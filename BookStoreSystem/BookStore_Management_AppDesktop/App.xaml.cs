@@ -2,7 +2,7 @@
 using System;
 using System.Windows;
 using BookStore_Management_AppDesktop.ViewModels;
-// using BookStore_Management_AppDesktop.Views.Windows;
+using BookStore_Management_AppDesktop.Views.Windows;
 // using BookStore_Management_AppDesktop.Services;
 
 namespace BookStore_Management_AppDesktop
@@ -16,13 +16,16 @@ namespace BookStore_Management_AppDesktop
             base.OnStartup(e);
 
             var serviceCollection = new ServiceCollection();
+
+            serviceCollection.AddTransient<LoginViewModel>();
+            serviceCollection.AddTransient<LoginWindow>();
+
             ConfigureServices(serviceCollection);
 
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
-            // Thay vì WPF tự mở, chúng ta yêu cầu DI lấy MainWindow ra và hiển thị
-            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
-            mainWindow.Show();
+            var LoginWindow = ServiceProvider.GetRequiredService<LoginWindow>();
+            LoginWindow.Show();
         }
 
         private void ConfigureServices(IServiceCollection services)
