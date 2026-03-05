@@ -16,12 +16,13 @@
     </ui:FluentWindow.DataContext>
 
     <Grid>
-        <Border Background="#0A2A47" />
+        <Border Background="{DynamicResource NavyPrimaryBrush}" />
 
         <ItemsControl
+            Grid.Column="0"
             Margin="-50"
             ItemsSource="{Binding CarouselBooks}"
-            Opacity="0.4">
+            Opacity="0.65">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel
@@ -48,15 +49,15 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-
         <Border
+            Grid.Column="1"
             Width="420"
             Height="520"
-            Margin="0,0,15,0"
-            HorizontalAlignment="Right"
+            Margin="15,0,15,0"
+            HorizontalAlignment="Center"
             VerticalAlignment="Center"
             BorderBrush="#4DFFFFFF"
-            BorderThickness="1.5"
+            BorderThickness="2"
             CornerRadius="24">
             <Border.Background>
                 <SolidColorBrush Opacity="0.65" Color="#0F172A" />
@@ -64,7 +65,7 @@
             <Border.Effect>
                 <DropShadowEffect
                     BlurRadius="40"
-                    Opacity="0.6"
+                    Opacity="0.65"
                     ShadowDepth="15"
                     Color="Black" />
             </Border.Effect>
@@ -72,7 +73,7 @@
                 <TextBlock
                     Margin="0,0,0,10"
                     HorizontalAlignment="Center"
-                    FontSize="32"
+                    FontSize="42"
                     FontWeight="ExtraBold"
                     Foreground="{DynamicResource TextPrimaryBrush}"
                     Text="LOGIN" />
@@ -80,7 +81,7 @@
                     Margin="0,0,0,40"
                     HorizontalAlignment="Center"
                     FontSize="14"
-                    Foreground="#A0AABF"
+                    Foreground="{DynamicResource TextSecondBrush}"
                     Text="Book Store Management System" />
 
                 <ui:TextBox
@@ -109,7 +110,7 @@
                     CornerRadius="8"
                     FontSize="16"
                     FontWeight="Bold"
-                    Foreground="#0A2A47" />
+                    Foreground="{DynamicResource NavyPrimaryBrush}" />
 
                 <StackPanel
                     Margin="0,35,0,0"
@@ -118,7 +119,7 @@
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="14"
-                        Foreground="#A0AABF"
+                        Foreground="{DynamicResource TextSecondBrush}"
                         Text="Don't have an account? " />
                     <ui:Button
                         Padding="5,0"
@@ -127,7 +128,7 @@
                         Content="Sign up now"
                         FontSize="14"
                         FontWeight="SemiBold"
-                        Foreground="#00D4B2" />
+                        Foreground="{DynamicResource NavyAccentBrush}" />
                 </StackPanel>
             </StackPanel>
         </Border>

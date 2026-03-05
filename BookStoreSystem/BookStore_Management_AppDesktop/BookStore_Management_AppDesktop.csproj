@@ -9,9 +9,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\Forged of Fire.webp" />
+    <None Remove="Resources\Images\God of Malice A Dark College.webp" />
+    <None Remove="Resources\Images\How to Kill Men and Get Away With It.webp" />
+    <None Remove="Resources\Images\In an Instant.webp" />
+    <None Remove="Resources\Images\In Five Year.webp" />
+    <None Remove="Resources\Images\It Began With a Lie %28Secrets of Redemption Book%29 1.webp" />
+    <None Remove="Resources\Images\Just For the Cameras.webp" />
+    <None Remove="Resources\Images\Magic Hour A novel.webp" />
+    <None Remove="Resources\Images\Night Road.webp" />
+    <None Remove="Resources\Images\Promise Me.webp" />
+    <None Remove="Resources\Images\The Donor Billionaire A Fake Relatioship Romance.webp" />
+    <None Remove="Resources\Images\The Frozen River A GMA Book Club Pick.webp" />
+    <None Remove="Resources\Images\The keeper of Happy Endings.webp" />
+    <None Remove="Resources\Images\The Last Thing He Told Me A Reese Witherspoon Book Club.webp" />
+    <None Remove="Resources\Images\The Love of My AfterLife.webp" />
+    <None Remove="Resources\Images\The Man in Lower Ten.webp" />
+    <None Remove="Resources\Images\The Seaside House %28Marina Cove Book 1%29.webp" />
+    <None Remove="Resources\Images\The Wedding of the Year.webp" />
+    <None Remove="Resources\Images\Twenty Years Later.webp" />
+    <None Remove="Resources\Images\Twisted Lives A heart-pounding trill ride with covert adventures a jaw-dropping twist.webp" />
+    <None Remove="Resources\Images\Where the Darkness Goes.webp" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Resources\Fonts\" />
-    <Folder Include="Resources\Images\" />
     <Folder Include="Services\API\" />
     <Folder Include="Services\Navigation\" />
     <Folder Include="Views\UserControls\" />
@@ -31,6 +54,72 @@
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
     <PackageReference Include="WPF-UI" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\Images\Forged of Fire.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\God of Malice A Dark College.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\How to Kill Men and Get Away With It.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\In an Instant.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\In Five Year.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\It Began With a Lie (Secrets of Redemption Book) 1.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\Just For the Cameras.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\Magic Hour A novel.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\Night Road.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\Promise Me.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\The Donor Billionaire A Fake Relatioship Romance.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\The Frozen River A GMA Book Club Pick.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\The keeper of Happy Endings.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\The Last Thing He Told Me A Reese Witherspoon Book Club.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\The Love of My AfterLife.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\The Man in Lower Ten.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\The Seaside House (Marina Cove Book 1).webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\The Wedding of the Year.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\Twenty Years Later.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\Twisted Lives A heart-pounding trill ride with covert adventures a jaw-dropping twist.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\Where the Darkness Goes.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
+using System.Windows;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -22,12 +25,19 @@ namespace BookStore_Management_AppDesktop.ViewModels
         }
         private void LoadMockBooks()
         {
-            CarouselBooks.Add("");
-            CarouselBooks.Add("");
-            CarouselBooks.Add("");
-            CarouselBooks.Add("");
-            CarouselBooks.Add("");
-            CarouselBooks.Add("");
+            string imagesFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Images");
+            if (Directory.Exists(imagesFolder))
+            {
+                var imageFiles = Directory
+                            .GetFiles(imagesFolder, "*.webp")
+                            .Select(Path.GetFileName);
+
+                foreach (var file in imageFiles)
+                {
+                    String fullPath = Path.Combine(imagesFolder, file);
+                    CarouselBooks.Add(fullPath);
+                }
+            }
         }
 
         private bool CanLogin()
