@@ -13,12 +13,13 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <!--#region SIDEBAR  -->
         <ui:NavigationView x:Name="RootNavigation"
                            Grid.Column="0"
                            PaneDisplayMode="Left"
                            IsBackButtonVisible="Collapsed"
                            OpenPaneLength="250"
-                           Background="Transparent">
+                           Background="{StaticResource SidebarBackgroundBrush}">
 
             <ui:NavigationView.PaneHeader>
                 <Grid Margin="15,20,0,20">
@@ -42,15 +43,18 @@
                 <ui:NavigationViewItem Content="Cài Đặt" Tag="Settings" Icon="{ui:SymbolIcon Settings24}" />
             </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
+        <!--#endregion-->
 
+        <!--#region CONTENT-->
         <Border Grid.Column="1" 
                 Margin="10" 
                 CornerRadius="8" 
-                Background="{StaticResource NavyGlassBrush}">
+                Background="{StaticResource ContentBackgroundBrush}">
 
             <Frame x:Name="RootFrame" NavigationUIVisibility="Hidden"/>
 
         </Border>
-
+        <!--#endregion-->
+        
     </Grid>
 </Window>
