@@ -5,8 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStore_Management_AppDesktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="BookStore Management"
+        Height="600" Width="1000">
+
+    <!-- Grid chia giao diện thành 2 phần -->
     <Grid>
+
+        <!-- Định nghĩa 2 cột -->
+        <Grid.ColumnDefinitions>
+
+            <!-- Sidebar menu -->
+            <ColumnDefinition Width="220"/>
+
+            <!-- Nội dung chính -->
+            <ColumnDefinition Width="*"/>
+
+        </Grid.ColumnDefinitions>
+
+        <!-- SIDEBAR -->
+        <StackPanel Grid.Column="0" Background="#2C3E50">
+
+            <TextBlock Text="BookStore"
+                       FontSize="22"
+                       Foreground="White"
+                       Margin="20"/>
+
+            <Button Content="Dashboard" Margin="10"/>
+            <Button Content="Books" Margin="10"/>
+            <Button Content="Employees" Margin="10"/>
+            <Button Content="Reports" Margin="10"/>
+
+        </StackPanel>
+
+        <!-- CONTENT AREA -->
+        <Grid Grid.Column="1" Background="#ECF0F1">
+
+            <TextBlock Text="Main Content Area"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="20"/>
+
+        </Grid>
 
     </Grid>
 </Window>
