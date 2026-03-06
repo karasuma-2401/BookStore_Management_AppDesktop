@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="White" />
     <SolidColorBrush x:Key="TextSecondBrush" Color="#AAAAAA" />
+    <SolidColorBrush x:Key="ErrorPrimaryBrush" Color="#FF4C4C" />
+    <SolidColorBrush x:Key="SuccessPrimaryBrush" Color="#00DC82" />
 
     <SolidColorBrush x:Key="NavyPrimaryBrush" Color="#0A2A47" />
     <SolidColorBrush x:Key="NavyLightBrush" Color="#15436F" />
