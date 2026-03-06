@@ -7,12 +7,16 @@
       "RelativeMoniker": "D:0:0:{547B6646-30BC-2C68-F8DB-71833042EC6B}|BookStore_Management_AppDesktop\\BookStore_Management_AppDesktop.csproj|solutionrelative:bookstore_management_appdesktop\\views\\windows\\loginwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{547B6646-30BC-2C68-F8DB-71833042EC6B}|BookStore_Management_AppDesktop\\BookStore_Management_AppDesktop.csproj|a:\\bookstore_management_appdesktop\\bookstoresystem\\bookstore_management_appdesktop\\resources\\styles\\colors.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{547B6646-30BC-2C68-F8DB-71833042EC6B}|BookStore_Management_AppDesktop\\BookStore_Management_AppDesktop.csproj|solutionrelative:bookstore_management_appdesktop\\resources\\styles\\colors.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{547B6646-30BC-2C68-F8DB-71833042EC6B}|BookStore_Management_AppDesktop\\BookStore_Management_AppDesktop.csproj|a:\\bookstore_management_appdesktop\\bookstoresystem\\bookstore_management_appdesktop\\viewmodels\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{547B6646-30BC-2C68-F8DB-71833042EC6B}|BookStore_Management_AppDesktop\\BookStore_Management_AppDesktop.csproj|solutionrelative:bookstore_management_appdesktop\\viewmodels\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{547B6646-30BC-2C68-F8DB-71833042EC6B}|BookStore_Management_AppDesktop\\BookStore_Management_AppDesktop.csproj|a:\\bookstore_management_appdesktop\\bookstoresystem\\bookstore_management_appdesktop\\views\\windows\\loginwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{547B6646-30BC-2C68-F8DB-71833042EC6B}|BookStore_Management_AppDesktop\\BookStore_Management_AppDesktop.csproj|solutionrelative:bookstore_management_appdesktop\\views\\windows\\loginwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{547B6646-30BC-2C68-F8DB-71833042EC6B}|BookStore_Management_AppDesktop\\BookStore_Management_AppDesktop.csproj|a:\\bookstore_management_appdesktop\\bookstoresystem\\bookstore_management_appdesktop\\resources\\styles\\colors.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{547B6646-30BC-2C68-F8DB-71833042EC6B}|BookStore_Management_AppDesktop\\BookStore_Management_AppDesktop.csproj|solutionrelative:bookstore_management_appdesktop\\resources\\styles\\colors.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -24,6 +28,19 @@
           "DockedWidth": 468,
           "SelectedChildIndex": 6,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Colors.xaml",
+              "DocumentMoniker": "A:\\BookStore_Management_AppDesktop\\BookStoreSystem\\BookStore_Management_AppDesktop\\Resources\\Styles\\Colors.xaml",
+              "RelativeDocumentMoniker": "BookStore_Management_AppDesktop\\Resources\\Styles\\Colors.xaml",
+              "ToolTip": "A:\\BookStore_Management_AppDesktop\\BookStoreSystem\\BookStore_Management_AppDesktop\\Resources\\Styles\\Colors.xaml",
+              "RelativeToolTip": "BookStore_Management_AppDesktop\\Resources\\Styles\\Colors.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-05T01:29:39.508Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
@@ -38,23 +55,19 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
-            },
-            {
-              "$type": "Bookmark",
               "Name": "ST:0:0:{c9c0ae26-aa77-11d2-b3f0-0000f87570ee}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Colors.xaml",
-              "DocumentMoniker": "A:\\BookStore_Management_AppDesktop\\BookStoreSystem\\BookStore_Management_AppDesktop\\Resources\\Styles\\Colors.xaml",
-              "RelativeDocumentMoniker": "BookStore_Management_AppDesktop\\Resources\\Styles\\Colors.xaml",
-              "ToolTip": "A:\\BookStore_Management_AppDesktop\\BookStoreSystem\\BookStore_Management_AppDesktop\\Resources\\Styles\\Colors.xaml",
-              "RelativeToolTip": "BookStore_Management_AppDesktop\\Resources\\Styles\\Colors.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-03-05T01:29:39.508Z",
-              "EditorCaption": ""
+              "Title": "LoginVIewModel.cs",
+              "DocumentMoniker": "A:\\BookStore_Management_AppDesktop\\BookStoreSystem\\BookStore_Management_AppDesktop\\ViewModels\\LoginVIewModel.cs",
+              "RelativeDocumentMoniker": "BookStore_Management_AppDesktop\\ViewModels\\LoginVIewModel.cs",
+              "ToolTip": "A:\\BookStore_Management_AppDesktop\\BookStoreSystem\\BookStore_Management_AppDesktop\\ViewModels\\LoginVIewModel.cs",
+              "RelativeToolTip": "BookStore_Management_AppDesktop\\ViewModels\\LoginVIewModel.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAYwD4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-05T10:07:52.384Z"
             },
             {
               "$type": "Document",
@@ -65,21 +78,20 @@
               "ToolTip": "A:\\BookStore_Management_AppDesktop\\BookStoreSystem\\BookStore_Management_AppDesktop\\Views\\Windows\\LoginWindow.xaml",
               "RelativeToolTip": "BookStore_Management_AppDesktop\\Views\\Windows\\LoginWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-03-05T01:25:18.536Z",
+              "WhenOpened": "2026-03-05T10:06:37.827Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "LoginVIewModel.cs",
-              "DocumentMoniker": "A:\\BookStore_Management_AppDesktop\\BookStoreSystem\\BookStore_Management_AppDesktop\\ViewModels\\LoginVIewModel.cs",
-              "RelativeDocumentMoniker": "BookStore_Management_AppDesktop\\ViewModels\\LoginVIewModel.cs",
-              "ToolTip": "A:\\BookStore_Management_AppDesktop\\BookStoreSystem\\BookStore_Management_AppDesktop\\ViewModels\\LoginVIewModel.cs",
-              "RelativeToolTip": "BookStore_Management_AppDesktop\\ViewModels\\LoginVIewModel.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAAwBgAAAAJAAAAAAAAAA==",
+              "Title": "LoginWindow.xaml.cs",
+              "DocumentMoniker": "A:\\BookStore_Management_AppDesktop\\BookStoreSystem\\BookStore_Management_AppDesktop\\Views\\Windows\\LoginWindow.xaml.cs",
+              "RelativeDocumentMoniker": "BookStore_Management_AppDesktop\\Views\\Windows\\LoginWindow.xaml.cs",
+              "ToolTip": "A:\\BookStore_Management_AppDesktop\\BookStoreSystem\\BookStore_Management_AppDesktop\\Views\\Windows\\LoginWindow.xaml.cs",
+              "RelativeToolTip": "BookStore_Management_AppDesktop\\Views\\Windows\\LoginWindow.xaml.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAwBUAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-05T01:18:50.454Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-05T08:39:37.839Z"
             }
           ]
         }
