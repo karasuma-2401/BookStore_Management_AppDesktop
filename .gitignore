@@ -191,5 +191,6 @@ StyleCop.Cache
 bin
 obj
 
+# VS code
 .vs/
 **/.vs/
