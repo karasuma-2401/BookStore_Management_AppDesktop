@@ -1,4 +1,4 @@
-﻿<Window x:Class="BookStore_Management_AppDesktop.MainWindow"
+﻿<Window x:Class="BookStore_Management_AppDesktop.Views.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -29,40 +29,25 @@
                 <Grid Margin="15,20,0,20">
                     <StackPanel Orientation="Horizontal">
                         <ui:SymbolIcon Symbol="Library24" FontSize="25" Foreground="{StaticResource NavyAccentBrush}"/>
-                        <TextBlock Text="BOOKSTORE"
-                                   FontSize="28"
-                                   FontWeight="Bold"
-                                   Opacity="0"
+                        <TextBlock Text="BOOKSTORE" FontSize="28" FontWeight="Bold" Opacity="0"
                                    Foreground="{StaticResource TextPrimaryBrush}">
-
                             <TextBlock.RenderTransform>
                                 <TranslateTransform X="-30"/>
                             </TextBlock.RenderTransform>
-
                             <TextBlock.Triggers>
-
                                 <EventTrigger RoutedEvent="Loaded">
                                     <BeginStoryboard>
-
                                         <Storyboard>
-
                                             <DoubleAnimation
-                                                Storyboard.TargetProperty="Opacity"
-                                                From="0"
-                                                To="1"
+                                                Storyboard.TargetProperty="Opacity" From="0" To="1"
                                                 Duration="0:0:1.0"/>
-
                                             <DoubleAnimation
-                                                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                From="-30"
-                                                To="0"
+                                                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" 
+                                                From="-30" To="0"
                                                 Duration="0:0:1.0"/>
-
                                         </Storyboard>
-
                                     </BeginStoryboard>
                                 </EventTrigger>
-
                             </TextBlock.Triggers>
 
                         </TextBlock>

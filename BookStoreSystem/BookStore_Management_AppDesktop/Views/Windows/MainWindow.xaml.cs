@@ -1,7 +1,7 @@
 ﻿
 using System.Windows;
 using BookStore_Management_AppDesktop.ViewModels;
-namespace BookStore_Management_AppDesktop
+namespace BookStore_Management_AppDesktop.Views.Windows
 {
     /// <summary>
     /// Cửa sổ chính của ứng dụng (Main Layout).
