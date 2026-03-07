@@ -17,9 +17,9 @@ namespace BookStore_Management_AppDesktop
 
             var serviceCollection = new ServiceCollection();
 
-            // Tạm thời comment Login lại để không bị cản trở khi làm task Main Layout
-            // serviceCollection.AddTransient<LoginViewModel>();
-            // serviceCollection.AddTransient<LoginWindow>();
+            //Tạm thời comment login lại để không bị cản trở khi làm task main layout
+            //servicecollection.addtransient<loginviewmodel>();
+            //servicecollection.addtransient<loginwindow>();
 
             ConfigureServices(serviceCollection);
 
