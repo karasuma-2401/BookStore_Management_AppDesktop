@@ -3,12 +3,15 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Windows;
+using BookStore_Management_AppDesktop.Services.Navigation;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
     public partial class LoginViewModel : ObservableObject
     {
+        private readonly INavigationService _navigationService;
+        public Action CloseAction { get; set; }
+
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
         [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
@@ -60,8 +63,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
             Debug.WriteLine(ErrorMessage);
 
 
-
-            // call to feature
+            _navigationService.NavigateToMainWindow();
+            CloseAction?.Invoke();
             IsLoading = false;
         }
         #endregion
@@ -122,8 +125,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         [ObservableProperty]
         private ObservableCollection<string> _carouselBooks = new();
-        public LoginViewModel()
+        public LoginViewModel(INavigationService navigationService)
         {
+            _navigationService = navigationService;
             LoadMockBooks();
         }
         // load background with full book from resource -> images

@@ -9,11 +9,12 @@ namespace BookStore_Management_AppDesktop.Views.Windows
     public partial class LoginWindow : FluentWindow
     {
         private readonly Random _random = new Random();
-        public LoginWindow()
+        public LoginWindow(LoginViewModel viewModel)
         {
             InitializeComponent();
 
-            DataContext = new LoginViewModel();
+            DataContext = viewModel;
+            viewModel.CloseAction = () => this.Close();
         }
 
         private void BookImagesBackground_Loaded(object sender, RoutedEventArgs e)
