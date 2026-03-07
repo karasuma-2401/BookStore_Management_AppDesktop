@@ -1,12 +1,111 @@
 ﻿<Window x:Class="BookStore_Management_AppDesktop.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BookStore_Management_AppDesktop"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="BookStore Management" Height="768" Width="1366"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource NavyPrimaryBrush}"
+        Foreground="{StaticResource TextPrimaryBrush}">
+    
+    <Window.Resources>
+        
+    </Window.Resources>
+    
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
+        <!--#region SIDEBAR  -->
+        <ui:NavigationView x:Name="RootNavigation"
+                           Grid.Column="0"
+                           PaneDisplayMode="Left"
+                           IsBackButtonVisible="Collapsed"
+                           OpenPaneLength="250"
+                           Background="{StaticResource SidebarBackgroundBrush}">
+
+            <ui:NavigationView.PaneHeader>
+                <Grid Margin="15,20,0,20">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Library24" FontSize="25" Foreground="{StaticResource NavyAccentBrush}"/>
+                        <TextBlock Text="BOOKSTORE"
+                                   FontSize="28"
+                                   FontWeight="Bold"
+                                   Opacity="0"
+                                   Foreground="{StaticResource TextPrimaryBrush}">
+
+                            <TextBlock.RenderTransform>
+                                <TranslateTransform X="-30"/>
+                            </TextBlock.RenderTransform>
+
+                            <TextBlock.Triggers>
+
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <BeginStoryboard>
+
+                                        <Storyboard>
+
+                                            <DoubleAnimation
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="0"
+                                                To="1"
+                                                Duration="0:0:1.0"/>
+
+                                            <DoubleAnimation
+                                                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                From="-30"
+                                                To="0"
+                                                Duration="0:0:1.0"/>
+
+                                        </Storyboard>
+
+                                    </BeginStoryboard>
+                                </EventTrigger>
+
+                            </TextBlock.Triggers>
+
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+            </ui:NavigationView.PaneHeader>
+
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Tag="Books" Icon="{ui:SymbolIcon Book24}">
+                    <TextBlock Text="Books" FontSize="20" FontWeight="Medium"/>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Tag="Employees" Icon="{ui:SymbolIcon People24}">
+                    <TextBlock Text="Employees" FontSize="20" FontWeight="Medium"/>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Tag="Customers" Icon="{ui:SymbolIcon Person24}">
+                    <TextBlock Text="Customers" FontSize="20" FontWeight="Medium"/>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Tag="Invoice" Icon="{ui:SymbolIcon Document24}">
+                    <TextBlock Text="Invoice" FontSize="20" FontWeight="Medium"/>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Tag="Inventory" Icon="{ui:SymbolIcon Box24}">
+                    <TextBlock Text="Inventory" FontSize="20" FontWeight="Medium"/>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.MenuItems>
+
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem Tag="Settings" Icon="{ui:SymbolIcon Settings24}">
+                    <TextBlock Text="Settings" FontSize="20" FontWeight="Medium"/>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.FooterMenuItems>
+        </ui:NavigationView>
+        <!--#endregion-->
+
+        <!--#region CONTENT-->
+        <Border Grid.Column="1" 
+                Margin="10" 
+                CornerRadius="8" 
+                Background="{StaticResource ContentBackgroundBrush}">
+
+            <Frame x:Name="RootFrame" NavigationUIVisibility="Hidden"/>
+
+        </Border>
+        <!--#endregion-->
+        
     </Grid>
 </Window>

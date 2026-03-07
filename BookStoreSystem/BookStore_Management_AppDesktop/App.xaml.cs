@@ -17,15 +17,20 @@ namespace BookStore_Management_AppDesktop
 
             var serviceCollection = new ServiceCollection();
 
-            serviceCollection.AddTransient<LoginViewModel>();
-            serviceCollection.AddTransient<LoginWindow>();
+            //Tạm thời comment login lại để không bị cản trở khi làm task main layout
+            //servicecollection.addtransient<loginviewmodel>();
+            //servicecollection.addtransient<loginwindow>();
 
             ConfigureServices(serviceCollection);
 
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
-            var LoginWindow = ServiceProvider.GetRequiredService<LoginWindow>();
-            LoginWindow.Show();
+            // --- ĐỔI CỬA SỔ KHỞI CHẠY SANG MAINWINDOW ---
+            // var LoginWindow = ServiceProvider.GetRequiredService<LoginWindow>();
+            // LoginWindow.Show();
+
+            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+            mainWindow.Show();
         }
 
         private void ConfigureServices(IServiceCollection services)
@@ -35,7 +40,7 @@ namespace BookStore_Management_AppDesktop
             // services.AddSingleton<INavigationService, NavigationService>();
 
             // // Get ViewModels
-            // services.AddTransient<MainViewModel>();
+             services.AddTransient<MainViewModel>();
             // services.AddTransient<LoginViewModel>();
             // services.AddTransient<BookViewModel>();
 
