@@ -1,6 +1,8 @@
 ﻿
-using System.Windows;
+using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.ViewModels;
+using System.Windows;
+using BookStore_Management_AppDesktop.Services.Navigation; 
 namespace BookStore_Management_AppDesktop.Views.Windows
 {
     /// <summary>
@@ -13,12 +15,16 @@ namespace BookStore_Management_AppDesktop.Views.Windows
         /// Cửa sổ chính của ứng dụng (Main Layout).
         /// Đóng vai trò là lớp vỏ (Shell) chứa Sidebar Menu và vùng hiển thị nội dung động (Content Region).
         /// </summary>
-        public MainWindow(MainViewModel viewModel)
+        public MainWindow(MainViewModel viewModel, INavigationService navigationService)
         {
             InitializeComponent();
 
             // Thiết lập ngữ cảnh dữ liệu (DataContext) để kích hoạt cơ chế Data Binding của MVVM
             this.DataContext = viewModel;
+
+            navigationService.SetFrame(RootFrame);
+
+            navigationService.NavigateTo(PageType.Books);
         }
     }
 }

@@ -56,10 +56,14 @@
             </ui:NavigationView.PaneHeader>
 
             <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Tag="Books" Icon="{ui:SymbolIcon Book24}">
+                <ui:NavigationViewItem Tag="Books" Icon="{ui:SymbolIcon Book24}"
+                                       Command="{Binding NavigateCommand}" 
+                                       CommandParameter="Books">
                     <TextBlock Text="Books" FontSize="20" FontWeight="Medium"/>
                 </ui:NavigationViewItem>
-                <ui:NavigationViewItem Tag="Employees" Icon="{ui:SymbolIcon People24}">
+                <ui:NavigationViewItem Tag="Employees" Icon="{ui:SymbolIcon People24}"
+                                       Command="{Binding NavigateCommand}" 
+                                       CommandParameter="Employees">
                     <TextBlock Text="Employees" FontSize="20" FontWeight="Medium"/>
                 </ui:NavigationViewItem>
                 <ui:NavigationViewItem Tag="Customers" Icon="{ui:SymbolIcon Person24}">

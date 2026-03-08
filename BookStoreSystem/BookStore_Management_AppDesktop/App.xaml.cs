@@ -3,6 +3,7 @@ using System;
 using System.Windows;
 using BookStore_Management_AppDesktop.ViewModels;
 using BookStore_Management_AppDesktop.Views.Windows;
+using BookStore_Management_AppDesktop.Services.Navigation; 
 // using BookStore_Management_AppDesktop.Services;
 
 namespace BookStore_Management_AppDesktop
@@ -35,12 +36,13 @@ namespace BookStore_Management_AppDesktop
 
         private void ConfigureServices(IServiceCollection services)
         {
-            // // Get Services (Connect BE, Navigate)
+            //  Get Services (Connect BE, Navigate)
             // services.AddSingleton<IApiClient, ApiClient>();
-            // services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<INavigationService, NavigationService>();
+           
 
             // // Get ViewModels
-             services.AddTransient<MainViewModel>();
+            services.AddTransient<MainViewModel>();
             // services.AddTransient<LoginViewModel>();
             // services.AddTransient<BookViewModel>();
 
