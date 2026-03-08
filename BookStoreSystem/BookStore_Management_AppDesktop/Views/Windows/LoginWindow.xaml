@@ -10,11 +10,6 @@
     ExtendsContentIntoTitleBar="True"
     WindowBackdropType="None"
     WindowStartupLocation="CenterScreen">
-
-    <ui:FluentWindow.DataContext>
-        <viewmodels:LoginViewModel />
-    </ui:FluentWindow.DataContext>
-
     <Grid>
         <Border Background="{DynamicResource NavyPrimaryBrush}" />
 
@@ -76,7 +71,63 @@
                     Color="Black" />
             </Border.Effect>
             <Grid Margin="40,50,40,40">
-                <StackPanel VerticalAlignment="Center" Visibility="{Binding IsLoginFormVisible, Converter={StaticResource BoolToVis}}">
+                <StackPanel VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                    <StackPanel.RenderTransform>
+                        <TranslateTransform X="0" />
+                    </StackPanel.RenderTransform>
+
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="IsHitTestVisible" Value="False" />
+                            <Setter Property="Opacity" Value="0" />
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLoginFormVisible}" Value="True">
+                                    <Setter Property="IsHitTestVisible" Value="True" />
+
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    To="1"
+                                                    Duration="0:0:0.3" />
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                    From="-100"
+                                                    To="0"
+                                                    Duration="0:0:0.4">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseOut" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+
+                                    <DataTrigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    To="0"
+                                                    Duration="0:0:0.3" />
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                    To="-100"
+                                                    Duration="0:0:0.4">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseIn" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.ExitActions>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+
                     <ui:TextBlock
                         Margin="0,0,0,10"
                         HorizontalAlignment="Center"
@@ -101,7 +152,7 @@
                         Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" />
 
                     <ui:PasswordBox
-                        Margin="0,0,0,35"
+                        Margin="0,0,0,25"
                         Padding="12"
                         FontSize="15"
                         Icon="Key24"
@@ -162,7 +213,62 @@
                     </StackPanel>
                 </StackPanel>
 
-                <StackPanel VerticalAlignment="Center" Visibility="{Binding IsSignUpFormVisible, Converter={StaticResource BoolToVis}}">
+                <StackPanel VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                    <StackPanel.RenderTransform>
+                        <TranslateTransform X="100" />
+                    </StackPanel.RenderTransform>
+
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="IsHitTestVisible" Value="False" />
+                            <Setter Property="Opacity" Value="0" />
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSignUpFormVisible}" Value="True">
+                                    <Setter Property="IsHitTestVisible" Value="True" />
+
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    To="1"
+                                                    Duration="0:0:0.3" />
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                    From="100"
+                                                    To="0"
+                                                    Duration="0:0:0.4">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseOut" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+
+                                    <DataTrigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    To="0"
+                                                    Duration="0:0:0.3" />
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                    To="100"
+                                                    Duration="0:0:0.4">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseIn" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.ExitActions>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
                     <TextBlock
                         Margin="0,0,0,10"
                         HorizontalAlignment="Center"
@@ -203,7 +309,7 @@
                         PlaceholderText="Password"
                         PreviewKeyDown="MoveFocusOnEnter_PreviewKeyDown" />
                     <ui:PasswordBox
-                        Margin="0,0,0,30"
+                        Margin="0,0,0,25"
                         Padding="12"
                         FontSize="15"
                         Icon="CheckmarkLock24"
