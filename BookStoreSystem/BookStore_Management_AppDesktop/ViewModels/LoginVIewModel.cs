@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using BookStore_Management_AppDesktop.Services.Navigation;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -12,16 +13,31 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly INavigationService _navigationService;
         public Action CloseAction { get; set; }
 
+        // Loading variable
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
         [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
         private bool _isLoading = false;
 
+        // Show message (string)
         [ObservableProperty]
         private string _errorMessage = string.Empty;
 
+        // Check It's successMessage or NOT
         [ObservableProperty]
         private bool _isSuccessMessage = false;
+
+        // variable for Remember ME
+        [ObservableProperty]
+        private bool _rememberMe = false;
+
+        // variable for forgot password form
+        [ObservableProperty]
+        private bool _isForgotPasswordFormVisible = false;
+
+        // Save email user for revert account
+        [ObservableProperty]
+        private string _resetEmail = string.Empty;
 
         #region Login
 
@@ -38,6 +54,21 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private bool CanLogin()
         {
             return !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password) && !IsLoading;
+        }
+
+        private void HandleRememberMe ()
+        {
+            if (RememberMe)
+            {
+                Settings.Default.RememberMe = true ;
+                Settings.Default.SavedUsername = Username;
+            }
+            else
+            {
+                Settings.Default.RememberMe = false;
+                Settings.Default.SavedUsername = String.Empty;
+            }
+            Settings.Default.Save();
         }
 
         [RelayCommand(CanExecute = nameof(CanLogin))]
@@ -62,6 +93,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
             ErrorMessage = "Login successful! Redirecting...";
             Debug.WriteLine(ErrorMessage);
 
+            // RememberMe Logic
+            HandleRememberMe();
 
             _navigationService.NavigateToMainWindow();
             CloseAction?.Invoke();
@@ -129,6 +162,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             _navigationService = navigationService;
             LoadMockBooks();
+
+            RememberMe = Settings.Default.RememberMe;
+            if (!RememberMe)
+                Username = Settings.Default.SavedUsername;
+
         }
         // load background with full book from resource -> images
         private void LoadMockBooks()
@@ -154,6 +192,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             ErrorMessage = string.Empty;
             IsLoginFormVisible = false;
             IsSignUpFormVisible = true;
+            IsForgotPasswordFormVisible = false;
         }
 
         [RelayCommand]
@@ -162,6 +201,15 @@ namespace BookStore_Management_AppDesktop.ViewModels
             ErrorMessage = string.Empty;
             IsSignUpFormVisible = false;
             IsLoginFormVisible = true;
+            IsForgotPasswordFormVisible = false;
+        }
+        [RelayCommand]
+        private void SwitchToForgotPassword()
+        {
+            ErrorMessage = string.Empty;
+            IsSignUpFormVisible = false;
+            IsLoginFormVisible = false;
+            IsForgotPasswordFormVisible = true;
         }
     }
 }
