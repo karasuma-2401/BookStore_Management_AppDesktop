@@ -29,10 +29,6 @@ namespace BookStoreManagement.API.Controllers
             _context = context;
             _validator = validator;
         }
-        public UsersController(ApplicationDBContext context)
-        {
-            _context = context;
-        }
 
         // GET: api/Users
         [HttpGet]
