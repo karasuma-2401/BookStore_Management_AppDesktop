@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookStoreManagement.API.Data;
-using BookStoreManagement.API.Models;
+using BookStoreManagement.API.Models.Entities;
 
 namespace BookStoreManagement.API.Controllers
 {

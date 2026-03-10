@@ -1,12 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-namespace BookStoreManagement.API.Models
+using BookStoreManagement.API.Models.Entities;
+
+namespace BookStoreManagement.API.Models.Entities
 {
     [Table("users")]
     public class User
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("user_id")]
         public int UserId {get; set;}
 

@@ -1,12 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BookStoreManagement.API.Models
+namespace BookStoreManagement.API.Models.Entities
 {
     [Table("books")]
     public class Book
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("book_id")]
         public int BookId {get; set;}
 

@@ -1,12 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BookStoreManagement.API.Models
+namespace BookStoreManagement.API.Models.Entities
 {
     [Table("import_details")]
     public class ImportDetail
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
         public int Id {get; set;}
 

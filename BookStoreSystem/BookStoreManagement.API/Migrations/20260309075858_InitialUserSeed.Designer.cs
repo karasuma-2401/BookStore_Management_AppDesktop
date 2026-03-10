@@ -3,6 +3,7 @@ using System;
 using BookStoreManagement.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookStoreManagement.API.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260309075858_InitialUserSeed")]
+    partial class InitialUserSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,53 +148,6 @@ namespace BookStoreManagement.API.Migrations
                     b.HasKey("CustomerId");
 
                     b.ToTable("customers");
-                });
-
-            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Employee", b =>
-                {
-                    b.Property<int>("EmployeeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("employee_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("EmployeeId"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("address");
-
-                    b.Property<int>("Age")
-                        .HasColumnType("integer")
-                        .HasColumnName("age");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("full_name");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("phone");
-
-                    b.Property<decimal>("Salary")
-                        .HasColumnType("decimal(12,2)")
-                        .HasColumnName("salary");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("EmployeeId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasDatabaseName("Employees_UserId");
-
-                    b.ToTable("employees");
                 });
 
             modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Import", b =>
