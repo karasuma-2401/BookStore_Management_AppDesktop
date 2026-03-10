@@ -2,6 +2,7 @@
     x:Class="BookStore_Management_AppDesktop.Views.Windows.LoginWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:components="clr-namespace:BookStore_Management_AppDesktop.Views.UserControls"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:viewmodels="clr-namespace:BookStore_Management_AppDesktop.ViewModels"
     Title="Book Store Login"
@@ -52,7 +53,7 @@
         </ItemsControl>
         <Border
             Grid.Column="1"
-            Width="420"
+            Width="385"
             Height="auto"
             Margin="15,0,15,0"
             HorizontalAlignment="Center"
@@ -128,108 +129,8 @@
                         </Style>
                     </StackPanel.Style>
 
-                    <ui:TextBlock
-                        Margin="0,0,0,10"
-                        HorizontalAlignment="Center"
-                        FontSize="42"
-                        FontWeight="ExtraBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
-                        Text="LOGIN" />
-                    <ui:TextBlock
-                        Margin="0,0,0,40"
-                        HorizontalAlignment="Center"
-                        FontSize="14"
-                        Foreground="{DynamicResource TextSecondBrush}"
-                        Text="Book Store Management System" />
+                    <components:LoginForm />
 
-                    <ui:TextBox
-                        Margin="0,0,0,20"
-                        Padding="12"
-                        FontSize="15"
-                        Icon="Person24"
-                        PlaceholderText="Username"
-                        PreviewKeyDown="MoveFocusOnEnter_PreviewKeyDown"
-                        Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" />
-
-                    <ui:PasswordBox
-                        Margin="0,0,0,15"
-                        Padding="12"
-                        FontSize="15"
-                        Icon="Key24"
-                        Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        PasswordChar="●"
-                        PlaceholderText="Password"
-                        PreviewKeyDown="MoveFocusOnEnter_PreviewKeyDown" />
-                    <Grid Margin="0,0,0,25">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <CheckBox
-                            Grid.Column="0"
-                            Content="Remember me"
-                            Foreground="{DynamicResource TextSecondBrush}"
-                            IsChecked="{Binding RememberMe}" />
-                        <ui:Button
-                            Grid.Column="1"
-                            Padding="0"
-                            Appearance="Transparent"
-                            Command="{Binding SwitchToForgotPasswordCommand}"
-                            Content="Forgot password?"
-                            FontWeight="SemiBold"
-                            Foreground="{DynamicResource NavyAccentBrush}" />
-                    </Grid>
-                    <TextBlock
-                        Margin="0,0,0,15"
-                        HorizontalAlignment="Center"
-                        FontWeight="SemiBold"
-                        Text="{Binding ErrorMessage}"
-                        TextWrapping="Wrap">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Foreground" Value="{DynamicResource ErrorPrimaryBrush}" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsSuccessMessage}" Value="True">
-                                        <Setter Property="Foreground" Value="{DynamicResource SuccessPrimaryBrush}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                    <ui:ProgressRing
-                        Margin="0,0,0,15"
-                        IsIndeterminate="True"
-                        Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}" />
-                    <ui:Button
-                        Padding="0,14"
-                        HorizontalAlignment="Stretch"
-                        Appearance="Primary"
-                        Background="{DynamicResource NavyAccentBrush}"
-                        Command="{Binding LoginCommand}"
-                        Content="Log in"
-                        CornerRadius="8"
-                        FontSize="16"
-                        FontWeight="Bold"
-                        Foreground="{DynamicResource NavyPrimaryBrush}" />
-
-                    <StackPanel
-                        Margin="0,35,0,0"
-                        HorizontalAlignment="Center"
-                        Orientation="Horizontal">
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontSize="14"
-                            Foreground="{DynamicResource TextSecondBrush}"
-                            Text="Don't have an account? " />
-                        <ui:Button
-                            Padding="5,0"
-                            Appearance="Transparent"
-                            Command="{Binding SwitchToSignUpCommand}"
-                            Content="Sign up now"
-                            FontSize="14"
-                            FontWeight="SemiBold"
-                            Foreground="{DynamicResource NavyAccentBrush}" />
-                    </StackPanel>
                 </StackPanel>
 
                 <StackPanel VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
@@ -288,106 +189,9 @@
                             </Style.Triggers>
                         </Style>
                     </StackPanel.Style>
-                    <TextBlock
-                        Margin="0,0,0,10"
-                        HorizontalAlignment="Center"
-                        FontSize="32"
-                        FontWeight="ExtraBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
-                        Text="SIGN UP" />
-                    <TextBlock
-                        Margin="0,0,0,30"
-                        HorizontalAlignment="Center"
-                        FontSize="14"
-                        Foreground="{DynamicResource TextSecondBrush}"
-                        Text="CREATE A NEW ACCOUNT" />
-
-                    <ui:TextBox
-                        Margin="0,0,0,15"
-                        Padding="12"
-                        FontSize="15"
-                        Icon="ContactCard24"
-                        PlaceholderText="Fullname"
-                        PreviewKeyDown="MoveFocusOnEnter_PreviewKeyDown"
-                        Text="{Binding SignUpFullName, UpdateSourceTrigger=PropertyChanged}" />
-                    <ui:TextBox
-                        Margin="0,0,0,15"
-                        Padding="12"
-                        FontSize="15"
-                        Icon="Person24"
-                        PlaceholderText="Username"
-                        PreviewKeyDown="MoveFocusOnEnter_PreviewKeyDown"
-                        Text="{Binding SignUpUsername, UpdateSourceTrigger=PropertyChanged}" />
-                    <ui:PasswordBox
-                        Margin="0,0,0,15"
-                        Padding="12"
-                        FontSize="15"
-                        Icon="Key24"
-                        Password="{Binding SignUpPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        PasswordChar="●"
-                        PlaceholderText="Password"
-                        PreviewKeyDown="MoveFocusOnEnter_PreviewKeyDown" />
-                    <ui:PasswordBox
-                        Margin="0,0,0,25"
-                        Padding="12"
-                        FontSize="15"
-                        Icon="CheckmarkLock24"
-                        Password="{Binding SignUpConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        PasswordChar="●"
-                        PlaceholderText="Confirmm Password"
-                        PreviewKeyDown="MoveFocusOnEnter_PreviewKeyDown" />
-                    <TextBlock
-                        Margin="0,0,0,15"
-                        HorizontalAlignment="Center"
-                        FontWeight="SemiBold"
-                        Text="{Binding ErrorMessage}"
-                        TextWrapping="Wrap">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Foreground" Value="{DynamicResource ErrorPrimaryBrush}" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsSuccessMessage}" Value="True">
-                                        <Setter Property="Foreground" Value="{DynamicResource SuccessPrimaryBrush}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                    <ui:ProgressRing
-                        Margin="0,0,0,15"
-                        IsIndeterminate="True"
-                        Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}" />
-                    <ui:Button
-                        Padding="0,14"
-                        HorizontalAlignment="Stretch"
-                        Appearance="Primary"
-                        Background="{DynamicResource NavyAccentBrush}"
-                        Command="{Binding SignUpCommand}"
-                        Content="Complete Registration"
-                        CornerRadius="8"
-                        FontSize="16"
-                        FontWeight="Bold"
-                        Foreground="{DynamicResource NavyPrimaryBrush}" />
-
-                    <StackPanel
-                        Margin="0,25,0,0"
-                        HorizontalAlignment="Center"
-                        Orientation="Horizontal">
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontSize="14"
-                            Foreground="{DynamicResource TextSecondBrush}"
-                            Text="Already have an account? " />
-                        <ui:Button
-                            Padding="5,0"
-                            Appearance="Transparent"
-                            Command="{Binding SwitchToLoginCommand}"
-                            Content="Back to Login "
-                            FontSize="14"
-                            FontWeight="SemiBold"
-                            Foreground="{DynamicResource NavyAccentBrush}" />
-                    </StackPanel>
+                    <components:SignUpForm />
                 </StackPanel>
+
                 <StackPanel VerticalAlignment="Center" RenderTransformOrigin="0.5, 0.5">
                     <StackPanel.RenderTransform>
                         <TranslateTransform Y="-100" />
@@ -441,53 +245,7 @@
                             </Style.Triggers>
                         </Style>
                     </StackPanel.Style>
-                    <TextBlock
-                        Margin="0,0,0,10"
-                        HorizontalAlignment="Center"
-                        FontSize="32"
-                        FontWeight="ExtraBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
-                        Text="RESET PASSWORD" />
-                    <TextBlock
-                        Margin="0,0,0,30"
-                        HorizontalAlignment="Center"
-                        FontSize="14"
-                        Foreground="{DynamicResource TextSecondBrush}"
-                        Text="Enter your email to receive a OTP code" />
-
-                    <ui:TextBox
-                        Margin="0,0,0,25"
-                        Padding="12"
-                        FontSize="15"
-                        Icon="Mail24"
-                        PlaceholderText="Email address"
-                        Text="{Binding ResetEmail, UpdateSourceTrigger=PropertyChanged}" />
-
-                    <ui:Button
-                        Padding="0,14"
-                        HorizontalAlignment="Stretch"
-                        Appearance="Primary"
-                        Background="{DynamicResource NavyAccentBrush}"
-                        Content="Send OTP CODE"
-                        CornerRadius="8"
-                        FontSize="16"
-                        FontWeight="Bold"
-                        Foreground="{DynamicResource NavyPrimaryBrush}" />
-
-                    <StackPanel
-                        Margin="0,25,0,0"
-                        HorizontalAlignment="Center"
-                        Orientation="Horizontal">
-                        <ui:Button
-                            Padding="5,0"
-                            Appearance="Transparent"
-                            Command="{Binding SwitchToLoginCommand}"
-                            Content="Back to Login"
-                            FontSize="14"
-                            FontWeight="SemiBold"
-                            Foreground="{DynamicResource NavyAccentBrush}" />
-                    </StackPanel>
-
+                    <components:ForgotPasswordForm />
                 </StackPanel>
             </Grid>
 
