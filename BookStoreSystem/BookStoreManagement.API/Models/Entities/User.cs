@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-namespace BookStoreManagement.API.Models
+using BookStoreManagement.API.Models.Entities;
+
+namespace BookStoreManagement.API.Models.Entities
 {
     [Table("users")]
     public class User

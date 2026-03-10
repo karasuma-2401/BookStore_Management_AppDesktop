@@ -1,4 +1,5 @@
-using BookStoreManagement.API.Models;
+using BookStoreManagement.API.Handlers;
+using BookStoreManagement.API.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreManagement.API.Data
@@ -33,7 +34,7 @@ namespace BookStoreManagement.API.Data
                     UserId = 1,
                     Username = "admin",
                     // remember hash password by brcypt
-                    PasswordHash = "123",
+                    PasswordHash = "$2a$12$kLRmN/MLkfha9kaVD.zPHOT7NHIlGPwoQ.FkyzQ.MHGa9.Oo3FT6u",
                     FullName = "Adminstrator",
                     RoleId = "admin",
                     CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
