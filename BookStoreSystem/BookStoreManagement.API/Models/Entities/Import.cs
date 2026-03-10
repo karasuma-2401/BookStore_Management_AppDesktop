@@ -7,6 +7,7 @@ namespace BookStoreManagement.API.Models.Entities
     public class Import
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("import_id")]
         public int ImportId { get; set;}
 

@@ -7,6 +7,7 @@ namespace BookStoreManagement.API.Models.Entities
     public class Payment
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("payment_id")]
         public int PaymentId {get; set;}
 

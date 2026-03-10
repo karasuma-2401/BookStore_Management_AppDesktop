@@ -28,6 +28,11 @@ namespace BookStoreManagement.API.Data
             modelBuilder.Entity<BookCategory>()
                 .HasKey(bc => new {bc.BookId, bc.CategoryId});
 
+            modelBuilder.Entity<Employee>()
+                .HasIndex(e => e.UserId)
+                .IsUnique()
+                .HasDatabaseName("Employees_UserId");
+
             modelBuilder.Entity<User>().HasData (
                 new User
                 {
