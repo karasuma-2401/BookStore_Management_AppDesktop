@@ -36,7 +36,6 @@
     <Folder Include="Models\" />
     <Folder Include="Resources\Fonts\" />
     <Folder Include="Services\API\" />
-    <Folder Include="Views\UserControls\" />
     <Folder Include="Views\Pages\" />
   </ItemGroup>
 
@@ -120,6 +119,21 @@
     <Content Include="Resources\Images\Where the Darkness Goes.webp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>
