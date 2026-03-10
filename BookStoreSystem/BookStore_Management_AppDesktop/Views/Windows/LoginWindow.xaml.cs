@@ -42,17 +42,5 @@ namespace BookStore_Management_AppDesktop.Views.Windows
                 transform.BeginAnimation(TranslateTransform.YProperty, fluctuateAnimation);
             }
         }
-
-        // focus on next UIElement
-        private void MoveFocusOnEnter_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                e.Handled = true;
-                var request = new TraversalRequest(FocusNavigationDirection.Next);
-                var elementWithFocus = Keyboard.FocusedElement as UIElement;
-                elementWithFocus?.MoveFocus(request);
-            }
-        }
     }
 }
