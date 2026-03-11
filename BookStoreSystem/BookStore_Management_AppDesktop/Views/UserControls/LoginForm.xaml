@@ -27,21 +27,26 @@
         <ui:TextBox
             Margin="0,0,0,20"
             Padding="12"
+            ClearButtonEnabled="True"
             FontSize="15"
             Icon="Person24"
             PlaceholderText="Username"
             PreviewKeyDown="MoveFocusOnEnter_PreviewKeyDown"
-            Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" />
+            Text="{Binding Username, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
 
         <ui:PasswordBox
             Margin="0,0,0,15"
             Padding="12"
+            ClearButtonEnabled="True"
             FontSize="15"
             Icon="Key24"
-            Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
             PasswordChar="●"
-            PlaceholderText="Password"
-            PreviewKeyDown="MoveFocusOnEnter_PreviewKeyDown" />
+            PlaceholderText="Password">
+            <ui:PasswordBox.InputBindings>
+                <KeyBinding Key="Enter" Command="{Binding LoginCommand}" />
+            </ui:PasswordBox.InputBindings>
+        </ui:PasswordBox>
         <Grid Margin="0,0,0,25">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
