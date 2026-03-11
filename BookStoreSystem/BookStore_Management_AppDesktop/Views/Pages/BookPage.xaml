@@ -3,17 +3,126 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:BookStore_Management_AppDesktop.Views.Pages"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="BookPage">
+      d:DesignHeight="700" d:DesignWidth="1000"
+      Title="BookPage"
+      Background="#FFFFFF">
 
-    <Grid>
-        <TextBlock Text="📚 MÀN HÌNH QUẢN LÝ SÁCH (NHÁP)" 
-                   FontSize="32" 
-                   FontWeight="Bold" 
-                   HorizontalAlignment="Center" 
-                   VerticalAlignment="Center"
-                   Foreground="Black"/>
+    <Grid TextElement.Foreground="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--#region Header & ToolBar-->
+        <Border Grid.Row="0" Background="#131921" Padding="25,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Books" FontSize="28" 
+                           FontWeight="Bold" 
+                           VerticalAlignment="Center" Foreground="White"/>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <ui:TextBox PlaceholderText="Search books..." 
+                                Icon="{ui:SymbolIcon Search24}" Width="300" Margin="0,0,15,0" 
+                                VerticalAlignment="Center" Cursor="Pen"
+                                Background="Transparent" Foreground="White"/>
+
+                    <ui:Button Icon="{ui:SymbolIcon Filter24}" Appearance="Secondary" 
+                               Margin="0,0,10,0" ToolTip="Filter Books"
+                               Cursor="Hand"/>
+
+                    <ui:Button Icon="{ui:SymbolIcon Cart24}" Appearance="Primary" 
+                               ToolTip="View Shopping Cart" Padding="8,6"
+                               Cursor="Hand"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <!--#endregion-->
+        
+        <!--region Book Card-->
+        <ListView x:Name="BooksListView"
+                  ItemsSource="{Binding Books}" 
+                  Background="White"
+                  BorderThickness="0"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.ColumnSpan="2" 
+                  Margin="0,62,0,0" Grid.RowSpan="2" d:ItemsSource="{d:SampleData ItemCount=5}">
+
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border Width="210" 
+                            Background="#F7F9FA" 
+                            Margin="30, 10, 10, 10"
+                            BorderBrush="#E8E8E8" 
+                            BorderThickness="1" 
+                            CornerRadius="10">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#000000" Opacity="0.08" BlurRadius="8" ShadowDepth="2"/>
+                        </Border.Effect>
+
+                        <StackPanel Margin="12">
+                            <Border CornerRadius="6" ClipToBounds="True" Margin="12,12,12,12">
+                                <Image Source="{Binding CoverImagePath}" Height="250" Stretch="UniformToFill" />
+                            </Border>
+
+                            <TextBlock Text="{Binding Title}" 
+                                       FontWeight="Bold" 
+                                       FontSize="15" 
+                                       Foreground="#0F1111"
+                                       TextWrapping="Wrap" 
+                                       Height="42" 
+                                       TextTrimming="CharacterEllipsis"
+                                       Margin="0,0,0,4"/>
+
+                            <TextBlock Text="{Binding Author}" 
+                                       Foreground="#565959" 
+                                       FontSize="13" 
+                                       Margin="0,0,0,8"/>
+
+                            <TextBlock Text="{Binding Price}" 
+                                       FontWeight="Bold" 
+                                       FontSize="18" 
+                                       Foreground="#B12704" 
+                                       Margin="0,0,0,10"/>
+                            <ui:Button Content="Add to Cart"
+                                       Icon="{ui:SymbolIcon Cart24}"
+                                       Appearance="Primary"
+                                       HorizontalAlignment="Stretch"
+                                       Cursor="Hand"
+                                       FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+
+        <!--#endregion-->
     </Grid>
 </Page>

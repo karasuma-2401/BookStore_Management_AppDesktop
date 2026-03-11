@@ -87,7 +87,6 @@
 
         <!--#region CONTENT-->
         <Border Grid.Column="1" 
-                Margin="10" 
                 CornerRadius="8" 
                 Background="{StaticResource ContentBackgroundBrush}">
 
