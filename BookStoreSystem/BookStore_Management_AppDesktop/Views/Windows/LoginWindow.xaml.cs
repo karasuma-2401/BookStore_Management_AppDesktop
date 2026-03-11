@@ -9,11 +9,12 @@ namespace BookStore_Management_AppDesktop.Views.Windows
     public partial class LoginWindow : FluentWindow
     {
         private readonly Random _random = new Random();
-        public LoginWindow()
+        public LoginWindow(LoginViewModel viewModel)
         {
             InitializeComponent();
 
-            DataContext = new LoginViewModel();
+            DataContext = viewModel;
+            viewModel.CloseAction = () => this.Close();
         }
 
         private void BookImagesBackground_Loaded(object sender, RoutedEventArgs e)
@@ -39,18 +40,6 @@ namespace BookStore_Management_AppDesktop.Views.Windows
                     EasingFunction = new SineEase {EasingMode = EasingMode.EaseInOut}
                 };
                 transform.BeginAnimation(TranslateTransform.YProperty, fluctuateAnimation);
-            }
-        }
-
-        // focus on next UIElement
-        private void MoveFocusOnEnter_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                e.Handled = true;
-                var request = new TraversalRequest(FocusNavigationDirection.Next);
-                var elementWithFocus = Keyboard.FocusedElement as UIElement;
-                elementWithFocus?.MoveFocus(request);
             }
         }
     }
