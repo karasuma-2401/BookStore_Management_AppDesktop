@@ -7,6 +7,7 @@ namespace BookStoreManagement.API.Models.Entities
     public class InvoiceDetail
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
         public int Id {get; set;}
 

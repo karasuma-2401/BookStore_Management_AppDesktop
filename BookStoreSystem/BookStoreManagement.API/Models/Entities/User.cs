@@ -9,6 +9,7 @@ namespace BookStoreManagement.API.Models.Entities
     public class User
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("user_id")]
         public int UserId {get; set;}
 

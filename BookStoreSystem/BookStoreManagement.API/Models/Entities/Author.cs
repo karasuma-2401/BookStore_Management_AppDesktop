@@ -8,6 +8,7 @@ namespace BookStoreManagement.API.Models.Entities
     public class Author
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("author_id")]
         public int AuthorId {get; set;}
 
