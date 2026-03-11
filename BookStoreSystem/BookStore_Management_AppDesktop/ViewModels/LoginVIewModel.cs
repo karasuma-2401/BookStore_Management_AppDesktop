@@ -6,11 +6,13 @@ using System.IO;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.Views.UserControls;
 using System.ComponentModel.DataAnnotations;
+using BookStore_Management_AppDesktop.Services;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
     public partial class LoginViewModel : ObservableValidator
     {
+        private readonly IAuthService _authService;
         private readonly INavigationService _navigationService;
         public Action CloseAction { get; set; }
 
@@ -74,21 +76,22 @@ namespace BookStore_Management_AppDesktop.ViewModels
             ErrorMessage = String.Empty;
             IsLoading = true;
 
-            // await time to connect with BE
-            await Task.Delay(1000);
+            // call API to connect to DB
+            var loginResult = await _authService.LoginAsync(Username, Password);
 
             // admin username and password
-            if (Username != "admin" ||  Password != "123")
+            if (loginResult == null)
             {
                 IsSuccessMessage = false;
-                ErrorMessage = "The username or password is incorrect!";
+                ErrorMessage = "Incorrect username or password";
                 IsLoading = false;
                 return;
             }
 
+            //Properties.Settings.Default.AccessToken = loginResult.AccessToken;
+
             IsSuccessMessage = true;
             ErrorMessage = "Login successful! Redirecting...";
-            Debug.WriteLine(ErrorMessage);
 
             // RememberMe Logic
             HandleRememberMe();
@@ -156,7 +159,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             ErrorMessage = "Registration successful! Redirecting to the login page...";
             Debug.WriteLine(ErrorMessage);
 
-            // Return to Login Window
             await Task.Delay(2000);
             SwitchToLogin();
 
@@ -276,9 +278,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         [ObservableProperty]
         private ObservableCollection<string> _carouselBooks = new();
-        public LoginViewModel(INavigationService navigationService)
+        public LoginViewModel(INavigationService navigationService, IAuthService authService)
         {
             _navigationService = navigationService;
+            _authService = authService;
             LoadMockBooks();
 
             RememberMe = Settings.Default.RememberMe;
