@@ -88,7 +88,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 return;
             }
 
-            //Properties.Settings.Default.AccessToken = loginResult.AccessToken;
+            Settings.Default.AccessToken = loginResult.AccessToken;
+            Settings.Default.Save();
 
             IsSuccessMessage = true;
             ErrorMessage = "Login successful! Redirecting...";
