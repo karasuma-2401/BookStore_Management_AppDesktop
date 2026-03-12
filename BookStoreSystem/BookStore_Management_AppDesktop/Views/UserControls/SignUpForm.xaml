@@ -27,37 +27,44 @@
         <ui:TextBox
             Margin="0,0,0,15"
             Padding="12"
+            ClearButtonEnabled="True"
             FontSize="15"
             Icon="ContactCard24"
             PlaceholderText="Fullname"
             PreviewKeyDown="MoveFocusOnEnter_PreviewKeyDown"
-            Text="{Binding SignUpFullName, UpdateSourceTrigger=PropertyChanged}" />
+            Text="{Binding SignUpFullName, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
         <ui:TextBox
             Margin="0,0,0,15"
             Padding="12"
+            ClearButtonEnabled="True"
             FontSize="15"
             Icon="Person24"
             PlaceholderText="Username"
             PreviewKeyDown="MoveFocusOnEnter_PreviewKeyDown"
-            Text="{Binding SignUpUsername, UpdateSourceTrigger=PropertyChanged}" />
+            Text="{Binding SignUpUsername, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
         <ui:PasswordBox
             Margin="0,0,0,15"
             Padding="12"
+            ClearButtonEnabled="True"
             FontSize="15"
             Icon="Key24"
-            Password="{Binding SignUpPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Password="{Binding SignUpPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
             PasswordChar="●"
             PlaceholderText="Password"
             PreviewKeyDown="MoveFocusOnEnter_PreviewKeyDown" />
         <ui:PasswordBox
             Margin="0,0,0,25"
             Padding="12"
+            ClearButtonEnabled="True"
             FontSize="15"
             Icon="CheckmarkLock24"
-            Password="{Binding SignUpConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Password="{Binding SignUpConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
             PasswordChar="●"
-            PlaceholderText="Confirm Password"
-            PreviewKeyDown="MoveFocusOnEnter_PreviewKeyDown" />
+            PlaceholderText="Confirm Password">
+            <ui:PasswordBox.InputBindings>
+                <KeyBinding Key="Enter" Command="{Binding SignUpCommand}" />
+            </ui:PasswordBox.InputBindings>
+        </ui:PasswordBox>
         <TextBlock
             Margin="0,0,0,15"
             HorizontalAlignment="Center"

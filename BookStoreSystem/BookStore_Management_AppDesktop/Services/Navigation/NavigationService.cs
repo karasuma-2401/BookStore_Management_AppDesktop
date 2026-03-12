@@ -1,10 +1,12 @@
-﻿using System;
+﻿using BookStore_Management_AppDesktop.Helpers.Enums;
+using BookStore_Management_AppDesktop.Views.Pages;
+using BookStore_Management_AppDesktop.Views.Windows;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
 using System.Collections.Generic;
 using System.Text;
-using System.Collections.Generic;
 using System.Windows.Controls;
-using BookStore_Management_AppDesktop.Views.Pages;
-using BookStore_Management_AppDesktop.Helpers.Enums;
 
 namespace BookStore_Management_AppDesktop.Services.Navigation
 {
@@ -51,6 +53,20 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
             {
                 _mainFrame.Navigate(_pageCache[pageType]);
             }
+        }
+
+
+
+        // Don't touch it please and pull code before push please
+        private readonly IServiceProvider _serviceProvider;
+        public NavigationService(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+        public void NavigateToMainWindow()
+        {
+            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+            mainWindow.Show();
         }
     }
 }

@@ -31,8 +31,8 @@ namespace BookStore_Management_AppDesktop
 
         private void ConfigureServices(IServiceCollection services)
         {
-            //  Get Services (Connect BE, Navigate)
-            // services.AddSingleton<IApiClient, ApiClient>();
+            // // Get Services (Connect BE, Navigate)
+            services.AddHttpClient<IAuthService, AuthService>();
             services.AddSingleton<INavigationService, NavigationService>();
 
             // // Get ViewModels
