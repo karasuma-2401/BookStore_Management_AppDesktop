@@ -5,11 +5,14 @@ using System.Diagnostics;
 using System.IO;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.Views.UserControls;
+using System.ComponentModel.DataAnnotations;
+using BookStore_Management_AppDesktop.Services;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
-    public partial class LoginViewModel : ObservableObject
+    public partial class LoginViewModel : ObservableValidator
     {
+        private readonly IAuthService _authService;
         private readonly INavigationService _navigationService;
         public Action CloseAction { get; set; }
 
@@ -32,10 +35,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private bool _isLoginFormVisible = true;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Username cannot be empty")]
         [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
         private string _username = string.Empty;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "password cannot be empty")]
         [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
         private string _password = string.Empty;
 
@@ -69,27 +76,23 @@ namespace BookStore_Management_AppDesktop.ViewModels
             ErrorMessage = String.Empty;
             IsLoading = true;
 
-            // await time to connect with BE
-            await Task.Delay(1000);
+            // call API to connect to DB
+            var loginResult = await _authService.LoginAsync(Username, Password);
 
             // admin username and password
-            if (Username != "admin" ||  Password != "123")
+            if (loginResult == null)
             {
                 IsSuccessMessage = false;
-                ErrorMessage = "The username or password is incorrect!";
+                ErrorMessage = "Incorrect username or password";
                 IsLoading = false;
                 return;
             }
 
-<<<<<<< Updated upstream
-=======
             Settings.Default.AccessToken = loginResult.AccessToken;
             Settings.Default.Save();
 
->>>>>>> Stashed changes
             IsSuccessMessage = true;
             ErrorMessage = "Login successful! Redirecting...";
-            Debug.WriteLine(ErrorMessage);
 
             // RememberMe Logic
             HandleRememberMe();
@@ -105,18 +108,26 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private bool _isSignUpFormVisible = false;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage ="Fullname cannot be empty")]
         [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
         private string _signUpFullName = string.Empty;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Username cannot be empty")]
         [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
         private string _signUpUsername = string.Empty;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Password cannot be empty")]
         [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
         private string _signUpPassword = string.Empty;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Confirm Password cannot be empty")]
         [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
         private string _signUpConfirmPassword = string.Empty;
 
@@ -149,7 +160,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             ErrorMessage = "Registration successful! Redirecting to the login page...";
             Debug.WriteLine(ErrorMessage);
 
-            // Return to Login Window
             await Task.Delay(2000);
             SwitchToLogin();
 
@@ -165,16 +175,46 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private int _forgotPasswordStep = 1;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Please enter your email")]
+        [EmailAddress(ErrorMessage = "Invalid email format (e.g., example@gmail.com")]
         private string _resetEmail = string.Empty;
+
+        [ObservableProperty]
+        private string _otpCode1 = string.Empty;
+
+        [ObservableProperty]
+        private string _otpCode2 = string.Empty;
+
+        [ObservableProperty]
+        private string _otpCode3 = string.Empty;
+
+        [ObservableProperty]
+        private string _otpCode4 = string.Empty;
+
+        [ObservableProperty]
+        private string _otpCode5 = string.Empty;
+
+        [ObservableProperty]
+        private string _otpCode6 = string.Empty;
 
         [ObservableProperty]
         private string _otpCode = string.Empty;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "New Password is required")]
         private string _newPassword = string.Empty;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Confirm new password is required")]
         private string _confirmNewPassword = string.Empty;
+
+        public void IntegrateOtpCode ()
+        {
+            OtpCode = OtpCode1 + OtpCode2 + OtpCode3 + OtpCode4 + OtpCode5 + OtpCode6;
+        }
 
         // Step 1: verify email have existed in DB
 
@@ -182,18 +222,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private async Task VerifyEmail()
         {
             ErrorMessage = string.Empty;
-            if (string.IsNullOrWhiteSpace(ResetEmail))
-            {
-                IsSuccessMessage = false;
-                ErrorMessage = "Please enter your email address!";
-                return;
-            }
 
             IsLoading = true;
             await Task.Delay(2000);
 
             IsSuccessMessage = true;
-            ErrorMessage = $"The OTP has been sent to your email {ResetEmail}";
+            ErrorMessage = $"The OTP has been sent to your email";
             ForgotPasswordStep = 2;
             IsLoading = false;
         }
@@ -203,6 +237,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private async Task VerifyOtp()
         {
             ErrorMessage = string.Empty;
+            IntegrateOtpCode();
             if (string.IsNullOrWhiteSpace(OtpCode) || OtpCode.Length != 6)
             {
                 IsSuccessMessage = false;
@@ -244,9 +279,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         [ObservableProperty]
         private ObservableCollection<string> _carouselBooks = new();
-        public LoginViewModel(INavigationService navigationService)
+        public LoginViewModel(INavigationService navigationService, IAuthService authService)
         {
             _navigationService = navigationService;
+            _authService = authService;
             LoadMockBooks();
 
             RememberMe = Settings.Default.RememberMe;
@@ -275,6 +311,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [RelayCommand]
         private void SwitchToSignUp()
         {
+            ClearErrors();
             ErrorMessage = string.Empty;
             IsLoginFormVisible = false;
             IsSignUpFormVisible = true;
@@ -284,6 +321,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [RelayCommand]
         private void SwitchToLogin()
         {
+            ClearErrors();
             ErrorMessage = string.Empty;
             IsSignUpFormVisible = false;
             IsLoginFormVisible = true;
@@ -292,9 +330,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [RelayCommand]
         private void SwitchToForgotPassword()
         {
+            ClearErrors();
             ErrorMessage = string.Empty;
             IsSignUpFormVisible = false;
             IsLoginFormVisible = false;
+
+            ResetEmail = string.Empty;
+            OtpCode1 = OtpCode2 = OtpCode3 = OtpCode4 = OtpCode5 = OtpCode6 = string.Empty;
+            NewPassword = ConfirmNewPassword = string.Empty;
 
             ForgotPasswordStep = 1;
             IsForgotPasswordFormVisible = true;

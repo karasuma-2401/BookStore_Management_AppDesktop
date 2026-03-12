@@ -53,7 +53,7 @@
         </ItemsControl>
         <Border
             Grid.Column="1"
-            Width="385"
+            Width="auto"
             Height="auto"
             Margin="15,0,15,0"
             HorizontalAlignment="Center"
