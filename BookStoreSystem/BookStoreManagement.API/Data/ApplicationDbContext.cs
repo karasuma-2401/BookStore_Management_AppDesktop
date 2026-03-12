@@ -21,6 +21,9 @@ namespace BookStoreManagement.API.Data
         public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
         public DbSet<Import> Imports { get; set; }
         public DbSet<ImportDetail> ImportDetails { get; set; }
+        public DbSet<Employee> Employees { get; set;  }
+        public DbSet<Shift> Shifts { get; set;  }
+        public DbSet<EmployeeShift> EmployeeShifts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

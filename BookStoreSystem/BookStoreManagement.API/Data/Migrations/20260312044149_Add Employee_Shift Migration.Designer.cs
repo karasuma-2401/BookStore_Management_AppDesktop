@@ -3,17 +3,20 @@ using System;
 using BookStoreManagement.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BookStoreManagement.API.Migrations
+namespace BookStoreManagement.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260312044149_Add Employee_Shift Migration")]
+    partial class AddEmployee_ShiftMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,11 +57,6 @@ namespace BookStoreManagement.API.Migrations
                     b.Property<int?>("AuthorId")
                         .HasColumnType("integer")
                         .HasColumnName("author_id");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("image_path");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer")
@@ -197,36 +195,6 @@ namespace BookStoreManagement.API.Migrations
                         .HasDatabaseName("Employees_UserId");
 
                     b.ToTable("employees");
-                });
-
-            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.EmployeeShift", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("employee_id");
-
-                    b.Property<int>("ShiftId")
-                        .HasColumnType("integer")
-                        .HasColumnName("shift_id");
-
-                    b.Property<DateTime>("WorkDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("work_date");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("ShiftId");
-
-                    b.ToTable("employee_shifts");
                 });
 
             modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Import", b =>
@@ -385,34 +353,6 @@ namespace BookStoreManagement.API.Migrations
                     b.ToTable("payments");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Shift", b =>
-                {
-                    b.Property<int>("ShiftId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("shifts");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ShiftId"));
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("end_time");
-
-                    b.Property<string>("ShiftName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("shift_name");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("start_time");
-
-                    b.HasKey("ShiftId");
-
-                    b.ToTable("shifts");
-                });
-
             modelBuilder.Entity("BookStoreManagement.API.Models.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -489,25 +429,6 @@ namespace BookStoreManagement.API.Migrations
                     b.Navigation("Book");
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.EmployeeShift", b =>
-                {
-                    b.HasOne("BookStoreManagement.API.Models.Entities.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookStoreManagement.API.Models.Entities.Shift", "Shift")
-                        .WithMany()
-                        .HasForeignKey("ShiftId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Shift");
                 });
 
             modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Import", b =>

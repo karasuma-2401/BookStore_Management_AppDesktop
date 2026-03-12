@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookStoreManagement.API.Models.Entities
 {
-    [Table("Employee_shifts")]
+    [Table("employee_shifts")]
     public class EmployeeShift
     {
         [Key]
