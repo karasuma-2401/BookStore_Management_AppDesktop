@@ -18,7 +18,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
-        [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
         private bool _isLoading = false;
 
         [ObservableProperty]
@@ -99,70 +98,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
             _navigationService.NavigateToMainWindow();
             CloseAction?.Invoke();
-            IsLoading = false;
-        }
-        #endregion
-        #region Sign up
-
-        [ObservableProperty]
-        private bool _isSignUpFormVisible = false;
-
-        [ObservableProperty]
-        [NotifyDataErrorInfo]
-        [Required(ErrorMessage ="Fullname cannot be empty")]
-        [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
-        private string _signUpFullName = string.Empty;
-
-        [ObservableProperty]
-        [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Username cannot be empty")]
-        [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
-        private string _signUpUsername = string.Empty;
-
-        [ObservableProperty]
-        [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Password cannot be empty")]
-        [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
-        private string _signUpPassword = string.Empty;
-
-        [ObservableProperty]
-        [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Confirm Password cannot be empty")]
-        [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
-        private string _signUpConfirmPassword = string.Empty;
-
-        private bool CanSignUp()
-        {
-            return !String.IsNullOrWhiteSpace(SignUpFullName) && 
-                    !String.IsNullOrWhiteSpace(SignUpUsername) &&
-                    !String.IsNullOrWhiteSpace(SignUpPassword) &&
-                    !String.IsNullOrWhiteSpace(SignUpConfirmPassword) &&
-                    SignUpPassword == SignUpConfirmPassword &&
-                    !IsLoading;
-        }
-            
-        [RelayCommand(CanExecute =nameof(CanSignUp))]
-        private async Task SignUp()
-        {
-            ErrorMessage = string.Empty;
-            IsLoading = true;
-
-            // await time 1s to connection with BE
-            await Task.Delay (1000);
-            if (SignUpUsername == "admin")
-            {
-                IsSuccessMessage = false;
-                ErrorMessage = "This username already exists.";
-                IsLoading = false;
-                return;
-            }
-            IsSuccessMessage = true;
-            ErrorMessage = "Registration successful! Redirecting to the login page...";
-            Debug.WriteLine(ErrorMessage);
-
-            await Task.Delay(2000);
-            SwitchToLogin();
-
             IsLoading = false;
         }
         #endregion
@@ -307,23 +242,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 }
             }
         }
-
-        [RelayCommand]
-        private void SwitchToSignUp()
-        {
-            ClearErrors();
-            ErrorMessage = string.Empty;
-            IsLoginFormVisible = false;
-            IsSignUpFormVisible = true;
-            IsForgotPasswordFormVisible = false;
-        }
-
         [RelayCommand]
         private void SwitchToLogin()
         {
             ClearErrors();
             ErrorMessage = string.Empty;
-            IsSignUpFormVisible = false;
             IsLoginFormVisible = true;
             IsForgotPasswordFormVisible = false;
         }
@@ -332,7 +255,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             ClearErrors();
             ErrorMessage = string.Empty;
-            IsSignUpFormVisible = false;
             IsLoginFormVisible = false;
 
             ResetEmail = string.Empty;
