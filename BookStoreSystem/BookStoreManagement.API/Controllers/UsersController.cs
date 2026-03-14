@@ -1,7 +1,7 @@
 ﻿using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Handlers;
 using BookStoreManagement.API.Interfaces.Services;
-using BookStoreManagement.API.Models.DTOs;
+using BookStoreManagement.API.Models.Auth;
 using BookStoreManagement.API.Models.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -24,10 +24,12 @@ namespace BookStoreManagement.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IValidator<ResetPasswordRequestDto> _resetPasswordValidator;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IValidator<ResetPasswordRequestDto> resetPasswordValidator)
         {
             _userService = userService;
+            _resetPasswordValidator = resetPasswordValidator;
         }
 
         // GET: api/Users
@@ -46,7 +48,7 @@ namespace BookStoreManagement.API.Controllers
         {
             var user = await _userService.GetUserByIdAsync(id);
             return user == null
-            ? NotFound(new { message = "Khong tim thay nguoi dung" })
+            ? NotFound(new { message = "User not found." })
             : Ok(user);
         }
 
@@ -59,7 +61,7 @@ namespace BookStoreManagement.API.Controllers
 
             return success
                 ? NoContent()
-                : BadRequest(new { message = "Cap nhat that bai hoac ID khong khop" });
+                : BadRequest(new { message = "Update failed or ID does not match." });
         }
 
         // POST: user
@@ -70,8 +72,8 @@ namespace BookStoreManagement.API.Controllers
             var success = await _userService.CreateUserAsync(user);
 
             return success
-                ? CreatedAtAction("GetUser", new { id = user.UserId }, new { message = "Tao user thanh cong" })
-                : BadRequest(new { message = "Du lieu khong hop le" });
+                ? CreatedAtAction("GetUser", new { id = user.UserId }, new { message = "User created successfully" })
+                : BadRequest(new { message = "Invalid data" });
         }
 
         // DELETE: user/5
@@ -83,31 +85,38 @@ namespace BookStoreManagement.API.Controllers
 
             return success
                 ? NoContent()
-                : NotFound(new { message = "Khong tim thay user de xoa" });
+                : NotFound(new { message = "User not found for deletion." });
         }
 
         // POST: user/forgot-password
         [HttpPost("forgot-password")]
         [AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword([FromBody] string email)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequestDto dto)
         {
-            var success = await _userService.SendForgotPasswordEmailAsync(email);
+            var success = await _userService.SendForgotPasswordEmailAsync(dto.Email);
 
             return success
-                ? Ok(new { message = "Ma xac thuc da duoc gui vao email cua ban" })
-                : NotFound(new { message = "Email nay khong ton tai trong he thong" });
+                ? Ok(new { message = "The verification code has been sent to your email." })
+                : NotFound(new { message = "This email is not registered in the system." });
         }
 
         // POST: user/reset-password
         [HttpPost("reset-password")]
         [AllowAnonymous]
-        public async Task<IActionResult> ResetPassword(string token, string newPassword)
+        public async Task<IActionResult> ResetPassword(ResetPasswordRequestDto dto)
         {
-            var success = await _userService.ResetPasswordAsync(token, newPassword);
+            var validatorResult = await _resetPasswordValidator.ValidateAsync(dto);
+
+            if (!validatorResult.IsValid) { 
+                var errors = validatorResult.Errors.Select(e => e.ErrorMessage);
+                return BadRequest(new { message = "Invalid data", errors = errors });
+            }
+
+            var success = await _userService.ResetPasswordAsync(dto.Token, dto.NewPassword, dto.ConfirmPassword);
 
             return success
-                ? Ok(new { message = "Doi mat khau thanh cong" })
-                : BadRequest(new { message = "Ma xac thuc sai hoac da het han" });
+                ? Ok(new { message = "Password changed successfully" })
+                : BadRequest(new { message = "The verification code is incorrect or has expired." });
         }
     }
 }

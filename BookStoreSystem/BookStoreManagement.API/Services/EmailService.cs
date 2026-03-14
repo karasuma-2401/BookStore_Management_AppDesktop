@@ -1,6 +1,5 @@
 ﻿using BookStoreManagement.API.Interfaces.Services;
-using BookStoreManagement.API.Models;
-using BookStoreManagement.API.Models.DTOs;
+using BookStoreManagement.API.Models.Auth;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;

@@ -1,10 +1,10 @@
 ﻿using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Handlers;
-using BookStoreManagement.API.Models.DTOs;
 using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Interfaces.Services;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using BookStoreManagement.API.Models.Auth;
 
 namespace BookStoreManagement.API.Services
 {
@@ -117,7 +117,7 @@ namespace BookStoreManagement.API.Services
             return true;
 
         }
-        public async Task<bool> ResetPasswordAsync(string token, string newPassword) 
+        public async Task<bool> ResetPasswordAsync(string token, string newPassword, string confirmPassword) 
         {
             var user = await _context.Users.FirstOrDefaultAsync(u =>
             u.ResetToken == token && u.ResetTokenExpires > DateTime.UtcNow);

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BookStoreManagement.API.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using BookStoreManagement.API.Models.Entities;
+using BookStoreManagement.API.Interfaces.Services;
+using BookStoreManagement.API.Models.Book;
 
 namespace BookStoreManagement.API.Controllers
 {
@@ -14,95 +9,111 @@ namespace BookStoreManagement.API.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+        private readonly IBookService _bookService;
 
-        public BooksController(ApplicationDBContext context)
+        public BooksController(IBookService bookService)
         {
-            _context = context;
+            _bookService = bookService;
         }
 
-        // GET: api/Books
+        // GET: api/books
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
+        public async Task<ActionResult<IEnumerable<BookResponseDto>>> GetBooks()
         {
-            return await _context.Books.ToListAsync();
+            var books = await _bookService.GetBooks();
+
+            var result = books.Select(book => new BookResponseDto
+            {
+                BookId = book.BookId,
+                Title = book.Title,
+                AuthorId = book.AuthorId,
+                AuthorName = book.Author?.Name,
+                Quantity = book.Quantity,
+                ImagePath = book.ImagePath
+            });
+
+            return Ok(result);
         }
 
-        // GET: api/Books/5
+        // GET: api/books/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<Book>> GetBook(int id)
+        public async Task<ActionResult<BookResponseDto>> GetBook(int id)
         {
-            var book = await _context.Books.FindAsync(id);
+            var book = await _bookService.GetBookById(id);
 
             if (book == null)
-            {
                 return NotFound();
-            }
 
-            return book;
+            var result = new BookResponseDto
+            {
+                BookId = book.BookId,
+                Title = book.Title,
+                AuthorId = book.AuthorId,
+                AuthorName = book.Author?.Name,
+                Quantity = book.Quantity,
+                ImagePath = book.ImagePath
+            };
+
+            return Ok(result);
         }
 
-        // PUT: api/Books/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBook(int id, Book book)
+        // POST: api/books
+        [HttpPost]
+        public async Task<ActionResult<BookResponseDto>> PostBook(BookCreateDto dto)
         {
-            if (id != book.BookId)
+            var book = new Book
             {
-                return BadRequest();
-            }
+                Title = dto.Title,
+                AuthorId = dto.AuthorId,
+                Quantity = dto.Quantity,
+                ImagePath = dto.ImagePath
+            };
 
-            _context.Entry(book).State = EntityState.Modified;
+            var createdBook = await _bookService.CreateBook(book);
 
-            try
+            var result = new BookResponseDto
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
+                BookId = createdBook.BookId,
+                Title = createdBook.Title,
+                AuthorId = createdBook.AuthorId,
+                Quantity = createdBook.Quantity,
+                ImagePath = createdBook.ImagePath
+            };
+
+            return CreatedAtAction(nameof(GetBook), new { id = result.BookId }, result);
+        }
+
+        // PUT: api/books/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutBook(int id, BookUpdateDto dto)
+        {
+            var book = new Book
             {
-                if (!BookExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                BookId = id,
+                Title = dto.Title,
+                AuthorId = dto.AuthorId,
+                Quantity = dto.Quantity,
+                ImagePath = dto.ImagePath
+            };
+
+            var updated = await _bookService.UpdateBook(id, book);
+
+            if (!updated)
+                return NotFound();
 
             return NoContent();
         }
 
-        // POST: api/Books
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Book>> PostBook(Book book)
-        {
-            _context.Books.Add(book);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBook", new { id = book.BookId }, book);
-        }
-
-        // DELETE: api/Books/5
+        // DELETE: api/books/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
-            var book = await _context.Books.FindAsync(id);
-            if (book == null)
-            {
-                return NotFound();
-            }
+            var deleted = await _bookService.DeleteBook(id);
 
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
+            if (!deleted)
+                return NotFound();
 
             return NoContent();
-        }
-
-        private bool BookExists(int id)
-        {
-            return _context.Books.Any(e => e.BookId == id);
         }
     }
 }

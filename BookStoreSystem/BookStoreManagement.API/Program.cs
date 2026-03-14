@@ -1,5 +1,6 @@
 using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Services;
+using BookStoreManagement.API.Interfaces.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using BookStoreManagement.API.Models.Auth;
 
 
 
@@ -76,9 +78,14 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddScoped<JwtService>();
 
+
 builder.Services.AddScoped<BookStoreManagement.API.Interfaces.Services.IUserService, BookStoreManagement.API.Services.UserService>();
-builder.Services.Configure<BookStoreManagement.API.Models.DTOs.EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<BookStoreManagement.API.Interfaces.Services.IEmailService, BookStoreManagement.API.Services.EmailService>();
+
+// Book CRUD
+builder.Services.AddScoped<IBookService, BookService>();
+
 
 var  app = builder.Build();
 if (app.Environment.IsDevelopment())

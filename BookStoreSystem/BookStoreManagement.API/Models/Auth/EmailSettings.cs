@@ -1,4 +1,4 @@
-﻿namespace BookStoreManagement.API.Models.DTOs
+﻿namespace BookStoreManagement.API.Models.Auth
 {
     public class EmailSettings
     {
