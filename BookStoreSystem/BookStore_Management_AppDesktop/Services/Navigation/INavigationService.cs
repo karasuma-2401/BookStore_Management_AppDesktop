@@ -14,5 +14,6 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
         void SetFrame(Frame frame);
 
         void NavigateTo(PageType pageType);
+        void NavigateToMainWindow();
     }
 }

@@ -42,5 +42,6 @@ namespace BookStore_Management_AppDesktop.Views.Windows
                 transform.BeginAnimation(TranslateTransform.YProperty, fluctuateAnimation);
             }
         }
+
     }
 }
