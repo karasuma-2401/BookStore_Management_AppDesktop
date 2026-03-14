@@ -76,7 +76,9 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddScoped<JwtService>();
 
-
+builder.Services.AddScoped<BookStoreManagement.API.Interfaces.Services.IUserService, BookStoreManagement.API.Services.UserService>();
+builder.Services.Configure<BookStoreManagement.API.Models.DTOs.EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<BookStoreManagement.API.Interfaces.Services.IEmailService, BookStoreManagement.API.Services.EmailService>();
 
 var  app = builder.Build();
 if (app.Environment.IsDevelopment())
