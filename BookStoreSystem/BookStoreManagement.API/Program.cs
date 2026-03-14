@@ -1,5 +1,6 @@
 using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Services;
+using BookStoreManagement.API.Services.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -75,8 +76,8 @@ builder.Services.AddAuthentication(options =>
 
 });
 builder.Services.AddScoped<JwtService>();
-
-
+// Book CRUD
+builder.Services.AddScoped<IBookService, BookService>();
 
 var  app = builder.Build();
 if (app.Environment.IsDevelopment())
