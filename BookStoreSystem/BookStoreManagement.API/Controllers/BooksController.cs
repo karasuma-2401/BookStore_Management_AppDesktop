@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BookStoreManagement.API.Models.Entities;
-using BookStoreManagement.API.Services.Interfaces;
-using BookStoreManagement.API.DTOs.Books;
+using BookStoreManagement.API.Interfaces.Services;
+using BookStoreManagement.API.Models.Book;
 
 namespace BookStoreManagement.API.Controllers
 {

@@ -44,10 +44,17 @@ namespace BookStoreManagement.API.Data
                     // remember hash password by brcypt
                     PasswordHash = "$2a$12$D1vG.G0.iA22bZ3hU.Z8/e2xK.6kX4A1X.N/H.8H.J.K.U.V.Q.C.q",
                     FullName = "Adminstrator",
+                    Email = "truongnhattien222@gmail.com",
                     RoleId = "admin",
                     CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
                 }
             );
+
+            modelBuilder.Entity<Employee>()
+            .HasOne(e => e.User)
+            .WithOne(u => u.Employee)
+            .HasForeignKey<Employee>(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

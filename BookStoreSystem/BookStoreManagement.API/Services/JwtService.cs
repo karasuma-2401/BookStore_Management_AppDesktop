@@ -1,10 +1,10 @@
 ﻿using BookStoreManagement.API.Data;
-using BookStoreManagement.API.Models.DTOs;
 using BookStoreManagement.API.Handlers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using BookStoreManagement.API.Models.Auth;
 
 
 namespace BookStoreManagement.API.Services
