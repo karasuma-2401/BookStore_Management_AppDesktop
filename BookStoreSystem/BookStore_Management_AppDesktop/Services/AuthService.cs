@@ -1,5 +1,6 @@
-using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Models.Dtos;   
 using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -36,6 +37,39 @@ namespace BookStore_Management_AppDesktop.Services
             {
                 System.Diagnostics.Debug.WriteLine($"Error call API Auth: {ex.Message}");
                 return null;
+            }
+        }
+        public async Task<bool> ForgotPasswordAsync(string email)
+        {
+            try
+            {
+                var payload = new {email = email};
+                var response = await _httpClient.PostAsJsonAsync("user/forgot-password", payload);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine ($"Errors for calling api: {ex.Message}");
+                return false;
+            }
+        }
+        public async Task<bool> ResetPasswordAsync (string token, string newPassword, string confirmPassword)
+        {
+            try
+            {
+                var payload = new
+                {
+                    token = token,
+                    newPassword = newPassword,
+                    confirmPassword = confirmPassword
+                };
+                var response = await _httpClient.PostAsJsonAsync("user/reset-password", payload);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine ($"Errors to calling api: {ex.Message}");
+                return false;
             }
         }
     }
