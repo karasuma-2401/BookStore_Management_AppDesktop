@@ -1,0 +1,58 @@
+﻿<Window x:Class="BookStore_Management_AppDesktop.Views.Windows.AddBookWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Add New Book" Height="550" Width="450"
+        WindowStartupLocation="CenterScreen"
+        Background="Pink">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Nhập thông tin sách mới" FontSize="22" FontWeight="Bold" Margin="0,0,0,20"/>
+
+        <StackPanel Grid.Row="1">
+
+            <TextBlock Text="Title (Tên sách):" FontWeight="SemiBold"/>
+            <ui:TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Nhập tên sách..."/>
+
+            <TextBlock Text="Author ID (Mã Tác giả):" FontWeight="SemiBold"/>
+            <ui:TextBox Text="{Binding AuthorId, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Ví dụ: 1"/>
+
+            <TextBlock Text="Quantity (Số lượng kho):" FontWeight="SemiBold"/>
+            <ui:TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Ví dụ: 50"/>
+
+            <TextBlock Text="Cover Image (Ảnh bìa):" FontWeight="SemiBold" Margin="0,10,0,0"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <ui:TextBox Grid.Column="0" Text="{Binding LocalImagePath}" IsReadOnly="True" PlaceholderText="Chưa chọn ảnh..." Margin="0,0,10,0"/>
+
+                <ui:Button Grid.Column="1" Content="Browse..." Command="{Binding SelectImageCommand}" Appearance="Secondary"/>
+            </Grid>
+
+            <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="5" Width="100" Height="130" HorizontalAlignment="Left" Margin="0,10,0,0">
+                <Image Source="{Binding LocalImagePath}" Stretch="Uniform" Margin="5"/>
+            </Border>
+
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <ui:ProgressRing IsIndeterminate="True" Visibility="{Binding IsLoading}" Margin="0,0,15,0" Width="20" Height="20"/>
+
+            <ui:Button Content="Cancel" Command="{Binding CancelCommand}" 
+                       Cursor="Hand"
+                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Appearance="Secondary" Margin="0,0,10,0"/>
+            <ui:Button Content="Save Book" Command="{Binding SaveCommand}" 
+                       Cursor="Hand"
+                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Appearance="Primary"/>
+        </StackPanel>
+    </Grid>
+</Window>
