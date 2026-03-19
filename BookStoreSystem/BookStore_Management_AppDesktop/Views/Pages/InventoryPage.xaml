@@ -2,60 +2,111 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-      Title="InventoryPage" Background="White">
+      Title="InventoryPage" 
+      Background="{DynamicResource ContentBackgroundBrush}" 
+      TextOptions.TextFormattingMode="Display"
+      UseLayoutRounding="True"
+      Loaded="Page_Loaded">
 
-    <Grid Margin="20">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
-            <TextBlock Text="Inventory Management" FontSize="24" FontWeight="Bold" VerticalAlignment="Center"/>
-            <ui:Button Content="Add New Book" Click="btnAddBook_Click"  Icon="{ui:SymbolIcon Add24}" Appearance="Primary" Margin="20,0,0,0"/>
-        </StackPanel>
+        <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
+            <Grid>
+                <TextBlock Text="Inventory Management" FontSize="26" FontWeight="Black" 
+                           Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
 
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Books}" AutoGenerateColumns="False" 
-                  CanUserAddRows="False" RowHeight="60" HeadersVisibility="Column"
-                  Foreground="Black"
-                  Background="Transparent" BorderBrush="#E0E0E0" BorderThickness="1" FontSize="14">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding BookId}" Width="60"/>
+                <ui:Button Content="Add New Book" Click="btnAddBook_Click" 
+                           Icon="{ui:SymbolIcon Add24}" 
+                           Background="{DynamicResource NavyAccentBrush}" Foreground="White" BorderThickness="0" 
+                           Appearance="Primary" HorizontalAlignment="Right" Cursor="Hand" FontWeight="Bold"/>
+            </Grid>
+        </Border>
 
-                <DataGridTemplateColumn Header="Cover" Width="80">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Source="{Binding ImagePath, IsAsync=True, TargetNullValue='https://link-anh-mac-dinh.jpg', FallbackValue='https://link-anh-mac-dinh.jpg'}" 
-                   Width="45" Height="60" Stretch="Uniform" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+        <Border Grid.Row="1" Background="{DynamicResource CardBackgroundBrush}" Margin="20" CornerRadius="8">
+            <DataGrid ItemsSource="{Binding Books}" AutoGenerateColumns="False" 
+                      CanUserAddRows="False" 
+                      IsReadOnly="True" 
+                      RowHeight="70" HeadersVisibility="Column"
+                      Foreground="#1E293B" 
+                      Background="Transparent" 
+                      RowBackground="{DynamicResource CardBackgroundBrush}"
+                      AlternatingRowBackground="{DynamicResource ContentBackgroundBrush}"
+                      BorderBrush="#E2E8F0" BorderThickness="1" 
+                      HorizontalGridLinesBrush="#E2E8F0" VerticalGridLinesBrush="Transparent"
+                      FontSize="15" Cursor="Hand"
+                      EnableRowVirtualization="True"
+                      EnableColumnVirtualization="True"
+                      VirtualizingPanel.IsVirtualizing="True"
+                      VirtualizingPanel.VirtualizationMode="Recycling"
+                      ScrollViewer.CanContentScroll="True">
 
-                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
-                <DataGridTextColumn Header="Author ID" Binding="{Binding AuthorId}" Width="100"/>
-                <DataGridTextColumn Header="Stock" Binding="{Binding Quantity}" Width="100"/>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding BookId}" Width="60">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Margin" Value="10,0,0,0"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
-                <DataGridTemplateColumn Header="Actions" Width="120">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
-                                <ui:Button Icon="{ui:SymbolIcon Edit24}" 
-                           Appearance="Primary" 
-                           Margin="0,0,10,0"
-                           Command="{Binding DataContext.EditBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                           CommandParameter="{Binding}" />
+                    <DataGridTextColumn Header="Author ID" Binding="{Binding AuthorId}" Width="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Foreground" Value="#64748B"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
-                                <ui:Button Icon="{ui:SymbolIcon Delete24}" 
-                           Appearance="Danger" 
-                           Command="{Binding DataContext.DeleteBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                           CommandParameter="{Binding}" />
+                    <DataGridTextColumn Header="Stock" Binding="{Binding Quantity}" Width="100">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="Foreground" Value="{DynamicResource NavyLightBrush}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+                    <DataGridTemplateColumn Header="Actions" Width="140">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                                    <ui:Button Icon="{ui:SymbolIcon Edit24}" 
+                                               Appearance="Secondary" 
+                                               Background="{DynamicResource ContentBackgroundBrush}" Foreground="{DynamicResource SidebarBackgroundBrush}" BorderBrush="#CBD5E1"
+                                               Margin="0,0,10,0" Cursor="Hand"
+                                               Command="{Binding DataContext.EditBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                               CommandParameter="{Binding}" />
+
+                                    <ui:Button Icon="{ui:SymbolIcon Delete24}" 
+                                               Appearance="Danger" 
+                                               Background="{DynamicResource ErrorPrimaryBrush}" Foreground="White" BorderThickness="0" Cursor="Hand"
+                                               Command="{Binding DataContext.DeleteBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                               CommandParameter="{Binding}" />
+
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
     </Grid>
 </Page>

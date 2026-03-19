@@ -20,12 +20,20 @@ namespace BookStore_Management_AppDesktop.Views.Windows
         public CustomMessageBox(string message)
         {
             InitializeComponent();
-            txtMessage.Text = message; // Gắn chữ lên giao diện
+            txtMessage.Text = message; 
         }
 
         private void BtnOk_Click(object sender, RoutedEventArgs e)
         {
-            this.Close(); // Bấm OK thì tắt thông báo
+            this.Close();
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
         }
     }
 }

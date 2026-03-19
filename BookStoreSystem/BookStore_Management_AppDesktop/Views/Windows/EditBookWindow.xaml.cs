@@ -24,10 +24,8 @@ namespace BookStore_Management_AppDesktop.Views.Windows
         {
             InitializeComponent();
 
-            // Khởi tạo ViewModel và truyền cuốn sách vào
             var viewModelEdit = new EditBookViewModel(bookToEdit);
 
-            // Lắng nghe sự kiện từ ViewModel để báo lỗi hoặc đóng form
             viewModelEdit.OnShowMessage = (message) =>
             {
                 var msgBox = new CustomMessageBox(message);
@@ -36,6 +34,14 @@ namespace BookStore_Management_AppDesktop.Views.Windows
             viewModelEdit.OnRequestClose = () => this.Close();
 
             this.DataContext = viewModelEdit;
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
+            {
+                this.DragMove();
+            }
         }
     }
 }

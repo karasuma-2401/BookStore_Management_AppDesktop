@@ -33,43 +33,43 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             var booksFromApi = await _apiService.GetAllBooksAsync();
 
-            Books.Clear();
-            foreach (var book in booksFromApi)
-            {
-                Books.Add(book);
-            }
+            Books = new ObservableCollection<Book>(booksFromApi);
         }
+
+        public Action<string>? OnShowMessage { get; set; }
+
+        public Func<string, string, Task<bool>>? OnRequestConfirm { get; set; }
 
         [RelayCommand]
         private async Task DeleteBookAsync(Book selectedBook)
         {
             if (selectedBook == null) return;
 
-            var result = MessageBox.Show($"Bạn có chắc chắn muốn xóa cuốn sách '{selectedBook.Title}' không?",
-                                         "Xác nhận xóa",
-                                         MessageBoxButton.YesNo,
-                                         MessageBoxImage.Warning);
+            bool isConfirmed = false;
+            if (OnRequestConfirm != null)
+            {
+                isConfirmed = await OnRequestConfirm.Invoke("Xác nhận xóa", $"Bạn có chắc chắn muốn xóa cuốn sách '{selectedBook.Title}' không?");
+            }
 
-            if (result == MessageBoxResult.Yes)
+            if (isConfirmed)
             {
                 bool isSuccess = await _apiService.DeleteBookAsync(selectedBook.BookId);
 
                 if (isSuccess)
                 {
-
                     var cloudinaryService = new CloudinaryService();
-                    await cloudinaryService.DeleteImageAsync(selectedBook.ImagePath);
+                    await cloudinaryService.DeleteImageAsync(selectedBook.ImagePath); // Cẩn thận tên biến ảnh nhé
 
-                    MessageBox.Show("Xóa sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-
+                    OnShowMessage?.Invoke("Xóa sách thành công!");
                     await LoadDataAsync();
                 }
                 else
                 {
-                    MessageBox.Show("Xóa thất bại! Vui lòng kiểm tra lại kết nối.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    OnShowMessage?.Invoke("Xóa thất bại! Vui lòng kiểm tra lại kết nối.");
                 }
             }
         }
+
 
         [RelayCommand]
         private async Task EditBook(Book selectedBook)
