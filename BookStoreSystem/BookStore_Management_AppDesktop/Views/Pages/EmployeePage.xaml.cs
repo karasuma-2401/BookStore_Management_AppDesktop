@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BookStore_Management_AppDesktop.ViewModels;
 
 namespace BookStore_Management_AppDesktop.Views.Pages
 {
@@ -21,6 +22,8 @@ namespace BookStore_Management_AppDesktop.Views.Pages
         public EmployeePage()
         {
             InitializeComponent();
+            // Gán ViewModel để UI có thể Binding dữ liệu từ danh sách Employees
+            this.DataContext = new EmployeeViewModel();
         }
     }
 }

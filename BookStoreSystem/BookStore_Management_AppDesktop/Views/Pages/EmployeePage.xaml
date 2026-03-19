@@ -3,17 +3,144 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       xmlns:local="clr-namespace:BookStore_Management_AppDesktop.Views.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="750" d:DesignWidth="1100"
       Title="EmployeePage">
 
-    <Grid>
-        <TextBlock Text="👥 MÀN HÌNH QUẢN LÝ NHÂN VIÊN (NHÁP)"
-                   FontSize="32" 
-                   FontWeight="Bold" 
-                   HorizontalAlignment="Center" 
-                   VerticalAlignment="Center"
-                   Foreground="Black"/>
+    <Grid Background="#F3F4F6">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Margin="40,25,40,15" LastChildFill="False">
+            <TextBlock Text="Employee Management" FontSize="28" FontWeight="Bold" Foreground="#111827" VerticalAlignment="Center"/>
+
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                <ui:Button Icon="{ui:SymbolIcon Symbol=Search24, Filled=True}" Appearance="Transparent" Foreground="#4B5563"/>
+
+                <Grid Width="40" Height="40" Margin="10,0">
+                    <ui:Button Icon="{ui:SymbolIcon Symbol=Alert24, Filled=True}" Appearance="Transparent" Foreground="#4B5563" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Border Width="10" Height="10" CornerRadius="5" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,8,0" 
+                            Background="#EF4444" BorderBrush="White" BorderThickness="1.5"/>
+                </Grid>
+
+                <Separator Margin="10,5" Height="25" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+
+                <ui:Button Icon="{ui:SymbolIcon Symbol=SignOut24, Filled=True}" Appearance="Transparent" Foreground="#4B5563" Margin="10,0"/>
+
+                <TextBlock Text="Administrator" VerticalAlignment="Center" Margin="5,0,10,0" FontWeight="SemiBold" Foreground="#374151"/>
+                <Ellipse Width="38" Height="38" Fill="#D1D5DB" Stroke="White" StrokeThickness="1"/>
+            </StackPanel>
+        </DockPanel>
+
+        <DockPanel Grid.Row="1" Margin="40,0,40,20">
+            <ui:Button Background="#1E7E34" 
+                       BorderBrush="#1E7E34"
+                       Foreground="White"
+                       Padding="18,10"
+                       CornerRadius="10">
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="AddCircle24" Filled="True" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="Add New Employee" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <ui:SymbolIcon Symbol="CursorClick24" Filled="True" FontSize="18" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </ui:Button>
+        </DockPanel>
+
+        <Border Grid.Row="2" 
+                Margin="40,0,40,30" 
+                Background="White" 
+                BorderBrush="#E5E7EB" 
+                BorderThickness="1" 
+                CornerRadius="12">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" Direction="270" ShadowDepth="2" Opacity="0.06" Color="Black"/>
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="25,20,25,10">
+                    <TextBlock Text="Employee List" FontSize="20" FontWeight="Bold" Foreground="#1F2937"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <ui:Button Content="Sort" Icon="{ui:SymbolIcon Symbol=ArrowSort24, Filled=True}" 
+                                   Appearance="Transparent" Foreground="#6B7280" FontWeight="Medium" Margin="0,0,12,0"/>
+                        <ui:Button Content="Filter" Icon="{ui:SymbolIcon Symbol=Filter24, Filled=True}" 
+                                   Appearance="Transparent" Foreground="#6B7280" FontWeight="Medium"/>
+                    </StackPanel>
+                </Grid>
+
+                <ListView Grid.Row="1" 
+                          ItemsSource="{Binding Employees}" 
+                          Margin="15,5" 
+                          BorderThickness="0" 
+                          Background="Transparent"
+                          Focusable="False">
+                    <ListView.View>
+                        <GridView>
+                            <GridView.ColumnHeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="#9CA3AF"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Padding" Value="12,12"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="BorderBrush" Value="#F3F4F6"/>
+                                </Style>
+                            </GridView.ColumnHeaderContainerStyle>
+
+                            <GridViewColumn Header="User ID" Width="100" DisplayMemberBinding="{Binding UserId}"/>
+                            <GridViewColumn Header="Employee ID" Width="120" DisplayMemberBinding="{Binding EmployeeId}"/>
+                            <GridViewColumn Header="Username" Width="200" DisplayMemberBinding="{Binding Username}"/>
+                            <GridViewColumn Header="Address" Width="250" DisplayMemberBinding="{Binding Address}"/>
+                            <GridViewColumn Header="Phone" Width="150" DisplayMemberBinding="{Binding PhoneNumber}"/>
+                            <GridViewColumn Header="Full Name" Width="250" DisplayMemberBinding="{Binding FullName}"/>
+
+                            <GridViewColumn Header="" Width="60">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ui:Button Icon="{ui:SymbolIcon Symbol=MoreVertical24, Filled=True}" 
+                                                   Appearance="Transparent" Foreground="#9CA3AF" Padding="4"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <Border Grid.Row="2" BorderBrush="#F3F4F6" BorderThickness="0,1,0,0" Padding="25,15,25,20">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <TextBlock Text="Items per page:" VerticalAlignment="Center" Foreground="#6B7280" Margin="0,0,10,0"/>
+                            <ComboBox Width="75" 
+                                      ItemsSource="{Binding PageSizeOptions}"
+                                      SelectedItem="{Binding PageSize}"
+                                      BorderThickness="1" BorderBrush="#E5E7EB" Background="#F9FAFB"/>
+
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="25,0">
+                                <TextBlock Text="{Binding CurrentPageStart}" FontWeight="Bold" Foreground="#374151"/>
+                                <TextBlock Text="-" Margin="3,0" Foreground="#374151"/>
+                                <TextBlock Text="{Binding CurrentPageEnd}" FontWeight="Bold" Foreground="#374151"/>
+                                <TextBlock Text=" of " Foreground="#6B7280"/>
+                                <TextBlock Text="{Binding TotalEmployees}" FontWeight="Bold" Foreground="#374151"/>
+                            </StackPanel>
+
+                            <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronLeft24, Filled=True}" Appearance="Transparent" Foreground="#4B5563" Margin="5,0"/>
+                            <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronRight24, Filled=True}" Appearance="Transparent" Foreground="#4B5563"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
 </Page>
