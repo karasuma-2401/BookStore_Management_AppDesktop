@@ -31,5 +31,17 @@ namespace BookStoreManagement.API.Models.Entities
 
         [Column("created_at")]
         public DateTime CreatedAt {get; set;} = DateTime.UtcNow;
+
+        [Column("reset_token")]
+        public string? ResetToken { get; set; }
+
+        [Column("reset_token_expires")]
+        public DateTime? ResetTokenExpires { get; set; }
+
+        [Column("email")]
+        public string Email { get; set; } = string.Empty;
+
+        public virtual Employee? Employee { get; set; }
+
     }
 }

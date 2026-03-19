@@ -98,24 +98,5 @@
             FontSize="16"
             FontWeight="Bold"
             Foreground="{DynamicResource NavyPrimaryBrush}" />
-
-        <StackPanel
-            Margin="0,35,0,0"
-            HorizontalAlignment="Center"
-            Orientation="Horizontal">
-            <TextBlock
-                VerticalAlignment="Center"
-                FontSize="14"
-                Foreground="{DynamicResource TextSecondBrush}"
-                Text="Don't have an account? " />
-            <ui:Button
-                Padding="5,0"
-                Appearance="Transparent"
-                Command="{Binding SwitchToSignUpCommand}"
-                Content="Sign up now"
-                FontSize="14"
-                FontWeight="SemiBold"
-                Foreground="{DynamicResource NavyAccentBrush}" />
-        </StackPanel>
     </StackPanel>
 </UserControl>

@@ -1,4 +1,4 @@
-namespace BookStore_Management_AppDesktop.Models
+namespace BookStore_Management_AppDesktop.Models.Dtos
 {
     public class LoginRequestModel
     {
