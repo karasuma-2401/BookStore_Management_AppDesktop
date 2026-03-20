@@ -9,7 +9,8 @@
       Title="BookPage"
       Background="{DynamicResource ContentBackgroundBrush}"
       TextOptions.TextFormattingMode="Display"
-      UseLayoutRounding="True">
+      UseLayoutRounding="True"
+      Loaded="Page_Loaded">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -78,13 +79,12 @@
 
                                 <Image Height="250" Stretch="UniformToFill"
                                        RenderOptions.BitmapScalingMode="LowQuality"
-                                       RenderOptions.EdgeMode="Aliased">
-                                    <Image.Source>
-                                        <BitmapImage UriSource="{Binding CoverImagePath, IsAsync=True, TargetNullValue='https://via.placeholder.com/180x250?text=No+Image', FallbackValue='https://via.placeholder.com/180x250?text=No+Image'}" 
-                                                     DecodePixelWidth="200" 
-                                                     CacheOption="OnLoad" />
-                                    </Image.Source>
+                                       RenderOptions.EdgeMode="Aliased"
+                                       Source="{Binding ImagePath, IsAsync=True, 
+                                    TargetNullValue='https://via.placeholder.com/180x250?text=No+Image', 
+                                    FallbackValue='https://via.placeholder.com/180x250?text=No+Image'}">
                                 </Image>
+
                             </Border>
 
                             <TextBlock Text="{Binding Title}" 
