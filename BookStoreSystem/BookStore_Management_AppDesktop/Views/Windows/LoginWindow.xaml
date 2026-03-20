@@ -53,7 +53,7 @@
         </ItemsControl>
         <Border
             Grid.Column="1"
-            Width="385"
+            Width="auto"
             Height="auto"
             Margin="15,0,15,0"
             HorizontalAlignment="Center"
@@ -133,64 +133,6 @@
 
                 </StackPanel>
 
-                <StackPanel VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
-                    <StackPanel.RenderTransform>
-                        <TranslateTransform X="100" />
-                    </StackPanel.RenderTransform>
-
-                    <StackPanel.Style>
-                        <Style TargetType="StackPanel">
-                            <Setter Property="IsHitTestVisible" Value="False" />
-                            <Setter Property="Opacity" Value="0" />
-
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsSignUpFormVisible}" Value="True">
-                                    <Setter Property="IsHitTestVisible" Value="True" />
-
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation
-                                                    Storyboard.TargetProperty="Opacity"
-                                                    To="1"
-                                                    Duration="0:0:0.3" />
-                                                <DoubleAnimation
-                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                    From="100"
-                                                    To="0"
-                                                    Duration="0:0:0.4">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CubicEase EasingMode="EaseOut" />
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.EnterActions>
-
-                                    <DataTrigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation
-                                                    Storyboard.TargetProperty="Opacity"
-                                                    To="0"
-                                                    Duration="0:0:0.3" />
-                                                <DoubleAnimation
-                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                    To="100"
-                                                    Duration="0:0:0.4">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CubicEase EasingMode="EaseIn" />
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.ExitActions>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Style>
-                    <components:SignUpForm />
-                </StackPanel>
 
                 <StackPanel VerticalAlignment="Center" RenderTransformOrigin="0.5, 0.5">
                     <StackPanel.RenderTransform>

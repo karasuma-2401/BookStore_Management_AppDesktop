@@ -22,6 +22,9 @@ namespace BookStoreManagement.API.Models.Entities
         [Column("quantity")]
         public int Quantity {get; set;} = 0;
 
+        [Column("image_path")]
+        public string ImagePath { get; set; } = string.Empty;
+
         [ForeignKey("AuthorId")]
         public Author? Author {get; set;}
         

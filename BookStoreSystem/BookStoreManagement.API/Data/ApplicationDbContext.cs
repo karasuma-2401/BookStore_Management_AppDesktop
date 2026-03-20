@@ -21,6 +21,9 @@ namespace BookStoreManagement.API.Data
         public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
         public DbSet<Import> Imports { get; set; }
         public DbSet<ImportDetail> ImportDetails { get; set; }
+        public DbSet<Employee> Employees { get; set;  }
+        public DbSet<Shift> Shifts { get; set;  }
+        public DbSet<EmployeeShift> EmployeeShifts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,12 +42,19 @@ namespace BookStoreManagement.API.Data
                     UserId = 1,
                     Username = "admin",
                     // remember hash password by brcypt
-                    PasswordHash = "$2a$12$kLRmN/MLkfha9kaVD.zPHOT7NHIlGPwoQ.FkyzQ.MHGa9.Oo3FT6u",
+                    PasswordHash = "$2a$12$D1vG.G0.iA22bZ3hU.Z8/e2xK.6kX4A1X.N/H.8H.J.K.U.V.Q.C.q",
                     FullName = "Adminstrator",
+                    Email = "truongnhattien222@gmail.com",
                     RoleId = "admin",
                     CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
                 }
             );
+
+            modelBuilder.Entity<Employee>()
+            .HasOne(e => e.User)
+            .WithOne(u => u.Employee)
+            .HasForeignKey<Employee>(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

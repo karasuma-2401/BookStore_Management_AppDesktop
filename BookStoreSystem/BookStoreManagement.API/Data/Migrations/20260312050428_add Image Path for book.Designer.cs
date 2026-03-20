@@ -3,17 +3,20 @@ using System;
 using BookStoreManagement.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BookStoreManagement.API.Migrations
+namespace BookStoreManagement.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260312050428_add Image Path for book")]
+    partial class addImagePathforbook
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -426,11 +429,6 @@ namespace BookStoreManagement.API.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("email");
-
                     b.Property<string>("FullName")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
@@ -440,14 +438,6 @@ namespace BookStoreManagement.API.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("password_hash");
-
-                    b.Property<string>("ResetToken")
-                        .HasColumnType("text")
-                        .HasColumnName("reset_token");
-
-                    b.Property<DateTime?>("ResetTokenExpires")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("reset_token_expires");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
@@ -469,7 +459,6 @@ namespace BookStoreManagement.API.Migrations
                         {
                             UserId = 1,
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "truongnhattien222@gmail.com",
                             FullName = "Adminstrator",
                             PasswordHash = "$2a$12$D1vG.G0.iA22bZ3hU.Z8/e2xK.6kX4A1X.N/H.8H.J.K.U.V.Q.C.q",
                             RoleId = "admin",
@@ -503,17 +492,6 @@ namespace BookStoreManagement.API.Migrations
                     b.Navigation("Book");
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Employee", b =>
-                {
-                    b.HasOne("BookStoreManagement.API.Models.Entities.User", "User")
-                        .WithOne("Employee")
-                        .HasForeignKey("BookStoreManagement.API.Models.Entities.Employee", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BookStoreManagement.API.Models.Entities.EmployeeShift", b =>
@@ -641,11 +619,6 @@ namespace BookStoreManagement.API.Migrations
             modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Import", b =>
                 {
                     b.Navigation("ImportDetails");
-                });
-
-            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.User", b =>
-                {
-                    b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618
         }
