@@ -19,7 +19,6 @@ namespace BookStore_Management_AppDesktop.Views.Windows
         {
             InitializeComponent();
 
-            // Thiết lập ngữ cảnh dữ liệu (DataContext) để kích hoạt cơ chế Data Binding của MVVM
             this.DataContext = viewModel;
 
             navigationService.SetFrame(RootFrame);
