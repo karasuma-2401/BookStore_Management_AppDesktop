@@ -22,11 +22,11 @@ namespace BookStore_Management_AppDesktop
 
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
-            var LoginWindow = ServiceProvider.GetRequiredService<LoginWindow>();
-            LoginWindow.Show();
+            //var LoginWindow = ServiceProvider.GetRequiredService<LoginWindow>();
+            //LoginWindow.Show();
 
-            //var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
-            //mainWindow.Show();
+            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+            mainWindow.Show();
         }
 
         private void ConfigureServices(IServiceCollection services)

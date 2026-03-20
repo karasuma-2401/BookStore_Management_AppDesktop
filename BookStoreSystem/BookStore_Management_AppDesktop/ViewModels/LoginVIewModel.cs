@@ -15,7 +15,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly IAuthService _authService;
         private readonly INavigationService _navigationService;
-        public Action CloseAction { get; set; }
+        public Action? CloseAction { get; set; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
