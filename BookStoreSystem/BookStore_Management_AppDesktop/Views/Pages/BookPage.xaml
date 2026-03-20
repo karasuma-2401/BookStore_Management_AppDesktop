@@ -7,16 +7,17 @@
       mc:Ignorable="d" 
       d:DesignHeight="700" d:DesignWidth="1000"
       Title="BookPage"
-      Background="#FFFFFF">
+      Background="{DynamicResource ContentBackgroundBrush}"
+      TextOptions.TextFormattingMode="Display"
+      UseLayoutRounding="True">
 
-    <Grid TextElement.Foreground="Black">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--#region Header & ToolBar-->
-        <Border Grid.Row="0" Background="#131921" Padding="25,15">
+        <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -25,34 +26,34 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="Books" FontSize="28" 
-                           FontWeight="Bold" 
-                           VerticalAlignment="Center" Foreground="White"/>
+                           FontWeight="Black" 
+                           VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}"/>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <ui:TextBox PlaceholderText="Search books..." 
                                 Icon="{ui:SymbolIcon Search24}" Width="300" Margin="0,0,15,0" 
-                                VerticalAlignment="Center" Cursor="Pen"
-                                Background="Transparent" Foreground="White"/>
+                                VerticalAlignment="Center" Cursor="IBeam"
+                                Background="{DynamicResource NavyPrimaryBrush}" 
+                                Foreground="{DynamicResource TextPrimaryBrush}"
+                                BorderBrush="{DynamicResource NavyLightBrush}"/>
 
                     <ui:Button Icon="{ui:SymbolIcon Filter24}" Appearance="Secondary" 
-                               Margin="0,0,10,0" ToolTip="Filter Books"
-                               Cursor="Hand"/>
+                               Background="{DynamicResource NavyLightBrush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0"
+                               Margin="0,0,10,0" ToolTip="Filter Books" Cursor="Hand"/>
 
                     <ui:Button Icon="{ui:SymbolIcon Cart24}" Appearance="Primary" 
-                               ToolTip="View Shopping Cart" Padding="8,6"
-                               Cursor="Hand"/>
+                               Background="{DynamicResource NavyAccentBrush}" Foreground="White" BorderThickness="0" FontWeight="Bold"
+                               ToolTip="View Shopping Cart" Padding="12,6" Cursor="Hand"/>
                 </StackPanel>
             </Grid>
         </Border>
-        <!--#endregion-->
-        
-        <!--region Book Card-->
         <ListView x:Name="BooksListView"
+                  Grid.Row="1"
                   ItemsSource="{Binding Books}" 
-                  Background="White"
+                  Background="Transparent"
                   BorderThickness="0"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.ColumnSpan="2" 
-                  Margin="0,62,0,0" Grid.RowSpan="2" d:ItemsSource="{d:SampleData ItemCount=5}">
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  Padding="10,10,10,20">
 
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -63,45 +64,56 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Border Width="210" 
-                            Background="#F7F9FA" 
-                            Margin="30, 10, 10, 10"
-                            BorderBrush="#E8E8E8" 
+                            Background="{DynamicResource CardBackgroundBrush}" 
+                            Margin="15"
+                            BorderBrush="#E2E8F0" 
                             BorderThickness="1" 
-                            CornerRadius="10">
+                            CornerRadius="12">
                         <Border.Effect>
-                            <DropShadowEffect Color="#000000" Opacity="0.08" BlurRadius="8" ShadowDepth="2"/>
+                            <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="10" ShadowDepth="3"/>
                         </Border.Effect>
 
                         <StackPanel Margin="12">
-                            <Border CornerRadius="6" ClipToBounds="True" Margin="12,12,12,12">
-                                <Image Source="{Binding CoverImagePath}" Height="250" Stretch="UniformToFill" />
+                            <Border CornerRadius="8" ClipToBounds="True" Margin="0,0,0,12" Background="{DynamicResource ContentBackgroundBrush}">
+
+                                <Image Height="250" Stretch="UniformToFill"
+                                       RenderOptions.BitmapScalingMode="LowQuality"
+                                       RenderOptions.EdgeMode="Aliased">
+                                    <Image.Source>
+                                        <BitmapImage UriSource="{Binding CoverImagePath, IsAsync=True, TargetNullValue='https://via.placeholder.com/180x250?text=No+Image', FallbackValue='https://via.placeholder.com/180x250?text=No+Image'}" 
+                                                     DecodePixelWidth="200" 
+                                                     CacheOption="OnLoad" />
+                                    </Image.Source>
+                                </Image>
                             </Border>
 
                             <TextBlock Text="{Binding Title}" 
                                        FontWeight="Bold" 
-                                       FontSize="15" 
-                                       Foreground="#0F1111"
+                                       FontSize="16" 
+                                       Foreground="#1E293B"
                                        TextWrapping="Wrap" 
-                                       Height="42" 
+                                       Height="44" 
                                        TextTrimming="CharacterEllipsis"
                                        Margin="0,0,0,4"/>
 
-                            <TextBlock Text="{Binding Author}" 
-                                       Foreground="#565959" 
+                            <TextBlock Text="{Binding AuthorId}" 
+                                       Foreground="#64748B" 
                                        FontSize="13" 
                                        Margin="0,0,0,8"/>
 
-                            <TextBlock Text="{Binding Price}" 
-                                       FontWeight="Bold" 
+                            <TextBlock Text="{Binding Price, TargetNullValue='150.000đ'}" 
+                                       FontWeight="Black" 
                                        FontSize="18" 
-                                       Foreground="#B12704" 
-                                       Margin="0,0,0,10"/>
+                                       Foreground="{DynamicResource ErrorPrimaryBrush}" 
+                                       Margin="0,0,0,12"/>
+
                             <ui:Button Content="Add to Cart"
                                        Icon="{ui:SymbolIcon Cart24}"
                                        Appearance="Primary"
+                                       Background="{DynamicResource NavyAccentBrush}" Foreground="White" BorderThickness="0"
                                        HorizontalAlignment="Stretch"
                                        Cursor="Hand"
-                                       FontWeight="SemiBold"/>
+                                       FontWeight="Bold"/>
                         </StackPanel>
                     </Border>
                 </DataTemplate>
@@ -112,6 +124,7 @@
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Margin" Value="0"/>
                     <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Cursor" Value="Hand"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListViewItem">
@@ -122,7 +135,5 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-
-        <!--#endregion-->
     </Grid>
 </Page>

@@ -39,7 +39,6 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
                     case PageType.Employees:
                         newPage = new EmployeePage();
                         break;
-                        // Mở rộng các Page khác...
                 }
 
 
