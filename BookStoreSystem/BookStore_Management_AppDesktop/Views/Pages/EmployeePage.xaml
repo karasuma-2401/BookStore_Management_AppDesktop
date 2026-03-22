@@ -31,6 +31,14 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="AvatarCircleStyle" TargetType="Ellipse">
+            <Setter Property="Opacity" Value="1.0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.8"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Page.Resources>
 
     <Grid Background="{DynamicResource ContentBackgroundBrush}">
@@ -51,7 +59,21 @@
                 <Separator Height="30" Background="{DynamicResource TextSecondBrush}" Width="3"/>
                 <ui:Button Icon="{ui:SymbolIcon Symbol=SignOut24, Filled=True}" Appearance="Transparent" Foreground="{DynamicResource TextThirdBrush }" Margin="30 0 0 0" FontSize="25"/>
                 <TextBlock Text="Administrator" VerticalAlignment="Center" Margin="5,0,10,0" FontWeight="SemiBold" Foreground="{DynamicResource TextThirdBrush}"/>
-                <Ellipse Width="38" Height="38" Fill="{DynamicResource NavyLightBrush}" Stroke="{DynamicResource CardBackgroundBrush}" StrokeThickness="1"/>
+                <Border Width="54" Height="54" 
+                    CornerRadius="27" 
+                    BorderBrush="{DynamicResource SidebarAccentBrush}" 
+                    BorderThickness="2"
+                    Margin="5,0,0,0"
+                    VerticalAlignment="Center">
+                    <Ellipse Width="50" Height="50" Cursor="Hand">
+                        <Ellipse.InputBindings>
+                            <MouseBinding MouseAction="LeftClick" Command="{Binding OpenAvatarModalCommand}"/>
+                        </Ellipse.InputBindings>
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding CurrentAvatarPath}" Stretch="UniformToFill" />
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </Border>
             </StackPanel>
         </DockPanel>
 
@@ -97,6 +119,7 @@
                           Background="Transparent"
                           BorderThickness="0"
                           RowHeight="50"
+                          CanUserResizeColumns="False"
                           Margin="20,0"
                           IsReadOnly="True"
                           VerticalScrollBarVisibility="Auto"
@@ -159,51 +182,57 @@
                 </DataGrid>
 
                 <Border Grid.Row="2" BorderBrush="{DynamicResource ContentBackgroundBrush}" BorderThickness="0,1,0,0" Padding="25,15,25,20">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <TextBlock Text="Lines per page: " 
-                               VerticalAlignment="Center" 
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+
+                        <TextBlock Text="Dòng mỗi trang" 
+                           VerticalAlignment="Center" 
+                           Foreground="{DynamicResource TextSecondBrush}" 
+                           FontSize="13" 
+                           Margin="0,0,15,0"/>
+
+                        <TextBlock Text="{Binding PageSize}" 
+                           VerticalAlignment="Center" 
+                           Foreground="{DynamicResource TextThirdBrush}" 
+                           FontSize="14" 
+                           FontWeight="SemiBold"
+                           Margin="0,0,5,0"/>
+
+                        <Grid VerticalAlignment="Center" Margin="0,0,40,0">
+                            <ui:SymbolIcon Symbol="ChevronDown24" 
+                               Filled="False" 
                                Foreground="{DynamicResource TextSecondBrush}" 
-                               Margin="0,0,8,0" 
-                               FontSize="13"/>
-
-                        <Grid VerticalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <ComboBox Grid.Column="0" 
-                                  Grid.ColumnSpan="2"
-                                  Width="60" 
-                                  ItemsSource="{Binding PageSizeOptions}" 
+                               FontSize="10"
+                               IsHitTestVisible="False"/>
+                            <ComboBox ItemsSource="{Binding PageSizeOptions}" 
                                   SelectedItem="{Binding PageSize}" 
-                                  Background="Transparent" 
-                                  BorderThickness="0"
-                                  Foreground="{DynamicResource TextThirdBrush}"
-                                  FontSize="10"
-                                  VerticalAlignment="Center"
-                                  HorizontalContentAlignment="Left"/>
+                                  Width="20" Height="20"
+                                  Background="Transparent" BorderThickness="0"
+                                  Opacity="0.01" Cursor="Hand"/>
+                        </Grid>
 
-                            <ui:SymbolIcon Grid.Column="1"
-                                   Symbol="ChevronDown24" 
-                                   Filled="False" 
-                                   Foreground="{DynamicResource TextSecondBrush}" 
-                                   HorizontalAlignment="Right" 
-                                   VerticalAlignment="Center"
-                                   IsHitTestVisible="False"
-                                   FontSize="12"
-                                   Margin="0,2,5,0"/>
-                        </Grid> 
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
-                            <TextBlock Text="{Binding CurrentPageStart}" Foreground="{DynamicResource TextThirdBrush}"/>
-                            <TextBlock Text="-" Margin="2,0" Foreground="{DynamicResource TextThirdBrush}"/>
-                            <TextBlock Text="{Binding CurrentPageEnd}" Foreground="{DynamicResource TextThirdBrush}"/>
-                            <TextBlock Text=" of     " Foreground="{DynamicResource TextSecondBrush}"/>
-                            <TextBlock Text="{Binding TotalEmployees}" Foreground="{DynamicResource TextThirdBrush}"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,30,0">
+                            <TextBlock Text="{Binding CurrentPageStart}" Foreground="{DynamicResource TextThirdBrush}" FontSize="13"/>
+                            <TextBlock Text="-" Foreground="{DynamicResource TextThirdBrush}" Margin="2,0"/>
+                            <TextBlock Text="{Binding CurrentPageEnd}" Foreground="{DynamicResource TextThirdBrush}" FontSize="13"/>
+
+                            <TextBlock Text="of" Foreground="{DynamicResource TextSecondBrush}" FontSize="13" Margin="8,0"/>
+
+                            <TextBlock Text="{Binding TotalEmployees}" Foreground="{DynamicResource TextThirdBrush}" FontSize="13"/>
                         </StackPanel>
 
-                        <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronLeft24}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}"/>
-                        <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronRight24}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" Margin="5,0,0,0"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronLeft24}" 
+                               Appearance="Transparent" 
+                               Foreground="{DynamicResource TextSecondBrush}" 
+                               Padding="5"
+                               Margin="0,0,15,0"/>
+
+                            <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronRight24}" 
+                               Appearance="Transparent" 
+                               Foreground="{DynamicResource TextSecondBrush}" 
+                               Padding="5"/>
+                        </StackPanel>
+
                     </StackPanel>
                 </Border>
             </Grid>
