@@ -13,12 +13,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ui:Button}">
-                        <Border x:Name="ActionBorder"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="{TemplateBinding CornerRadius}"
-                                Padding="{TemplateBinding Padding}">
+                        <Border x:Name="ActionBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -31,6 +26,23 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="SoftHoverIconButtonStyle" TargetType="{x:Type ui:Button}" BasedOn="{StaticResource {x:Type ui:Button}}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="Opacity" Value="0.7"/>
+                </Trigger>
+
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="AvatarCircleStyle" TargetType="Ellipse">
             <Setter Property="Opacity" Value="1.0"/>
             <Style.Triggers>
@@ -41,7 +53,7 @@
         </Style>
     </Page.Resources>
 
-    <Grid Background="{DynamicResource ContentBackgroundBrush}">
+    <Grid Background="{DynamicResource TextPrimaryBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -51,21 +63,27 @@
         <DockPanel Grid.Row="0" Margin="40,25,40,15" LastChildFill="False">
             <TextBlock Text="Employee Management" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextThirdBrush}" VerticalAlignment="Center"/>
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                <ui:Button Icon="{ui:SymbolIcon Symbol=Search24, Filled=True}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" FontSize="15"/>
+                <ui:Button Icon="{ui:SymbolIcon Symbol=Search24, Filled=True}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" FontSize="15" Style="{StaticResource SoftHoverIconButtonStyle}"/>
                 <Grid Width="40" Height="40" Margin="10,0">
-                    <ui:Button Icon="{ui:SymbolIcon Symbol=Alert24, Filled=True}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+                    <ui:Button Icon="{ui:SymbolIcon Symbol=Alert24, Filled=True}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Style="{StaticResource SoftHoverIconButtonStyle}"/>
                     <Border Width="10" Height="10" CornerRadius="5" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,8,0" Background="{DynamicResource ErrorPrimaryBrush}" BorderBrush="{DynamicResource CardBackgroundBrush}" BorderThickness="1.5"/>
                 </Grid>
-                <Separator Height="30" Background="{DynamicResource TextSecondBrush}" Width="3"/>
-                <ui:Button Icon="{ui:SymbolIcon Symbol=SignOut24, Filled=True}" Appearance="Transparent" Foreground="{DynamicResource TextThirdBrush }" Margin="30 0 0 0" FontSize="25"/>
+                <Border Width="2" 
+                    Height="30" 
+                    Background="{DynamicResource TextSecondBrush}" 
+                    Margin="0,0,15,0" 
+                    Opacity="0.3"
+                    VerticalAlignment="Center"
+                    SnapsToDevicePixels="True"/>
+                <ui:Button Icon="{ui:SymbolIcon Symbol=SignOut24, Filled=True}" Appearance="Transparent" Foreground="{DynamicResource TextThirdBrush }" Margin="10 0 0 0" FontSize="25" Style="{StaticResource SoftHoverIconButtonStyle}"/>
                 <TextBlock Text="Administrator" VerticalAlignment="Center" Margin="5,0,10,0" FontWeight="SemiBold" Foreground="{DynamicResource TextThirdBrush}"/>
                 <Border Width="54" Height="54" 
-                    CornerRadius="27" 
-                    BorderBrush="{DynamicResource SidebarAccentBrush}" 
-                    BorderThickness="2"
-                    Margin="5,0,0,0"
-                    VerticalAlignment="Center">
-                    <Ellipse Width="50" Height="50" Cursor="Hand">
+                        CornerRadius="27" 
+                        BorderBrush="{DynamicResource SidebarAccentBrush}" 
+                        BorderThickness="2"
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Center">
+                    <Ellipse Width="50" Height="50" Cursor="Hand" Style="{StaticResource AvatarCircleStyle}">
                         <Ellipse.InputBindings>
                             <MouseBinding MouseAction="LeftClick" Command="{Binding OpenAvatarModalCommand}"/>
                         </Ellipse.InputBindings>
@@ -92,7 +110,7 @@
 
         <Border Grid.Row="2" Margin="40,0,40,30" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="20" Direction="270" ShadowDepth="2" Opacity="0.06" Color="Black"/>
+                <DropShadowEffect BlurRadius="10" ShadowDepth="1" Opacity="0.5" Color="Black"/>
             </Border.Effect>
 
             <Grid>
@@ -105,8 +123,8 @@
                 <Grid Grid.Row="0" Margin="25,20,25,10">
                     <TextBlock Text="Employee List" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextThirdBrush}"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <ui:Button Content="Sort" Icon="{ui:SymbolIcon Symbol=ArrowSort24}" Appearance="Transparent" Foreground="{DynamicResource TextThirdBrush }" Margin="0,0,12,0"/>
-                        <ui:Button Content="Filter" Icon="{ui:SymbolIcon Symbol=Filter24}" Appearance="Transparent" Foreground="{DynamicResource TextThirdBrush }"/>
+                        <ui:Button Content="Sort" Icon="{ui:SymbolIcon Symbol=ArrowSort24}" Appearance="Transparent" Foreground="{DynamicResource TextThirdBrush }" Margin="0,0,12,0" Style="{StaticResource SoftHoverIconButtonStyle}"/>
+                        <ui:Button Content="Filter" Icon="{ui:SymbolIcon Symbol=Filter24}" Appearance="Transparent" Foreground="{DynamicResource TextThirdBrush }" Style="{StaticResource SoftHoverIconButtonStyle}"/>
                     </StackPanel>
                 </Grid>
 
@@ -117,25 +135,29 @@
                           HeadersVisibility="Column"
                           GridLinesVisibility="None"
                           Background="Transparent"
+                          Foreground="{DynamicResource TextThirdBrush}"
                           BorderThickness="0"
                           RowHeight="50"
                           CanUserResizeColumns="False"
                           Margin="20,0"
                           IsReadOnly="True"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
                           VerticalScrollBarVisibility="Auto"
-                          ScrollViewer.CanContentScroll="True">
+                          ScrollViewer.CanContentScroll="True"
+                          PreviewMouseLeftButtonDown="EmployeeDataGrid_PreviewMouseLeftButtonDown">
 
                     <DataGrid.Resources>
                         <Style TargetType="DataGridCell">
-                            <Setter Property="Foreground" Value="{DynamicResource TextThirdBrush}"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
                             <Setter Property="VerticalAlignment" Value="Center"/>
                             <Setter Property="Padding" Value="12,0"/>
-                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                             <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="{DynamicResource SidebarAccentBrush}"/>
-                                    <Setter Property="Foreground" Value="{DynamicResource TextThirdBrush}"/>
-                                </Trigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </DataGrid.Resources>
@@ -157,6 +179,10 @@
                             <Setter Property="BorderThickness" Value="0,0,0,1"/>
                             <Setter Property="BorderBrush" Value="{DynamicResource ContentBackgroundBrush}"/>
                             <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource ContentBackground}"/>
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </Trigger>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="{DynamicResource ContentBackgroundBrush}"/>
                                 </Trigger>
@@ -183,56 +209,26 @@
 
                 <Border Grid.Row="2" BorderBrush="{DynamicResource ContentBackgroundBrush}" BorderThickness="0,1,0,0" Padding="25,15,25,20">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
-
-                        <TextBlock Text="Dòng mỗi trang" 
-                           VerticalAlignment="Center" 
-                           Foreground="{DynamicResource TextSecondBrush}" 
-                           FontSize="13" 
-                           Margin="0,0,15,0"/>
-
-                        <TextBlock Text="{Binding PageSize}" 
-                           VerticalAlignment="Center" 
-                           Foreground="{DynamicResource TextThirdBrush}" 
-                           FontSize="14" 
-                           FontWeight="SemiBold"
-                           Margin="0,0,5,0"/>
+                        <TextBlock Text="Lines per page" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondBrush}" FontSize="13" Margin="0,0,15,0"/>
+                        <TextBlock Text="{Binding PageSize}" VerticalAlignment="Center" Foreground="{DynamicResource TextThirdBrush}" FontSize="14" FontWeight="SemiBold" Margin="0,0,5,0"/>
 
                         <Grid VerticalAlignment="Center" Margin="0,0,40,0">
-                            <ui:SymbolIcon Symbol="ChevronDown24" 
-                               Filled="False" 
-                               Foreground="{DynamicResource TextSecondBrush}" 
-                               FontSize="10"
-                               IsHitTestVisible="False"/>
-                            <ComboBox ItemsSource="{Binding PageSizeOptions}" 
-                                  SelectedItem="{Binding PageSize}" 
-                                  Width="20" Height="20"
-                                  Background="Transparent" BorderThickness="0"
-                                  Opacity="0.01" Cursor="Hand"/>
+                            <ui:SymbolIcon Symbol="ChevronDown24" Filled="False" Foreground="{DynamicResource TextSecondBrush}" FontSize="10" IsHitTestVisible="False"/>
+                            <ComboBox ItemsSource="{Binding PageSizeOptions}" SelectedItem="{Binding PageSize}" Width="20" Height="20" Background="Transparent" BorderThickness="0" Opacity="0.01" Cursor="Hand"/>
                         </Grid>
 
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,30,0">
                             <TextBlock Text="{Binding CurrentPageStart}" Foreground="{DynamicResource TextThirdBrush}" FontSize="13"/>
                             <TextBlock Text="-" Foreground="{DynamicResource TextThirdBrush}" Margin="2,0"/>
                             <TextBlock Text="{Binding CurrentPageEnd}" Foreground="{DynamicResource TextThirdBrush}" FontSize="13"/>
-
                             <TextBlock Text="of" Foreground="{DynamicResource TextSecondBrush}" FontSize="13" Margin="8,0"/>
-
                             <TextBlock Text="{Binding TotalEmployees}" Foreground="{DynamicResource TextThirdBrush}" FontSize="13"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronLeft24}" 
-                               Appearance="Transparent" 
-                               Foreground="{DynamicResource TextSecondBrush}" 
-                               Padding="5"
-                               Margin="0,0,15,0"/>
-
-                            <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronRight24}" 
-                               Appearance="Transparent" 
-                               Foreground="{DynamicResource TextSecondBrush}" 
-                               Padding="5"/>
+                            <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronLeft24}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" Padding="5" Margin="0,0,15,0" Style="{StaticResource SoftHoverIconButtonStyle}"/>
+                            <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronRight24}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" Padding="5" Style="{StaticResource SoftHoverIconButtonStyle}"/>
                         </StackPanel>
-
                     </StackPanel>
                 </Border>
             </Grid>

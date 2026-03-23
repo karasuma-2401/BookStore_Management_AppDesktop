@@ -1,12 +1,15 @@
 ﻿using BookStore_Management_AppDesktop.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Win32;
-using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.Generic;
+using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -43,6 +46,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         [ObservableProperty]
         private int _pageSize = 8;
+
+
 
         // CONSTRUCTOR
         public EmployeeViewModel()
