@@ -226,8 +226,8 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronLeft24}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" Padding="5" Margin="0,0,15,0" Style="{StaticResource SoftHoverIconButtonStyle}"/>
-                            <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronRight24}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" Padding="5" Style="{StaticResource SoftHoverIconButtonStyle}"/>
+                            <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronLeft24}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" Padding="5" Style="{StaticResource SoftHoverIconButtonStyle}" Command="{Binding PreviousPageCommand}"/>
+                            <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronRight24}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" Padding="5" Style="{StaticResource SoftHoverIconButtonStyle}" Command="{Binding NextPageCommand}"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>

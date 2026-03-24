@@ -15,10 +15,28 @@ namespace BookStore_Management_AppDesktop.ViewModels
 {
     public partial class EmployeeViewModel : ObservableObject
     {
-        // 1. QUẢN LÝ DANH SÁCH NHÂN VIÊN
+        //Danh sách gốc chứa tất cả nhân viên
+        private List<Employee> _allEmployees = new();
+        // Danh sách nhân viên hiển thị trên datagrid
         [ObservableProperty]
         private ObservableCollection<Employee> _employees = new();
 
+        // 1. CẤU HÌNH PHÂN TRANG
+        // Trang hiện tại đang hiển thị (Mặc định là 1)
+        [ObservableProperty]
+        private int _currentPage = 1;
+
+        // Số lượng nhân viên hiển thị trên một trang (Mặc định là 10)
+        [ObservableProperty]
+        private int _pageSize = 8;
+
+        public List<int> PageSizeOptions { get; set; } = new List<int> { 5, 8, 10, 12, 15 };
+
+        //Các thuộc tính hỗ trợ hiển thị UI (Dòng bắt đầu , dòng kết thúc, tổng số trang)
+        public int TotalEmployees => _allEmployees.Count;
+        public int TotalPages => (int)Math.Ceiling((double)TotalEmployees / PageSize);
+        public int CurrentPageStart => (CurrentPage - 1) * PageSize + 1;
+        public int CurrentPageEnd => Math.Min(CurrentPage * PageSize, TotalEmployees);
         // 2. QUẢN LÝ AVATAR
         // Ảnh thực tế đang hiển thị của người dùng
         [ObservableProperty]
@@ -41,20 +59,50 @@ namespace BookStore_Management_AppDesktop.ViewModels
             "pack://siteoforigin:,,,/Resources/Images/Twenty Years Later.webp"
         };
 
-        // 3. CẤU HÌNH PHÂN TRANG
-        public List<int> PageSizeOptions { get; set; } = new List<int> { 4, 8, 12, 16 };
-
-        [ObservableProperty]
-        private int _pageSize = 8;
-
-
-
         // CONSTRUCTOR
         public EmployeeViewModel()
         {
             LoadFakeData();
+            UpdateDisplayList();
         }
 
+        // Tự động chạy khi PageSize thay đổi (tính năng của MVVM Toolkit)
+        partial void OnPageSizeChanged(int value)
+        {
+            CurrentPage = 1; // Reset về trang 1 khi đổi số dòng hiển thị
+            UpdateDisplayList();
+        }
+
+        // Tự động chạy khi CurrentPage thay đổi
+        partial void OnCurrentPageChanged(int value)
+        {
+            UpdateDisplayList();
+        }
+        void UpdateDisplayList()
+        {
+            Employees.Clear();
+            var itemsToShow = _allEmployees.Skip((CurrentPage - 1) * PageSize).Take(PageSize);
+            foreach (var emp in itemsToShow)
+            {
+                Employees.Add(emp);
+            }
+            OnPropertyChanged(nameof(TotalEmployees));
+            OnPropertyChanged(nameof(TotalPages));
+            OnPropertyChanged(nameof(CurrentPageStart));
+            OnPropertyChanged(nameof(CurrentPageEnd));
+        }
+
+        [RelayCommand]
+        private void NextPage()
+        {
+            if (CurrentPage < TotalPages) CurrentPage++;
+        }
+
+        [RelayCommand]
+        private void PreviousPage()
+        {
+            if (CurrentPage > 1) CurrentPage--;
+        }
         // --- COMMANDS ---
 
         /// <summary>
@@ -133,7 +181,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             for (int i = 1; i <= 20; i++)
             {
-                Employees.Add(new Employee
+                _allEmployees.Add(new Employee
                 {
                     UserId = i.ToString(),
                     EmployeeId = "NV" + i.ToString("D3"),
