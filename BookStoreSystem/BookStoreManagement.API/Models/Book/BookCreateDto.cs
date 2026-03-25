@@ -1,6 +1,6 @@
-namespace BookStoreManagement.API.DTOs.Books
+namespace BookStoreManagement.API.Models.Book
 {
-    public class BookUpdateDto
+    public class BookCreateDto
     {
         public string Title { get; set; } = string.Empty;
 

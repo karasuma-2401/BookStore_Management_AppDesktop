@@ -1,4 +1,4 @@
-﻿using BookStoreManagement.API.Models.DTOs;
+﻿using BookStoreManagement.API.Models.Auth;
 using BookStoreManagement.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,7 +26,5 @@ namespace BookStoreManagement.API.Controllers
             return result;
 
         }
-
-
     }
 }

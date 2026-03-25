@@ -1,6 +1,6 @@
 using BookStoreManagement.API.Models.Entities;
 
-namespace BookStoreManagement.API.Services.Interfaces
+namespace BookStoreManagement.API.Interfaces.Services
 {
     public interface IBookService
     {

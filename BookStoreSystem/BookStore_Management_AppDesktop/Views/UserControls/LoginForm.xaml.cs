@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace BookStore_Management_AppDesktop.Views.UserControls
 {
     public partial class LoginForm : UserControl

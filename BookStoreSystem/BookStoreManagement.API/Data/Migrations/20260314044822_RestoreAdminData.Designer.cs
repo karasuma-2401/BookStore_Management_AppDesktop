@@ -3,17 +3,20 @@ using System;
 using BookStoreManagement.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BookStoreManagement.API.Migrations
+namespace BookStoreManagement.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260314044822_RestoreAdminData")]
+    partial class RestoreAdminData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -308,17 +311,11 @@ namespace BookStoreManagement.API.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("user_id");
 
-                    b.Property<int?>("VoucherId")
-                        .HasColumnType("integer")
-                        .HasColumnName("voucher_id");
-
                     b.HasKey("InvoiceId");
 
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("VoucherId");
 
                     b.ToTable("invoices");
                 });
@@ -374,10 +371,6 @@ namespace BookStoreManagement.API.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("customer_id");
 
-                    b.Property<int>("InvoiceId")
-                        .HasColumnType("integer")
-                        .HasColumnName("invoice_id");
-
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("payment_date");
@@ -389,8 +382,6 @@ namespace BookStoreManagement.API.Migrations
                     b.HasKey("PaymentId");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("InvoiceId");
 
                     b.HasIndex("UserId");
 
@@ -487,46 +478,6 @@ namespace BookStoreManagement.API.Migrations
                             RoleId = "admin",
                             Username = "admin"
                         });
-                });
-
-            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Voucher", b =>
-                {
-                    b.Property<int>("VoucherId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("voucher_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("VoucherId"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("code");
-
-                    b.Property<decimal?>("DiscountAmount")
-                        .HasColumnType("decimal(10,2)")
-                        .HasColumnName("discount_amount");
-
-                    b.Property<int?>("DiscountPercent")
-                        .HasColumnType("integer")
-                        .HasColumnName("discount_percent");
-
-                    b.Property<DateTime?>("ExpiryDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("expiry_date");
-
-                    b.Property<int?>("UsageLimit")
-                        .HasColumnType("integer")
-                        .HasColumnName("usage_limit");
-
-                    b.Property<int>("UsedCount")
-                        .HasColumnType("integer")
-                        .HasColumnName("used_count");
-
-                    b.HasKey("VoucherId");
-
-                    b.ToTable("vouchers");
                 });
 
             modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Book", b =>
@@ -627,15 +578,9 @@ namespace BookStoreManagement.API.Migrations
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.HasOne("BookStoreManagement.API.Models.Entities.Voucher", "Voucher")
-                        .WithMany()
-                        .HasForeignKey("VoucherId");
-
                     b.Navigation("Customer");
 
                     b.Navigation("User");
-
-                    b.Navigation("Voucher");
                 });
 
             modelBuilder.Entity("BookStoreManagement.API.Models.Entities.InvoiceDetail", b =>
@@ -665,19 +610,11 @@ namespace BookStoreManagement.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookStoreManagement.API.Models.Entities.Invoice", "Invoice")
-                        .WithMany()
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BookStoreManagement.API.Models.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Invoice");
 
                     b.Navigation("User");
                 });

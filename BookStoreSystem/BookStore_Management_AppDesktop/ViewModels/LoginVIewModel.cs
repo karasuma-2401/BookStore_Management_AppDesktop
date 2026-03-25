@@ -7,6 +7,7 @@ using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.Views.UserControls;
 using System.ComponentModel.DataAnnotations;
 using BookStore_Management_AppDesktop.Services;
+using System.Windows.Threading;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -14,11 +15,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly IAuthService _authService;
         private readonly INavigationService _navigationService;
-        public Action CloseAction { get; set; }
+        public Action? CloseAction { get; set; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
-        [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
         private bool _isLoading = false;
 
         [ObservableProperty]
@@ -102,70 +102,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             IsLoading = false;
         }
         #endregion
-        #region Sign up
-
-        [ObservableProperty]
-        private bool _isSignUpFormVisible = false;
-
-        [ObservableProperty]
-        [NotifyDataErrorInfo]
-        [Required(ErrorMessage ="Fullname cannot be empty")]
-        [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
-        private string _signUpFullName = string.Empty;
-
-        [ObservableProperty]
-        [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Username cannot be empty")]
-        [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
-        private string _signUpUsername = string.Empty;
-
-        [ObservableProperty]
-        [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Password cannot be empty")]
-        [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
-        private string _signUpPassword = string.Empty;
-
-        [ObservableProperty]
-        [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Confirm Password cannot be empty")]
-        [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
-        private string _signUpConfirmPassword = string.Empty;
-
-        private bool CanSignUp()
-        {
-            return !String.IsNullOrWhiteSpace(SignUpFullName) && 
-                    !String.IsNullOrWhiteSpace(SignUpUsername) &&
-                    !String.IsNullOrWhiteSpace(SignUpPassword) &&
-                    !String.IsNullOrWhiteSpace(SignUpConfirmPassword) &&
-                    SignUpPassword == SignUpConfirmPassword &&
-                    !IsLoading;
-        }
-            
-        [RelayCommand(CanExecute =nameof(CanSignUp))]
-        private async Task SignUp()
-        {
-            ErrorMessage = string.Empty;
-            IsLoading = true;
-
-            // await time 1s to connection with BE
-            await Task.Delay (1000);
-            if (SignUpUsername == "admin")
-            {
-                IsSuccessMessage = false;
-                ErrorMessage = "This username already exists.";
-                IsLoading = false;
-                return;
-            }
-            IsSuccessMessage = true;
-            ErrorMessage = "Registration successful! Redirecting to the login page...";
-            Debug.WriteLine(ErrorMessage);
-
-            await Task.Delay(2000);
-            SwitchToLogin();
-
-            IsLoading = false;
-        }
-        #endregion
         #region ForgotPassword
 
         [ObservableProperty]
@@ -178,24 +114,31 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [NotifyDataErrorInfo]
         [Required(ErrorMessage = "Please enter your email")]
         [EmailAddress(ErrorMessage = "Invalid email format (e.g., example@gmail.com")]
+        [NotifyCanExecuteChangedFor(nameof(VerifyEmailCommand))]
         private string _resetEmail = string.Empty;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(VerifyOtpCommand))]
         private string _otpCode1 = string.Empty;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(VerifyOtpCommand))]
         private string _otpCode2 = string.Empty;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(VerifyOtpCommand))]
         private string _otpCode3 = string.Empty;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(VerifyOtpCommand))]
         private string _otpCode4 = string.Empty;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(VerifyOtpCommand))]
         private string _otpCode5 = string.Empty;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(VerifyOtpCommand))]
         private string _otpCode6 = string.Empty;
 
         [ObservableProperty]
@@ -204,36 +147,111 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty]
         [NotifyDataErrorInfo]
         [Required(ErrorMessage = "New Password is required")]
+        [NotifyCanExecuteChangedFor(nameof(ChangeToNewPasswordCommand))]
         private string _newPassword = string.Empty;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
         [Required(ErrorMessage = "Confirm new password is required")]
-        private string _confirmNewPassword = string.Empty;
+        [NotifyCanExecuteChangedFor(nameof(ChangeToNewPasswordCommand))]
+        private string _confirmPassword = string.Empty;
 
         public void IntegrateOtpCode ()
         {
             OtpCode = OtpCode1 + OtpCode2 + OtpCode3 + OtpCode4 + OtpCode5 + OtpCode6;
         }
 
-        // Step 1: verify email have existed in DB
+        #region 
+        private DispatcherTimer _countdownTimer;
+        private int _timeRemaining;
 
-        [RelayCommand]
+        [ObservableProperty]
+        private string _countdownText = "05:00";
+
+        [ObservableProperty]
+        private bool _isResendVisible = false;
+
+        private void UpdateCountdownText ()
+        {
+            TimeSpan time = TimeSpan.FromSeconds(_timeRemaining);
+            CountdownText = time.ToString(@"mm\:ss");
+        }
+        private void StartCountdown()
+        {
+            _timeRemaining = 300;
+            IsResendVisible = false;
+            UpdateCountdownText();
+
+            if (_countdownTimer == null)
+            {
+                _countdownTimer = new DispatcherTimer();
+                _countdownTimer.Interval = TimeSpan.FromSeconds(1);
+                _countdownTimer.Tick += Timer_Tick;
+            }
+
+            _countdownTimer.Start();
+        }
+
+        private void Timer_Tick (object sender, EventArgs e)
+        {
+            if (_timeRemaining > 0)
+            {
+                _timeRemaining--;
+                UpdateCountdownText();
+            }
+            else
+            {
+                _countdownTimer.Stop();
+                CountdownText = "00:00";
+                IsResendVisible = true;
+
+                IsSuccessMessage = false;
+                ErrorMessage = "OTP Code is expired. Please resend!";
+            }
+        }
+
+        #endregion
+
+        // Step 1: verify email have existed in DB
+        private bool CanVerifyEmail()
+        {
+            return !string.IsNullOrWhiteSpace(_resetEmail);
+        }
+        [RelayCommand(CanExecute = nameof(CanVerifyEmail))]
         private async Task VerifyEmail()
         {
             ErrorMessage = string.Empty;
 
             IsLoading = true;
-            await Task.Delay(2000);
+            var success = await _authService.ForgotPasswordAsync(ResetEmail);
+            if (!success)
+            {
+                IsSuccessMessage = false;
+                ErrorMessage = "Email is not existed";
+                IsLoading = false;
+                return;
+            }
 
             IsSuccessMessage = true;
             ErrorMessage = $"The OTP has been sent to your email";
             ForgotPasswordStep = 2;
+
+            StartCountdown();
+
             IsLoading = false;
         }
 
         // step 2 Send OTP to email, get OTP code
-        [RelayCommand]
+        private bool CanVerifyOtp()
+        {
+            return !string.IsNullOrWhiteSpace(OtpCode1) &&
+                   !string.IsNullOrWhiteSpace(OtpCode2) &&
+                   !string.IsNullOrWhiteSpace(OtpCode3) &&
+                   !string.IsNullOrWhiteSpace(OtpCode4) &&
+                   !string.IsNullOrWhiteSpace(OtpCode5) &&
+                   !string.IsNullOrWhiteSpace(OtpCode6);
+        }
+        [RelayCommand(CanExecute = nameof(CanVerifyOtp))]
         private async Task VerifyOtp()
         {
             ErrorMessage = string.Empty;
@@ -246,19 +264,23 @@ namespace BookStore_Management_AppDesktop.ViewModels
             }
 
             IsLoading = true;
-            await Task.Delay(20000);
             IsSuccessMessage = true;
             ErrorMessage = "Verification completed successfully";
+            _countdownTimer.Stop();
             ForgotPasswordStep = 3;
             IsLoading = false;
 
         }
-
-        [RelayCommand]
+        private bool CanChangeToNewPassword()
+        {
+            return !string.IsNullOrWhiteSpace(NewPassword) &&
+                   !string.IsNullOrWhiteSpace(ConfirmPassword);
+        }
+        [RelayCommand(CanExecute = nameof(CanChangeToNewPassword))]
         private async Task ChangeToNewPassword()
         {
             ErrorMessage = string.Empty;
-            if (NewPassword != ConfirmNewPassword)
+            if (NewPassword != ConfirmPassword)
             {
                 IsSuccessMessage = false;
                 ErrorMessage = "Passwords do not match";
@@ -266,7 +288,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
             }
 
             IsLoading = true;
-            await Task.Delay(2000);
+            var success = await _authService.ResetPasswordAsync(OtpCode, NewPassword, ConfirmPassword);
+            if (!success)
+            {
+                IsSuccessMessage = false;
+                ErrorMessage = "OTP Code is expired";
+                IsLoading = false;
+                return;
+            }
 
             IsSuccessMessage = true;
             ErrorMessage = "Password changed successfully";
@@ -307,37 +336,27 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 }
             }
         }
-
-        [RelayCommand]
-        private void SwitchToSignUp()
-        {
-            ClearErrors();
-            ErrorMessage = string.Empty;
-            IsLoginFormVisible = false;
-            IsSignUpFormVisible = true;
-            IsForgotPasswordFormVisible = false;
-        }
-
         [RelayCommand]
         private void SwitchToLogin()
         {
             ClearErrors();
             ErrorMessage = string.Empty;
-            IsSignUpFormVisible = false;
             IsLoginFormVisible = true;
             IsForgotPasswordFormVisible = false;
+            _countdownTimer?.Stop();
         }
         [RelayCommand]
         private void SwitchToForgotPassword()
         {
             ClearErrors();
             ErrorMessage = string.Empty;
-            IsSignUpFormVisible = false;
             IsLoginFormVisible = false;
+
+            _countdownTimer?.Stop();
 
             ResetEmail = string.Empty;
             OtpCode1 = OtpCode2 = OtpCode3 = OtpCode4 = OtpCode5 = OtpCode6 = string.Empty;
-            NewPassword = ConfirmNewPassword = string.Empty;
+            NewPassword = ConfirmPassword = string.Empty;
 
             ForgotPasswordStep = 1;
             IsForgotPasswordFormVisible = true;

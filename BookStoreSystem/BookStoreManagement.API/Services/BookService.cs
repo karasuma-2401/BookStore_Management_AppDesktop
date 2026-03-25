@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Models.Entities;
-using BookStoreManagement.API.Services.Interfaces;
+using BookStoreManagement.API.Interfaces.Services;
 
 namespace BookStoreManagement.API.Services
 {
