@@ -8,7 +8,7 @@ namespace BookStoreManagement.API.Controllers
 {
     [Route("author")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class AuthorsController : ControllerBase
     {
         private readonly IAuthorService _service;

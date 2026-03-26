@@ -8,7 +8,7 @@ namespace BookStoreManagement.API.Controllers
 {
     [Route("bookcategory")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class BookCategoriesController : ControllerBase
     {
         private readonly IBookCategoryService _service;
