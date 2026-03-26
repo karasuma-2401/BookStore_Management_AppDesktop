@@ -6,9 +6,10 @@ namespace BookStore_Management_AppDesktop.Models
 {
     public class Book
     {
-        public string? Title { get; set; }
-        public string? Author { get; set; }
-        public string? Price { get; set; }
-        public string? CoverImagePath { get; set; }
+        public int BookId { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public int? AuthorId { get; set; }
+        public int Quantity { get; set; }
+        public string ImagePath { get; set; } = string.Empty;
     }
 }

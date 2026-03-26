@@ -12,9 +12,8 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
 {
     public class NavigationService : INavigationService
     {
-        private Frame _mainFrame;
+        private Frame? _mainFrame;
 
-        // Đây chính là PAGE CACHE: Nơi lưu trữ các trang đã được tạo
         private readonly Dictionary<PageType, Page> _pageCache = new Dictionary<PageType, Page>();
 
         public void SetFrame(Frame frame)
@@ -28,7 +27,7 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
 
             if (!_pageCache.ContainsKey(pageType))
             {
-                Page newPage = null;
+                Page? newPage = null;
 
                
                 switch (pageType)
@@ -39,7 +38,9 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
                     case PageType.Employees:
                         newPage = new EmployeePage();
                         break;
-                        // Mở rộng các Page khác...
+                    case PageType.Inventory: 
+                        newPage = new InventoryPage();
+                        break;
                 }
 
                 

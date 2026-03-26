@@ -1,4 +1,6 @@
 <Solution>
   <Project Path="BookStoreManagement.API/BookStoreManagement.API.csproj" />
-  <Project Path="BookStore_Management_AppDesktop/BookStore_Management_AppDesktop.csproj" />
+  <Project Path="BookStore_Management_AppDesktop/BookStore_Management_AppDesktop.csproj">
+    <BuildDependency Project="BookStoreManagement.API/BookStoreManagement.API.csproj" />
+  </Project>
 </Solution>
