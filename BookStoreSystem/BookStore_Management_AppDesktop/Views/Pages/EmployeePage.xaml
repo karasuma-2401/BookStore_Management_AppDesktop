@@ -9,6 +9,42 @@
       Title="EmployeePage">
 
     <Page.Resources>
+        <Style x:Key="SearchTextBoxStyle" 
+       TargetType="{x:Type ui:TextBox}" 
+       BasedOn="{StaticResource {x:Type ui:TextBox}}">
+
+            <Setter Property="Foreground" Value="{DynamicResource TextThirdBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource TextSecondBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,5"/>
+
+            <!-- 🔥 ÉP nền -->
+            <Setter Property="Background" Value="Transparent"/>
+
+            <Style.Triggers>
+
+                <!-- luôn ép nền -->
+                <Trigger Property="IsEnabled" Value="True">
+                    <Setter Property="Background" Value="Transparent"/>
+                </Trigger>
+
+                <!-- Hover -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.8"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource SidebarAccentBrush}"/>
+                </Trigger>
+
+                <!-- Focus -->
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Opacity" Value="1"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource SidebarAccentBrush}"/>
+                    <Setter Property="BorderThickness" Value="1.5"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                </Trigger>
+
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="SoftHoverButtonStyle" TargetType="{x:Type ui:Button}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -53,7 +89,7 @@
         </Style>
     </Page.Resources>
 
-    <Grid Background="{DynamicResource TextPrimaryBrush}">
+    <Grid Background="{DynamicResource ContentBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -63,7 +99,12 @@
         <DockPanel Grid.Row="0" Margin="40,25,40,15" LastChildFill="False">
             <TextBlock Text="Employee Management" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextThirdBrush}" VerticalAlignment="Center"/>
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                <ui:Button Icon="{ui:SymbolIcon Symbol=Search24, Filled=True}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" FontSize="15" Style="{StaticResource SoftHoverIconButtonStyle}"/>
+                <ui:TextBox Width="250" Height="30" 
+                    PlaceholderText="Search name, ID, phone..." 
+                    Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                    Icon="{ui:SymbolIcon Symbol=Search24, Filled=True}"                    
+                    Style="{StaticResource SearchTextBoxStyle}"
+                />
                 <Grid Width="40" Height="40" Margin="10,0">
                     <ui:Button Icon="{ui:SymbolIcon Symbol=Alert24, Filled=True}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Style="{StaticResource SoftHoverIconButtonStyle}"/>
                     <Border Width="10" Height="10" CornerRadius="5" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,8,0" Background="{DynamicResource ErrorPrimaryBrush}" BorderBrush="{DynamicResource CardBackgroundBrush}" BorderThickness="1.5"/>
@@ -85,7 +126,7 @@
                         VerticalAlignment="Center">
                     <Ellipse Width="50" Height="50" Cursor="Hand" Style="{StaticResource AvatarCircleStyle}">
                         <Ellipse.InputBindings>
-                            <MouseBinding MouseAction="LeftClick" Command="{Binding OpenAvatarModalCommand}"/>
+                            <MouseBinding MouseAction="LeftClick" Command="{Binding OpenAvatarModalx`Command}"/>
                         </Ellipse.InputBindings>
                         <Ellipse.Fill>
                             <ImageBrush ImageSource="{Binding CurrentAvatarPath}" Stretch="UniformToFill" />
@@ -123,8 +164,53 @@
                 <Grid Grid.Row="0" Margin="25,20,25,10">
                     <TextBlock Text="Employee List" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextThirdBrush}"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <ui:Button Content="Sort" Icon="{ui:SymbolIcon Symbol=ArrowSort24}" Appearance="Transparent" Foreground="{DynamicResource TextThirdBrush }" Margin="0,0,12,0" Style="{StaticResource SoftHoverIconButtonStyle}"/>
-                        <ui:Button Content="Filter" Icon="{ui:SymbolIcon Symbol=Filter24}" Appearance="Transparent" Foreground="{DynamicResource TextThirdBrush }" Style="{StaticResource SoftHoverIconButtonStyle}"/>
+                        <ui:Button Content="Sort" Icon="{ui:SymbolIcon Symbol=ArrowSort24}" Appearance="Transparent" Foreground="{DynamicResource TextThirdBrush }" Margin="0,0,12,0" Style="{StaticResource SoftHoverIconButtonStyle}">
+                            <ui:Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Sort by Name (A-Z)" Command="{Binding ApplySortCommand}" CommandParameter="FullName"/>
+                                    <MenuItem Header="Sort by Employee ID" Command="{Binding ApplySortCommand}" CommandParameter="EmployeeId"/>
+                                    <MenuItem Header="Sort by User ID" Command="{Binding ApplySortCommand}" CommandParameter="UserId"/>
+                                </ContextMenu>
+                            </ui:Button.ContextMenu>
+                        </ui:Button>
+                        <ui:Button Content="Filter" Icon="{ui:SymbolIcon Symbol=Filter24}" Appearance="Transparent" Foreground="{DynamicResource TextThirdBrush }" Style="{StaticResource SoftHoverIconButtonStyle}">
+                            <ui:Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Filter by Name" 
+                                        Command="{Binding SearchTypeCommand}" 
+                                        CommandParameter="Name">
+                                        <MenuItem.Icon>
+                                            <ui:SymbolIcon Symbol="Person24"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+
+                                    <MenuItem Header="Filter by Employee ID" 
+                                        Command="{Binding SearchTypeCommand}" 
+                                        CommandParameter="ID">
+                                        <MenuItem.Icon>
+                                            <ui:SymbolIcon Symbol="NumberSymbol24"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+
+                                    <MenuItem Header="Filter by Phone Number" 
+                                         Command="{Binding SearchTypeCommand}" 
+                                         CommandParameter="Phone">
+                                        <MenuItem.Icon>
+                                            <ui:SymbolIcon Symbol="Phone24"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+
+                                    <Separator />
+
+                                    <MenuItem Header="Clear All Filters" 
+                                        Command="{Binding ClearFilterCommand}">
+                                        <MenuItem.Icon>
+                                            <ui:SymbolIcon Symbol="FilterDismiss24"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </ui:Button.ContextMenu>
+                        </ui:Button>
                     </StackPanel>
                 </Grid>
 
