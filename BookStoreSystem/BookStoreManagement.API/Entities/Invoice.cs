@@ -26,7 +26,13 @@ namespace BookStoreManagement.API.Models.Entities
         [ForeignKey("CustomerId")]
         public Customer Customer {get; set;} = null!;
         
+        [Column("voucher_id")]
+        public int? VoucherId { get; set; }
+
         [ForeignKey("UserId")]
         public User User {get; set;} = null!;
+        
+        [ForeignKey("VoucherId")]
+        public Voucher? Voucher { get; set; }
     }
 }

@@ -26,4 +26,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Author\" />
+    <Folder Include="Models\Category\" />
+    <Folder Include="Models\BookCategory\" />
+  </ItemGroup>
+
 </Project>
