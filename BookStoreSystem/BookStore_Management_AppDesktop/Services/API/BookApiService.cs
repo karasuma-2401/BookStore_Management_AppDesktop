@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using BookStore_Management_AppDesktop.Models.DTOs;
+using System.Linq;
 
 namespace BookStore_Management_AppDesktop.Services.API
 {
@@ -18,11 +20,6 @@ namespace BookStore_Management_AppDesktop.Services.API
         private static readonly JsonSerializerOptions _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true }; 
             
 
-        public BookApiService()
-        {
-
-        }
-
         // GET ALL BOOK: 
         public async Task<List<Book>> GetAllBooksAsync()
         {
@@ -33,7 +30,18 @@ namespace BookStore_Management_AppDesktop.Services.API
 
                 var json = await response.Content.ReadAsStringAsync();
 
-                return JsonSerializer.Deserialize<List<Book>>(json, _options) ?? new List<Book>();
+                var dtos = JsonSerializer.Deserialize<List<BookResponseDto>>(json, _options) ?? new List<BookResponseDto>();
+
+
+                return dtos.Select(dto => new Book
+                {
+                    BookId = dto.BookId,
+                    Title = dto.Title,
+                    AuthorId = dto.AuthorId,
+                    Price = dto.Price,
+                    Quantity = dto.Quantity,
+                    ImagePath = dto.ImagePath
+                }).ToList();
             }
             catch (Exception ex)
             {
@@ -47,7 +55,16 @@ namespace BookStore_Management_AppDesktop.Services.API
         {
             try
             {
-                var json = JsonSerializer.Serialize(newBook);
+                var createDto = new BookCreateDto
+                {
+                    Title = newBook.Title,
+                    AuthorId = newBook.AuthorId,
+                    Price = newBook.Price,
+                    Quantity = newBook.Quantity,
+                    ImagePath = newBook.ImagePath
+                };
+
+                var json = JsonSerializer.Serialize(createDto, _options);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PostAsync("books", content);
@@ -82,7 +99,17 @@ namespace BookStore_Management_AppDesktop.Services.API
         {
             try
             {
-                var json = JsonSerializer.Serialize(updatedBook); 
+                var updateDto = new BookUpdateDto
+                {
+                    BookId = id,
+                    Title = updatedBook.Title,
+                    AuthorId = updatedBook.AuthorId,
+                    Price = updatedBook.Price,
+                    Quantity = updatedBook.Quantity,
+                    ImagePath = updatedBook.ImagePath
+                };
+
+                var json = JsonSerializer.Serialize(updateDto, _options);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PutAsync($"books/{id}", content);

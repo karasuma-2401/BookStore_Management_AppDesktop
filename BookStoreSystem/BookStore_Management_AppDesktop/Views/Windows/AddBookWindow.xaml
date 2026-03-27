@@ -42,9 +42,34 @@
                     <ui:TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter book title..." 
                                 Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Padding="10,8"/>
 
-                    <TextBlock Text="Author ID" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,5,0,0"/>
-                    <ui:TextBox Text="{Binding AuthorId, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="e.g. 1" 
-                                Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Padding="10,8"/>
+                    <TextBlock Text="Author" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox Grid.Column="0"
+                                  IsEditable="True" 
+                                  IsTextSearchEnabled="False"
+                                  StaysOpenOnEdit="True"
+                                  ItemsSource="{Binding AuthorsView}" 
+                                  DisplayMemberPath="AuthorName" 
+                                  Text="{Binding SearchAuthorText, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedItem="{Binding SelectedAuthor}"
+                                  HorizontalAlignment="Stretch"
+                                  Margin="0,0,10,0" Height="35"/>
+
+                        <ui:Button Grid.Column="1"
+                                   Icon="{ui:SymbolIcon Add24}"
+                                   Content="Add"
+                                   Appearance="Primary"
+                                   Command="{Binding AddAuthorCommand}"
+                                   Background="{DynamicResource NavyLightBrush}" 
+                                   Foreground="{DynamicResource TextPrimaryBrush}"
+                                   Visibility="{Binding IsShowAddButton, Converter={StaticResource BoolToVis}}" 
+                                   Height="35" Cursor="Hand"/>
+                    </Grid>
 
                     <TextBlock Text="Quantity" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,5,0,0"/>
                     <ui:TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="e.g. 50" 
@@ -60,7 +85,9 @@
                         <ui:TextBox Grid.Column="0" Text="{Binding LocalImagePath}" IsReadOnly="True" PlaceholderText="No image selected..." 
                                     Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Margin="0,0,10,0" Padding="10,8"/>
                         <ui:Button Grid.Column="1" Content="Browse" Command="{Binding SelectImageCommand}" 
-                                   Appearance="Secondary" Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource NavyLightBrush}" BorderBrush="{DynamicResource TextSecondBrush}" Cursor="Hand"/>
+                                   Appearance="Primary" Foreground="{DynamicResource TextPrimaryBrush}" 
+                                   Background="{DynamicResource NavyLightBrush}" 
+                                   Cursor="Hand"/>
                     </Grid>
 
                     <Border BorderBrush="{DynamicResource NavyLightBrush}" BorderThickness="1" CornerRadius="8" 
@@ -80,7 +107,7 @@
                                    Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" Cursor="Hand" Margin="0,0,15,0"/>
 
                         <ui:Button Content="Save Book" Command="{Binding SaveCommand}" 
-                                   Appearance="Primary" Background="{DynamicResource NavyAccentBrush}" Foreground="White" FontWeight="Bold" Cursor="Hand" Width="120" BorderThickness="0"/>
+                                   Appearance="Primary" Background="{DynamicResource NavyAccentBrush}" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Bold" Cursor="Hand" Width="120" BorderThickness="0"/>
                     </StackPanel>
                 </Grid>
             </Grid>
