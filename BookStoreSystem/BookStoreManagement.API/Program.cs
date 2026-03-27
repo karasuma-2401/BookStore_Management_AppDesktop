@@ -1,6 +1,8 @@
 using BookStoreManagement.API.Data;
-using BookStoreManagement.API.Services;
 using BookStoreManagement.API.Interfaces.Services;
+using BookStoreManagement.API.Models.Auth;
+using BookStoreManagement.API.Services;
+using BookStoreManagement.API.Services.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +11,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using BookStoreManagement.API.Models.Auth;
 
 
 
@@ -85,6 +86,9 @@ builder.Services.AddScoped<BookStoreManagement.API.Interfaces.Services.IEmailSer
 
 // Book CRUD
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IBookCategoryService, BookCategoryService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 
