@@ -7,24 +7,21 @@ namespace BookStoreManagement.API.Validators
     {
         public UserValidator()
         {
-            // Thiet ke cho Username
+
             RuleFor(x => x.Username)
-                .NotEmpty().WithMessage("Username khong duoc de trong")
-                .MaximumLength(100).WithMessage("Username khong duoc qua 100 ky tu");
+                .NotEmpty().WithMessage("Username is required")
+                .MaximumLength(100).WithMessage("Username cannot exceed 100 characters");
 
-            // Thiet ke cho Password (luc nay van la chuoi thô truoc khi bam)
             RuleFor(x => x.PasswordHash)
-                .NotEmpty().WithMessage("Mat khau khong duoc de trong")
-                .MinimumLength(6).WithMessage("Mat khau phai co it nhat 6 ky tu");
+                .NotEmpty().WithMessage("Password is required")
+                .MinimumLength(6).WithMessage("Password must be at least 6 characters long");
 
-            // Thiet ke cho FullName (vi trong Model ban de string? nen ta chi check do dai)
             RuleFor(x => x.FullName)
-                .MaximumLength(200).WithMessage("Ho ten khong duoc qua 200 ky tu");
+                .MaximumLength(200).WithMessage("Full name cannot exceed 200 characters");
 
-            // Thiet ke cho RoleId (dam bao chi co 'admin' hoac 'staff')
             RuleFor(x => x.RoleId)
                 .Must(role => role == "admin" || role == "staff")
-                .WithMessage("Role chi duoc phep la admin hoac staff");
+                .WithMessage("Role must be either 'admin' or 'staff'");
         }
     }
 }

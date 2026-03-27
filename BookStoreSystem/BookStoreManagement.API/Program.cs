@@ -85,6 +85,7 @@ builder.Services.AddScoped<BookStoreManagement.API.Interfaces.Services.IEmailSer
 
 // Book CRUD
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 
 var  app = builder.Build();
