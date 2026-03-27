@@ -20,10 +20,27 @@
 
         <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
             <Grid>
-                <TextBlock Text="Inventory Management" FontSize="26" FontWeight="Black" 
-                           Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-                <ui:Button Content="Add New Book" Click="btnAddBook_Click" 
+                <TextBlock Grid.Column="0"
+                           Text="Inventory Management" FontSize="26" FontWeight="Black" 
+                           Foreground="{DynamicResource TextPrimaryBrush}" 
+                           VerticalAlignment="Center"/>
+
+                <ui:TextBox Grid.Column="1" 
+                    Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                    PlaceholderText="Search title, ID, or stock.." 
+                    Icon="{ui:SymbolIcon Search24}"
+                    Width="250" 
+                    Margin="0,0,15,0"
+                    VerticalAlignment="Center"/>
+
+                <ui:Button Grid.Column="2"
+                           Content="Add New Book" Click="btnAddBook_Click" 
                            Icon="{ui:SymbolIcon Add24}" 
                            Background="{DynamicResource NavyAccentBrush}" Foreground="White" BorderThickness="0" 
                            Appearance="Primary" HorizontalAlignment="Right" Cursor="Hand" FontWeight="Bold"/>
