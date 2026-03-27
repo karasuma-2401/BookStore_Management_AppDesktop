@@ -5,6 +5,7 @@ using BookStoreManagement.API.Models.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 
 namespace BookStoreManagement.API.Controllers
@@ -77,6 +78,22 @@ namespace BookStoreManagement.API.Controllers
             return success
                 ? NoContent()
                 : NotFound(new { message = "User not found for deletion." });
+        }
+
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDto dto)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var errorMessage = await _userService.ChangePasswordAsync(userId, dto);
+
+            if (errorMessage != null)
+            {
+                return BadRequest(new { message = errorMessage });
+            }
+
+            return Ok(new { message = "Password updated successfully!" });
         }
 
         // POST: user/forgot-password

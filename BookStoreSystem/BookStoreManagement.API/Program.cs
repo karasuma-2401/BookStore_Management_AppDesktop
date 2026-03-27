@@ -3,6 +3,7 @@ using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Auth;
 using BookStoreManagement.API.Services;
 using BookStoreManagement.API.Services.Interfaces;
+using BookStoreManagement.API.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -90,6 +91,7 @@ builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IBookCategoryService, BookCategoryService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IShiftService, ShiftService>();
 
 
 var  app = builder.Build();
