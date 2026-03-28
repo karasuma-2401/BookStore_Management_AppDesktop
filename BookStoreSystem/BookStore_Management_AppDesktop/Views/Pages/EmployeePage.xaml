@@ -41,9 +41,7 @@
 
                     <Border Width="2" Height="30" Background="{DynamicResource TextSecondBrush}" Margin="15,0" VerticalAlignment="Center" Opacity="0.3"/>
 
-                    <ui:Button Icon="{ui:SymbolIcon Symbol=SignOut24, Filled=True}" Appearance="Secondary" Foreground="{DynamicResource TextSecondBrush}" Margin="10 0 0 0" FontSize="15"/>
-
-                    <TextBlock Text="Administrator" VerticalAlignment="Center" Margin="50,0,10,0" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock Text="Administrator" VerticalAlignment="Center" Margin="20,0,10,0" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
 
                     <Border Width="54" Height="54" CornerRadius="27" BorderBrush="{DynamicResource SidebarAccentBrush}" BorderThickness="2" Margin="5,0,0,0" VerticalAlignment="Center">
                         <Ellipse Width="50" Height="50" Cursor="Hand">
