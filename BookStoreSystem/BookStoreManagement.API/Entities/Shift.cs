@@ -8,19 +8,19 @@ namespace BookStoreManagement.API.Models.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column("shifts")]
-        public int ShiftId {get; set;}
+        [Column("shift_id")]
+        public int ShiftId { get; set; }
 
         [Required]
         [MaxLength(50)]
         [Column("shift_name")]
-        public string ShiftName {get; set;} = string.Empty;
+        public string ShiftName { get; set; } = string.Empty;
 
         [Column("start_time")]
-        public DateTime StartTime {get; set;}
+        public TimeSpan StartTime { get; set; }
 
         [Column("end_time")]
-        public DateTime EndTime {get; set;}
+        public TimeSpan EndTime { get; set; }
 
         public ICollection<EmployeeShift> EmployeeShifts = new List<EmployeeShift>();
 

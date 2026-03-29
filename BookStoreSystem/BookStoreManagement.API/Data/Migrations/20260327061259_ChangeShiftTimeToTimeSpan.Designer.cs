@@ -3,17 +3,20 @@ using System;
 using BookStoreManagement.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BookStoreManagement.API.Migrations
+namespace BookStoreManagement.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260327061259_ChangeShiftTimeToTimeSpan")]
+    partial class ChangeShiftTimeToTimeSpan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -406,8 +409,8 @@ namespace BookStoreManagement.API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ShiftId"));
 
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("interval")
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_time");
 
                     b.Property<string>("ShiftName")
@@ -416,36 +419,13 @@ namespace BookStoreManagement.API.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("shift_name");
 
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("interval")
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("start_time");
 
                     b.HasKey("ShiftId");
 
                     b.ToTable("shifts");
-
-                    b.HasData(
-                        new
-                        {
-                            ShiftId = 1,
-                            EndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ShiftName = "Ca Sang",
-                            StartTime = new TimeSpan(0, 7, 0, 0, 0)
-                        },
-                        new
-                        {
-                            ShiftId = 2,
-                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
-                            ShiftName = "Ca Chieu",
-                            StartTime = new TimeSpan(0, 12, 0, 0, 0)
-                        },
-                        new
-                        {
-                            ShiftId = 3,
-                            EndTime = new TimeSpan(0, 22, 0, 0, 0),
-                            ShiftName = "Ca Toi",
-                            StartTime = new TimeSpan(0, 17, 0, 0, 0)
-                        });
                 });
 
             modelBuilder.Entity("BookStoreManagement.API.Models.Entities.User", b =>

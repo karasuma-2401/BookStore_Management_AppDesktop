@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Employee;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookStoreManagement.API.Controllers
 {
     [Route("employee")]
     [ApiController]
+    [Authorize(Roles = "admin")]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
