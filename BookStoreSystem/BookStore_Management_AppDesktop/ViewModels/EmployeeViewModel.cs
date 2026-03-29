@@ -1,4 +1,5 @@
 ﻿using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Services.API;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
@@ -176,7 +177,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             window?.Close();
         }
 
-        // DỮ LIỆU GIẢ ĐỂ TEST
+        //DỮ LIỆU GIẢ ĐỂ TEST
         private void LoadFakeData()
         {
             for (int i = 1; i <= 20; i++)
@@ -184,7 +185,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 _allEmployees.Add(new Employee
                 {
                     UserId = i.ToString(),
-                    EmployeeId = "NV" + i.ToString("D3"),
+                    EmployeeId = i + "123",
                     Username = "user_" + i,
                     FullName = "Nhân viên " + i,
                     Address = "Việt Nam",
@@ -192,5 +193,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 });
             }
         }
+
     }
 }

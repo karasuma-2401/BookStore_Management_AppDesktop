@@ -178,17 +178,10 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTemplateColumn Header="Actions" Width="140">
+                        <DataGridTemplateColumn Width="60">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <ui:Button Icon="{ui:SymbolIcon Edit24}" Appearance="Secondary" 
-                                                   Background="{DynamicResource NavyAccentBrush}" 
-                                                   Foreground="{DynamicResource SidebarBackgroundBrush}" Margin="0,0,10,0" Cursor="Hand"/>
-
-                                        <ui:Button Icon="{ui:SymbolIcon Delete24}" Appearance="Danger" 
-                                                   Background="{DynamicResource ErrorPrimaryBrush}" Foreground="White" BorderThickness="0" Cursor="Hand"/>
-                                    </StackPanel>
+                                    <ui:Button Icon="{ui:SymbolIcon Symbol=MoreVertical24}" Appearance="Transparent" Foreground="{DynamicResource TextThirdBrush}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
