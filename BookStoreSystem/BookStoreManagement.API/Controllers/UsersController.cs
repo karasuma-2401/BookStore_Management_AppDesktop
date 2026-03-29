@@ -1,20 +1,12 @@
 ﻿using BookStoreManagement.API.Data;
-using BookStoreManagement.API.Handlers;
 using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Auth;
 using BookStoreManagement.API.Models.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Claims;
+
 
 namespace BookStoreManagement.API.Controllers
 {
@@ -32,7 +24,7 @@ namespace BookStoreManagement.API.Controllers
             _resetPasswordValidator = resetPasswordValidator;
         }
 
-        // GET: api/Users
+        // GET: user
         [HttpGet]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetUsers()
@@ -41,7 +33,7 @@ namespace BookStoreManagement.API.Controllers
             return Ok(users);
         }
 
-        // GET: api/Users/5
+        // GET: user/5
         [HttpGet("{id}")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetUser(int id)
@@ -66,7 +58,7 @@ namespace BookStoreManagement.API.Controllers
 
         // POST: user
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PostUser(User user)
         {
             var success = await _userService.CreateUserAsync(user);
@@ -86,6 +78,22 @@ namespace BookStoreManagement.API.Controllers
             return success
                 ? NoContent()
                 : NotFound(new { message = "User not found for deletion." });
+        }
+
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDto dto)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var errorMessage = await _userService.ChangePasswordAsync(userId, dto);
+
+            if (errorMessage != null)
+            {
+                return BadRequest(new { message = errorMessage });
+            }
+
+            return Ok(new { message = "Password updated successfully!" });
         }
 
         // POST: user/forgot-password

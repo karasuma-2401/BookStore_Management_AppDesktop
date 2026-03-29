@@ -55,6 +55,7 @@ namespace BookStoreManagement.API.Data
             .WithOne(u => u.Employee)
             .HasForeignKey<Employee>(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

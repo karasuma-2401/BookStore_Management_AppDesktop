@@ -48,6 +48,23 @@ namespace BookStoreManagement.API.Services
             };
         }
 
+        public async Task<string?> ChangePasswordAsync(int userId, ChangePasswordRequestDto dto)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return "User not found.";
+
+            if (!BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.PasswordHash))
+                return "Incorrect old password.";
+
+            if (dto.NewPassword != dto.ConfirmPassword)
+                return "Confirm password does not match.";
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            await _context.SaveChangesAsync();
+
+            return null;
+        }
+
         public async Task<bool> CreateUserAsync(User user)
         {
             var validationResult = await _validator.ValidateAsync(user);

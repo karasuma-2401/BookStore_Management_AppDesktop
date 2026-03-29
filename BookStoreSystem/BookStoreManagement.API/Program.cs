@@ -3,6 +3,7 @@ using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Auth;
 using BookStoreManagement.API.Services;
 using BookStoreManagement.API.Services.Interfaces;
+using BookStoreManagement.API.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using FluentValidation.AspNetCore;
 
 
 
@@ -26,6 +28,8 @@ builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseNpgsql
 builder.Services.AddControllers();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -89,6 +93,10 @@ builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IBookCategoryService, BookCategoryService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IShiftService, ShiftService>();
+builder.Services.AddScoped<IEmployeeShift, EmployeeShiftService>();
+
 
 var  app = builder.Build();
 if (app.Environment.IsDevelopment())

@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+﻿
 using BookStoreManagement.API.Models.Auth;
 using BookStoreManagement.API.Models.Entities;
 
@@ -14,5 +14,6 @@ namespace BookStoreManagement.API.Interfaces.Services
         Task<bool> DeleteUserAsync(int id);
         Task<bool> SendForgotPasswordEmailAsync(string email);
         Task<bool> ResetPasswordAsync(string token, string newPassword, string confirmPassword);
+        Task<string?> ChangePasswordAsync(int userId, ChangePasswordRequestDto dto);
     }
 }
