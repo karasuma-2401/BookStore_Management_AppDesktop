@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Threading.Tasks;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -60,11 +61,29 @@ namespace BookStore_Management_AppDesktop.ViewModels
             "pack://siteoforigin:,,,/Resources/Images/Twenty Years Later.webp"
         };
 
+        private readonly IEmployeeApiService _apiService; // Thêm service
+
         // CONSTRUCTOR
         public EmployeeViewModel()
         {
-            LoadFakeData();
+            _apiService = new EmployeeApiService(); // Khởi tạo service
+            // Gọi hàm kéo dữ liệu từ API
+            _ = InitializeDataAsync();
             UpdateDisplayList();
+        }
+
+        private async Task InitializeDataAsync()
+        {
+            // 1. Kéo data từ API
+            var data = await _apiService.GetAllEmployeesAsync();
+
+            // 2. Lưu vào danh sách gốc
+            _allEmployees = data;
+
+            // 3. Cập nhật UI trên Thread chính
+            Application.Current.Dispatcher.Invoke(() => {
+                UpdateDisplayList();
+            });
         }
 
         // Tự động chạy khi PageSize thay đổi (tính năng của MVVM Toolkit)
@@ -176,23 +195,5 @@ namespace BookStore_Management_AppDesktop.ViewModels
             // Đóng cửa sổ
             window?.Close();
         }
-
-        //DỮ LIỆU GIẢ ĐỂ TEST
-        private void LoadFakeData()
-        {
-            for (int i = 1; i <= 20; i++)
-            {
-                _allEmployees.Add(new Employee
-                {
-                    UserId = i.ToString(),
-                    EmployeeId = i + "123",
-                    Username = "user_" + i,
-                    FullName = "Nhân viên " + i,
-                    Address = "Việt Nam",
-                    PhoneNumber = "090123456" + (i % 10)
-                });
-            }
-        }
-
     }
 }
