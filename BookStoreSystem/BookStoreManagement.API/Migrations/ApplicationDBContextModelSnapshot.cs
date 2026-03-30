@@ -308,11 +308,17 @@ namespace BookStoreManagement.API.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("user_id");
 
+                    b.Property<int?>("VoucherId")
+                        .HasColumnType("integer")
+                        .HasColumnName("voucher_id");
+
                     b.HasKey("InvoiceId");
 
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("VoucherId");
 
                     b.ToTable("invoices");
                 });
@@ -368,6 +374,10 @@ namespace BookStoreManagement.API.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("customer_id");
 
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("integer")
+                        .HasColumnName("invoice_id");
+
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("payment_date");
@@ -379,6 +389,8 @@ namespace BookStoreManagement.API.Migrations
                     b.HasKey("PaymentId");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("InvoiceId");
 
                     b.HasIndex("UserId");
 
@@ -394,8 +406,8 @@ namespace BookStoreManagement.API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ShiftId"));
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("interval")
                         .HasColumnName("end_time");
 
                     b.Property<string>("ShiftName")
@@ -404,13 +416,36 @@ namespace BookStoreManagement.API.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("shift_name");
 
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("interval")
                         .HasColumnName("start_time");
 
                     b.HasKey("ShiftId");
 
                     b.ToTable("shifts");
+
+                    b.HasData(
+                        new
+                        {
+                            ShiftId = 1,
+                            EndTime = new TimeSpan(0, 12, 0, 0, 0),
+                            ShiftName = "Ca Sang",
+                            StartTime = new TimeSpan(0, 7, 0, 0, 0)
+                        },
+                        new
+                        {
+                            ShiftId = 2,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            ShiftName = "Ca Chieu",
+                            StartTime = new TimeSpan(0, 12, 0, 0, 0)
+                        },
+                        new
+                        {
+                            ShiftId = 3,
+                            EndTime = new TimeSpan(0, 22, 0, 0, 0),
+                            ShiftName = "Ca Toi",
+                            StartTime = new TimeSpan(0, 17, 0, 0, 0)
+                        });
                 });
 
             modelBuilder.Entity("BookStoreManagement.API.Models.Entities.User", b =>
@@ -475,6 +510,46 @@ namespace BookStoreManagement.API.Migrations
                             RoleId = "admin",
                             Username = "admin"
                         });
+                });
+
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Voucher", b =>
+                {
+                    b.Property<int>("VoucherId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("voucher_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("VoucherId"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("code");
+
+                    b.Property<decimal?>("DiscountAmount")
+                        .HasColumnType("decimal(10,2)")
+                        .HasColumnName("discount_amount");
+
+                    b.Property<int?>("DiscountPercent")
+                        .HasColumnType("integer")
+                        .HasColumnName("discount_percent");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expiry_date");
+
+                    b.Property<int?>("UsageLimit")
+                        .HasColumnType("integer")
+                        .HasColumnName("usage_limit");
+
+                    b.Property<int>("UsedCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("used_count");
+
+                    b.HasKey("VoucherId");
+
+                    b.ToTable("vouchers");
                 });
 
             modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Book", b =>
@@ -575,9 +650,15 @@ namespace BookStoreManagement.API.Migrations
                         .WithMany()
                         .HasForeignKey("UserId");
 
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Voucher", "Voucher")
+                        .WithMany()
+                        .HasForeignKey("VoucherId");
+
                     b.Navigation("Customer");
 
                     b.Navigation("User");
+
+                    b.Navigation("Voucher");
                 });
 
             modelBuilder.Entity("BookStoreManagement.API.Models.Entities.InvoiceDetail", b =>
@@ -607,11 +688,19 @@ namespace BookStoreManagement.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Invoice", "Invoice")
+                        .WithMany()
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BookStoreManagement.API.Models.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Customer");
+
+                    b.Navigation("Invoice");
 
                     b.Navigation("User");
                 });

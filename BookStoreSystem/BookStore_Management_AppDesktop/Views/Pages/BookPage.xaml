@@ -36,7 +36,7 @@
                                 VerticalAlignment="Center" Cursor="IBeam"
                                 Background="{DynamicResource NavyPrimaryBrush}" 
                                 Foreground="{DynamicResource TextPrimaryBrush}"
-                                BorderBrush="{DynamicResource NavyLightBrush}"/>
+                                BorderBrush="{DynamicResource NavyLightBrush}" TextChanged="TextBox_TextChanged"/>
 
                     <ui:Button Icon="{ui:SymbolIcon Filter24}" Appearance="Secondary" 
                                Background="{DynamicResource NavyLightBrush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0"
@@ -54,7 +54,7 @@
                   Background="Transparent"
                   BorderThickness="0"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  Padding="10,10,10,20">
+                  Padding="10,10,10,20" d:ItemsSource="{d:SampleData ItemCount=5}">
 
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>

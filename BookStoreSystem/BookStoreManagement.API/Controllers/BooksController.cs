@@ -2,11 +2,13 @@
 using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Book;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookStoreManagement.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("book")]
     [ApiController]
+    [Authorize]
     public class BooksController : ControllerBase
     {
         private readonly IBookService _bookService;

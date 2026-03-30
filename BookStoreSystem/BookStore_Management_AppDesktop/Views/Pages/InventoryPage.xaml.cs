@@ -46,13 +46,12 @@ namespace BookStore_Management_AppDesktop.Views.Pages
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            // Nếu đã load rồi thì thôi, tránh giật lag khi chuyển qua lại giữa các Page
             if (_isDataLoaded) return;
 
             if (this.DataContext is InventoryViewModel viewModel)
             {
                 await viewModel.LoadDataAsync();
-                _isDataLoaded = true; // Đánh dấu là đã load xong
+                _isDataLoaded = true; 
             }
         }
         private async void btnAddBook_Click(object sender, RoutedEventArgs e)
@@ -65,5 +64,7 @@ namespace BookStore_Management_AppDesktop.Views.Pages
                 await viewModel.LoadDataAsync();
             }
         }
+
+
     }
 }

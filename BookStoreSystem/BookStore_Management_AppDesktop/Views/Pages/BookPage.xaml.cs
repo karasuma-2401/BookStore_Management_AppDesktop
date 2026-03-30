@@ -29,5 +29,10 @@ namespace BookStore_Management_AppDesktop.Views.Pages
                 _isDataLoaded = true;
             }
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

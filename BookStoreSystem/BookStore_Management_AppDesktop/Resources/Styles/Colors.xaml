@@ -1,19 +1,28 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
-    <SolidColorBrush x:Key="TextPrimaryBrush" Color="White" />
-    <SolidColorBrush x:Key="TextSecondBrush" Color="#AAAAAA" />
-    <SolidColorBrush x:Key="ErrorPrimaryBrush" Color="#FF4C4C" />
-    <SolidColorBrush x:Key="SuccessPrimaryBrush" Color="#00DC82" />
 
+    <!-- Text Colors -->
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#A0AEC0" />
+    <SolidColorBrush x:Key="TextMutedBrush" Color="#718096" />
+    <SolidColorBrush x:Key="TextOnLightBackgroudBrush" Color="#000000" />
+
+    <!-- Status Colors-->
+    <SolidColorBrush x:Key="ErrorPrimaryBrush" Color="#FF3030" />
+    <SolidColorBrush x:Key="SuccessPrimaryBrush" Color="#7FFF00" />
+
+    <!-- Theme Colors -->
     <SolidColorBrush x:Key="NavyPrimaryBrush" Color="#0A2A47" />
     <SolidColorBrush x:Key="NavyLightBrush" Color="#15436F" />
     <SolidColorBrush x:Key="NavyAccentBrush" Color="#00D4B2" />
     <SolidColorBrush x:Key="NavyGlassBrush" Color="#B30A2A47" />
 
-   
+    
+    <!-- Control Colors-->
     <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#1E293B" />
     <SolidColorBrush x:Key="SidebarAccentBrush" Color="#38BDF8" />
+    <SolidColorBrush x:Key="ActionPrimaryBrush" Color="#00D4B2" />
     <SolidColorBrush x:Key="ContentBackgroundBrush" Color="#F1F5F9" />
     <SolidColorBrush x:Key="CardBackgroundBrush" Color="White" />
+    <SolidColorBrush x:Key="BorderDefaultBrush" Color="#38BDF8" />
 </ResourceDictionary>
