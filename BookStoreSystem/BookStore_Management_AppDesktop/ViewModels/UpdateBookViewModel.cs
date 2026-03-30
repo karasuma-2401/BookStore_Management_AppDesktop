@@ -63,7 +63,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (string.IsNullOrWhiteSpace(Title))
             {
-                OnShowMessage?.Invoke("Vui lòng nhập tên sách!");
+                OnShowMessage?.Invoke("Please enter the book title!");
                 return;
             }
 
@@ -91,12 +91,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
                 if (isSuccess)
                 {
-                    OnShowMessage?.Invoke("Cập nhật thông tin sách thành công!");
+                    OnShowMessage?.Invoke("Book updated successfully!");
                     OnRequestClose?.Invoke();
                 }
                 else
                 {
-                    OnShowMessage?.Invoke("Cập nhật thất bại. Vui lòng kiểm tra lại!");
+                    OnShowMessage?.Invoke("Update failed. Please check your connection!");
                 }
             }
             finally
