@@ -23,6 +23,12 @@ namespace BookStoreManagement.API.Controllers
         {
             return Ok(await _service.GetAll());
         }
+        [HttpGet("string")]
+        public async Task<IActionResult> GetAsString()
+        {
+            var categories = await _service.GetAll();
+            return Ok(string.Join(", ", categories.Select(c => c.Name)));
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create(CategoryCreateDto dto)
