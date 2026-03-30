@@ -21,7 +21,15 @@ namespace BookStore_Management_AppDesktop.ViewModels
             get => _books;
             set => SetProperty(ref _books, value);
         }
-
+        private string _searchText = string.Empty;
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                SetProperty(ref _searchText, value);
+            }
+        }
         public InventoryViewModel()
         {
             _apiService = new BookApiService();
@@ -48,7 +56,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             bool isConfirmed = false;
             if (OnRequestConfirm != null)
             {
-                isConfirmed = await OnRequestConfirm.Invoke("Xác nhận xóa", $"Bạn có chắc chắn muốn xóa cuốn sách '{selectedBook.Title}' không?");
+                isConfirmed = await OnRequestConfirm.Invoke("Confirm Deletion", $"Are you sure you want to delete the book '{selectedBook.Title}'?");
             }
 
             if (isConfirmed)
@@ -58,14 +66,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 if (isSuccess)
                 {
                     var cloudinaryService = new CloudinaryService();
-                    await cloudinaryService.DeleteImageAsync(selectedBook.ImagePath); // Cẩn thận tên biến ảnh nhé
+                    await cloudinaryService.DeleteImageAsync(selectedBook.ImagePath); 
 
-                    OnShowMessage?.Invoke("Xóa sách thành công!");
+                    OnShowMessage?.Invoke("Book deleted successfully!");
                     await LoadDataAsync();
                 }
                 else
                 {
-                    OnShowMessage?.Invoke("Xóa thất bại! Vui lòng kiểm tra lại kết nối.");
+                    OnShowMessage?.Invoke("Book deleted successfully!");
                 }
             }
         }

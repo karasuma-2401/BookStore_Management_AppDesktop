@@ -7,25 +7,39 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using BookStore_Management_AppDesktop.Models.DTOs;
 using System.Linq;
-
+using System.Net.Http.Headers;
 namespace BookStore_Management_AppDesktop.Services.API
 {
     public class BookApiService : IBookApiService
     {
         private static readonly HttpClient _httpClient = new HttpClient
         {
-            BaseAddress = new Uri("https://localhost:7063/api/")
-        };
+            BaseAddress = new Uri("https://localhost:7063/")
+        };  
 
         private static readonly JsonSerializerOptions _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true }; 
             
+        private void AddAuthorizationHeader()
+        {
+            var token = Settings.Default.AccessToken;
+            if (!string.IsNullOrEmpty(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            else
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = null;
+            }
+        }
 
         // GET ALL BOOK: 
         public async Task<List<Book>> GetAllBooksAsync()
         {
             try
             {
-                var response = await _httpClient.GetAsync("books");
+                AddAuthorizationHeader();
+
+                var response = await _httpClient.GetAsync("book");
                 response.EnsureSuccessStatusCode();
 
                 var json = await response.Content.ReadAsStringAsync();
@@ -55,6 +69,7 @@ namespace BookStore_Management_AppDesktop.Services.API
         {
             try
             {
+                AddAuthorizationHeader();
                 var createDto = new BookCreateDto
                 {
                     Title = newBook.Title,
@@ -67,7 +82,7 @@ namespace BookStore_Management_AppDesktop.Services.API
                 var json = JsonSerializer.Serialize(createDto, _options);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PostAsync("books", content);
+                var response = await _httpClient.PostAsync("book", content);
 
                 return response.IsSuccessStatusCode;
             }
@@ -83,7 +98,8 @@ namespace BookStore_Management_AppDesktop.Services.API
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"books/{id}");
+                AddAuthorizationHeader();
+                var response = await _httpClient.DeleteAsync($"book/{id}");
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
@@ -99,6 +115,7 @@ namespace BookStore_Management_AppDesktop.Services.API
         {
             try
             {
+                AddAuthorizationHeader();
                 var updateDto = new BookUpdateDto
                 {
                     BookId = id,
@@ -112,7 +129,7 @@ namespace BookStore_Management_AppDesktop.Services.API
                 var json = JsonSerializer.Serialize(updateDto, _options);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PutAsync($"books/{id}", content);
+                var response = await _httpClient.PutAsync($"book/{id}", content);
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
