@@ -90,27 +90,27 @@
                             <TextBlock Text="{Binding Title}" 
                                        FontWeight="Bold" 
                                        FontSize="16" 
-                                       Foreground="#1E293B"
+                                       Foreground="{DynamicResource TextOnLightBackgroudBrush}"
                                        TextWrapping="Wrap" 
                                        Height="44" 
                                        TextTrimming="CharacterEllipsis"
                                        Margin="0,0,0,4"/>
 
-                            <TextBlock Text="{Binding AuthorId}" 
-                                       Foreground="#64748B" 
+                            <TextBlock Text="{Binding AuthorName, TargetNullValue='Unknown Author'}" 
+                                       Foreground="{DynamicResource TextOnLightBackgroudBrush}" 
                                        FontSize="13" 
                                        Margin="0,0,0,8"/>
 
-                            <TextBlock Text="{Binding Price, TargetNullValue='150.000đ'}" 
-                                       FontWeight="Black" 
-                                       FontSize="18" 
-                                       Foreground="{DynamicResource ErrorPrimaryBrush}" 
-                                       Margin="0,0,0,12"/>
+                            <TextBlock Margin="0,0,0,12">
+                                <Run Text="Price: " FontSize="14" Foreground="{DynamicResource TextOnLightBackgroudBrush}" FontWeight="SemiBold"/>
+                                <Run Text="{Binding Price, TargetNullValue='150.000'}" FontWeight="Black" FontSize="18" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
+                                <Run Text="đ" FontWeight="Black" FontSize="18" Foreground="{DynamicResource NavyLightBrush}"/>
+                            </TextBlock>
 
                             <ui:Button Content="Add to Cart"
                                        Icon="{ui:SymbolIcon Cart24}"
                                        Appearance="Primary"
-                                       Background="{DynamicResource NavyAccentBrush}" Foreground="White" BorderThickness="0"
+                                       Background="{DynamicResource NavyAccentBrush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0"
                                        HorizontalAlignment="Stretch"
                                        Cursor="Hand"
                                        FontWeight="Bold"/>
