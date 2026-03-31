@@ -20,20 +20,12 @@ namespace BookStoreManagement.API.Controllers
 
         // GET: api/books
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookResponseDto>>> GetBooks()
+        public async Task<IActionResult> GetBooks(
+            [FromQuery] int? categoryId,
+            [FromQuery] int? authorId,
+            [FromQuery] string? keyword)
         {
-            var books = await _bookService.GetBooks();
-
-            var result = books.Select(book => new BookResponseDto
-            {
-                BookId = book.BookId,
-                Title = book.Title,
-                AuthorId = book.AuthorId,
-                AuthorName = book.Author?.Name,
-                Quantity = book.Quantity,
-                ImagePath = book.ImagePath
-            });
-
+            var result = await _bookService.GetBooks(categoryId, authorId, keyword);
             return Ok(result);
         }
 
