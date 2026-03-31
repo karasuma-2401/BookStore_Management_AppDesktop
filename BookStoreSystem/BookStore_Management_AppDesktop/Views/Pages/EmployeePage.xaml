@@ -35,7 +35,7 @@
                     <ui:Button Icon="{ui:SymbolIcon Filter24}" Appearance="Secondary" Margin="0,0,10,0" Cursor="Hand"/>
 
                     <Grid>
-                        <ui:Button Icon="{ui:SymbolIcon Symbol=Alert24, Filled=True}" Appearance="Secondary" Foreground="{DynamicResource TextSecondBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+                        <ui:Button Icon="{ui:SymbolIcon Symbol=Alert24, Filled=True}" Appearance="Secondary" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
                         <Border Width="10" Height="10" CornerRadius="5" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,8,0" Background="{DynamicResource ErrorPrimaryBrush}" BorderBrush="{DynamicResource CardBackgroundBrush}" BorderThickness="1.5"/>
                     </Grid>
 
@@ -89,10 +89,6 @@
                           FontSize="15" 
                           Cursor="Hand"
                           EnableRowVirtualization="True"
-                          EnableColumnVirtualization="True"
-                          VirtualizingPanel.IsVirtualizing="True"
-                          VirtualizingPanel.VirtualizationMode="Recycling"
-                          ScrollViewer.CanContentScroll="True"
                           PreviewMouseLeftButtonDown="EmployeeDataGrid_PreviewMouseLeftButtonDown">
 
                     <DataGrid.Resources>
@@ -198,10 +194,10 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <ui:Button Icon="{ui:SymbolIcon Symbol=MoreVertical24}" 
-                           Appearance="Transparent" 
-                           Foreground="{DynamicResource TextThirdBrush}"
-                           Padding="0"
-                           Cursor="Hand"/>
+                                               Appearance="Transparent" 
+                                               Foreground="{DynamicResource TextThirdBrush}"
+                                               Padding="0"
+                                               Cursor="Hand"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

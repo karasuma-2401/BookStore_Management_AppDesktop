@@ -1,113 +1,113 @@
-using BookStoreManagement.API.Data;
-using BookStoreManagement.API.Interfaces.Services;
-using BookStoreManagement.API.Models.Auth;
-using BookStoreManagement.API.Services;
-using BookStoreManagement.API.Services.Interfaces;
-using BookStoreManagement.API.Validators;
-using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Text;
-using FluentValidation.AspNetCore;
+    using BookStoreManagement.API.Data;
+    using BookStoreManagement.API.Interfaces.Services;
+    using BookStoreManagement.API.Models.Auth;
+    using BookStoreManagement.API.Services;
+    using BookStoreManagement.API.Services.Interfaces;
+    using BookStoreManagement.API.Validators;
+    using FluentValidation;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
+    using Microsoft.IdentityModel.Tokens;
+    using Microsoft.OpenApi.Models;
+    using System.Text;
+    using FluentValidation.AspNetCore;
 
 
 
-var builder = WebApplication.CreateBuilder(args);
+    var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-
-// Set up ApplicationDBContext with PostgreSQL (neon)
-builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseNpgsql(connectionString));
-
-// Set up Conllers and Swagger (test API) 
-builder.Services.AddControllers();
-
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-
-builder.Services.AddFluentValidationAutoValidation();
-
-builder.Services.AddEndpointsApiExplorer();
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 
-builder.Services.AddSwaggerGen(options =>
-{
-    var jwtSecurityScheme = new OpenApiSecurityScheme
+    // Set up ApplicationDBContext with PostgreSQL (neon)
+    builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseNpgsql(connectionString));
+
+    // Set up Conllers and Swagger (test API) 
+    builder.Services.AddControllers();
+
+    builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+    builder.Services.AddFluentValidationAutoValidation();
+
+    builder.Services.AddEndpointsApiExplorer();
+
+
+    builder.Services.AddSwaggerGen(options =>
     {
-        BearerFormat = "JWT",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = JwtBearerDefaults.AuthenticationScheme,
-        Description = "\"Enter your JWT Access Token\",",
-        Reference = new OpenApiReference
+        var jwtSecurityScheme = new OpenApiSecurityScheme
         {
-            Id = JwtBearerDefaults.AuthenticationScheme,
-            Type = ReferenceType.SecurityScheme
-        }
-    };
+            BearerFormat = "JWT",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.Http,
+            Scheme = JwtBearerDefaults.AuthenticationScheme,
+            Description = "\"Enter your JWT Access Token\",",
+            Reference = new OpenApiReference
+            {
+                Id = JwtBearerDefaults.AuthenticationScheme,
+                Type = ReferenceType.SecurityScheme
+            }
+        };
 
-    options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        { jwtSecurityScheme, Array.Empty<string>() }
+        options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            { jwtSecurityScheme, Array.Empty<string>() }
+        });
+
+
     });
 
-
-});
-
-builder.Services.AddAuthentication(options => 
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
+    builder.Services.AddAuthentication(options => 
     {
-        ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
-        ValidAudience = builder.Configuration["JwtConfig:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Key"]!)),
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true
-    };
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
+            ValidAudience = builder.Configuration["JwtConfig:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Key"]!)),
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true
+        };
 
-});
-builder.Services.AddScoped<JwtService>();
-
-
-builder.Services.AddScoped<BookStoreManagement.API.Interfaces.Services.IUserService, BookStoreManagement.API.Services.UserService>();
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.AddScoped<BookStoreManagement.API.Interfaces.Services.IEmailService, BookStoreManagement.API.Services.EmailService>();
-
-// Book CRUD
-builder.Services.AddScoped<IBookService, BookService>();
-builder.Services.AddScoped<IAuthorService, AuthorService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IBookCategoryService, BookCategoryService>();
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-builder.Services.AddScoped<IShiftService, ShiftService>();
-builder.Services.AddScoped<IEmployeeShift, EmployeeShiftService>();
+    });
+    builder.Services.AddScoped<JwtService>();
 
 
-var  app = builder.Build();
-if (app.Environment.IsDevelopment())
-{
-     app.UseSwagger();
-     app.UseSwaggerUI();
-}
+    builder.Services.AddScoped<BookStoreManagement.API.Interfaces.Services.IUserService, BookStoreManagement.API.Services.UserService>();
+    builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+    builder.Services.AddScoped<BookStoreManagement.API.Interfaces.Services.IEmailService, BookStoreManagement.API.Services.EmailService>();
 
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
+    // Book CRUD
+    builder.Services.AddScoped<IBookService, BookService>();
+    builder.Services.AddScoped<IAuthorService, AuthorService>();
+    builder.Services.AddScoped<ICategoryService, CategoryService>();
+    builder.Services.AddScoped<IBookCategoryService, BookCategoryService>();
+    builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+    builder.Services.AddScoped<IShiftService, ShiftService>();
+    builder.Services.AddScoped<IEmployeeShift, EmployeeShiftService>();
 
-app.Run();
+
+    var  app = builder.Build();
+    if (app.Environment.IsDevelopment())
+    {
+         app.UseSwagger();
+         app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+    app.UseAuthentication();
+    app.UseAuthorization();
+    app.MapControllers();
+
+    app.Run();

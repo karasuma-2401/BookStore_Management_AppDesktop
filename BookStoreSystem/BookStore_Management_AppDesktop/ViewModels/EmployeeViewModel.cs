@@ -63,27 +63,38 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         private readonly IEmployeeApiService _apiService; // Thêm service
 
-        // CONSTRUCTOR
+
         public EmployeeViewModel()
         {
-            _apiService = new EmployeeApiService(); // Khởi tạo service
-            // Gọi hàm kéo dữ liệu từ API
-            _ = InitializeDataAsync();
-            UpdateDisplayList();
+            _apiService = new EmployeeApiService(); // Khởi tạo thực tế
+            _ = InitializeDataAsync(); // Kéo dữ liệu khi vừa mở trang
         }
 
         private async Task InitializeDataAsync()
         {
-            // 1. Kéo data từ API
-            var data = await _apiService.GetAllEmployeesAsync();
+            try
+            {
+                // Hiển thị trạng thái đang tải (nếu có biến IsBusy)
+                var data = await _apiService.GetAllEmployeesAsync();
 
-            // 2. Lưu vào danh sách gốc
-            _allEmployees = data;
-
-            // 3. Cập nhật UI trên Thread chính
-            Application.Current.Dispatcher.Invoke(() => {
-                UpdateDisplayList();
-            });
+                if (data != null && data.Count > 0)
+                {
+                    _allEmployees = data;
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        UpdateDisplayList();
+                    });
+                }
+                else
+                {
+                    // Nếu data rỗng, có thể do Token hết hạn hoặc không phải Admin
+                    System.Diagnostics.Debug.WriteLine("Không nhận được dữ liệu hoặc quyền truy cập bị từ chối.");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Lỗi ViewModel: {ex.Message}");
+            }
         }
 
         // Tự động chạy khi PageSize thay đổi (tính năng của MVVM Toolkit)
@@ -123,11 +134,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (CurrentPage > 1) CurrentPage--;
         }
-        // --- COMMANDS ---
 
-        /// <summary>
-        /// Mở cửa sổ chỉnh sửa Avatar
-        /// </summary>
         [RelayCommand]
         private void OpenAvatarModal()
         {
@@ -144,9 +151,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             editWindow.ShowDialog();
         }
 
-        /// <summary>
-        /// Chọn ảnh từ máy tính (Lưu vào biến tạm)
-        /// </summary>
+
         [RelayCommand]
         private void UploadFromComputer()
         {
@@ -162,9 +167,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             }
         }
 
-        /// <summary>
-        /// Chọn ảnh từ danh sách mặc định (Lưu vào biến tạm)
-        /// </summary>
+
         [RelayCommand]
         private void SelectDefaultAvatar(string path)
         {
@@ -183,9 +186,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 window.Close();
             }
         }
-        /// <summary>
-        /// Xác nhận lưu thay đổi ảnh
-        /// </summary>
+
         [RelayCommand]
         private void SaveAvatarChange(Window window)
         {
