@@ -39,7 +39,7 @@
                         <Border Width="10" Height="10" CornerRadius="5" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,8,0" Background="{DynamicResource ErrorPrimaryBrush}" BorderBrush="{DynamicResource CardBackgroundBrush}" BorderThickness="1.5"/>
                     </Grid>
 
-                    <Border Width="2" Height="30" Background="{DynamicResource TextSecondBrush}" Margin="15,0" VerticalAlignment="Center" Opacity="0.3"/>
+                    <Border Width="2" Height="30" Background="{DynamicResource TextSecondaryBrush}" Margin="15,0" VerticalAlignment="Center" Opacity="0.3"/>
 
                     <TextBlock Text="Administrator" VerticalAlignment="Center" Margin="20,0,10,0" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
 
@@ -195,7 +195,8 @@
                                 <DataTemplate>
                                     <ui:Button Icon="{ui:SymbolIcon Symbol=MoreVertical24}" 
                                                Appearance="Transparent" 
-                                               Foreground="{DynamicResource TextThirdBrush}"
+                                               Background="Transparent"
+                                               Foreground="{DynamicResource TextOnLightBackgroudBrush}"
                                                Padding="0"
                                                Cursor="Hand"/>
                                 </DataTemplate>
@@ -205,12 +206,12 @@
                 </DataGrid>
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1" Margin="0 30 20 20" >
-                    <TextBlock Text="Lines per page" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondBrush}" FontSize="13" Margin="0,0,15,0"/>
+                    <TextBlock Text="Lines per page" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" Margin="0,0,15,0"/>
 
                     <Grid VerticalAlignment="Center" Margin="0,0,40,0">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding PageSize}" VerticalAlignment="Center" Foreground="{DynamicResource TextThirdBrush}" FontSize="14" FontWeight="SemiBold" Margin="0,0,5,0"/>
-                            <ui:SymbolIcon Symbol="ChevronDown24" Filled="False" Foreground="{DynamicResource TextSecondBrush}" FontSize="10" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding PageSize}" VerticalAlignment="Center" Foreground="{DynamicResource TextOnLightBackgroudBrush}" FontSize="14" FontWeight="SemiBold" Margin="0,0,5,0"/>
+                            <ui:SymbolIcon Symbol="ChevronDown24" Filled="False" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="10" VerticalAlignment="Center"/>
                         </StackPanel>
                         <ComboBox ItemsSource="{Binding PageSizeOptions}" 
                                   SelectedItem="{Binding PageSize}" 
@@ -218,19 +219,19 @@
                     </Grid>
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,30,0">
-                        <TextBlock Text="{Binding CurrentPageStart}" Foreground="{DynamicResource TextThirdBrush}" FontSize="13"/>
-                        <TextBlock Text="-" Foreground="{DynamicResource TextThirdBrush}" Margin="2,0"/>
-                        <TextBlock Text="{Binding CurrentPageEnd}" Foreground="{DynamicResource TextThirdBrush}" FontSize="13"/>
-                        <TextBlock Text="of" Foreground="{DynamicResource TextSecondBrush}" FontSize="13" Margin="8,0"/>
-                        <TextBlock Text="{Binding TotalEmployees}" Foreground="{DynamicResource TextThirdBrush}" FontSize="13"/>
+                        <TextBlock Text="{Binding CurrentPageStart}" Foreground="{DynamicResource TextOnLightBackgroudBrush}" FontSize="13"/>
+                        <TextBlock Text="-" Foreground="{DynamicResource TextOnLightBackgroudBrush}" Margin="2,0"/>
+                        <TextBlock Text="{Binding CurrentPageEnd}" Foreground="{DynamicResource TextOnLightBackgroudBrush}" FontSize="13"/>
+                        <TextBlock Text="of" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" Margin="8,0"/>
+                        <TextBlock Text="{Binding TotalEmployees}" Foreground="{DynamicResource TextOnLightBackgroudBrush}" FontSize="13"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronLeft24}" Appearance="Transparent" 
-                                   Foreground="{DynamicResource TextSecondBrush}" Padding="5" 
+                                   Foreground="{DynamicResource TextSecondaryBrush}" Padding="5" 
                                    Command="{Binding PreviousPageCommand}"/>
                         <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronRight24}" Appearance="Transparent" 
-                                   Foreground="{DynamicResource TextSecondBrush}" Padding="5" 
+                                   Foreground="{DynamicResource TextSecondaryBrush}" Padding="5" 
                                    Command="{Binding NextPageCommand}"/>
                     </StackPanel>
                 </StackPanel>

@@ -8,47 +8,16 @@
         WindowStartupLocation="CenterOwner">
 
     <Grid Margin="10">
-        <!-- Card container -->
-        <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="20" BorderBrush="{DynamicResource SidebarAccentBrush}" BorderThickness="1">
+        <Border Background="{DynamicResource NavyPrimaryBrush}" 
+                CornerRadius="20" 
+                BorderBrush="{DynamicResource TextSecondaryBrush}" 
+                BorderThickness="1.5">
             <Grid>
-                <!-- Close Button góc trên bên phải -->
-                <ui:Button Content="✕"
-                           Width="50" Height="50"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Right"
-                           VerticalAlignment="Top"
-                           Margin="0,5,15,0"
-                           Appearance="Secondary"
-                           CornerRadius="15"
-                           Background="Transparent"
-                           BorderThickness="0"
-                           Command="{Binding CloseWindowCommand}"
-                           CommandParameter="{Binding ElementName=AvatarWindow}">
-                    <ui:Button.Style>
-                        <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
-                            <Setter Property="Foreground" Value="Gray"/>
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Cursor" Value="Hand"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Opacity" Value="0.6"/>
-                                    <Setter Property="Foreground" Value="Black"/>
-                                </Trigger>
-                                <Trigger Property="IsPressed" Value="True">
-                                    <Setter Property="Opacity" Value="0.9"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ui:Button.Style>
-                </ui:Button>
-
                 <StackPanel Margin="25">
-                    <!-- Title -->
-                    <TextBlock Text="Update Avatar" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                    <TextBlock Text="Update Avatar" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20" Foreground="{DynamicResource TextPrimaryBrush}"/>
 
-                    <!-- Avatar Preview -->
                     <Grid HorizontalAlignment="Center" Margin="0,0,0,20">
-                        <Ellipse Width="160" Height="160" Stroke="{DynamicResource SidebarAccentBrush}" StrokeThickness="3"/>
+                        <Ellipse Width="160" Height="160" Stroke="{DynamicResource TextSecondaryBrush}" StrokeThickness="2"/>
                         <Ellipse Width="148" Height="148">
                             <Ellipse.Fill>
                                 <ImageBrush ImageSource="{Binding TempAvatarPath, TargetNullValue='/Resources/Images/Promise Me.webp'}" Stretch="UniformToFill"/>
@@ -56,16 +25,24 @@
                         </Ellipse>
                     </Grid>
 
-                    <!-- Upload from computer -->
                     <ui:Button Content="Choose from Computer"
                                Command="{Binding UploadFromComputerCommand}"
                                HorizontalAlignment="Stretch"
                                Appearance="Primary"
-                               CornerRadius="10"/>
+                               Height="42"
+                               Foreground="{DynamicResource TextPrimaryBrush}"
+                               Background="{DynamicResource NavyLightBrush}"
+                               BorderBrush="{DynamicResource TextSecondaryBrush}" 
+                               BorderThickness="1.2"
+                               CornerRadius="8"/>
 
-                    <!-- Avatar list -->
-                    <TextBlock Text="Select from available avatars:" Margin="0,20,0,10" Foreground="{DynamicResource TextSecondBrush}"/>
-                    <Border Background="{DynamicResource ContentBackgroundBrush}" CornerRadius="12" Padding="5">
+                    <TextBlock Text="Select from available avatars:" Margin="0,20,0,10" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Medium"/>
+
+                    <Border Background="{DynamicResource ContentBackgroundBrush}" 
+                            CornerRadius="12" 
+                            Padding="8"
+                            BorderBrush="{DynamicResource TextSecondaryBrush}" 
+                            BorderThickness="1.5">
                         <ScrollViewer Height="180" VerticalScrollBarVisibility="Auto">
                             <ItemsControl ItemsSource="{Binding DefaultAvatars}">
                                 <ItemsControl.ItemsPanel>
@@ -75,10 +52,10 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <ui:Button Appearance="Transparent" Margin="5" 
+                                        <ui:Button Appearance="Transparent" Margin="5" Padding="2"
                                                    Command="{Binding DataContext.SelectDefaultAvatarCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                    CommandParameter="{Binding}">
-                                            <Ellipse Width="70" Height="70">
+                                            <Ellipse Width="70" Height="70" Stroke="{DynamicResource TextSecondaryBrush}" StrokeThickness="1">
                                                 <Ellipse.Fill>
                                                     <ImageBrush ImageSource="{Binding}" Stretch="UniformToFill"/>
                                                 </Ellipse.Fill>
@@ -89,23 +66,37 @@
                             </ItemsControl>
                         </ScrollViewer>
                     </Border>
-                    
-                    <!-- Buttons Save-->
+
                     <Grid Margin="0,25,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Save Button -->
-                        <ui:Button Grid.Column="1"
-                                   Content="Save Changes"
-                                   Appearance="Primary"
-                                   CornerRadius="10"
-                                   HorizontalAlignment="Stretch"
-                                   Margin="5,0,0,10"
-                                   Command="{Binding SaveAvatarChangeCommand}"
-                                   CommandParameter="{Binding ElementName=AvatarWindow}"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <ui:Button Content="Cancel"
+                                       Appearance="Transparent"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       BorderBrush="{DynamicResource TextSecondaryBrush}"
+                                       BorderThickness="1"
+                                       Margin="0,0,10,10"
+                                       Padding="15,0"
+                                       Command="{Binding CloseWindowCommand}" CommandParameter="{Binding ElementName=AvatarWindow}"
+                                       Height="30"/>
+
+                            <ui:Button Content="Save Changes"
+                                       Width="150" Height="30"
+                                       FontWeight="Medium"
+                                       Foreground="{DynamicResource TextPrimaryBrush}"
+                                       Background="{DynamicResource NavyAccentBrush}"
+                                       BorderBrush="{DynamicResource TextSecondaryBrush}"
+                                       BorderThickness="1.2"
+                                       Appearance="Primary"
+                                       CornerRadius="8"
+                                       Margin="0,0,0,10"
+                                       Command="{Binding SaveAvatarChangeCommand}"
+                                       CommandParameter="{Binding ElementName=AvatarWindow}"/>
+                        </StackPanel>
                     </Grid>
                 </StackPanel>
             </Grid>
