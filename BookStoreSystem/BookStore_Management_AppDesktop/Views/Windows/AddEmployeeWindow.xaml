@@ -52,7 +52,6 @@
                                Command="{Binding AddUserIDCommand}"
                                Background="{DynamicResource NavyLightBrush}" 
                                Foreground="{DynamicResource TextPrimaryBrush}"
-                               Visibility="{Binding IsShowAddButton, Converter={StaticResource BoolToVis}}" 
                                Height="30" Cursor="Hand"/>  
                     </Grid>
                     <TextBlock Text="Full Name" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>

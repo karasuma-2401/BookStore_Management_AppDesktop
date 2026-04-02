@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BookStore_Management_AppDesktop.Converters
 {
-    internal class StatusToColorConverters
+    internal class StatusToColorConverter
     {
     }
 }
