@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         x:Name="AvatarWindow"
-        Height="650" Width="420"
+        Height="660" Width="420"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         WindowStartupLocation="CenterOwner">
 
@@ -14,7 +14,7 @@
                 BorderThickness="1.5">
             <Grid>
                 <StackPanel Margin="25">
-                    <TextBlock Text="Update Avatar" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock Text="Update Avatar" FontSize="25" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20" Foreground="{DynamicResource TextPrimaryBrush}"/>
 
                     <Grid HorizontalAlignment="Center" Margin="0,0,0,20">
                         <Ellipse Width="160" Height="160" Stroke="{DynamicResource TextSecondaryBrush}" StrokeThickness="2"/>
@@ -82,10 +82,10 @@
                                        Margin="0,0,10,10"
                                        Padding="15,0"
                                        Command="{Binding CloseWindowCommand}" CommandParameter="{Binding ElementName=AvatarWindow}"
-                                       Height="30"/>
+                                       Height="35"/>
 
                             <ui:Button Content="Save Changes"
-                                       Width="150" Height="30"
+                                       Width="150" Height="35"
                                        FontWeight="Medium"
                                        Foreground="{DynamicResource TextPrimaryBrush}"
                                        Background="{DynamicResource NavyAccentBrush}"
