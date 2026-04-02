@@ -52,6 +52,7 @@ namespace BookStore_Management_AppDesktop.Services.API
                     BookId = dto.BookId,
                     Title = dto.Title,
                     AuthorId = dto.AuthorId,
+                    AuthorName = dto.AuthorName,
                     Price = dto.Price,
                     Quantity = dto.Quantity,
                     ImagePath = dto.ImagePath

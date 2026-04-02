@@ -13,5 +13,7 @@ namespace BookStoreManagement.API.Models.Book
         public int Quantity { get; set; }
 
         public string ImagePath { get; set; } = string.Empty;
+        
+        public string BookCategories { get; set; } = string.Empty;
     }
 }
