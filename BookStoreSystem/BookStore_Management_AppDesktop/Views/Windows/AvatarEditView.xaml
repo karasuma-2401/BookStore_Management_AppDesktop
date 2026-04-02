@@ -14,7 +14,7 @@
                 BorderThickness="1.5">
             <Grid>
                 <StackPanel Margin="25">
-                    <TextBlock Text="Update Avatar" FontSize="25" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock  MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Text="Update Avatar" FontSize="25" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20" Foreground="{DynamicResource TextPrimaryBrush}"/>
 
                     <Grid HorizontalAlignment="Center" Margin="0,0,0,20">
                         <Ellipse Width="160" Height="160" Stroke="{DynamicResource TextSecondaryBrush}" StrokeThickness="2"/>

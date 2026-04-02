@@ -23,5 +23,12 @@ namespace BookStore_Management_AppDesktop.Views.Windows
             InitializeComponent();
             this.DataContext = dataContext; // Nhận ViewModel từ Page truyền sang
         }
+
+        private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                DragMove();
+            }
     }
 }
