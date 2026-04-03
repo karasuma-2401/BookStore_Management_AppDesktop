@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using BookStore_Management_AppDesktop.ViewModels;
 
 namespace BookStore_Management_AppDesktop.Views.Windows
 {
@@ -20,6 +21,8 @@ namespace BookStore_Management_AppDesktop.Views.Windows
         public AddEmployeeWindow()
         {
             InitializeComponent();
+            // Set the DataContext to the AddEmployeeViewModel
+            this.DataContext = new AddEmployeeViewModel();
         }
 
         private void StackPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

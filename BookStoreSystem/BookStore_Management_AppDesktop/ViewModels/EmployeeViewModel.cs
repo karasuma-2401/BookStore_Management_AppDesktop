@@ -196,5 +196,25 @@ namespace BookStore_Management_AppDesktop.ViewModels
             // Đóng cửa sổ
             window?.Close();
         }
+
+        [RelayCommand]
+        private async Task OpenAddEmployeeWindow()
+        {
+            var addEmployeeWindow = new BookStore_Management_AppDesktop.Views.Windows.AddEmployeeWindow();
+
+            if (Application.Current.MainWindow != null)
+            {
+                addEmployeeWindow.Owner = Application.Current.MainWindow;
+            }
+
+            // Show as dialog and wait for result
+            var result = addEmployeeWindow.ShowDialog();
+
+            // If the window was saved successfully, refresh the employee list
+            if (result == true)
+            {
+                await InitializeDataAsync();
+            }
+        }
     }
 }

@@ -30,5 +30,6 @@ namespace BookStore_Management_AppDesktop.Views.Windows
             {
                 DragMove();
             }
+        }
     }
 }

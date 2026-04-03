@@ -61,7 +61,8 @@
             <ui:Button Content="Add New Employee"
                        Icon="{ui:SymbolIcon Add24}" Height="40"
                        Background="{DynamicResource NavyAccentBrush}" Foreground="White" BorderThickness="0" 
-                       Appearance="Primary" Cursor="Hand" FontWeight="Bold" Margin="40 0 0 20"/>
+                       Appearance="Primary" Cursor="Hand" FontWeight="Bold" Margin="40 0 0 20"
+                       Command="{Binding OpenAddEmployeeWindowCommand}"/>
         </Border>
 
         <Border Grid.Row="2" Background="{DynamicResource CardBackgroundBrush}" Margin="20" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1" >
