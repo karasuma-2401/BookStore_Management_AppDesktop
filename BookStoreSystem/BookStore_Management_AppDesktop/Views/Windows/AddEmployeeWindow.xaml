@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Background="Transparent" WindowStartupLocation="CenterScreen"
         WindowStyle="None" AllowsTransparency="True"
-        Title="Add Employee" Height="550" Width="400">
+        Title="Add Employee" Height="650" Width="400">
     <Grid Margin="15">
         <Border CornerRadius="15" Background="Black">
             <Border.Effect>
@@ -28,10 +28,11 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="1">
-                    <TextBlock Text="UserID" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                    <TextBlock Text="UserID" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,5,0,5"/>
                     <Grid Margin="0,0,0,15">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="6*" />
+                            <ColumnDefinition Width="53*"/>
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
@@ -43,32 +44,31 @@
                               DisplayMemberPath="AuthorName" 
                               Text="{Binding SearchUserIDText, UpdateSourceTrigger=PropertyChanged}"
                               SelectedItem="{Binding SelectedUserID}"
-                              HorizontalAlignment="Stretch"
-                              Margin="0,0,10,0" Height="30"/>
+                              Margin="0,0,10,0" Height="30" Grid.ColumnSpan="2"/>
 
-                        <ui:Button Grid.Column="1"
+                        <ui:Button Grid.Column="2"
                                Icon="{ui:SymbolIcon Add24}"
                                Content="Add"
                                Appearance="Primary"
                                Command="{Binding AddUserIDCommand}"
                                Background="{DynamicResource NavyLightBrush}" 
                                Foreground="{DynamicResource TextPrimaryBrush}"
-                               Height="30" Cursor="Hand"/>  
+                               Height="30" Cursor="Hand" HorizontalAlignment="Center"/>
                     </Grid>
                     <TextBlock Text="Full Name" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                    <ui:TextBox Text="{Binding NewEmployee.FullName, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter full name..." Margin="0,0,0,10"/>
+                    <ui:TextBox Text="{Binding NewEmployee.FullName, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter full name..." Margin="0,0,0,10" Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}"/>
 
                     <TextBlock Text="Age" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                    <ui:TextBox Text="{Binding NewEmployee.Age, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter age..." Margin="0,0,0,10"/>
+                    <ui:TextBox Text="{Binding NewEmployee.Age, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter age..." Margin="0,0,0,10" Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}"/>
 
                     <TextBlock Text="Phone" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                    <ui:TextBox Text="{Binding NewEmployee.Phone, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter phone..." Margin="0,0,0,10"/>
+                    <ui:TextBox Text="{Binding NewEmployee.Phone, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter phone..." Margin="0,0,0,10" Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}"/>
 
                     <TextBlock Text="Address" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                    <ui:TextBox Text="{Binding NewEmployee.Address, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter address..." Margin="0,0,0,10"/>
+                    <ui:TextBox Text="{Binding NewEmployee.Address, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter address..." Margin="0,0,0,10" Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}"/>
 
                     <TextBlock Text="Salary" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                    <ui:TextBox Text="{Binding NewEmployee.Salary, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter salary..." Margin="0,0,0,10"/>
+                    <ui:TextBox Text="{Binding NewEmployee.Salary, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter salary..." Margin="0,0,0,10" Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
