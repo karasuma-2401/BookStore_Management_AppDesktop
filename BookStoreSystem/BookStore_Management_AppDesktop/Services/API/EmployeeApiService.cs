@@ -81,7 +81,7 @@ namespace BookStore_Management_AppDesktop.Services.API
                 AddAuthorizationHeader();
                 var dto = new EmployeeCreateDto { FullName = emp.FullName, Age = emp.Age, Phone = emp.Phone, Address = emp.Address, Salary = emp.Salary, UserId = emp.UserId };
                 var content = new StringContent(JsonSerializer.Serialize(dto, _options), Encoding.UTF8, "application/json");
-                return (await _httpClient.PostAsync("employees", content)).IsSuccessStatusCode;
+                return (await _httpClient.PostAsync("employee", content)).IsSuccessStatusCode;
             }
             catch { return false; }
         }
@@ -93,7 +93,7 @@ namespace BookStore_Management_AppDesktop.Services.API
                 AddAuthorizationHeader();
                 var dto = new EmployeeResponseDto { EmployeeId = id, FullName = emp.FullName, Age = emp.Age, Phone = emp.Phone, Address = emp.Address, Salary = emp.Salary, UserId = emp.UserId };
                 var content = new StringContent(JsonSerializer.Serialize(dto, _options), Encoding.UTF8, "application/json");
-                return (await _httpClient.PutAsync($"employees/{id}", content)).IsSuccessStatusCode;
+                return (await _httpClient.PutAsync($"employee/{id}", content)).IsSuccessStatusCode;
             }
             catch { return false; }
         }
@@ -103,7 +103,7 @@ namespace BookStore_Management_AppDesktop.Services.API
             try
             {
                 AddAuthorizationHeader();
-                return (await _httpClient.DeleteAsync($"employees/{id}")).IsSuccessStatusCode;
+                return (await _httpClient.DeleteAsync($"employee/{id}")).IsSuccessStatusCode;
             }
             catch { return false; }
         }

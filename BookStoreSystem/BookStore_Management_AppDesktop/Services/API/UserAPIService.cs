@@ -10,7 +10,6 @@ namespace BookStore_Management_AppDesktop.Services.API
 {
     public class UserApiService : IUserApiService
     {
-        // Dùng chung HttpClient và cấu hình JSON với EmployeeService để tiết kiệm tài nguyên
         private static readonly HttpClient _httpClient = new HttpClient { BaseAddress = new Uri("https://localhost:7063/") };
         private static readonly JsonSerializerOptions _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
@@ -28,7 +27,6 @@ namespace BookStore_Management_AppDesktop.Services.API
             try
             {
                 AddAuthorizationHeader();
-                // Giả sử endpoint của bạn là "api/user" hoặc "user"
                 var response = await _httpClient.GetAsync("user");
 
                 if (response.IsSuccessStatusCode)
@@ -43,22 +41,6 @@ namespace BookStore_Management_AppDesktop.Services.API
                 System.Diagnostics.Debug.WriteLine($"Lỗi UserApi: {ex.Message}");
                 return new List<UserResponseModel>();
             }
-        }
-
-        public async Task<UserResponseModel> GetUserByIdAsync(int id)
-        {
-            try
-            {
-                AddAuthorizationHeader();
-                var response = await _httpClient.GetAsync($"user/{id}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var json = await response.Content.ReadAsStringAsync();
-                    return JsonSerializer.Deserialize<UserResponseModel>(json, _options);
-                }
-                return null;
-            }
-            catch { return null; }
         }
     }
 }

@@ -16,16 +16,20 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly IEmployeeApiService _employeeApi;
         private readonly IUserApiService _userApi;
-        private List<UserResponseModel> _allUsers = new();
+
+        // Danh sách gốc để phục vụ việc search/filter nếu cần
+        private List<int> _allUnassignedUserIds = new();
 
         [ObservableProperty]
         private Employee _newEmployee = new();
 
+        // Sửa kiểu dữ liệu thành int để tránh lỗi CS1503
         [ObservableProperty]
-        private ObservableCollection<UserResponseModel> _userList = new();
+        private ObservableCollection<int> _userList = new();
 
+        // Lưu trữ ID được chọn từ ComboBox
         [ObservableProperty]
-        private UserResponseModel _selectedUser;
+        private int _selectedUserId;
 
         [ObservableProperty]
         private string _searchUserIDText;
@@ -41,129 +45,90 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             try
             {
-                var users = await _userApi.GetAllUsersAsync();
-                if (users != null)
-                {
-                    // Filter users: only show users who don't already have an employee profile
-                    // This prevents one user from having multiple employee records (Foreign Key constraint)
-                    _allUsers = users.Where(u => u != null).ToList();
+                // 1. Gọi song song API User và Employee để tối ưu thời gian
+                var usersTask = _userApi.GetAllUsersAsync();
+                var employeesTask = _employeeApi.GetAllEmployeesAsync();
 
-                    Application.Current.Dispatcher.Invoke(() =>
+                await Task.WhenAll(usersTask, employeesTask);
+
+                var allUsers = await usersTask;
+                var allEmployees = await employeesTask;
+
+                if (allUsers != null && allEmployees != null)
+                {
+                    // 2. Tìm các UserId đã được cấp cho nhân viên (khóa ngoại)
+                    var assignedUserIds = allEmployees
+                                          .Select(e => e.UserId)
+                                          .Distinct()
+                                          .ToHashSet();
+
+                    // 3. Lọc ra danh sách ID chưa được sử dụng
+                    _allUnassignedUserIds = allUsers
+                        .Where(u => u != null && !assignedUserIds.Contains(u.UserId))
+                        .Select(u => u.UserId)
+                        .ToList();
+
+                    // 4. Cập nhật giao diện trên UI Thread
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
                     {
                         UserList.Clear();
-                        foreach (var u in _allUsers)
+                        foreach (var id in _allUnassignedUserIds)
                         {
-                            if (u != null) UserList.Add(u);
+                            UserList.Add(id); // Thêm kiểu int vào ObservableCollection<int>
                         }
                     });
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error loading users: {ex.Message}");
-                MessageBox.Show("Failed to load users. Please try again.", "Error", MessageBoxButton.OK);
-            }
-        }
-
-        partial void OnSearchUserIDTextChanged(string value)
-        {
-            if (_allUsers == null) return;
-
-            UserList.Clear();
-
-            if (string.IsNullOrEmpty(value))
-            {
-                foreach (var user in _allUsers)
-                {
-                    if (user != null) UserList.Add(user);
-                }
-            }
-            else
-            {
-                var filtered = _allUsers.Where(u => u != null && 
-                    (u.Username.Contains(value, StringComparison.OrdinalIgnoreCase) || 
-                     u.Email.Contains(value, StringComparison.OrdinalIgnoreCase) ||
-                     u.FullName.Contains(value, StringComparison.OrdinalIgnoreCase)));
-
-                foreach (var user in filtered)
-                {
-                    if (user != null) UserList.Add(user);
-                }
+                System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
+                MessageBox.Show("Không thể tải danh sách ID người dùng.");
             }
         }
 
         [RelayCommand]
         private async Task Save(Window window)
         {
-            // Validation
-            if (SelectedUser == null)
+            // Validation: Kiểm tra ID đã được chọn chưa
+            if (SelectedUserId <= 0)
             {
-                MessageBox.Show("Please select a User account.", "Validation Error", MessageBoxButton.OK);
+                MessageBox.Show("Vui lòng chọn một User ID hợp lệ.", "Lỗi nhập liệu", MessageBoxButton.OK);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(NewEmployee.FullName))
             {
-                MessageBox.Show("Please enter employee full name.", "Validation Error", MessageBoxButton.OK);
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(NewEmployee.Phone))
-            {
-                MessageBox.Show("Please enter employee phone number.", "Validation Error", MessageBoxButton.OK);
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(NewEmployee.Address))
-            {
-                MessageBox.Show("Please enter employee address.", "Validation Error", MessageBoxButton.OK);
+                MessageBox.Show("Vui lòng nhập tên nhân viên.", "Lỗi nhập liệu", MessageBoxButton.OK);
                 return;
             }
 
             try
             {
-                // Assign UserId to avoid Foreign Key DB error
-                NewEmployee.UserId = SelectedUser.UserId;
+                // Gán ID trực tiếp từ ComboBox vào đối tượng nhân viên mới
+                NewEmployee.UserId = SelectedUserId;
 
                 var success = await _employeeApi.CreateEmployeeAsync(NewEmployee);
                 if (success)
                 {
-                    MessageBox.Show("Employee added successfully!", "Success", MessageBoxButton.OK);
-                    if (window != null) 
-                    { 
-                        window.DialogResult = true; 
-                        window.Close(); 
+                    MessageBox.Show("Thêm nhân viên thành công!", "Thông báo", MessageBoxButton.OK);
+                    if (window != null)
+                    {
+                        window.DialogResult = true;
+                        window.Close();
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Failed to save employee. Check if User already has an Employee profile or try again later.", 
-                        "Error", MessageBoxButton.OK);
+                    MessageBox.Show("Lưu thất bại. Kiểm tra lại dữ liệu hoặc tài khoản đã có hồ sơ.");
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error saving employee: {ex.Message}");
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK);
+                MessageBox.Show($"Lỗi hệ thống: {ex.Message}");
             }
         }
 
         [RelayCommand]
-        private void Cancel(Window window)
-        {
-            window?.Close();
-        }
-
-        [RelayCommand]
-        private async Task AddUserID()
-        {
-            // This command opens a new user creation window
-            // For now, we'll show a message asking the user to create account first
-            MessageBox.Show("Please create a User account first in the User Management section.", 
-                "Information", MessageBoxButton.OK);
-
-            // Reload users list in case a new user was added
-            await LoadUsersAsync();
-        }
+        private void Cancel(Window window) => window?.Close();
     }
 }
