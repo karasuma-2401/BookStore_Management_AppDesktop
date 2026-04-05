@@ -17,6 +17,7 @@ namespace BookStoreManagement.API.Validators
                 .LessThanOrEqualTo(65).WithMessage("Employee must be no older than 65 years old");
             RuleFor(x => x.Phone)
                 .NotEmpty().WithMessage("Phone number is required")
+                .Matches(@"^\d+$").WithMessage("Phone number must contain only digits.")
                 .MaximumLength(20).WithMessage("Phone number cannot exceed 20 characters");
             RuleFor(x => x.Salary)
                 .GreaterThanOrEqualTo(0).WithMessage("Salary must be a positive number");

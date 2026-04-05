@@ -1,24 +1,33 @@
 ﻿using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Handlers;
-using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Interfaces.Services;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using BookStoreManagement.API.Models.Auth;
+using BookStoreManagement.API.Models.Entities;
+using FluentValidation;
+using Humanizer;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreManagement.API.Services
 {
     public class UserService : IUserService
     {
         private readonly ApplicationDBContext _context;
-        private readonly IValidator<User> _validator;
+
         private readonly IEmailService _emailService;
 
-        public UserService(ApplicationDBContext context, IValidator<User> validator, IEmailService emailService)
+        private readonly IValidator<UserCreateDto> _createValidator;
+        private readonly IValidator<UserUpdateDto> _updateValidator;
+
+        public UserService(
+            ApplicationDBContext context,
+            IEmailService emailService,
+            IValidator<UserCreateDto> createValidator,
+            IValidator<UserUpdateDto> updateValidator)
         {
             _context = context;
-            _validator = validator;
             _emailService = emailService;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
         public async Task<IEnumerable<UserResponseModel>> GetAllUsersAsync()
@@ -65,37 +74,52 @@ namespace BookStoreManagement.API.Services
             return null;
         }
 
-        public async Task<bool> CreateUserAsync(User user)
+        public async Task<bool> CreateUserAsync(UserCreateDto dto)
         {
-            var validationResult = await _validator.ValidateAsync(user);
-            if (!validationResult.IsValid) return false;
 
-            user.PasswordHash = PasswordHashHandler.HashPassword(user.PasswordHash);
-            user.CreatedAt = DateTime.UtcNow;
+            var validationResult = await _createValidator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+            {
+                return false;
+            }
+
+            var user = new User
+            {
+                Username = dto.Username,
+                FullName = dto.FullName,
+                RoleId = dto.RoleId.ToString(),
+                Email = dto.Email,
+                PasswordHash = PasswordHashHandler.HashPassword(dto.Password),
+                CreatedAt = DateTime.UtcNow
+            };
 
             _context.Users.Add(user);
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> UpdateUserAsync(int id, User user)
+        public async Task<bool> UpdateUserAsync(int id, UserUpdateDto dto)
         {
-            if (id != user.UserId) return false;
-
-            var existingUser = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == id);
-            if (existingUser == null) return false;
-
-
-            if (user.PasswordHash != existingUser.PasswordHash)
+            var validationResult = await _updateValidator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
             {
-                user.PasswordHash = PasswordHashHandler.HashPassword(user.PasswordHash);
+                return false;
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
+            if (existingUser == null)
+            {
+                return false;
+            }
+
+            existingUser.FullName = dto.FullName;
+            existingUser.Email = dto.Email;
+
             try
             {
                 return await _context.SaveChangesAsync() > 0;
             }
-            catch
+            catch (DbUpdateException ex)
             {
                 return false;
             }
