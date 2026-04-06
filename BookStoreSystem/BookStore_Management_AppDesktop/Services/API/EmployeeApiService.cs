@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BookStore_Management_AppDesktop.Services.API
 {
@@ -18,12 +19,12 @@ namespace BookStore_Management_AppDesktop.Services.API
 
         private void AddAuthorizationHeader()
         {
-            // Lấy token đã lưu sau khi đăng nhập thành công
+            // Retrieve the token saved after a successful login
             var token = Settings.Default.AccessToken;
 
             if (!string.IsNullOrEmpty(token))
             {
-                // Gán Bearer Token vào Header
+                // Assign Bearer Token to the Header
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
             else
@@ -42,14 +43,14 @@ namespace BookStore_Management_AppDesktop.Services.API
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                 {
-                    System.Windows.MessageBox.Show("Bạn không có quyền Admin để xem danh sách này!");
+                    MessageBox.Show("You do not have Admin permissions to view this list!", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Stop);
                     return new List<Employee>();
                 }
 
                 if (!response.IsSuccessStatusCode)
                 {
                     var error = await response.Content.ReadAsStringAsync();
-                    System.Diagnostics.Debug.WriteLine($"Lỗi: {response.StatusCode} - {error}");
+                    System.Diagnostics.Debug.WriteLine($"Error: {response.StatusCode} - {error}");
                     return new List<Employee>();
                 }
 
@@ -69,7 +70,7 @@ namespace BookStore_Management_AppDesktop.Services.API
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Lỗi kết nối: {ex.Message}");
+                MessageBox.Show($"Connection Error: {ex.Message}", "Network Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return new List<Employee>();
             }
         }
@@ -79,11 +80,27 @@ namespace BookStore_Management_AppDesktop.Services.API
             try
             {
                 AddAuthorizationHeader();
-                var dto = new EmployeeCreateDto { FullName = emp.FullName, Age = emp.Age, Phone = emp.Phone, Address = emp.Address, Salary = emp.Salary, UserId = emp.UserId };
-                var content = new StringContent(JsonSerializer.Serialize(dto, _options), Encoding.UTF8, "application/json");
-                return (await _httpClient.PostAsync("employee", content)).IsSuccessStatusCode;
+                var dto = new EmployeeCreateDto
+                {
+                    FullName = emp.FullName,
+                    Age = emp.Age,
+                    Phone = emp.Phone,
+                    Address = emp.Address,
+                    Salary = emp.Salary,
+                    UserId = emp.UserId
+                };
+
+                var json = JsonSerializer.Serialize(dto, _options);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("employee", content);
+                return response.IsSuccessStatusCode;
             }
-            catch { return false; }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"CreateEmployee Error: {ex.Message}");
+                return false;
+            }
         }
 
         public async Task<bool> UpdateEmployeeAsync(int id, Employee emp)
@@ -91,11 +108,28 @@ namespace BookStore_Management_AppDesktop.Services.API
             try
             {
                 AddAuthorizationHeader();
-                var dto = new EmployeeResponseDto { EmployeeId = id, FullName = emp.FullName, Age = emp.Age, Phone = emp.Phone, Address = emp.Address, Salary = emp.Salary, UserId = emp.UserId };
-                var content = new StringContent(JsonSerializer.Serialize(dto, _options), Encoding.UTF8, "application/json");
-                return (await _httpClient.PutAsync($"employee/{id}", content)).IsSuccessStatusCode;
+                var dto = new EmployeeResponseDto
+                {
+                    EmployeeId = id,
+                    FullName = emp.FullName,
+                    Age = emp.Age,
+                    Phone = emp.Phone,
+                    Address = emp.Address,
+                    Salary = emp.Salary,
+                    UserId = emp.UserId
+                };
+
+                var json = JsonSerializer.Serialize(dto, _options);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PutAsync($"employee/{id}", content);
+                return response.IsSuccessStatusCode;
             }
-            catch { return false; }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"UpdateEmployee Error: {ex.Message}");
+                return false;
+            }
         }
 
         public async Task<bool> DeleteEmployeeAsync(int id)
@@ -103,9 +137,14 @@ namespace BookStore_Management_AppDesktop.Services.API
             try
             {
                 AddAuthorizationHeader();
-                return (await _httpClient.DeleteAsync($"employee/{id}")).IsSuccessStatusCode;
+                var response = await _httpClient.DeleteAsync($"employee/{id}");
+                return response.IsSuccessStatusCode;
             }
-            catch { return false; }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"DeleteEmployee Error: {ex.Message}");
+                return false;
+            }
         }
     }
 }

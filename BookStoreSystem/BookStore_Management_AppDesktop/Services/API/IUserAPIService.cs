@@ -6,7 +6,7 @@ namespace BookStore_Management_AppDesktop.Services.API
 {
     public interface IUserApiService
     {
-        // Lấy danh sách User để đổ vào ComboBox
         Task<List<UserResponseModel>> GetAllUsersAsync();
+        Task<(bool IsSuccess, string Message)> CreateUserAsync(UserCreateDto dto);
     }
 }

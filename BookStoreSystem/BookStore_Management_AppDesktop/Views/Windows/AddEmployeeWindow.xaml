@@ -77,7 +77,7 @@
                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                                Appearance="Transparent" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,15,0"/>
 
-                    <ui:Button Content="Add Employee" Command="{Binding SaveCommand}" 
+                    <ui:Button Content="Add Employee" Command="{Binding AddEmployeeCommand}" 
                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                                Appearance="Primary" Background="{DynamicResource NavyAccentBrush}" Width="120"/>
                 </StackPanel>

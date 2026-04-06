@@ -17,17 +17,16 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly IEmployeeApiService _employeeApi;
         private readonly IUserApiService _userApi;
 
-        // Danh sách gốc để phục vụ việc search/filter nếu cần
+        // Original list for searching/filtering if needed
         private List<int> _allUnassignedUserIds = new();
 
         [ObservableProperty]
         private Employee _newEmployee = new();
 
-        // Sửa kiểu dữ liệu thành int để tránh lỗi CS1503
         [ObservableProperty]
         private ObservableCollection<int> _userList = new();
 
-        // Lưu trữ ID được chọn từ ComboBox
+        // Stores the ID selected from the ComboBox
         [ObservableProperty]
         private int _selectedUserId;
 
@@ -45,7 +44,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             try
             {
-                // 1. Gọi song song API User và Employee để tối ưu thời gian
+                // 1. Call User and Employee APIs in parallel to optimize time
                 var usersTask = _userApi.GetAllUsersAsync();
                 var employeesTask = _employeeApi.GetAllEmployeesAsync();
 
@@ -56,25 +55,25 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
                 if (allUsers != null && allEmployees != null)
                 {
-                    // 2. Tìm các UserId đã được cấp cho nhân viên (khóa ngoại)
+                    // 2. Find UserIds already assigned to employees (Foreign Key check)
                     var assignedUserIds = allEmployees
                                           .Select(e => e.UserId)
                                           .Distinct()
                                           .ToHashSet();
 
-                    // 3. Lọc ra danh sách ID chưa được sử dụng
+                    // 3. Filter IDs that are not yet used
                     _allUnassignedUserIds = allUsers
                         .Where(u => u != null && !assignedUserIds.Contains(u.UserId))
                         .Select(u => u.UserId)
                         .ToList();
 
-                    // 4. Cập nhật giao diện trên UI Thread
+                    // 4. Update the UI on the Dispatcher thread
                     await Application.Current.Dispatcher.InvokeAsync(() =>
                     {
                         UserList.Clear();
                         foreach (var id in _allUnassignedUserIds)
                         {
-                            UserList.Add(id); // Thêm kiểu int vào ObservableCollection<int>
+                            UserList.Add(id);
                         }
                     });
                 }
@@ -82,35 +81,35 @@ namespace BookStore_Management_AppDesktop.ViewModels
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
-                MessageBox.Show("Không thể tải danh sách ID người dùng.");
+                MessageBox.Show("Unable to load User ID list.", "System Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         [RelayCommand]
-        private async Task Save(Window window)
+        private async Task AddEmployee(Window window)
         {
-            // Validation: Kiểm tra ID đã được chọn chưa
+            // Validation: Check if an ID has been selected
             if (SelectedUserId <= 0)
             {
-                MessageBox.Show("Vui lòng chọn một User ID hợp lệ.", "Lỗi nhập liệu", MessageBoxButton.OK);
+                MessageBox.Show("Please select a valid User ID.", "Input Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(NewEmployee.FullName))
             {
-                MessageBox.Show("Vui lòng nhập tên nhân viên.", "Lỗi nhập liệu", MessageBoxButton.OK);
+                MessageBox.Show("Please enter the employee's full name.", "Input Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             try
             {
-                // Gán ID trực tiếp từ ComboBox vào đối tượng nhân viên mới
+                // Assign selected ID to the new employee object
                 NewEmployee.UserId = SelectedUserId;
 
                 var success = await _employeeApi.CreateEmployeeAsync(NewEmployee);
                 if (success)
                 {
-                    MessageBox.Show("Thêm nhân viên thành công!", "Thông báo", MessageBoxButton.OK);
+                    MessageBox.Show("Employee added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     if (window != null)
                     {
                         window.DialogResult = true;
@@ -119,16 +118,38 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Lưu thất bại. Kiểm tra lại dữ liệu hoặc tài khoản đã có hồ sơ.");
+                    MessageBox.Show("Save failed. Please check the data or ensure the account doesn't already have a profile.", "Server Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi hệ thống: {ex.Message}");
+                MessageBox.Show($"System Error: {ex.Message}", "Critical Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         [RelayCommand]
         private void Cancel(Window window) => window?.Close();
+
+        [RelayCommand]
+        private async Task AddUserID()
+        {
+            // Open Create New User window
+            var addUserWin = new BookStore_Management_AppDesktop.Views.Windows.AddUserWindow();
+            var addUserVM = new AddUserViewModel();
+            addUserWin.DataContext = addUserVM;
+
+            // Wait for user to close window
+            if (addUserWin.ShowDialog() == true)
+            {
+                // If created successfully, reload the ID list
+                await LoadUsersAsync();
+
+                // Automatically select the highest ID (usually the newly created one)
+                if (UserList.Any())
+                {
+                    SelectedUserId = UserList.Max();
+                }
+            }
+        }
     }
 }
