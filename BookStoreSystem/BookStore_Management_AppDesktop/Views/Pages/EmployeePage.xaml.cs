@@ -52,5 +52,15 @@ namespace BookStore_Management_AppDesktop.Views.Pages
                 // Nếu chưa chọn, DataGrid sẽ tự thực hiện logic chọn mặc định (Trigger sẽ đổi màu chữ sang Đỏ)
             }
         }
+
+        private void FilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement element && element.ContextMenu != null)
+            {
+                element.ContextMenu.PlacementTarget = element;
+                element.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                element.ContextMenu.IsOpen = true;
+            }
+        }
     }
 }
