@@ -17,14 +17,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly IEmployeeApiService _apiService;
         private List<Employee> _allEmployees = new();
-
-        // Token để hủy việc search cũ khi người dùng đang gõ phím liên tục (Debounce)
         private CancellationTokenSource? _searchCts;
 
         [ObservableProperty]
         private ObservableCollection<Employee> _employees = new();
 
-        // --- SEARCH & FILTER PROPERTIES ---
         [ObservableProperty]
         private string _searchText = string.Empty;
 
@@ -34,12 +31,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty]
         private string _searchPlaceholder = "Search by Full Name...";
 
-        // Properties giúp ContextMenu hiển thị dấu tích hoặc thanh màu xanh nổi bật
         public bool IsFullNameSelected => SelectedFilter == "Full Name";
         public bool IsSalarySelected => SelectedFilter == "Salary";
         public bool IsAddressSelected => SelectedFilter == "Address";
 
-        // --- PAGINATION PROPERTIES ---
         [ObservableProperty]
         private int _currentPage = 1;
 
@@ -48,7 +43,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         public List<int> PageSizeOptions { get; set; } = new List<int> { 5, 8, 10, 12, 15 };
 
-        // --- AVATAR PROPERTIES ---
         [ObservableProperty]
         private string _currentAvatarPath = "pack://application:,,,/Resources/Images/default_user.png";
 
@@ -90,10 +84,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
             }
         }
 
-        // --- LOGIC DEBOUNCE SEARCH (Khắc phục giật lag) ---
         partial void OnSearchTextChanged(string value)
         {
-            // Hủy đợt chờ search cũ
             _searchCts?.Cancel();
             _searchCts = new CancellationTokenSource();
             var token = _searchCts.Token;
@@ -102,17 +94,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
             {
                 try
                 {
-                    // Chờ người dùng ngừng gõ trong 400ms mới bắt đầu lọc
                     await Task.Delay(400, token);
-
                     if (!token.IsCancellationRequested)
                     {
-                        // Reset về trang 1 khi thực hiện tìm kiếm mới
                         CurrentPage = 1;
                         UpdateDisplayList();
                     }
                 }
-                catch (OperationCanceledException) { /* Bỏ qua nếu bị hủy bởi phím gõ tiếp theo */ }
+                catch (OperationCanceledException) { }
             }, token);
         }
 
@@ -124,14 +113,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         partial void OnCurrentPageChanged(int value) => UpdateDisplayList();
 
-        // --- CORE FILTER & PAGINATION LOGIC ---
         private void UpdateDisplayList()
         {
-            // 1. Lọc dữ liệu trên Thread phụ dựa trên SearchText và Option đã chọn
             var filteredData = _allEmployees.Where(e =>
             {
                 if (string.IsNullOrWhiteSpace(SearchText)) return true;
-
                 string search = SearchText.ToLower();
                 return SelectedFilter switch
                 {
@@ -142,11 +128,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 };
             }).ToList();
 
-            // 2. Tính toán các thông số phân trang
             int totalFiltered = filteredData.Count;
             int totalPages = Math.Max(1, (int)Math.Ceiling((double)totalFiltered / PageSize));
 
-            // Đảm bảo các thay đổi UI diễn ra trên UI Thread
             Application.Current.Dispatcher.Invoke(() =>
             {
                 if (CurrentPage > totalPages) CurrentPage = totalPages;
@@ -159,7 +143,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 Employees.Clear();
                 foreach (var emp in itemsToShow) Employees.Add(emp);
 
-                // Thông báo cập nhật các thuộc tính tính toán (Getters) và UI
                 OnPropertyChanged(nameof(TotalEmployees));
                 OnPropertyChanged(nameof(TotalPages));
                 OnPropertyChanged(nameof(CurrentPageStart));
@@ -167,7 +150,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             });
         }
 
-        // --- CALCULATED GETTERS CHO UI ---
         public int TotalEmployees => _allEmployees.Count(e => {
             if (string.IsNullOrWhiteSpace(SearchText)) return true;
             string search = SearchText.ToLower();
@@ -184,20 +166,40 @@ namespace BookStore_Management_AppDesktop.ViewModels
         public int CurrentPageStart => TotalEmployees == 0 ? 0 : (CurrentPage - 1) * PageSize + 1;
         public int CurrentPageEnd => Math.Min(CurrentPage * PageSize, TotalEmployees);
 
-        // --- COMMANDS ---
+        // --- ACTION COMMANDS ---
+
+        [RelayCommand]
+        private async Task EditEmployee(Employee employee)
+        {
+            if (employee == null) return;
+            // Add your Logic to open Edit window here
+            MessageBox.Show($"Editing: {employee.FullName}");
+            await InitializeDataAsync();
+        }
+
+        [RelayCommand]
+        private async Task DeleteEmployee(Employee employee)
+        {
+            if (employee == null) return;
+
+            var result = MessageBox.Show($"Are you sure you want to delete {employee.FullName}?",
+                "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                // await _apiService.DeleteEmployeeAsync(employee.EmployeeId);
+                await InitializeDataAsync();
+            }
+        }
 
         [RelayCommand]
         private void ChangeFilter(string filterType)
         {
             SelectedFilter = filterType;
             SearchPlaceholder = $"Search by {filterType}...";
-
-            // Cập nhật trạng thái Highlight cho ContextMenu
             OnPropertyChanged(nameof(IsFullNameSelected));
             OnPropertyChanged(nameof(IsSalarySelected));
             OnPropertyChanged(nameof(IsAddressSelected));
-
-            // Lọc lại dữ liệu ngay khi đổi chế độ
             UpdateDisplayList();
         }
 
@@ -215,7 +217,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             if (addWin.ShowDialog() == true) await InitializeDataAsync();
         }
 
-        // Avatar Actions
         [RelayCommand]
         private void OpenAvatarModal()
         {
