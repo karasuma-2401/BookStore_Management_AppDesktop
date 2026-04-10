@@ -133,18 +133,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [RelayCommand]
         private async Task AddUserID()
         {
-            // Open Create New User window
             var addUserWin = new BookStore_Management_AppDesktop.Views.Windows.AddUserWindow();
             var addUserVM = new AddUserViewModel();
             addUserWin.DataContext = addUserVM;
 
-            // Wait for user to close window
             if (addUserWin.ShowDialog() == true)
             {
-                // If created successfully, reload the ID list
                 await LoadUsersAsync();
 
-                // Automatically select the highest ID (usually the newly created one)
                 if (UserList.Any())
                 {
                     SelectedUserId = UserList.Max();

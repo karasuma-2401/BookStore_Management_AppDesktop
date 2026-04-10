@@ -267,26 +267,33 @@
                                            Cursor="Hand"
                                            Click="MoreButton_Click"
                                            Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Page}}">
-                                        <ui:Button.ContextMenu >
-                                            <ContextMenu x:Name="ActionMenu">
+                                        <ui:Button.ContextMenu>
+                                            <ContextMenu x:Name="ActionMenu" Padding="2" MinWidth="110">
+
                                                 <MenuItem Header="Edit" 
+                                                      Height="30" 
+                                                      Padding="5,0,10,0"
                                                       Command="{Binding PlacementTarget.Tag.EditEmployeeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                       CommandParameter="{Binding}"
-                                                      Foreground="{DynamicResource SuccessPrimaryBrush}"> 
+                                                      Foreground="{DynamicResource SuccessPrimaryBrush}">
                                                     <MenuItem.Icon>
-                                                        <ui:SymbolIcon Symbol="Edit24" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
+                                                        <ui:SymbolIcon Symbol="Edit24" FontSize="16" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
                                                     </MenuItem.Icon>
                                                 </MenuItem>
 
-                                                <Separator Background="#333333" Margin="5,0"/>
+                                                <Separator Background="#333333" Margin="5,2" Height="1"/>
+
                                                 <MenuItem Header="Delete" 
+                                                      Height="30"
+                                                      Padding="5,0,10,0"
                                                       Command="{Binding PlacementTarget.Tag.DeleteEmployeeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                       CommandParameter="{Binding}"
                                                       Foreground="{DynamicResource ErrorPrimaryBrush}">
                                                     <MenuItem.Icon>
-                                                        <ui:SymbolIcon Symbol="Delete24" Foreground="{DynamicResource ErrorPrimaryBrush}"/>
+                                                        <ui:SymbolIcon Symbol="Delete24" FontSize="16" Foreground="{DynamicResource ErrorPrimaryBrush}"/>
                                                     </MenuItem.Icon>
                                                 </MenuItem>
+
                                             </ContextMenu>
                                         </ui:Button.ContextMenu>
                                     </ui:Button>
