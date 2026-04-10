@@ -17,15 +17,12 @@ namespace BookStore_Management_AppDesktop.Views.Windows
         {
             InitializeComponent();
 
-            // 1. Khởi tạo các Services
             var authorApiService = new AuthorApiService();
             var bookApiService = new BookApiService();
             var cloudinaryService = new CloudinaryService();
 
-            // 2. Khởi tạo AuthorSelectionViewModel (Khối Lego Tác giả)
             var authorVM = new AuthorSelectionViewModel(authorApiService);
 
-            // 3. Tiêm tất cả vào BookFormViewModel (Không truyền Book -> Tự hiểu là chế độ Add)
             _viewModel = new BookFormViewModel(bookApiService, cloudinaryService, authorVM);
 
             _viewModel.OnShowMessage = (message) =>
@@ -38,7 +35,6 @@ namespace BookStore_Management_AppDesktop.Views.Windows
 
             this.DataContext = _viewModel;
 
-            // Gắn sự kiện để load dữ liệu khi mở form
             this.Loaded += AddBookWindow_Loaded;
         }
 

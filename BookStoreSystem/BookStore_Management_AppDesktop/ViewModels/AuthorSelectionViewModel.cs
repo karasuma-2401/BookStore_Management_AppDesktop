@@ -24,10 +24,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         [ObservableProperty] private bool _isShowAddButton;
 
-        // Lưu toàn bộ tác giả ngầm trong bộ nhớ
         private List<Author> _allAuthors = new();
 
-        // Chỉ chứa tối đa 5 tác giả để hiển thị lên giao diện ComboBox
         [ObservableProperty]
         private ObservableCollection<Author> _displayAuthors = new();
 
@@ -61,7 +59,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         SelectedAuthor = null;
                     }
 
-                    // Cập nhật lại danh sách 5 đề xuất mỗi khi người dùng gõ chữ
                     UpdateDisplayAuthors(text);
 
                     IsShowAddButton = !string.IsNullOrWhiteSpace(text) &&
@@ -81,18 +78,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
             {
                 var authors = await _authorApiService.GetAllAuthorsAsync();
 
-                // Nạp dữ liệu vào cache
                 _allAuthors = authors.ToList();
 
-                // Đề xuất 5 tác giả ban đầu
                 UpdateDisplayAuthors(SearchAuthorText);
 
-                // Xử lý khi ở chế độ Edit Book (có sẵn ID tác giả cũ)
                 if (initialAuthorId.HasValue)
                 {
                     SelectedAuthor = _allAuthors.FirstOrDefault(a => a.AuthorId == initialAuthorId.Value);
 
-                    // Nếu tác giả cũ không nằm trong top 5 đề xuất ban đầu, ép đưa lên đầu danh sách để hiển thị
                     if (SelectedAuthor != null && !DisplayAuthors.Contains(SelectedAuthor))
                     {
                         DisplayAuthors.Insert(0, SelectedAuthor);
@@ -106,7 +99,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             }
         }
 
-        // Logic giới hạn và lọc 5 tác giả
         private void UpdateDisplayAuthors(string searchText)
         {
             DisplayAuthors.Clear();
@@ -149,7 +141,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
                 _allAuthors.Add(created);
 
-                // Việc gán SelectedAuthor sẽ tự động kích hoạt cập nhật lại DisplayAuthors ở Setter của SearchAuthorText
                 SelectedAuthor = created;
 
                 OnShowMessage?.Invoke($"Added '{created.Name}'");

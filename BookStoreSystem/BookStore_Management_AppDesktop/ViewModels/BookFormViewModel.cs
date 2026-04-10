@@ -13,11 +13,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
 {
     public partial class BookFormViewModel : ObservableObject
     {
-        // Khai báo giao diện (Interfaces) thay vì class cụ thể để dễ dàng Unit Test sau này
         private readonly IBookApiService _bookApiService;
         private readonly CloudinaryService _cloudinaryService;
 
-        // [KIẾN TRÚC COMPOSITION]: Khối Lego Quản lý Tác giả
         public AuthorSelectionViewModel AuthorVM { get; }
 
         private readonly bool _isEditMode;
@@ -35,8 +33,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
         public Action<string>? OnShowMessage { get; set; }
         public Action? OnRequestClose { get; set; }
 
-        // [TỐI ƯU 2.2 - DEPENDENCY INJECTION]: Không dùng "new" bên trong class nữa
-        // Gộp chung 2 Constructor làm 1, Book truyền vào là null thì hiểu là Add, có Book thì là Edit
         public BookFormViewModel(
             IBookApiService bookApiService,
             CloudinaryService cloudinaryService,
@@ -47,7 +43,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             _cloudinaryService = cloudinaryService;
             AuthorVM = authorVM;
 
-            // Ràng buộc sự kiện thông báo của AuthorVM chung với Form này
             AuthorVM.OnShowMessage = (msg) => OnShowMessage?.Invoke(msg);
 
             if (bookToEdit == null)
@@ -58,7 +53,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             {
                 _isEditMode = true;
                 _bookId = bookToEdit.BookId;
-                Title = bookToEdit.Title;
+                Title = bookToEdit.Title ?? string.Empty;
                 Quantity = bookToEdit.Quantity;
                 LocalImagePath = bookToEdit.ImagePath ?? string.Empty;
                 _initialAuthorId = bookToEdit.AuthorId;
@@ -67,7 +62,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         public async Task InitializeAsync()
         {
-            // Kích hoạt khối Lego Tác giả, truyền ID cũ (nếu có) để nó tự tìm và Select
             await AuthorVM.InitializeAsync(_initialAuthorId);
         }
 
@@ -86,7 +80,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             LocalImagePath = file.FullName;
         }
 
-        // [TỐI ƯU 2.3 - THUẦN MVVM]: Bỏ tham số Window, giao diện tự đóng thông qua Action
         [RelayCommand]
         private void Cancel() => OnRequestClose?.Invoke();
 
@@ -95,7 +88,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (string.IsNullOrWhiteSpace(Title)) { OnShowMessage?.Invoke("Enter title."); return; }
 
-            // Lấy ID từ khối Lego Tác giả
             var selectedAuthorId = AuthorVM.SelectedAuthor?.AuthorId;
             if (selectedAuthorId is null or 0) { OnShowMessage?.Invoke("Select author."); return; }
 
@@ -106,7 +98,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 IsLoading = true;
                 string finalImageUrl = LocalImagePath;
 
-                // [TỐI ƯU 2.1 - URL VALIDATION]: Dùng Uri.TryCreate để check chính xác
                 bool isHttpLink = Uri.TryCreate(LocalImagePath, UriKind.Absolute, out var uri) &&
                                   (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
 
@@ -116,7 +107,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     {
                         finalImageUrl = await _cloudinaryService.UploadImageAsync(LocalImagePath);
                     }
-                    // [TỐI ƯU 2.4 - EXCEPTION]: Log lỗi ra Debug để dev truy vết
                     catch (Exception ex)
                     {
                         Debug.WriteLine($"[Cloudinary Error]: {ex}");

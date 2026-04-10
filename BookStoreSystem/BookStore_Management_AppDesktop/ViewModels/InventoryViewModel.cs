@@ -66,7 +66,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 if (isSuccess)
                 {
                     var cloudinaryService = new CloudinaryService();
-                    await cloudinaryService.DeleteImageAsync(selectedBook.ImagePath); 
+                    if (!string.IsNullOrWhiteSpace(selectedBook.ImagePath))
+                    {
+                        await cloudinaryService.DeleteImageAsync(selectedBook.ImagePath);
+                    }
 
                     OnShowMessage?.Invoke("Book deleted successfully!");
                     await LoadDataAsync();

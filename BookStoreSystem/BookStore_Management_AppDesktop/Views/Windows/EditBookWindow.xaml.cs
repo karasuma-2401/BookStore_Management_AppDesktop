@@ -14,20 +14,16 @@ namespace BookStore_Management_AppDesktop.Views.Windows
     {
         private readonly BookFormViewModel _viewModel;
 
-        // Yêu cầu phải truyền vào một đối tượng Book khi mở cửa sổ này
         public EditBookWindow(Book bookToEdit)
         {
             InitializeComponent();
 
-            // 1. Khởi tạo các Services
             var authorApiService = new AuthorApiService();
             var bookApiService = new BookApiService();
             var cloudinaryService = new CloudinaryService();
 
-            // 2. Khởi tạo AuthorSelectionViewModel (Khối Lego Tác giả)
             var authorVM = new AuthorSelectionViewModel(authorApiService);
 
-            // 3. Tiêm tất cả vào BookFormViewModel (CÓ truyền bookToEdit -> Tự hiểu là chế độ Edit)
             _viewModel = new BookFormViewModel(bookApiService, cloudinaryService, authorVM, bookToEdit);
 
             _viewModel.OnShowMessage = (message) =>
@@ -40,7 +36,6 @@ namespace BookStore_Management_AppDesktop.Views.Windows
 
             this.DataContext = _viewModel;
 
-            // ĐÃ BỔ SUNG: Gắn sự kiện để load dữ liệu (và tự động chọn tác giả cũ) khi mở form
             this.Loaded += EditBookWindow_Loaded;
         }
 
