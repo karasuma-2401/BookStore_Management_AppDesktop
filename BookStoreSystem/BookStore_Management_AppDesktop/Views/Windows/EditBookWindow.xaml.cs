@@ -1,16 +1,9 @@
 ﻿using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Services;
+using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace BookStore_Management_AppDesktop.Views.Windows
 {
@@ -19,26 +12,41 @@ namespace BookStore_Management_AppDesktop.Views.Windows
     /// </summary>
     public partial class EditBookWindow : Window
     {
-        // Yêu cầu phải truyền vào một đối tượng Book khi mở cửa sổ này
+        private readonly BookFormViewModel _viewModel;
+
         public EditBookWindow(Book bookToEdit)
         {
             InitializeComponent();
 
-            var viewModelEdit = new EditBookViewModel(bookToEdit);
+            var authorApiService = new AuthorApiService();
+            var bookApiService = new BookApiService();
+            var cloudinaryService = new CloudinaryService();
 
-            viewModelEdit.OnShowMessage = (message) =>
+            var authorVM = new AuthorSelectionViewModel(authorApiService);
+
+            _viewModel = new BookFormViewModel(bookApiService, cloudinaryService, authorVM, bookToEdit);
+
+            _viewModel.OnShowMessage = (message) =>
             {
                 var msgBox = new CustomMessageBox(message);
                 msgBox.ShowDialog();
             };
-            viewModelEdit.OnRequestClose = () => this.Close();
 
-            this.DataContext = viewModelEdit;
+            _viewModel.OnRequestClose = () => this.Close();
+
+            this.DataContext = _viewModel;
+
+            this.Loaded += EditBookWindow_Loaded;
         }
 
-        private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private async void EditBookWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
+            await _viewModel.InitializeAsync();
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
             {
                 this.DragMove();
             }
