@@ -172,22 +172,24 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private async Task EditEmployee(Employee employee)
         {
             if (employee == null) return;
-            // Add your Logic to open Edit window here
-            MessageBox.Show($"Editing: {employee.FullName}");
-            await InitializeDataAsync();
-        }
 
-        [RelayCommand]
-        private async Task DeleteEmployee(Employee employee)
-        {
-            if (employee == null) return;
+            // 1. Khởi tạo ViewModel cho cửa sổ Edit và truyền dữ liệu nhân viên vào
+            // Lưu ý: Đảm bảo class UpdateEmployeeViewModel của bạn nhận tham số Employee trong Constructor
+            var editViewModel = new UpdateEmployeeViewModel(employee);
 
-            var result = MessageBox.Show($"Are you sure you want to delete {employee.FullName}?",
-                "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            // 2. Khởi tạo cửa sổ Edit và truyền ViewModel vào (Khớp với Constructor trong EditEmployeeWindow.xaml.cs)
+            var editWindow = new BookStore_Management_AppDesktop.Views.Windows.EditEmployeeWindow(editViewModel);
 
-            if (result == MessageBoxResult.Yes)
+            // 3. Thiết lập Owner để cửa sổ hiện ở giữa ứng dụng chính
+            if (Application.Current.MainWindow != null)
             {
-                // await _apiService.DeleteEmployeeAsync(employee.EmployeeId);
+                editWindow.Owner = Application.Current.MainWindow;
+            }
+
+            // 4. Hiển thị cửa sổ dưới dạng Dialog (người dùng phải đóng mới quay lại được Page)
+            if (editWindow.ShowDialog() == true)
+            {
+                // Nếu cập nhật thành công (DialogResult = true), load lại danh sách
                 await InitializeDataAsync();
             }
         }

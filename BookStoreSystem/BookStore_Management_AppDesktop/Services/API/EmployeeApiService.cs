@@ -19,12 +19,9 @@ namespace BookStore_Management_AppDesktop.Services.API
 
         private void AddAuthorizationHeader()
         {
-            // Retrieve the token saved after a successful login
             var token = Settings.Default.AccessToken;
-
             if (!string.IsNullOrEmpty(token))
             {
-                // Assign Bearer Token to the Header
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
             else
@@ -38,21 +35,15 @@ namespace BookStore_Management_AppDesktop.Services.API
             try
             {
                 AddAuthorizationHeader();
-
                 var response = await _httpClient.GetAsync("employee");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                 {
-                    MessageBox.Show("You do not have Admin permissions to view this list!", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Stop);
+                    MessageBox.Show("You do not have Admin permissions!", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Stop);
                     return new List<Employee>();
                 }
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    var error = await response.Content.ReadAsStringAsync();
-                    System.Diagnostics.Debug.WriteLine($"Error: {response.StatusCode} - {error}");
-                    return new List<Employee>();
-                }
+                if (!response.IsSuccessStatusCode) return new List<Employee>();
 
                 var json = await response.Content.ReadAsStringAsync();
                 var dtos = JsonSerializer.Deserialize<List<EmployeeResponseDto>>(json, _options) ?? new List<EmployeeResponseDto>();
@@ -70,7 +61,7 @@ namespace BookStore_Management_AppDesktop.Services.API
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Connection Error: {ex.Message}", "Network Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Diagnostics.Debug.WriteLine($"GetAll Error: {ex.Message}");
                 return new List<Employee>();
             }
         }
@@ -92,13 +83,12 @@ namespace BookStore_Management_AppDesktop.Services.API
 
                 var json = JsonSerializer.Serialize(dto, _options);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-
                 var response = await _httpClient.PostAsync("employee", content);
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"CreateEmployee Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Create Error: {ex.Message}");
                 return false;
             }
         }
@@ -108,26 +98,26 @@ namespace BookStore_Management_AppDesktop.Services.API
             try
             {
                 AddAuthorizationHeader();
-                var dto = new EmployeeResponseDto
+
+                var dto = new EmployeeUpdateDto
                 {
-                    EmployeeId = id,
                     FullName = emp.FullName,
                     Age = emp.Age,
                     Phone = emp.Phone,
                     Address = emp.Address,
-                    Salary = emp.Salary,
-                    UserId = emp.UserId
+                    Salary = emp.Salary
                 };
 
                 var json = JsonSerializer.Serialize(dto, _options);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
+                // Gọi PUT: employee/{id}
                 var response = await _httpClient.PutAsync($"employee/{id}", content);
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"UpdateEmployee Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Update Error: {ex.Message}");
                 return false;
             }
         }
@@ -142,7 +132,7 @@ namespace BookStore_Management_AppDesktop.Services.API
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"DeleteEmployee Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Delete Error: {ex.Message}");
                 return false;
             }
         }

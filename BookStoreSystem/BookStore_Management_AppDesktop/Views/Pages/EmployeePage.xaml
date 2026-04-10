@@ -265,11 +265,12 @@
                                            Foreground="{DynamicResource TextOnLightBackgroudBrush}"
                                            Padding="0"
                                            Cursor="Hand"
-                                           Click="MoreButton_Click">
-                                        <ui:Button.ContextMenu>
+                                           Click="MoreButton_Click"
+                                           Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Page}}">
+                                        <ui:Button.ContextMenu >
                                             <ContextMenu x:Name="ActionMenu">
                                                 <MenuItem Header="Edit" 
-                                                      Command="{Binding DataContext.EditEmployeeCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                      Command="{Binding PlacementTarget.Tag.EditEmployeeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                       CommandParameter="{Binding}"
                                                       Foreground="{DynamicResource SuccessPrimaryBrush}"> 
                                                     <MenuItem.Icon>
@@ -279,7 +280,7 @@
 
                                                 <Separator Background="#333333" Margin="5,0"/>
                                                 <MenuItem Header="Delete" 
-                                                      Command="{Binding DataContext.DeleteEmployeeCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                      Command="{Binding PlacementTarget.Tag.DeleteEmployeeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                       CommandParameter="{Binding}"
                                                       Foreground="{DynamicResource ErrorPrimaryBrush}">
                                                     <MenuItem.Icon>
