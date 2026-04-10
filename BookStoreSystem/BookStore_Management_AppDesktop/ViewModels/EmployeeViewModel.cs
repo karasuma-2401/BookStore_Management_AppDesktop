@@ -10,6 +10,9 @@ using System.Linq;
 using System.Windows;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net.Http;
+using System.Net.Http.Headers;
+
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -173,24 +176,89 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (employee == null) return;
 
-            // 1. Khởi tạo ViewModel cho cửa sổ Edit và truyền dữ liệu nhân viên vào
-            // Lưu ý: Đảm bảo class UpdateEmployeeViewModel của bạn nhận tham số Employee trong Constructor
+
             var editViewModel = new UpdateEmployeeViewModel(employee);
 
-            // 2. Khởi tạo cửa sổ Edit và truyền ViewModel vào (Khớp với Constructor trong EditEmployeeWindow.xaml.cs)
             var editWindow = new BookStore_Management_AppDesktop.Views.Windows.EditEmployeeWindow(editViewModel);
 
-            // 3. Thiết lập Owner để cửa sổ hiện ở giữa ứng dụng chính
             if (Application.Current.MainWindow != null)
             {
                 editWindow.Owner = Application.Current.MainWindow;
             }
 
-            // 4. Hiển thị cửa sổ dưới dạng Dialog (người dùng phải đóng mới quay lại được Page)
             if (editWindow.ShowDialog() == true)
             {
-                // Nếu cập nhật thành công (DialogResult = true), load lại danh sách
                 await InitializeDataAsync();
+            }
+        }
+
+        [RelayCommand]
+        private async Task DeleteEmployee(Employee employee)
+        {
+            if (employee == null) return;
+
+            var confirmDialog = new BookStore_Management_AppDesktop.Views.Windows.DeleteConfirmationWindow();
+            if (Application.Current.MainWindow != null)
+            {
+                confirmDialog.Owner = Application.Current.MainWindow;
+            }
+
+            if (confirmDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    bool isEmployeeDeleted = await _apiService.DeleteEmployeeAsync(employee.EmployeeId);
+
+                    if (isEmployeeDeleted)
+                    {
+                        bool isUserDeleted = await DeleteUserAccountAsync(employee.UserId);
+
+                        _allEmployees.Remove(employee);
+                        UpdateDisplayList();
+
+                        if (isUserDeleted)
+                        {
+                            MessageBox.Show("Employee and associated User account deleted successfully!",
+                                            "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Employee deleted, but the User account could not be removed. It might be in use elsewhere.",
+                                            "Partial Success", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to delete the Employee record.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"System Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private async Task<bool> DeleteUserAccountAsync(int userId)
+        {
+            try
+            {
+                using (var client = new HttpClient { BaseAddress = new Uri("https://localhost:7063/") })
+                {
+                    var token = Settings.Default.AccessToken;
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    var response = await client.DeleteAsync($"api/users/{userId}");
+                    return response.IsSuccessStatusCode;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"User Delete Error: {ex.Message}");
+                return false;
             }
         }
 
