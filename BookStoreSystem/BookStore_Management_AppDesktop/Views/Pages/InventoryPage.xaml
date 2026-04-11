@@ -52,7 +52,7 @@
                       CanUserAddRows="False" 
                       IsReadOnly="True" 
                       RowHeight="70" HeadersVisibility="Column"
-                      Foreground="#1E293B" 
+                      Foreground="{DynamicResource TextOnLightBackgroudBrush}" 
                       Background="Transparent" 
                       CanUserResizeColumns="False" 
                       RowBackground="{DynamicResource CardBackgroundBrush}"
@@ -86,11 +86,21 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="Author ID" Binding="{Binding AuthorId}" Width="120">
+                    <DataGridTextColumn Header="Author" Binding="{Binding AuthorName}" Width="150">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Foreground" Value="#64748B"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextOnLightBackgroudBrush}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Category"  Width="150">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextOnLightBackgroudBrush}"/>
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -100,30 +110,39 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="FontWeight" Value="SemiBold"/>
-                                <Setter Property="Foreground" Value="{DynamicResource NavyLightBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextOnLightBackgroudBrush}"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTemplateColumn Header="Actions" Width="140">
+                    <DataGridTemplateColumn Header="Actions" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Menu Background="Transparent" 
+                                      VerticalAlignment="Center" 
+                                      HorizontalAlignment="Center">
+                                    <MenuItem Padding="8,4" Background="Transparent" BorderThickness="0" Cursor="Hand">
 
-                                    <ui:Button Icon="{ui:SymbolIcon Edit24}" 
-                                               Appearance="Secondary" 
-                                               Background="{DynamicResource ContentBackgroundBrush}" Foreground="{DynamicResource SidebarBackgroundBrush}" BorderBrush="#CBD5E1"
-                                               Margin="0,0,10,0" Cursor="Hand"
-                                               Command="{Binding DataContext.EditBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                               CommandParameter="{Binding}" />
+                                        <MenuItem.Header>
+                                            <ui:SymbolIcon Symbol="MoreHorizontal24" FontSize="20" Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
+                                        </MenuItem.Header>
 
-                                    <ui:Button Icon="{ui:SymbolIcon Delete24}" 
-                                               Appearance="Danger" 
-                                               Background="{DynamicResource ErrorPrimaryBrush}" Foreground="White" BorderThickness="0" Cursor="Hand"
-                                               Command="{Binding DataContext.DeleteBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                               CommandParameter="{Binding}" />
+                                        <MenuItem Header="Edit" 
+                                                  Icon="{ui:SymbolIcon Edit24}"
+                                                  Foreground="{DynamicResource SuccessPrimaryBrush}"
+                                                  Command="{Binding DataContext.EditBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                  CommandParameter="{Binding}"/>
 
-                                </StackPanel>
+                                        <Separator/>
+
+                                        <MenuItem Header="Delete" 
+                                                  Icon="{ui:SymbolIcon Delete24}" 
+                                                  Foreground="{DynamicResource ErrorPrimaryBrush}"
+                                                  Command="{Binding DataContext.DeleteBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                  CommandParameter="{Binding}"/>
+
+                                    </MenuItem>
+                                </Menu>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

@@ -47,9 +47,9 @@ namespace BookStoreManagement.API.Controllers
         // PUT: user/5
         [HttpPut("{id}")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        public async Task<IActionResult> PutUser(int id, UserUpdateDto dto)
         {
-            var success = await _userService.UpdateUserAsync(id, user);
+            var success = await _userService.UpdateUserAsync(id, dto);
 
             return success
                 ? NoContent()
@@ -59,12 +59,12 @@ namespace BookStoreManagement.API.Controllers
         // POST: user
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> PostUser(User user)
+        public async Task<IActionResult> PostUser(UserCreateDto user)
         {
             var success = await _userService.CreateUserAsync(user);
 
             return success
-                ? CreatedAtAction("GetUser", new { id = user.UserId }, new { message = "User created successfully" })
+                ? StatusCode(201, new { message = "User created successfully" })
                 : BadRequest(new { message = "Invalid data" });
         }
 
