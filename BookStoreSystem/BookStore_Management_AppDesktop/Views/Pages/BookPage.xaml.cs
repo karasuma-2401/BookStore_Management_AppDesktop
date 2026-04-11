@@ -1,5 +1,6 @@
 ﻿
 using BookStore_Management_AppDesktop.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -15,8 +16,7 @@ namespace BookStore_Management_AppDesktop.Views.Pages
         {
             InitializeComponent();
 
-            // Gán ViewModel giả để test giao diện Amazon lên hình
-            this.DataContext = new BookViewModel();
+            this.DataContext = App.ServiceProvider!.GetRequiredService<BookViewModel>();
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)

@@ -32,7 +32,6 @@ namespace BookStore_Management_AppDesktop.Services.API
             }
         }
 
-        // GET ALL BOOK: 
         public async Task<List<Book>> GetAllBooksAsync()
         {
             try
@@ -52,6 +51,7 @@ namespace BookStore_Management_AppDesktop.Services.API
                     BookId = dto.BookId,
                     Title = dto.Title,
                     AuthorId = dto.AuthorId,
+                    AuthorName = dto.AuthorName,
                     Price = dto.Price,
                     Quantity = dto.Quantity,
                     ImagePath = dto.ImagePath
@@ -64,7 +64,6 @@ namespace BookStore_Management_AppDesktop.Services.API
             }
         }
 
-        // CREATE  new BOOK: 
         public async Task<bool> CreateBookAsync(Book newBook)
         {
             try
@@ -72,11 +71,13 @@ namespace BookStore_Management_AppDesktop.Services.API
                 AddAuthorizationHeader();
                 var createDto = new BookCreateDto
                 {
-                    Title = newBook.Title,
+                    Title = newBook.Title ?? string.Empty,
+
                     AuthorId = newBook.AuthorId,
                     Price = newBook.Price,
                     Quantity = newBook.Quantity,
-                    ImagePath = newBook.ImagePath
+
+                    ImagePath = newBook.ImagePath ?? string.Empty
                 };
 
                 var json = JsonSerializer.Serialize(createDto, _options);
@@ -93,7 +94,6 @@ namespace BookStore_Management_AppDesktop.Services.API
             }
         }
 
-        // DELETE: 
         public async Task<bool> DeleteBookAsync(int id)
         {
             try
@@ -110,7 +110,6 @@ namespace BookStore_Management_AppDesktop.Services.API
         }
 
 
-        // UPDATE: 
         public async Task<bool> UpdateBookAsync(int id, Book updatedBook)
         {
             try
@@ -119,11 +118,11 @@ namespace BookStore_Management_AppDesktop.Services.API
                 var updateDto = new BookUpdateDto
                 {
                     BookId = id,
-                    Title = updatedBook.Title,
+                    Title = updatedBook.Title ?? string.Empty,
                     AuthorId = updatedBook.AuthorId,
                     Price = updatedBook.Price,
                     Quantity = updatedBook.Quantity,
-                    ImagePath = updatedBook.ImagePath
+                    ImagePath = updatedBook.ImagePath ?? string.Empty
                 };
 
                 var json = JsonSerializer.Serialize(updateDto, _options);

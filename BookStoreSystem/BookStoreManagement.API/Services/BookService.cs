@@ -1,7 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using BookStoreManagement.API.Data;
-using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Interfaces.Services;
+using BookStoreManagement.API.Models.Book;
+using BookStoreManagement.API.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreManagement.API.Services
 {
@@ -14,9 +15,42 @@ namespace BookStoreManagement.API.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Book>> GetBooks()
+        public async Task<IEnumerable<BookResponseDto>> GetBooks(int? categoryId, int? authorId, string? keyword)
         {
-            return await _context.Books.ToListAsync();
+            var query = _context.Books
+                .Include(b => b.Author)
+                    .Include(b => b.BookCategories)
+                        .ThenInclude(bc => bc.Category)
+                .AsQueryable();
+            if (authorId.HasValue)
+            {
+                query = query.Where(b => b.AuthorId == authorId.Value);
+            }
+
+            if (categoryId.HasValue)
+            {
+                query = query.Where(b =>
+                    b.BookCategories.Any(bc => bc.CategoryId == categoryId.Value));
+            }
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(b => b.Title.Contains(keyword));
+            }
+
+            var result = await query
+                .Select(b => new BookResponseDto
+                {
+                    BookId = b.BookId,
+                    Title = b.Title,
+                    AuthorId = b.AuthorId,
+                    AuthorName = b.Author != null ? b.Author.Name : null,
+                    BookCategories = string.Join(", ",
+                        b.BookCategories.Select(bc => bc.Category.Name))
+                })
+                .ToListAsync();
+
+            return result;
         }
 
         public async Task<Book?> GetBookById(int id)
