@@ -18,9 +18,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         public AuthorSelectionViewModel AuthorVM { get; }
 
-        private readonly bool _isEditMode;
-        private readonly int _bookId;
-        private readonly int? _initialAuthorId;
+        private bool _isEditMode;
+        private int _bookId;
+        private int? _initialAuthorId;
 
         [ObservableProperty] private string _title = string.Empty;
         [ObservableProperty] private int _quantity;
@@ -36,28 +36,24 @@ namespace BookStore_Management_AppDesktop.ViewModels
         public BookFormViewModel(
             IBookApiService bookApiService,
             CloudinaryService cloudinaryService,
-            AuthorSelectionViewModel authorVM,
-            Book? bookToEdit = null)
+            AuthorSelectionViewModel authorVM)
         {
             _bookApiService = bookApiService;
             _cloudinaryService = cloudinaryService;
             AuthorVM = authorVM;
 
             AuthorVM.OnShowMessage = (msg) => OnShowMessage?.Invoke(msg);
+            _isEditMode = false;
+        }
 
-            if (bookToEdit == null)
-            {
-                _isEditMode = false;
-            }
-            else
-            {
-                _isEditMode = true;
-                _bookId = bookToEdit.BookId;
-                Title = bookToEdit.Title ?? string.Empty;
-                Quantity = bookToEdit.Quantity;
-                LocalImagePath = bookToEdit.ImagePath ?? string.Empty;
-                _initialAuthorId = bookToEdit.AuthorId;
-            }
+        public void SetupEditMode(Book bookToEdit)
+        {
+            _isEditMode = true;
+            _bookId = bookToEdit.BookId;
+            Title = bookToEdit.Title ?? string.Empty;
+            Quantity = bookToEdit.Quantity;
+            LocalImagePath = bookToEdit.ImagePath ?? string.Empty;
+            _initialAuthorId = bookToEdit.AuthorId;
         }
 
         public async Task InitializeAsync()

@@ -1,6 +1,8 @@
 ﻿using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.ViewModels;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Input;
 
@@ -17,13 +19,7 @@ namespace BookStore_Management_AppDesktop.Views.Windows
         {
             InitializeComponent();
 
-            var authorApiService = new AuthorApiService();
-            var bookApiService = new BookApiService();
-            var cloudinaryService = new CloudinaryService();
-
-            var authorVM = new AuthorSelectionViewModel(authorApiService);
-
-            _viewModel = new BookFormViewModel(bookApiService, cloudinaryService, authorVM);
+            _viewModel = App.ServiceProvider!.GetRequiredService<BookFormViewModel>();
 
             _viewModel.OnShowMessage = (message) =>
             {
@@ -34,7 +30,6 @@ namespace BookStore_Management_AppDesktop.Views.Windows
             _viewModel.OnRequestClose = () => this.Close();
 
             this.DataContext = _viewModel;
-
             this.Loaded += AddBookWindow_Loaded;
         }
 
