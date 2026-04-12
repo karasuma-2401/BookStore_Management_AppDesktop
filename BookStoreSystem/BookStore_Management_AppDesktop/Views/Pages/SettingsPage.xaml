@@ -16,25 +16,23 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
-            <TextBlock Text="SYSTEM SETUP" 
-                       FontSize="28" 
-                       FontWeight="Black" 
-                       VerticalAlignment="Center" 
-                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+            <TextBlock Text="SYSTEM SETUP" Style="{StaticResource HeaderTextStyle}" />
         </Border>
 
         <StackPanel Grid.Row="1" Margin="30">
 
             <TextBlock Text="Data and Sync" 
-                       FontSize="18" 
-                       FontWeight="SemiBold" 
+                       FontSize="{StaticResource FontSizeSubTitle}" 
+                       FontWeight="Bold" 
                        Margin="0,0,0,10"
                        Foreground="{DynamicResource TextMutedBrush}"/>
 
             <ui:CardAction Command="{Binding RefreshDataCommand}" 
                            Margin="0,0,0,15"
                            Padding="20"
-                           Background="{DynamicResource CardBackgroundBrush}">
+                           Background="{DynamicResource CardBackgroundBrush}"
+                           Cursor="Hand">
+
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -48,15 +46,11 @@
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                         <TextBlock Text="Reload data (Refresh Data)" 
-                                   FontSize="16" 
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
+                                   Style="{StaticResource BookTitleTextStyle}" />
 
                         <TextBlock Text="Synchronize the latest data from the server. Use when you suspect data is skewed." 
-                                   FontSize="13" 
-                                   Foreground="{DynamicResource TextMutedBrush}" 
-                                   Margin="0,5,0,0"
-                                   TextWrapping="Wrap"/>
+                                   Style="{StaticResource BodyTextStyle}" 
+                                   Margin="0,5,0,0" />
                     </StackPanel>
                 </Grid>
             </ui:CardAction>

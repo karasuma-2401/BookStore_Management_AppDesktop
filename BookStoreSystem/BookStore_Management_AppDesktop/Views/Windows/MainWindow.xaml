@@ -4,40 +4,38 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="BookStore Management" Height="768" Width="1366"
         WindowStartupLocation="CenterScreen"
-        Background="{StaticResource NavyPrimaryBrush}"
-        Foreground="{StaticResource TextPrimaryBrush}">
-    
-    <Window.Resources>
-        
-    </Window.Resources>
-    
+        Background="{DynamicResource NavyPrimaryBrush}"
+        Foreground="{DynamicResource TextPrimaryBrush}">
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!--#region SIDEBAR  -->
         <ui:NavigationView x:Name="RootNavigation"
                            Grid.Column="0"
                            PaneDisplayMode="Left"
                            IsBackButtonVisible="Collapsed"
                            OpenPaneLength="250"
-                           Background="{StaticResource SidebarBackgroundBrush}">
+                           Background="{DynamicResource SidebarBackgroundBrush}">
 
             <ui:NavigationView.PaneHeader>
                 <Grid Margin="15,20,0,20">
                     <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon Symbol="Library24" FontSize="25" Foreground="{StaticResource NavyAccentBrush}"/>
-                        <TextBlock Text="BOOKSTORE" FontSize="28" FontWeight="Bold" Opacity="0"
-                                   Foreground="{StaticResource TextPrimaryBrush}">
+                        <ui:SymbolIcon Symbol="Library24" FontSize="25" Foreground="{DynamicResource NavyAccentBrush}" Margin="0,0,10,0"/>
+
+                        <TextBlock Text="BOOKSTORE" 
+                                   Style="{StaticResource HeaderTextStyle}" 
+                                   Opacity="0">
                             <TextBlock.RenderTransform>
                                 <TranslateTransform X="-30"/>
                             </TextBlock.RenderTransform>
+
                             <TextBlock.Triggers>
                                 <EventTrigger RoutedEvent="Loaded">
                                     <BeginStoryboard>
-                                        <Storyboard>
+                                        <Storyboard>    
                                             <DoubleAnimation
                                                 Storyboard.TargetProperty="Opacity" From="0" To="1"
                                                 Duration="0:0:1.0"/>
@@ -49,55 +47,43 @@
                                     </BeginStoryboard>
                                 </EventTrigger>
                             </TextBlock.Triggers>
-
                         </TextBlock>
                     </StackPanel>
                 </Grid>
             </ui:NavigationView.PaneHeader>
 
             <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Tag="Books" Icon="{ui:SymbolIcon Book24}"
-                                       Command="{Binding NavigateCommand}" 
-                                       CommandParameter="Books">
-                    <TextBlock Text="Books" FontSize="20" FontWeight="Medium"/>
+                <ui:NavigationViewItem Tag="Books" Icon="{ui:SymbolIcon Book24}" Command="{Binding NavigateCommand}" CommandParameter="Books">
+                    <TextBlock Text="Books" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
                 </ui:NavigationViewItem>
-                <ui:NavigationViewItem Tag="Employees" Icon="{ui:SymbolIcon People24}"
-                                       Command="{Binding NavigateCommand}" 
-                                       CommandParameter="Employees">
-                    <TextBlock Text="Employees" FontSize="20" FontWeight="Medium"/>
+
+                <ui:NavigationViewItem Tag="Employees" Icon="{ui:SymbolIcon People24}" Command="{Binding NavigateCommand}" CommandParameter="Employees">
+                    <TextBlock Text="Employees" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
                 </ui:NavigationViewItem>
+
                 <ui:NavigationViewItem Tag="Customers" Icon="{ui:SymbolIcon Person24}">
-                    <TextBlock Text="Customers" FontSize="20" FontWeight="Medium"/>
+                    <TextBlock Text="Customers" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
                 </ui:NavigationViewItem>
+
                 <ui:NavigationViewItem Tag="Invoice" Icon="{ui:SymbolIcon Document24}">
-                    <TextBlock Text="Invoice" FontSize="20" FontWeight="Medium"/>
+                    <TextBlock Text="Invoice" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
                 </ui:NavigationViewItem>
-                <ui:NavigationViewItem Tag="Inventory" Icon="{ui:SymbolIcon Box24}"
-                       Command="{Binding NavigateCommand}" 
-                       CommandParameter="Inventory">
-                    <TextBlock Text="Inventory" FontSize="20" FontWeight="Medium"/>
+
+                <ui:NavigationViewItem Tag="Inventory" Icon="{ui:SymbolIcon Box24}" Command="{Binding NavigateCommand}" CommandParameter="Inventory">
+                    <TextBlock Text="Inventory" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
                 </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>
 
             <ui:NavigationView.FooterMenuItems>
-                <ui:NavigationViewItem Tag="Settings" Icon="{ui:SymbolIcon Settings24}"
-                           Command="{Binding NavigateCommand}" 
-                           CommandParameter="Settings">
-                    <TextBlock Text="Settings" FontSize="20" FontWeight="Medium"/>
+                <ui:NavigationViewItem Tag="Settings" Icon="{ui:SymbolIcon Settings24}" Command="{Binding NavigateCommand}" CommandParameter="Settings">
+                    <TextBlock Text="Settings" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
                 </ui:NavigationViewItem>
             </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
-        <!--#endregion-->
-
-        <!--#region CONTENT-->
         <Border Grid.Column="1" 
                 CornerRadius="8" 
-                Background="{StaticResource ContentBackgroundBrush}">
-
+                Background="{DynamicResource ContentBackgroundBrush}">
             <Frame x:Name="RootFrame" NavigationUIVisibility="Hidden"/>
-
         </Border>
-        <!--#endregion-->
-        
     </Grid>
 </Window>

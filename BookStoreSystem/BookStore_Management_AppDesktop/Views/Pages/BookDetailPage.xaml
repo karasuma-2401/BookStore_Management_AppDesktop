@@ -28,11 +28,11 @@
                            Command="{Binding GoBackCommand}"
                            Margin="0,0,15,0" Cursor="Hand" ToolTip="Back to List Books"/>
 
-                <TextBlock Grid.Column="1" Text="BOOK DETAILS" FontSize="28" 
-                           FontWeight="Black" VerticalAlignment="Center" 
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBlock Grid.Column="1" Text="BOOK DETAILS" 
+                           Style="{StaticResource HeaderTextStyle}"/>
             </Grid>
         </Border>
+
         <ScrollViewer Grid.Row="1" Padding="40" VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -40,8 +40,10 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0" CornerRadius="12" Background="{DynamicResource CardBackgroundBrush}" 
-                        BorderBrush="#E2E8F0" BorderThickness="1" 
+                <Border Grid.Column="0" CornerRadius="12" 
+                        Background="{DynamicResource CardBackgroundBrush}" 
+                        BorderBrush="{DynamicResource BorderLightBrush}" 
+                        BorderThickness="1" 
                         Padding="15" VerticalAlignment="Top">
                     <Border.Effect>
                         <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="10" ShadowDepth="3"/>
@@ -53,10 +55,12 @@
 
                 <StackPanel Grid.Column="1" Margin="50,0,0,0">
 
-                    <TextBlock Text="{Binding CurrentBook.Title}" FontSize="36" FontWeight="Black" 
-                               Foreground="{DynamicResource TextOnLightBackgroudBrush}" TextWrapping="Wrap" Margin="0,0,0,10"/>
+                    <TextBlock Text="{Binding CurrentBook.Title}" 
+                               FontSize="36" FontWeight="Black" 
+                               Foreground="{DynamicResource TextOnLightBackgroudBrush}" 
+                               TextWrapping="Wrap" Margin="0,0,0,10"/>
 
-                    <TextBlock FontSize="16" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,25">
+                    <TextBlock Style="{StaticResource BodyTextStyle}" Margin="0,0,0,25">
                         <Run Text="Author: "/>
                         <Run Text="{Binding CurrentBook.AuthorName, TargetNullValue='updating'}" 
                              FontWeight="SemiBold" Foreground="{DynamicResource NavyLightBrush}"/>
@@ -68,15 +72,18 @@
                     </TextBlock>
 
                     <ui:Button Content="ADD TO CART" Icon="{ui:SymbolIcon Cart24}" 
-                               Appearance="Primary" Background="{DynamicResource NavyAccentBrush}" 
-                               Foreground="White" FontSize="18" FontWeight="Bold" Padding="50,15" 
-                               Cursor="Hand" Command="{Binding AddToCartCommand}" HorizontalAlignment="Left"/>
+                               Style="{StaticResource PrimaryActionButtonStyle}"
+                               Command="{Binding AddToCartCommand}" 
+                               HorizontalAlignment="Left" Padding="50,15"/>
 
-                    <Separator Margin="0,40" Background="#CBD5E1"/>
+                    <Separator Margin="0,15" Background="{DynamicResource DividerBrush}"/>
 
-                    <TextBlock Text="summary" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextOnLightBackgroudBrush}" Margin="0,0,0,15"/>
+                    <TextBlock Text="SUMMARY" 
+                               Style="{StaticResource BookTitleTextStyle}" 
+                               Margin="0,0,0,15"/>
+
                     <TextBlock Text="{Binding CurrentBook.Description, TargetNullValue='There are no reviews or descriptions for this book yet.'}" 
-                               FontSize="16" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" LineHeight="26"/>
+                               Style="{StaticResource BodyTextStyle}" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>

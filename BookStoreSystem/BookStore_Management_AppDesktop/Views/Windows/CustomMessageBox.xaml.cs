@@ -23,8 +23,9 @@ namespace BookStore_Management_AppDesktop.Views.Windows
             txtMessage.Text = message; 
         }
 
-        private void BtnOk_Click(object sender, RoutedEventArgs e)
+        private void btnOk_Click(object sender, RoutedEventArgs e)
         {
+            this.DialogResult = true;
             this.Close();
         }
 
