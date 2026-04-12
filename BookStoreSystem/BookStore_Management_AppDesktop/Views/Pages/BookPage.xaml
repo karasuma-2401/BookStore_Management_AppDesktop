@@ -48,6 +48,7 @@
                 </StackPanel>
             </Grid>
         </Border>
+
         <ListView x:Name="BooksListView"
                   Grid.Row="1"
                   ItemsSource="{Binding Books}" 
@@ -69,14 +70,20 @@
                             Margin="15"
                             BorderBrush="#E2E8F0" 
                             BorderThickness="1" 
-                            CornerRadius="12">
+                            CornerRadius="12"
+                            Cursor="Hand">
+                        <Border.InputBindings>
+                            <MouseBinding Gesture="LeftClick" 
+                                          Command="{Binding DataContext.ViewBookDetailCommand, RelativeSource={RelativeSource AncestorType=Page}}" 
+                                          CommandParameter="{Binding}" />
+                        </Border.InputBindings>
+
                         <Border.Effect>
                             <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="10" ShadowDepth="3"/>
                         </Border.Effect>
 
                         <StackPanel Margin="12">
                             <Border CornerRadius="8" ClipToBounds="True" Margin="0,0,0,12" Background="{DynamicResource ContentBackgroundBrush}">
-
                                 <Image Height="250" Stretch="UniformToFill"
                                        RenderOptions.BitmapScalingMode="LowQuality"
                                        RenderOptions.EdgeMode="Aliased"
@@ -84,7 +91,6 @@
                                     TargetNullValue='https://via.placeholder.com/180x250?text=No+Image', 
                                     FallbackValue='https://via.placeholder.com/180x250?text=No+Image'}">
                                 </Image>
-
                             </Border>
 
                             <TextBlock Text="{Binding Title}" 
@@ -94,26 +100,12 @@
                                        TextWrapping="Wrap" 
                                        Height="44" 
                                        TextTrimming="CharacterEllipsis"
-                                       Margin="0,0,0,4"/>
-
-                            <TextBlock Text="{Binding AuthorName, TargetNullValue='Unknown Author'}" 
-                                       Foreground="{DynamicResource TextOnLightBackgroudBrush}" 
-                                       FontSize="13" 
-                                       Margin="0,0,0,8"/>
-
-                            <TextBlock Margin="0,0,0,12">
-                                <Run Text="Price: " FontSize="14" Foreground="{DynamicResource TextOnLightBackgroudBrush}" FontWeight="SemiBold"/>
-                                <Run Text="{Binding Price, TargetNullValue='150.000'}" FontWeight="Black" FontSize="18" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
-                                <Run Text="đ" FontWeight="Black" FontSize="18" Foreground="{DynamicResource NavyLightBrush}"/>
+                                       Margin="0,0,0,10"/>
+                            <TextBlock Margin="0,0,0,8" HorizontalAlignment="Left">
+                                <Run Text="{Binding Price, TargetNullValue='0'}" FontWeight="Black" FontSize="20" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
+                                <Run Text="đ" FontWeight="Black" FontSize="16" Foreground="{DynamicResource NavyLightBrush}"/>
                             </TextBlock>
 
-                            <ui:Button Content="Add to Cart"
-                                       Icon="{ui:SymbolIcon Cart24}"
-                                       Appearance="Primary"
-                                       Background="{DynamicResource NavyAccentBrush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0"
-                                       HorizontalAlignment="Stretch"
-                                       Cursor="Hand"
-                                       FontWeight="Bold"/>
                         </StackPanel>
                     </Border>
                 </DataTemplate>

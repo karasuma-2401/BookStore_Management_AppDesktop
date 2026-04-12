@@ -21,7 +21,7 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
             _mainFrame = frame;
         }
 
-        public void NavigateTo(PageType pageType)
+        public void NavigateTo(PageType pageType, object? parameter = null)
         {
             if (_mainFrame == null) return;
 
@@ -44,6 +44,9 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
                     case PageType.Settings:
                         newPage = App.ServiceProvider!.GetRequiredService<SettingsPage>();
                         break;
+                    case PageType.BookDetail: 
+                        newPage = _serviceProvider.GetRequiredService<BookDetailPage>();
+                        break;
                 }
 
 
@@ -55,6 +58,12 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
 
             if (_pageCache.ContainsKey(pageType))
             {
+                var targetPage = _pageCache[pageType];
+
+                if (parameter != null && targetPage.DataContext is INavigatable navigatable)
+                {
+                    navigatable.OnNavigatedTo(parameter);
+                }
                 _mainFrame.Navigate(_pageCache[pageType]);
             }
         }
