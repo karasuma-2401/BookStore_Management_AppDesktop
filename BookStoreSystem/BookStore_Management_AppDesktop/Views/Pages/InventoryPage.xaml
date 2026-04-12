@@ -27,9 +27,8 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0"
-                           Text="Inventory Management" FontSize="26" FontWeight="Black" 
-                           Foreground="{DynamicResource TextPrimaryBrush}" 
-                           VerticalAlignment="Center"/>
+                           Text="Inventory Management" 
+                           Style="{StaticResource HeaderTextStyle}" />
 
                 <ui:TextBox Grid.Column="1" 
                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
@@ -42,8 +41,9 @@
                 <ui:Button Grid.Column="2"
                            Content="Add New Book" Click="btnAddBook_Click" 
                            Icon="{ui:SymbolIcon Add24}" 
-                           Background="{DynamicResource NavyAccentBrush}" Foreground="White" BorderThickness="0" 
-                           Appearance="Primary" HorizontalAlignment="Right" Cursor="Hand" FontWeight="Bold"/>
+                           Style="{StaticResource PrimaryActionButtonStyle}"
+                           Padding="15,8" FontSize="{StaticResource FontSizeBody}"
+                           HorizontalAlignment="Right"/>
             </Grid>
         </Border>
 
@@ -59,7 +59,7 @@
                       AlternatingRowBackground="{DynamicResource ContentBackgroundBrush}"
                       BorderBrush="#E2E8F0" BorderThickness="1" 
                       HorizontalGridLinesBrush="#E2E8F0" VerticalGridLinesBrush="Transparent"
-                      FontSize="15" Cursor="Hand"
+                      FontSize="{StaticResource FontSizeBody}" Cursor="Hand"
                       EnableRowVirtualization="True"
                       EnableColumnVirtualization="True"
                       VirtualizingPanel.IsVirtualizing="True"
@@ -90,7 +90,7 @@
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Foreground" Value="{DynamicResource TextOnLightBackgroudBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -99,7 +99,7 @@
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Foreground" Value="{DynamicResource TextOnLightBackgroudBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
                                 <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>

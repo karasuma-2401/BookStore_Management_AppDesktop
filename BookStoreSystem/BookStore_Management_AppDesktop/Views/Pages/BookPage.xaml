@@ -26,9 +26,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Books" FontSize="28" 
-                           FontWeight="Black" 
-                           VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBlock Grid.Column="0" Text="Books" Style="{StaticResource HeaderTextStyle}" />
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <ui:TextBox PlaceholderText="Search books..." 
@@ -40,7 +38,7 @@
 
                     <ui:Button Icon="{ui:SymbolIcon Filter24}" Appearance="Secondary" 
                                Background="{DynamicResource NavyLightBrush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0"
-                               Margin="0,0,10,0" ToolTip="Filter Books" Cursor="Hand"/>
+                               Margin="0,0,10,0" ToolTip="Filter Books" Cursor="Hand" Padding="8"/>
 
                     <ui:Button Icon="{ui:SymbolIcon Cart24}" Appearance="Primary" 
                                Background="{DynamicResource NavyAccentBrush}" Foreground="White" BorderThickness="0" FontWeight="Bold"
@@ -72,6 +70,7 @@
                             BorderThickness="1" 
                             CornerRadius="12"
                             Cursor="Hand">
+
                         <Border.InputBindings>
                             <MouseBinding Gesture="LeftClick" 
                                           Command="{Binding DataContext.ViewBookDetailCommand, RelativeSource={RelativeSource AncestorType=Page}}" 
@@ -87,23 +86,19 @@
                                 <Image Height="250" Stretch="UniformToFill"
                                        RenderOptions.BitmapScalingMode="LowQuality"
                                        RenderOptions.EdgeMode="Aliased"
-                                       Source="{Binding ImagePath, IsAsync=True, 
-                                    TargetNullValue='https://via.placeholder.com/180x250?text=No+Image', 
-                                    FallbackValue='https://via.placeholder.com/180x250?text=No+Image'}">
+                                       Source="{Binding ImagePath, IsAsync=True, TargetNullValue='https://via.placeholder.com/180x250?text=No+Image', FallbackValue='https://via.placeholder.com/180x250?text=No+Image'}">
                                 </Image>
                             </Border>
 
                             <TextBlock Text="{Binding Title}" 
-                                       FontWeight="Bold" 
-                                       FontSize="16" 
-                                       Foreground="{DynamicResource TextOnLightBackgroudBrush}"
-                                       TextWrapping="Wrap" 
+                                       Style="{StaticResource BookTitleTextStyle}"
                                        Height="44" 
                                        TextTrimming="CharacterEllipsis"
                                        Margin="0,0,0,10"/>
+
                             <TextBlock Margin="0,0,0,8" HorizontalAlignment="Left">
-                                <Run Text="{Binding Price, TargetNullValue='0'}" FontWeight="Black" FontSize="20" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
-                                <Run Text="đ" FontWeight="Black" FontSize="16" Foreground="{DynamicResource NavyLightBrush}"/>
+                                <Run Text="{Binding Price, TargetNullValue='0'}" FontSize="{StaticResource FontSizeTitle}" FontWeight="Black" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
+                                <Run Text="đ" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="Black" Foreground="{DynamicResource NavyLightBrush}"/>
                             </TextBlock>
 
                         </StackPanel>

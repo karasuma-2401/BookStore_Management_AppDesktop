@@ -32,17 +32,22 @@
 
                 <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,25" 
                             MouseLeftButtonDown="Window_MouseLeftButtonDown" Cursor="SizeAll" Background="Transparent">
-                    <TextBlock Text="EDIT BOOK" FontSize="36" FontWeight="Black" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Book Store Management System" FontSize="14" Foreground="{DynamicResource TextSecondBrush}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBlock Text="EDIT BOOK" 
+                               Style="{StaticResource HeaderTextStyle}" 
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Book Store Management System" 
+                               Style="{StaticResource BodyTextStyle}" 
+                               HorizontalAlignment="Center" Margin="0,5,0,0"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1">
 
-                    <TextBlock Text="Title" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold"/>
+                    <TextBlock Text="Title" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="{StaticResource FontSizeBody}"/>
                     <ui:TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter book title..." 
+                                FontSize="{StaticResource FontSizeBody}"
                                 Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Padding="10,8"/>
 
-                    <TextBlock Text="Author" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                    <TextBlock Text="Author" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,15,0,0" FontSize="{StaticResource FontSizeBody}"/>
                     <Grid Margin="0,0,0,15">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -58,24 +63,23 @@
                                   Text="{Binding AuthorVM.SearchAuthorText, UpdateSourceTrigger=PropertyChanged}"
                                   SelectedItem="{Binding AuthorVM.SelectedAuthor}"
                                   HorizontalAlignment="Stretch"
-                                  Margin="0,0,10,0" Height="35"/>
+                                  Margin="0,0,10,0" Height="35" FontSize="{StaticResource FontSizeBody}"/>
 
                         <ui:Button Grid.Column="1"
                                    Icon="{ui:SymbolIcon Add24}"
                                    Content="Add"
-                                   Appearance="Primary"
+                                   Style="{StaticResource SecondaryActionButtonStyle}"
                                    Command="{Binding AuthorVM.AddAuthorCommand}"
-                                   Background="{DynamicResource NavyLightBrush}" 
-                                   Foreground="{DynamicResource TextPrimaryBrush}"
                                    Visibility="{Binding AuthorVM.IsShowAddButton, Converter={StaticResource BoolToVis}}" 
-                                   Height="35" Cursor="Hand"/>
+                                   Height="35" Padding="15,0"/>
                     </Grid>
 
-                    <TextBlock Text="Quantity" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                    <TextBlock Text="Quantity" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,5,0,0" FontSize="{StaticResource FontSizeBody}"/>
                     <ui:TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="e.g. 50" 
+                                FontSize="{StaticResource FontSizeBody}"
                                 Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Padding="10,8"/>
 
-                    <TextBlock Text="Cover Image" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                    <TextBlock Text="Cover Image" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,15,0,0" FontSize="{StaticResource FontSizeBody}"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -83,9 +87,13 @@
                         </Grid.ColumnDefinitions>
 
                         <ui:TextBox Grid.Column="0" Text="{Binding LocalImagePath}" IsReadOnly="True" PlaceholderText="No image selected..." 
+                                    FontSize="{StaticResource FontSizeBody}"
                                     Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Margin="0,0,10,0" Padding="10,8"/>
-                        <ui:Button Grid.Column="1" Content="Browse" Command="{Binding SelectImageCommand}" 
-                                   Appearance="Secondary" Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource NavyLightBrush}" BorderBrush="{DynamicResource TextSecondBrush}" Cursor="Hand"/>
+
+                        <ui:Button Grid.Column="1" Content="Browse" 
+                                   Command="{Binding SelectImageCommand}" 
+                                   Style="{StaticResource SecondaryActionButtonStyle}"
+                                   Height="35" Padding="15,0"/>
                     </Grid>
 
                     <Border BorderBrush="{DynamicResource NavyLightBrush}" BorderThickness="1" CornerRadius="8" 
@@ -102,10 +110,12 @@
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <ui:Button Content="Cancel" Command="{Binding CancelCommand}" 
-                                    Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" 
-                                   Cursor="Hand" Margin="0,0,15,0"/>
+                                   Appearance="Transparent" Foreground="{DynamicResource TextMutedBrush}" 
+                                   Cursor="Hand" Margin="0,0,15,0" FontSize="{StaticResource FontSizeBody}"/>
+
                         <ui:Button Content="Save Changes" Command="{Binding SaveCommand}" 
-                                   Appearance="Primary" Background="{DynamicResource NavyAccentBrush}" Foreground="White" FontWeight="Bold" Cursor="Hand" Width="120" BorderThickness="0"/>
+                                   Style="{StaticResource PrimaryActionButtonStyle}"
+                                   Width="120" Height="40" Padding="0"/>
                     </StackPanel>
                 </Grid>
             </Grid>
