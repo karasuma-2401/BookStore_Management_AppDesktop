@@ -33,13 +33,16 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
                 switch (pageType)
                 {
                     case PageType.Books:
-                        newPage = new BookPage();
+                        newPage = App.ServiceProvider!.GetRequiredService<BookPage>();
                         break;
                     case PageType.Employees:
                         newPage = new EmployeePage();
                         break;
-                    case PageType.Inventory: 
-                        newPage = new InventoryPage();
+                    case PageType.Inventory:
+                        newPage = App.ServiceProvider!.GetRequiredService<InventoryPage>();
+                        break;
+                    case PageType.Settings:
+                        newPage = App.ServiceProvider!.GetRequiredService<SettingsPage>();
                         break;
                 }
 

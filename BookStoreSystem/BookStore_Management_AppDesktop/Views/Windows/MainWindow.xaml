@@ -80,7 +80,9 @@
             </ui:NavigationView.MenuItems>
 
             <ui:NavigationView.FooterMenuItems>
-                <ui:NavigationViewItem Tag="Settings" Icon="{ui:SymbolIcon Settings24}">
+                <ui:NavigationViewItem Tag="Settings" Icon="{ui:SymbolIcon Settings24}"
+                           Command="{Binding NavigateCommand}" 
+                           CommandParameter="Settings">
                     <TextBlock Text="Settings" FontSize="20" FontWeight="Medium"/>
                 </ui:NavigationViewItem>
             </ui:NavigationView.FooterMenuItems>

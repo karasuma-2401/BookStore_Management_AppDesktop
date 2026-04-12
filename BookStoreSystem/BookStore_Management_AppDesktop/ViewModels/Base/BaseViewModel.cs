@@ -1,24 +1,24 @@
-﻿using System;
+﻿using BookStore_Management_AppDesktop.Messages;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace BookStore_Management_AppDesktop.ViewModels.Base
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    public abstract class BaseViewModel : ObservableObject
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null!)
+        protected BaseViewModel()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            WeakReferenceMessenger.Default.Register<RefreshDataMessage>(this, async (recipient, message) =>
+            {
+                await LoadDataAsync();
+            });
         }
-        protected virtual bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = "")
+        public virtual async Task LoadDataAsync()
         {
-            if (EqualityComparer<T>.Default.Equals(storage, value))
-                return false;
-
-            storage = value;
-            OnPropertyChanged(propertyName);
-            return true;
+            await Task.CompletedTask;
         }
     }
 }

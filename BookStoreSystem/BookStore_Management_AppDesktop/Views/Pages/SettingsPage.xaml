@@ -1,0 +1,66 @@
+﻿<Page x:Class="BookStore_Management_AppDesktop.Views.Pages.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d" 
+      d:DesignHeight="700" d:DesignWidth="1000"
+      Title="SettingsPage"
+      Background="{DynamicResource ContentBackgroundBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
+            <TextBlock Text="SYSTEM SETUP" 
+                       FontSize="28" 
+                       FontWeight="Black" 
+                       VerticalAlignment="Center" 
+                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+        </Border>
+
+        <StackPanel Grid.Row="1" Margin="30">
+
+            <TextBlock Text="Data and Sync" 
+                       FontSize="18" 
+                       FontWeight="SemiBold" 
+                       Margin="0,0,0,10"
+                       Foreground="{DynamicResource TextMutedBrush}"/>
+
+            <ui:CardAction Command="{Binding RefreshDataCommand}" 
+                           Margin="0,0,0,15"
+                           Padding="20"
+                           Background="{DynamicResource CardBackgroundBrush}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ui:SymbolIcon Symbol="ArrowSync24" 
+                                   FontSize="32" 
+                                   Foreground="{DynamicResource NavyAccentBrush}" 
+                                   Margin="0,0,20,0"/>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="Reload data (Refresh Data)" 
+                                   FontSize="16" 
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
+
+                        <TextBlock Text="Synchronize the latest data from the server. Use when you suspect data is skewed." 
+                                   FontSize="13" 
+                                   Foreground="{DynamicResource TextMutedBrush}" 
+                                   Margin="0,5,0,0"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Grid>
+            </ui:CardAction>
+
+        </StackPanel>
+    </Grid>
+</Page>
