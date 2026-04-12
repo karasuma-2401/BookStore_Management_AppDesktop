@@ -59,6 +59,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<AuthorSelectionViewModel>();
             services.AddTransient<BookViewModel>();
+            services.AddTransient<BookDetailViewModel>();
 
 
             // // Get View 
@@ -69,6 +70,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<BookPage>();
             services.AddTransient<InventoryPage>();
             services.AddTransient<SettingsPage>();
+            services.AddTransient<BookDetailPage>();
         }
     }
 

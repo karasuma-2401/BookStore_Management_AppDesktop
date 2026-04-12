@@ -1,25 +1,30 @@
-﻿using BookStore_Management_AppDesktop.Models;
-using BookStore_Management_AppDesktop.Services.API;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.Messaging;
+﻿using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Messages;
+using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Services.API;
+using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.ViewModels.Base;
-using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
     public partial class BookViewModel : BaseViewModel
     {
         private readonly IBookApiService _apiService;
+        private readonly INavigationService _navigationService;
 
         [ObservableProperty]
         private ObservableCollection<Book> _books = new ObservableCollection<Book>();
 
-        public BookViewModel(IBookApiService apiService)
+        public BookViewModel(IBookApiService apiService, INavigationService navigationService)
         {
             _apiService = apiService;
+            _navigationService = navigationService;
 
             WeakReferenceMessenger.Default.Register<BookChangedMessage>(this, (recipient, message) =>
             {
@@ -55,6 +60,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
             var booksFromApi = await _apiService.GetAllBooksAsync();
 
             Books = new ObservableCollection<Book>(booksFromApi);
+        }
+
+        [RelayCommand]
+        private void ViewBookDetail(Book selectedBook)
+        {
+            if (selectedBook == null) return;
+
+            _navigationService.NavigateTo(PageType.BookDetail, selectedBook.BookId);
         }
     }
 }
