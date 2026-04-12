@@ -38,17 +38,7 @@ namespace BookStoreManagement.API.Controllers
             if (book == null)
                 return NotFound();
 
-            var result = new BookResponseDto
-            {
-                BookId = book.BookId,
-                Title = book.Title,
-                AuthorId = book.AuthorId,
-                AuthorName = book.Author?.Name,
-                Quantity = book.Quantity,
-                ImagePath = book.ImagePath
-            };
-
-            return Ok(result);
+            return Ok(book);
         }
 
         // POST: api/books

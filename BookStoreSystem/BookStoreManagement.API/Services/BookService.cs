@@ -55,9 +55,28 @@ namespace BookStoreManagement.API.Services
             return result;
         }
 
-        public async Task<Book?> GetBookById(int id)
+        public async Task<BookResponseDto?> GetBookById(int id)
         {
-            return await _context.Books.FindAsync(id);
+            return await _context.Books
+                .Include(b => b.Author) 
+                .Include(b => b.BookCategories)
+                    .ThenInclude(bc => bc.Category) 
+                .Where(b => b.BookId == id)
+                .Select(b => new BookResponseDto
+                {
+                    BookId = b.BookId,
+                    Title = b.Title,
+
+                    AuthorId = b.AuthorId,
+                    AuthorName = b.Author != null ? b.Author.Name : null,
+
+                    Quantity = b.Quantity,
+                    ImagePath = b.ImagePath,
+
+                    BookCategories = string.Join(", ",
+                        b.BookCategories.Select(bc => bc.Category.Name))
+                })
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Book> CreateBook(Book book)
