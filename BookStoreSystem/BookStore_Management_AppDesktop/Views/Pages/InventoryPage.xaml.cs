@@ -1,10 +1,8 @@
 ﻿using BookStore_Management_AppDesktop.ViewModels;
 using BookStore_Management_AppDesktop.Views.Windows;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BookStore_Management_AppDesktop.Views.Pages
 {
@@ -16,7 +14,7 @@ namespace BookStore_Management_AppDesktop.Views.Pages
         {
             InitializeComponent();
 
-            var viewModel = new InventoryViewModel();
+            var viewModel = App.ServiceProvider!.GetRequiredService<InventoryViewModel>();
 
             viewModel.OnShowMessage = (message) =>
             {
@@ -30,8 +28,8 @@ namespace BookStore_Management_AppDesktop.Views.Pages
                 {
                     Title = title,
                     Content = content,
-                    PrimaryButtonText = "Xóa sách",
-                    CloseButtonText = "Hủy",
+                    PrimaryButtonText = "Delete",
+                    CloseButtonText = "Cancel",
                     PrimaryButtonAppearance = Wpf.Ui.Controls.ControlAppearance.Danger
                 };
 
@@ -51,12 +49,12 @@ namespace BookStore_Management_AppDesktop.Views.Pages
             if (this.DataContext is InventoryViewModel viewModel)
             {
                 await viewModel.LoadDataAsync();
-                _isDataLoaded = true; 
+                _isDataLoaded = true;
             }
         }
         private async void btnAddBook_Click(object sender, RoutedEventArgs e)
         {
-            var addWindow = new AddBookWindow();
+            var addWindow = App.ServiceProvider!.GetRequiredService<AddBookWindow>();
             addWindow.ShowDialog();
 
             if (this.DataContext is InventoryViewModel viewModel)

@@ -29,10 +29,10 @@
                 </Grid.RowDefinitions>
 
                 <Border BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" Background="#F8FAFC" CornerRadius="12,12,0,0">
-                    <TextBlock Text="Thông Báo" FontWeight="Bold" FontSize="16" Foreground="#0F172A" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                    <TextBlock Text="Notification" FontWeight="Bold" FontSize="16" Foreground="#0F172A" VerticalAlignment="Center" Margin="20,0,0,0"/>
                 </Border>
 
-                <TextBlock x:Name="txtMessage" Grid.Row="1" Text="Nội dung sẽ nằm ở đây" 
+                <TextBlock x:Name="txtMessage" Grid.Row="1" Text="Content" 
                            TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"
                            Foreground="#334155" FontSize="15" Margin="20"/>
 

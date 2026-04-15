@@ -1,6 +1,9 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.Extensions.Configuration;
 using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookStore_Management_AppDesktop.Services
@@ -9,13 +12,12 @@ namespace BookStore_Management_AppDesktop.Services
     {
         private readonly Cloudinary _cloudinary;
 
-        public CloudinaryService()
+        public CloudinaryService(IConfiguration config)
         {
-       
-            Account account = new Account(
-                "dktghvlmb",
-                "177125943557715",
-                "9G8FwD7rd0J4OZbUbgSEif7CVkM");
+            var account = new Account(
+                config["Cloudinary:CloudName"],
+                config["Cloudinary:ApiKey"],
+                config["Cloudinary:ApiSecret"]);
 
             _cloudinary = new Cloudinary(account);
             _cloudinary.Api.Secure = true;
@@ -23,62 +25,68 @@ namespace BookStore_Management_AppDesktop.Services
 
         public async Task<string> UploadImageAsync(string filePath)
         {
-            try
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("File not found", filePath);
+
+            var uploadParams = new ImageUploadParams
             {
-                var uploadParams = new ImageUploadParams()
-                {
-                    File = new FileDescription(filePath),
-                    Folder = "BookStore_Images" 
-                };
+                File = new FileDescription(filePath),
+                Folder = "BookStore_Images"
+            };
 
-                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
-                if (uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
+            for (int i = 0; i < 2; i++)
+            {
+                try
                 {
-                    return uploadResult.SecureUrl.ToString(); 
+                    var result = await _cloudinary.UploadAsync(uploadParams);
+
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK && result.SecureUrl != null)
+                        return result.SecureUrl.ToString();
                 }
-                return string.Empty;
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"try upload {i + 1} th fail !!!: {ex.Message}");
+                }
+
+                await Task.Delay(500); 
             }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Lỗi upload ảnh: {ex.Message}");
-                return string.Empty;
-            }
+
+            throw new Exception("Upload failed after retry due to network or server issues.");
         }
 
-        // Thêm hàm này vào dưới hàm UploadImageAsync
         public async Task<bool> DeleteImageAsync(string imageUrl)
         {
-            // Nếu link rỗng hoặc không phải link Cloudinary thì bỏ qua
-            if (string.IsNullOrEmpty(imageUrl) || !imageUrl.Contains("cloudinary.com"))
+            if (string.IsNullOrWhiteSpace(imageUrl))
+                return true;
+
+            if (!Uri.TryCreate(imageUrl, UriKind.Absolute, out var uri) ||
+                !uri.Host.Contains("cloudinary.com"))
                 return true;
 
             try
             {
-                // 1. Thuật toán cắt chuỗi URL để lấy PublicId
-                var parts = imageUrl.Split('/');
+                var segments = uri.AbsolutePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
 
-                // Lấy tên thư mục (ví dụ: BookStore_Images)
-                string folder = parts[parts.Length - 2];
+                int uploadIndex = Array.IndexOf(segments, "upload");
+                if (uploadIndex == -1) return false;
 
-                // Lấy tên file có đuôi (ví dụ: anh-bia-123.jpg)
-                string fileWithExtension = parts[parts.Length - 1];
+                int start = uploadIndex + 1;
 
-                // Bỏ đuôi .jpg / .png đi
-                string fileName = fileWithExtension.Split('.')[0];
+                if (start < segments.Length && segments[start].StartsWith("v"))
+                    start++;
 
-                // Ghép lại thành PublicId chuẩn
-                string publicId = $"{folder}/{fileName}";
+                if (start >= segments.Length) return false;
 
-                // 2. Gửi lệnh Destroy (Tiêu hủy) lên Cloudinary
-                var destroyParams = new DeletionParams(publicId);
-                var result = await _cloudinary.DestroyAsync(destroyParams);
+                var publicIdWithExt = string.Join("/", segments.Skip(start));
+                var publicId = Path.ChangeExtension(publicIdWithExt, null);
 
-                return result.StatusCode == System.Net.HttpStatusCode.OK;
+                var result = await _cloudinary.DestroyAsync(new DeletionParams(publicId));
+
+                return result.Result == "ok";
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Lỗi khi xóa ảnh trên Cloudinary: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error Delete Picture Cloudinary: {ex}");
                 return false;
             }
         }

@@ -6,11 +6,11 @@ namespace BookStore_Management_AppDesktop.Models.DTOs
 {
     public class BookUpdateDto
     {
-        public int BookId { get; set; } 
-        public string Title { get; set; }
+        public int BookId { get; set; }
+        public string Title { get; set; } = string.Empty;
         public int? AuthorId { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
-        public string ImagePath { get; set; }
+        public string? ImagePath { get; set; }
     }
 }

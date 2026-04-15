@@ -43,7 +43,7 @@
                                 Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Padding="10,8"/>
 
                     <TextBlock Text="Author" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,8,0,0"/>
-                    <Grid Margin="0,0,0,8">
+                    <Grid Margin="0,0,0,15">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
@@ -53,10 +53,10 @@
                                   IsEditable="True" 
                                   IsTextSearchEnabled="False"
                                   StaysOpenOnEdit="True"
-                                  ItemsSource="{Binding AuthorsView}" 
-                                  DisplayMemberPath="AuthorName" 
-                                  Text="{Binding SearchAuthorText, UpdateSourceTrigger=PropertyChanged}"
-                                  SelectedItem="{Binding SelectedAuthor}"
+                                  ItemsSource="{Binding AuthorVM.DisplayAuthors}" 
+                                  DisplayMemberPath="Name" 
+                                  Text="{Binding AuthorVM.SearchAuthorText, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedItem="{Binding AuthorVM.SelectedAuthor}"
                                   HorizontalAlignment="Stretch"
                                   Margin="0,0,10,0" Height="35"/>
 
@@ -64,10 +64,10 @@
                                    Icon="{ui:SymbolIcon Add24}"
                                    Content="Add"
                                    Appearance="Primary"
-                                   Command="{Binding AddAuthorCommand}"
+                                   Command="{Binding AuthorVM.AddAuthorCommand}"
                                    Background="{DynamicResource NavyLightBrush}" 
                                    Foreground="{DynamicResource TextPrimaryBrush}"
-                                   Visibility="{Binding IsShowAddButton, Converter={StaticResource BoolToVis}}" 
+                                   Visibility="{Binding AuthorVM.IsShowAddButton, Converter={StaticResource BoolToVis}}" 
                                    Height="35" Cursor="Hand"/>
                     </Grid>
 
@@ -101,9 +101,9 @@
                                      HorizontalAlignment="Left" Width="24" Height="24" Foreground="{DynamicResource NavyAccentBrush}"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <ui:Button Content="Cancel" Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
-                                   Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" Cursor="Hand" Margin="0,0,15,0"/>
-
+                        <ui:Button Content="Cancel" Command="{Binding CancelCommand}" 
+                                    Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" 
+                                   Cursor="Hand" Margin="0,0,15,0"/>
                         <ui:Button Content="Save Changes" Command="{Binding SaveCommand}" 
                                    Appearance="Primary" Background="{DynamicResource NavyAccentBrush}" Foreground="White" FontWeight="Bold" Cursor="Hand" Width="120" BorderThickness="0"/>
                     </StackPanel>

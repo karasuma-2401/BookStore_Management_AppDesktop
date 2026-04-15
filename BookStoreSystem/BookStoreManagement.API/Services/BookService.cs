@@ -45,6 +45,8 @@ namespace BookStoreManagement.API.Services
                     Title = b.Title,
                     AuthorId = b.AuthorId,
                     AuthorName = b.Author != null ? b.Author.Name : null,
+                    Quantity = b.Quantity,    
+                    ImagePath = b.ImagePath,
                     BookCategories = string.Join(", ",
                         b.BookCategories.Select(bc => bc.Category.Name))
                 })

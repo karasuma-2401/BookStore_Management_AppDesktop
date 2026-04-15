@@ -12,6 +12,6 @@ namespace BookStore_Management_AppDesktop.Models
         public int Quantity { get; set; }
         public string? AuthorName { get; set; }
         public decimal Price { get; set; }
-        public string? ImagePath { get; set; } = string.Empty;
+        public string? ImagePath { get; set; } = null;
     }
 }
