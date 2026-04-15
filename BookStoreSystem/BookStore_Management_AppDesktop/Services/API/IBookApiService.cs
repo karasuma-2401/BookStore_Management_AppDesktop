@@ -10,7 +10,7 @@ namespace BookStore_Management_AppDesktop.Services.API
 
         Task<bool> CreateBookAsync(Book newBook);
 
-       // Task<Book?> GetBookByIdAsync(int id);
+        Task<Book?> GetBookByIdAsync(int id);
 
         Task<bool> UpdateBookAsync(int id, Book updatedBook);
 

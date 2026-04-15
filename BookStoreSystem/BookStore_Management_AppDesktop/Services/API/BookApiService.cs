@@ -109,6 +109,43 @@ namespace BookStore_Management_AppDesktop.Services.API
             }
         }
 
+        public async Task<Book?> GetBookByIdAsync(int id)
+        {
+            try
+            {
+                AddAuthorizationHeader();
+
+                var response = await _httpClient.GetAsync($"book/{id}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return null; 
+                }
+
+                var json = await response.Content.ReadAsStringAsync();
+
+                var dto = JsonSerializer.Deserialize<BookResponseDto>(json, _options);
+
+                if (dto == null) return null;
+
+                return new Book
+                {
+                    BookId = dto.BookId,
+                    Title = dto.Title,
+                    AuthorId = dto.AuthorId,
+                    AuthorName = dto.AuthorName,
+                    Price = dto.Price,
+                    Quantity = dto.Quantity,
+                    ImagePath = dto.ImagePath
+
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"GetBookById Error: {ex.Message}");
+                return null;
+            }
+        }
 
         public async Task<bool> UpdateBookAsync(int id, Book updatedBook)
         {

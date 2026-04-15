@@ -11,6 +11,7 @@ namespace BookStore_Management_AppDesktop.Helpers.Enums
         Customers,
         Invoices,
         Inventory,
-        Settings
+        Settings,
+        BookDetail
     }
 }

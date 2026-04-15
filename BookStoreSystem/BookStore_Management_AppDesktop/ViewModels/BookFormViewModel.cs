@@ -8,6 +8,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging; 
+using BookStore_Management_AppDesktop.Messages; 
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -127,6 +129,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         : await _bookApiService.CreateBookAsync(book);
 
                     if (!ok) { OnShowMessage?.Invoke("Save failed."); return; }
+
+                    var action = _isEditMode ? BookChangedMessage.ChangeAction.Update : BookChangedMessage.ChangeAction.Add;
+                    WeakReferenceMessenger.Default.Send(new BookChangedMessage(action, book));
 
                     OnShowMessage?.Invoke("Success.");
                     OnRequestClose?.Invoke();

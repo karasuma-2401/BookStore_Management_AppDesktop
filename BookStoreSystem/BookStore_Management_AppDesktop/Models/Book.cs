@@ -13,5 +13,8 @@ namespace BookStore_Management_AppDesktop.Models
         public string? AuthorName { get; set; }
         public decimal Price { get; set; }
         public string? ImagePath { get; set; } = null;
+
+        public string? Description { get; set; }
+
     }
 }

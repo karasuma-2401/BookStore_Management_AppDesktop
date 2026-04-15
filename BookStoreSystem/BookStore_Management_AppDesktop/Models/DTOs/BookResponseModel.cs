@@ -13,5 +13,7 @@ namespace BookStore_Management_AppDesktop.Models.DTOs
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public string? ImagePath { get; set; }
+
+        public string? Description { get; set; }
     }
 }
