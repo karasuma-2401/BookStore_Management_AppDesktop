@@ -7,5 +7,8 @@ namespace BookStore_Management_AppDesktop.Services.API
     public interface IEmployeeApiService
     {
         Task<List<Employee>> GetAllEmployeesAsync();
+        Task<bool> CreateEmployeeAsync(Employee newEmployee);
+        Task<bool> UpdateEmployeeAsync(int id, Employee updatedEmployee);
+        Task<bool> DeleteEmployeeAsync(int id);
     }
 }
