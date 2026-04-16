@@ -36,7 +36,7 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
                         newPage = App.ServiceProvider!.GetRequiredService<BookPage>();
                         break;
                     case PageType.Employees:
-                        newPage = new EmployeePage();
+                        newPage = App.ServiceProvider!.GetRequiredService<EmployeePage>();
                         break;
                     case PageType.Inventory:
                         newPage = App.ServiceProvider!.GetRequiredService<InventoryPage>();

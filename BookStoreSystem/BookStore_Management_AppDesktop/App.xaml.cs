@@ -49,7 +49,8 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<INavigationService, NavigationService>();
 
             services.AddSingleton<IBookApiService, BookApiService>(); 
-            services.AddSingleton<IAuthorApiService, AuthorApiService>(); 
+            services.AddSingleton<IAuthorApiService, AuthorApiService>();
+            services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
 
             // // Get ViewModels
             services.AddTransient<MainViewModel>();
@@ -60,6 +61,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<AuthorSelectionViewModel>();
             services.AddTransient<BookViewModel>();
             services.AddTransient<BookDetailViewModel>();
+            services.AddTransient<EmployeeViewModel>();
 
 
             // // Get View 
@@ -71,6 +73,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<InventoryPage>();
             services.AddTransient<SettingsPage>();
             services.AddTransient<BookDetailPage>();
+            services.AddTransient<EmployeePage>();
         }
     }
 

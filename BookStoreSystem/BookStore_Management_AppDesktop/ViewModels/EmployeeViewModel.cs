@@ -64,9 +64,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
             "pack://siteoforigin:,,,/Resources/Images/Twenty Years Later.webp"
         };
 
-        public EmployeeViewModel()
+        public EmployeeViewModel(IEmployeeApiService apiService) 
         {
-            _apiService = new EmployeeApiService();
+            _apiService = apiService;
             _ = InitializeDataAsync();
         }
 
