@@ -22,5 +22,44 @@ namespace BookStore_Management_AppDesktop.Views.Pages
         {
             InitializeComponent();
         }
+
+        private void FilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement element && element.ContextMenu != null)
+            {
+                element.ContextMenu.PlacementTarget = element;
+                element.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                element.ContextMenu.IsOpen = true;
+            }
+        }
+
+        private void InvoiceDataGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+
+            while ((dep != null) && !(dep is DataGridRow))
+            {
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+
+            if (dep is DataGridRow row)
+            {
+                if (row.IsSelected)
+                {
+                    row.IsSelected = false;
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void MoreButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement element && element.ContextMenu != null)
+            {
+                element.ContextMenu.PlacementTarget = element;
+                element.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                element.ContextMenu.IsOpen = true;
+            }
+        }
     }
 }
