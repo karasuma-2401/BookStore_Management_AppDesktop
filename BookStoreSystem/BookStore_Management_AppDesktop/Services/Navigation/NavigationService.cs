@@ -47,6 +47,9 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
                     case PageType.BookDetail: 
                         newPage = _serviceProvider.GetRequiredService<BookDetailPage>();
                         break;
+                    case PageType.Invoices:
+                        newPage = _serviceProvider.GetRequiredService<InvoicePage>();
+                        break;
                 }
 
 
