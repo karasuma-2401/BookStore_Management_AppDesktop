@@ -21,6 +21,7 @@ namespace BookStoreManagement.API.Services
         public async Task<IEnumerable<EmployeeResponseDto>> GetAllEmployeesAsync()
         {
             return await _context.Employees.
+                Where(e => e.Status == 1).
                 Select(e => new EmployeeResponseDto
                 {
                     EmployeeId = e.EmployeeId,
@@ -60,7 +61,8 @@ namespace BookStoreManagement.API.Services
                 Age = dto.Age,
                 Phone = dto.Phone,
                 Address = dto.Address,
-                Salary = dto.Salary
+                Salary = dto.Salary,
+                Status = 1
             };
 
             var validationResult = await _validator.ValidateAsync(employee);
@@ -98,7 +100,9 @@ namespace BookStoreManagement.API.Services
         {
             var employee = await _context.Employees.FindAsync(id);
             if (employee == null) return false;
-            _context.Employees.Remove(employee);
+                employee.Status = 0;
+
+            _context.Employees.Update(employee);
             return await _context.SaveChangesAsync() > 0;
         }
 
