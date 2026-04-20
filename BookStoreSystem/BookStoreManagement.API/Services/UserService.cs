@@ -33,13 +33,14 @@ namespace BookStoreManagement.API.Services
         public async Task<IEnumerable<UserResponseModel>> GetAllUsersAsync()
         {
             return await _context.Users
+                .Where(u => u.Status == 1)
                 .Select(u => new UserResponseModel
                 {
                     UserId = u.UserId,
                     Username = u.Username,
                     FullName = u.FullName,
                     RoleId = u.RoleId,
-                    Email = u.Email
+                    Email = u.Email,
                 }).ToListAsync();
         }
 
@@ -53,7 +54,8 @@ namespace BookStoreManagement.API.Services
                 Username = user.Username,
                 FullName = user.FullName,
                 RoleId = user.RoleId,
-                Email = user.Email
+                Email = user.Email,
+                Status = user.Status
             };
         }
 
@@ -83,6 +85,12 @@ namespace BookStoreManagement.API.Services
                 return false;
             }
 
+            var isUsernameExist = await _context.Users.AnyAsync(u => u.Username == dto.Username);
+            if (isUsernameExist)
+            {
+                throw new Exception("This Username already exists in the system!");
+            }
+
             var user = new User
             {
                 Username = dto.Username,
@@ -90,7 +98,8 @@ namespace BookStoreManagement.API.Services
                 RoleId = dto.RoleId.ToString(),
                 Email = dto.Email,
                 PasswordHash = PasswordHashHandler.HashPassword(dto.Password),
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                Status = 1
             };
 
             _context.Users.Add(user);
@@ -129,7 +138,9 @@ namespace BookStoreManagement.API.Services
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null) return false;
-            _context.Users.Remove(user);
+            user.Status = 0;
+
+            _context.Users.Update(user);
             return await _context.SaveChangesAsync() > 0;
         }
 

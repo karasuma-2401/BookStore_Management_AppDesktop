@@ -19,11 +19,18 @@ namespace BookStoreManagement.API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponseModel>> Login(LoginRequestModel request)
         {
-            var result = await _jwtService.Authenticate(request);
-            if (result is null)
-                return Unauthorized();
+            try
+            {
+                var result = await _jwtService.Authenticate(request);
+                if (result is null)
+                    return Unauthorized();
 
-            return result;
+                return Ok(result);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
 
         }
     }
