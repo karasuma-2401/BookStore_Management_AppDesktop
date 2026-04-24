@@ -109,6 +109,7 @@
                                      HorizontalAlignment="Left" Width="24" Height="24" Foreground="{DynamicResource NavyAccentBrush}"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <ui:Button Content="Cancel" Command="{Binding CancelCommand}"
                                    Appearance="Transparent" Foreground="{DynamicResource TextMutedBrush}" 
                                    Cursor="Hand" Margin="0,0,15,0" FontSize="{StaticResource FontSizeBody}"/>
                         <ui:Button Content="Save Book" Command="{Binding SaveCommand}" 

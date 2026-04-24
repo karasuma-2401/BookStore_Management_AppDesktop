@@ -12,7 +12,7 @@ namespace BookStoreManagement.API.Models.Entities
         public int PaymentId { get; set; }
 
         [Column("customer_id")]
-        public int CustomerId { get; set; }
+        public int ?CustomerId { get; set; }
 
         [Column("invoice_id")]
         public int InvoiceId { get; set; }   

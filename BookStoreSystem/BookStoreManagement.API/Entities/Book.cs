@@ -25,6 +25,12 @@ namespace BookStoreManagement.API.Models.Entities
         [Column("image_path")]
         public string ImagePath { get; set; } = string.Empty;
 
+        [Column("price", TypeName = "decimal(12,2)")]
+        public decimal Price { get; set; } = 0;
+
+        [Column("description", TypeName = "text")]
+        public string? Description { get; set; }
+
         [ForeignKey("AuthorId")]
         public Author? Author {get; set;}
         
