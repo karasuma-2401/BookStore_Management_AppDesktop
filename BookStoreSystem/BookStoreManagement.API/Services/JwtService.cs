@@ -32,6 +32,11 @@ namespace BookStoreManagement.API.Services
             if (userAccount is null || !PasswordHashHandler.VerifyPassword(request.Password, userAccount.PasswordHash!))
                 return null;
 
+            if (userAccount.Status == 0)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
             var issuer = _configuration["JwtConfig:Issuer"];
             var audience = _configuration["JwtConfig:Audience"];
             var key = _configuration["JwtConfig:Key"];

@@ -96,9 +96,10 @@
     builder.Services.AddScoped<IEmployeeService, EmployeeService>();
     builder.Services.AddScoped<IShiftService, ShiftService>();
     builder.Services.AddScoped<IEmployeeShift, EmployeeShiftService>();
+    builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+    builder.Services.AddScoped<IVoucherService, VoucherService>();
 
-
-    var  app = builder.Build();
+var  app = builder.Build();
     if (app.Environment.IsDevelopment())
     {
          app.UseSwagger();
