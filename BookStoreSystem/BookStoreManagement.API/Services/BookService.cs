@@ -15,13 +15,10 @@ namespace BookStoreManagement.API.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<BookResponseDto>> GetBooks(int? categoryId, int? authorId, string? keyword)
+        public async Task<object> GetBooks(int? categoryId, int? authorId, string? keyword, string? sortBy, string? sortOrder, int page,  int pageSize)
         {
-            var query = _context.Books
-                .Include(b => b.Author)
-                    .Include(b => b.BookCategories)
-                        .ThenInclude(bc => bc.Category)
-                .AsQueryable();
+            var query = _context.Books.AsQueryable();
+
             if (authorId.HasValue)
             {
                 query = query.Where(b => b.AuthorId == authorId.Value);
@@ -38,23 +35,53 @@ namespace BookStoreManagement.API.Services
                 query = query.Where(b => b.Title.Contains(keyword));
             }
 
-            var result = await query
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                switch (sortBy.ToLower())
+                {
+                    case "price":
+                        query = sortOrder == "desc"
+                            ? query.OrderByDescending(b => b.Price)
+                            : query.OrderBy(b => b.Price);
+                        break;
+
+                    case "title":
+                        query = sortOrder == "desc"
+                            ? query.OrderByDescending(b => b.Title)
+                            : query.OrderBy(b => b.Title);
+                        break;
+
+                    default:
+                        query = query.OrderBy(b => b.BookId);
+                        break;
+                }
+            }
+            var totalItems = await query.CountAsync();
+
+            var books = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .Select(b => new BookResponseDto
                 {
                     BookId = b.BookId,
                     Title = b.Title,
                     AuthorId = b.AuthorId,
-                    AuthorName = b.Author != null ? b.Author.Name : null,
+                    AuthorName = b.Author.Name,
                     Quantity = b.Quantity,
-                    Price = b.Price,
-                    Description = b.Description,
                     ImagePath = b.ImagePath,
                     BookCategories = string.Join(", ",
                         b.BookCategories.Select(bc => bc.Category.Name))
                 })
                 .ToListAsync();
 
-            return result;
+            return new
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling((double)totalItems / pageSize),
+                Data = books
+            };
         }
 
         public async Task<BookResponseDto?> GetBookById(int id)

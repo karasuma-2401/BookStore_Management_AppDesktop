@@ -23,9 +23,17 @@ namespace BookStoreManagement.API.Controllers
         public async Task<IActionResult> GetBooks(
             [FromQuery] int? categoryId,
             [FromQuery] int? authorId,
-            [FromQuery] string? keyword)
+            [FromQuery] string? keyword,
+            [FromQuery] string? sortBy = "price",
+            [FromQuery] string? sortOrder = "asc",
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
         {
-            var result = await _bookService.GetBooks(categoryId, authorId, keyword);
+            var result = await _bookService.GetBooks(
+                categoryId, authorId, keyword,
+                sortBy, sortOrder,
+                page, pageSize);
+
             return Ok(result);
         }
 

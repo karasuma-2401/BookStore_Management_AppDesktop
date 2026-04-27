@@ -5,7 +5,14 @@ namespace BookStoreManagement.API.Interfaces.Services
 {
     public interface IBookService
     {
-        Task<IEnumerable<BookResponseDto>> GetBooks(int? categoryId, int? authorId, string? keyword);
+        Task<object> GetBooks(
+                int? categoryId,
+                int? authorId,
+                string? keyword,
+                string? sortBy,
+                string? sortOrder,
+                int page,
+                int pageSize);
         Task<BookResponseDto?> GetBookById(int id);
         Task<Book> CreateBook(Book book);
         Task<bool> UpdateBook(int id, Book book);
