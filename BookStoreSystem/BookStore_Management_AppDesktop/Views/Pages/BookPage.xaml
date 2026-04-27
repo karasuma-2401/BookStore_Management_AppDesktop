@@ -29,20 +29,25 @@
                 <TextBlock Grid.Column="0" Text="Books" Style="{StaticResource HeaderTextStyle}" />
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <ui:TextBox PlaceholderText="Search books..." 
-                                Icon="{ui:SymbolIcon Search24}" Width="300" Margin="0,0,15,0" 
-                                VerticalAlignment="Center" Cursor="IBeam"
-                                Background="{DynamicResource NavyPrimaryBrush}" 
-                                Foreground="{DynamicResource TextPrimaryBrush}"
-                                BorderBrush="{DynamicResource NavyLightBrush}" TextChanged="TextBox_TextChanged"/>
+                    <ui:TextBox PlaceholderText="Search by title or category..." 
+                                Icon="{ui:SymbolIcon Search24}" 
+                                Width="300" Margin="0,0,15,0" 
+                                VerticalAlignment="Center" 
+                                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <ui:Button Icon="{ui:SymbolIcon Filter24}" Appearance="Secondary" 
-                               Background="{DynamicResource NavyLightBrush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0"
-                               Margin="0,0,10,0" ToolTip="Filter Books" Cursor="Hand" Padding="8"/>
+                    <ComboBox Width="180" Margin="0,0,15,0"
+                              SelectedValuePath="Tag"
+                              SelectedValue="{Binding SelectedSort}">
+                        <ComboBoxItem Content="Newest" Tag="" IsSelected="True"/>
+                        <ComboBoxItem Content="Price: Low to High" Tag="price_asc"/>
+                        <ComboBoxItem Content="Price: High to Low" Tag="price_desc"/>
+                        <ComboBoxItem Content="Title: A-Z" Tag="title_asc"/>
+                    </ComboBox>
 
                     <ui:Button Icon="{ui:SymbolIcon Cart24}" Appearance="Primary" 
-                               Background="{DynamicResource NavyAccentBrush}" Foreground="White" BorderThickness="0" FontWeight="Bold"
-                               ToolTip="View Shopping Cart" Padding="12,6" Cursor="Hand"/>
+                               Background="{DynamicResource NavyAccentBrush}" Foreground="White" 
+                               FontWeight="Bold" ToolTip="View Shopping Cart" 
+                               Padding="12,6" Cursor="Hand"/>
                 </StackPanel>
             </Grid>
         </Border>

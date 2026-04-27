@@ -1,17 +1,18 @@
 ﻿using BookStore_Management_AppDesktop.Helpers;
+using BookStore_Management_AppDesktop.Messages;
 using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Models.DTOs;
 using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API;
+using BookStore_Management_AppDesktop.ViewModels.Base; 
 using BookStore_Management_AppDesktop.Views.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using BookStore_Management_AppDesktop.ViewModels.Base; 
+using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using static System.Reflection.Metadata.BlobBuilder;
-using CommunityToolkit.Mvvm.Messaging;
-using BookStore_Management_AppDesktop.Messages;
-using System.Linq;
 
 
 namespace BookStore_Management_AppDesktop.ViewModels
@@ -62,7 +63,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         public override async Task LoadDataAsync()
         {
-            var booksFromApi = await _apiService.GetAllBooksAsync();
+            var booksFromApi = await _apiService.GetAllBooksAsync(new BookQueryParameters());
             Books = new ObservableCollection<Book>(booksFromApi);
         }
 

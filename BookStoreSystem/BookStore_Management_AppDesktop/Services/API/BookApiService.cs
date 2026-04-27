@@ -32,17 +32,30 @@ namespace BookStore_Management_AppDesktop.Services.API
             }
         }
 
-        public async Task<List<Book>> GetAllBooksAsync()
+        public async Task<List<Book>> GetAllBooksAsync(BookQueryParameters queryParams, CancellationToken ct = default)
         {
             try
             {
                 AddAuthorizationHeader();
 
-                var response = await _httpClient.GetAsync("book");
+                var query = new List<string>();
+
+                if (!string.IsNullOrWhiteSpace(queryParams.Keyword))
+                    query.Add($"keyword={Uri.EscapeDataString(queryParams.Keyword)}");
+
+                if (!string.IsNullOrWhiteSpace(queryParams.SortBy))
+                    query.Add($"sortBy={queryParams.SortBy}");
+
+                query.Add($"pageNumber={queryParams.PageNumber}");
+                query.Add($"pageSize={queryParams.PageSize}");
+
+                string queryString = query.Count > 0 ? "?" + string.Join("&", query) : "";
+                string finalUrl = $"book{queryString}";
+
+                var response = await _httpClient.GetAsync(finalUrl, ct);
                 response.EnsureSuccessStatusCode();
 
-                var json = await response.Content.ReadAsStringAsync();
-
+                var json = await response.Content.ReadAsStringAsync(ct);
                 var dtos = JsonSerializer.Deserialize<List<BookResponseDto>>(json, _options) ?? new List<BookResponseDto>();
 
 
@@ -56,6 +69,11 @@ namespace BookStore_Management_AppDesktop.Services.API
                     Quantity = dto.Quantity,
                     ImagePath = dto.ImagePath
                 }).ToList();
+            }
+            catch (OperationCanceledException) 
+            {
+                System.Diagnostics.Debug.WriteLine("The old request has been cancelled.");
+                throw; 
             }
             catch (Exception ex)
             {
