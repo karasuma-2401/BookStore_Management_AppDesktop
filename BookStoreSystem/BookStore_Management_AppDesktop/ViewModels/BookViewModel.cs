@@ -1,4 +1,5 @@
-﻿using BookStore_Management_AppDesktop.Helpers.Enums;
+﻿using BookStore_Management_AppDesktop.Helpers;
+using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Messages;
 using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs;
@@ -18,7 +19,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly IBookApiService _apiService;
         private readonly INavigationService _navigationService;
-        private CancellationTokenSource? _searchCts;
+        private readonly DebounceHelper _searchDebouncer = new DebounceHelper();
 
         [ObservableProperty]
         private string _searchText = string.Empty;
@@ -70,7 +71,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         partial void OnSearchTextChanged(string value)
         {
-            _ = DebounceSearchAsync();
+            _ = _searchDebouncer.RunAsync(997, async (token) => await ExecuteSearchAsync(token));
         }
 
         partial void OnSelectedSortChanged(string? value)
@@ -78,25 +79,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
             _ = ExecuteSearchAsync();
         }
 
-        private async Task DebounceSearchAsync()
+        private async Task ExecuteSearchAsync(CancellationToken token = default)
         {
-            _searchCts?.Cancel();
-            _searchCts = new CancellationTokenSource();
-
-            try
-            {
-                await Task.Delay(997, _searchCts.Token);
-                await ExecuteSearchAsync();
-            }
-            catch (TaskCanceledException) {}
-        }
-
-        private async Task ExecuteSearchAsync()
-        {
-            _searchCts?.Cancel();
-            _searchCts = new CancellationTokenSource();
-            var token = _searchCts.Token;
-
             try
             {
                 var query = new BookQueryParameters
@@ -107,7 +91,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
                 var booksFromApi = await _apiService.GetAllBooksAsync(query, token);
 
-
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     Books.Clear();
@@ -117,7 +100,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     }
                 });
             }
-            catch (OperationCanceledException){}
+            catch (OperationCanceledException) { }
         }
 
         [RelayCommand]

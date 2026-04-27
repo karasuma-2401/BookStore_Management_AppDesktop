@@ -1,4 +1,5 @@
-﻿using BookStore_Management_AppDesktop.Models;
+﻿using BookStore_Management_AppDesktop.Helpers;
+using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs;
 using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.ViewModels.Base;
@@ -16,6 +17,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly IBookApiService _apiService;
         private CancellationTokenSource? _searchCts;
+        private readonly DebounceHelper _searchDebouncer = new DebounceHelper();
 
         // 1. DỮ LIỆU BẢNG TẠP (Draft List) - Nơi chứa các ImportCartItem ta vừa tạo
         [ObservableProperty]
@@ -46,26 +48,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
         // --- LOGIC 1: TÌM KIẾM DEBOUNCE (Tái sử dụng kiến thức từ Task trước) ---
         partial void OnSearchTextChanged(string value)
         {
-            _ = DebounceSearchAsync();
-        }
-
-        private async Task DebounceSearchAsync()
-        {
-            _searchCts?.Cancel();
-            _searchCts = new CancellationTokenSource();
-            var token = _searchCts.Token;
-
-            try
+            _ = _searchDebouncer.RunAsync(400, async (token) =>
             {
-                await Task.Delay(400, token); // Đợi 400ms
-
                 if (string.IsNullOrWhiteSpace(SearchText))
                 {
                     Application.Current.Dispatcher.Invoke(() => SearchResults.Clear());
                     return;
                 }
 
-                // Tận dụng lại DTO ở task trước, giới hạn 10 kết quả cho thanh Dropdown nhẹ nhàng
                 var query = new BookQueryParameters { Keyword = SearchText, PageSize = 10 };
                 var results = await _apiService.GetAllBooksAsync(query, token);
 
@@ -74,8 +64,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     SearchResults.Clear();
                     foreach (var book in results) SearchResults.Add(book);
                 });
-            }
-            catch (TaskCanceledException) { }
+            });
         }
 
         // --- LOGIC 2: THÊM VÀO BẢNG TẠM (Giải quyết Vấn đề 2) ---
