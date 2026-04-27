@@ -1,6 +1,7 @@
 ﻿using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Messages;
 using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Models.DTOs;
 using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.ViewModels.Base;
@@ -17,6 +18,13 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly IBookApiService _apiService;
         private readonly INavigationService _navigationService;
+        private CancellationTokenSource? _searchCts;
+
+        [ObservableProperty]
+        private string _searchText = string.Empty;
+
+        [ObservableProperty]
+        private string? _selectedSort;
 
         [ObservableProperty]
         private ObservableCollection<Book> _books = new ObservableCollection<Book>();
@@ -57,9 +65,59 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         public override async Task LoadDataAsync()
         {
-            var booksFromApi = await _apiService.GetAllBooksAsync();
+            await ExecuteSearchAsync();
+        }
 
-            Books = new ObservableCollection<Book>(booksFromApi);
+        partial void OnSearchTextChanged(string value)
+        {
+            _ = DebounceSearchAsync();
+        }
+
+        partial void OnSelectedSortChanged(string? value)
+        {
+            _ = ExecuteSearchAsync();
+        }
+
+        private async Task DebounceSearchAsync()
+        {
+            _searchCts?.Cancel();
+            _searchCts = new CancellationTokenSource();
+
+            try
+            {
+                await Task.Delay(997, _searchCts.Token);
+                await ExecuteSearchAsync();
+            }
+            catch (TaskCanceledException) {}
+        }
+
+        private async Task ExecuteSearchAsync()
+        {
+            _searchCts?.Cancel();
+            _searchCts = new CancellationTokenSource();
+            var token = _searchCts.Token;
+
+            try
+            {
+                var query = new BookQueryParameters
+                {
+                    Keyword = SearchText,
+                    SortBy = SelectedSort
+                };
+
+                var booksFromApi = await _apiService.GetAllBooksAsync(query, token);
+
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Books.Clear();
+                    foreach (var book in booksFromApi)
+                    {
+                        Books.Add(book);
+                    }
+                });
+            }
+            catch (OperationCanceledException){}
         }
 
         [RelayCommand]
