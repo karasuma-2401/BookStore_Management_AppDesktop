@@ -110,10 +110,20 @@ namespace BookStoreManagement.API.Services
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<Book> CreateBook(Book book)
+        public async Task<Book> CreateBook(Book book, List<int> categoryIds)
         {
+            book.Quantity = 0;
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
+            var bookCategories = categoryIds.Select(cid => new BookCategory
+            {
+                BookId = book.BookId,
+                CategoryId = cid
+            }).ToList();
+
+            _context.BookCategories.AddRange(bookCategories);
+            await _context.SaveChangesAsync();
+
             return book;
         }
 

@@ -51,17 +51,18 @@ namespace BookStoreManagement.API.Controllers
 
         // POST: api/books
         [HttpPost]
+        [HttpPost]
         public async Task<ActionResult<BookResponseDto>> PostBook(BookCreateDto dto)
         {
             var book = new Book
             {
                 Title = dto.Title,
                 AuthorId = dto.AuthorId,
-                Quantity = dto.Quantity,
-                ImagePath = dto.ImagePath
+                ImagePath = dto.ImagePath,
+                Description = dto.Description
             };
 
-            var createdBook = await _bookService.CreateBook(book);
+            var createdBook = await _bookService.CreateBook(book, dto.CategoryIds);
 
             var result = new BookResponseDto
             {
@@ -69,6 +70,7 @@ namespace BookStoreManagement.API.Controllers
                 Title = createdBook.Title,
                 AuthorId = createdBook.AuthorId,
                 Quantity = createdBook.Quantity,
+                Price = createdBook.Price,
                 ImagePath = createdBook.ImagePath
             };
 
