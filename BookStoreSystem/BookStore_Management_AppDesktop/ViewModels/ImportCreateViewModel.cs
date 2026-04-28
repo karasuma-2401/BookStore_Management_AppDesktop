@@ -20,6 +20,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly IBookApiService _apiService;
         private readonly IDialogService _dialogService; 
         private readonly DebounceHelper _searchDebouncer = new DebounceHelper();
+        private readonly IImportApiService _importApiService;
 
         [ObservableProperty] private ObservableCollection<ImportCartItem> _draftList = new ObservableCollection<ImportCartItem>();
         [ObservableProperty] private string _searchText = string.Empty;
@@ -180,27 +181,40 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 return;
             }
 
-            bool isConfirmed = _dialogService.ShowDeleteConfirmation(); 
+            bool isConfirmed = _dialogService.ShowDeleteConfirmation();
 
-            //if (isConfirmed)
-            //{
-            //    var importDto = new ImportCreateDTO
-            //    {
-            //        EmployeeId = 1,
-            //        TotalAmount = TotalDraftAmount,
-            //        Details = DraftList.Select(item => new ImportDetailDTO
-            //        {
-            //            BookId = item.BookId,
-            //            Quantity = item.ImportQuantity,
-            //            Price = item.ImportPrice
-            //        }).ToList()
-            //    };
+            if (isConfirmed)
+            {
+                var importDto = new ImportCreateDTO
+                {
+                    UserId = 1, 
+                    Details = DraftList.Select(item => new ImportDetailCreateDTO
+                    {
+                        BookId = item.BookId,
+                        Quantity = item.ImportQuantity,
+                        ImportPrice = item.ImportPrice
+                    }).ToList()
+                };
 
-            //    // TODO: _apiService.CreateImportAsync(importDto);
+                try
+                {
+                    bool isSuccess = await _importApiService.CreateImportAsync(importDto);
 
-            //    _dialogService.ShowMessage("Import successful! The inventory has been updated.");
-            //    ClearDraftSafe();
-            //}
+                    if (isSuccess)
+                    {
+                        _dialogService.ShowMessage("Import successful! The inventory has been updated.");
+                        ClearDraftSafe(); 
+                    }
+                    else
+                    {
+                        _dialogService.ShowMessage("Import failed. Please check the server connection.");
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    _dialogService.ShowMessage($"An error occurred: {ex.Message}");
+                }
+            }
         }
     }
 }

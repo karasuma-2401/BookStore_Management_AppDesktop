@@ -51,7 +51,7 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<IBookApiService, BookApiService>(); 
             services.AddSingleton<IAuthorApiService, AuthorApiService>();
             services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
-
+            services.AddSingleton<IImportApiService, ImportApiService>();
             services.AddSingleton<Wpf.Ui.IContentDialogService, Wpf.Ui.ContentDialogService>();
             services.AddSingleton<IDialogService, DialogService>();
 
