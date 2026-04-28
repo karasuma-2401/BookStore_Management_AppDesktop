@@ -33,6 +33,9 @@ namespace BookStoreManagement.API.Models.Entities
         [Column("salary", TypeName ="decimal(12,2)")]
         public decimal Salary {get; set;}
 
+        [Column("status")]
+        public int Status { get; set; } = 1;
+        
         [ForeignKey("UserId")]
         public virtual User User { get; set; } = null!;
 

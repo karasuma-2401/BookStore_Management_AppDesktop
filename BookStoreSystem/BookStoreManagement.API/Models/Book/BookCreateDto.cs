@@ -6,8 +6,11 @@ namespace BookStoreManagement.API.Models.Book
 
         public int? AuthorId { get; set; }
 
-        public int Quantity { get; set; }
+
+        public string? Description { get; set; }
 
         public string ImagePath { get; set; } = string.Empty;
+
+        public List<int> CategoryIds { get; set; } = new();
     }
 }

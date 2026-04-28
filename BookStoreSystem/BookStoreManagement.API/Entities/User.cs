@@ -6,6 +6,7 @@ using BookStoreManagement.API.Models.Entities;
 namespace BookStoreManagement.API.Models.Entities
 {
     [Table("users")]
+    [Microsoft.EntityFrameworkCore.Index(nameof(Username), IsUnique = true)]
     public class User
     {
         [Key]
@@ -31,6 +32,9 @@ namespace BookStoreManagement.API.Models.Entities
 
         [Column("created_at")]
         public DateTime CreatedAt {get; set;} = DateTime.UtcNow;
+
+        [Column("status")]
+        public int Status { get; set; } = 1;
 
         [Column("reset_token")]
         public string? ResetToken { get; set; }

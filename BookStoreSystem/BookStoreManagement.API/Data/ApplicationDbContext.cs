@@ -24,6 +24,7 @@ namespace BookStoreManagement.API.Data
         public DbSet<Employee> Employees { get; set;  }
         public DbSet<Shift> Shifts { get; set;  }
         public DbSet<EmployeeShift> EmployeeShifts { get; set; }
+        public DbSet<Voucher> Vouchers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

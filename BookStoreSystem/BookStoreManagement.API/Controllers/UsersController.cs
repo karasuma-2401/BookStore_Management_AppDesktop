@@ -61,11 +61,19 @@ namespace BookStoreManagement.API.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> PostUser(UserCreateDto user)
         {
-            var success = await _userService.CreateUserAsync(user);
+            try
+            {
+                var success = await _userService.CreateUserAsync(user);
 
-            return success
-                ? StatusCode(201, new { message = "User created successfully" })
-                : BadRequest(new { message = "Invalid data" });
+                return success
+                    ? StatusCode(201, new { message = "User created successfully" })
+                    : BadRequest(new { message = "Invalid data" });
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         // DELETE: user/5

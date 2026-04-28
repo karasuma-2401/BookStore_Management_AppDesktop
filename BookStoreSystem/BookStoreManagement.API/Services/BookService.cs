@@ -15,13 +15,10 @@ namespace BookStoreManagement.API.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<BookResponseDto>> GetBooks(int? categoryId, int? authorId, string? keyword)
+        public async Task<object> GetBooks(int? categoryId, int? authorId, string? keyword, string? sortBy, string? sortOrder, int page,  int pageSize)
         {
-            var query = _context.Books
-                .Include(b => b.Author)
-                    .Include(b => b.BookCategories)
-                        .ThenInclude(bc => bc.Category)
-                .AsQueryable();
+            var query = _context.Books.AsQueryable();
+
             if (authorId.HasValue)
             {
                 query = query.Where(b => b.AuthorId == authorId.Value);
@@ -38,21 +35,54 @@ namespace BookStoreManagement.API.Services
                 query = query.Where(b => b.Title.Contains(keyword));
             }
 
-            var result = await query
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                switch (sortBy.ToLower())
+                {
+                    case "price":
+                        query = sortOrder == "desc"
+                            ? query.OrderByDescending(b => b.Price)
+                            : query.OrderBy(b => b.Price);
+                        break;
+
+                    case "title":
+                        query = sortOrder == "desc"
+                            ? query.OrderByDescending(b => b.Title)
+                            : query.OrderBy(b => b.Title);
+                        break;
+
+                    default:
+                        query = query.OrderBy(b => b.BookId);
+                        break;
+                }
+            }
+            var totalItems = await query.CountAsync();
+
+            var books = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .Select(b => new BookResponseDto
                 {
                     BookId = b.BookId,
                     Title = b.Title,
                     AuthorId = b.AuthorId,
-                    AuthorName = b.Author != null ? b.Author.Name : null,
-                    Quantity = b.Quantity,    
+                    AuthorName = b.Author.Name,
+                    Quantity = b.Quantity,
+                    Price = b.Price,
                     ImagePath = b.ImagePath,
                     BookCategories = string.Join(", ",
                         b.BookCategories.Select(bc => bc.Category.Name))
                 })
                 .ToListAsync();
 
-            return result;
+            return new
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling((double)totalItems / pageSize),
+                Data = books
+            };
         }
 
         public async Task<BookResponseDto?> GetBookById(int id)
@@ -71,18 +101,29 @@ namespace BookStoreManagement.API.Services
                     AuthorName = b.Author != null ? b.Author.Name : null,
 
                     Quantity = b.Quantity,
+                    Price = b.Price,
+                    Description = b.Description,
                     ImagePath = b.ImagePath,
-
                     BookCategories = string.Join(", ",
                         b.BookCategories.Select(bc => bc.Category.Name))
                 })
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<Book> CreateBook(Book book)
+        public async Task<Book> CreateBook(Book book, List<int> categoryIds)
         {
+            book.Quantity = 0;
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
+            var bookCategories = categoryIds.Select(cid => new BookCategory
+            {
+                BookId = book.BookId,
+                CategoryId = cid
+            }).ToList();
+
+            _context.BookCategories.AddRange(bookCategories);
+            await _context.SaveChangesAsync();
+
             return book;
         }
 
@@ -91,7 +132,7 @@ namespace BookStoreManagement.API.Services
             if (id != book.BookId)
                 return false;
 
-            _context.Entry(book).State = EntityState.Modified;
+            _context.Entry(book).Property(b => b.Price).IsModified = false;
 
             try
             {

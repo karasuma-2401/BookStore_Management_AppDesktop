@@ -23,9 +23,17 @@ namespace BookStoreManagement.API.Controllers
         public async Task<IActionResult> GetBooks(
             [FromQuery] int? categoryId,
             [FromQuery] int? authorId,
-            [FromQuery] string? keyword)
+            [FromQuery] string? keyword,
+            [FromQuery] string? sortBy = "price",
+            [FromQuery] string? sortOrder = "asc",
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
         {
-            var result = await _bookService.GetBooks(categoryId, authorId, keyword);
+            var result = await _bookService.GetBooks(
+                categoryId, authorId, keyword,
+                sortBy, sortOrder,
+                page, pageSize);
+
             return Ok(result);
         }
 
@@ -49,11 +57,11 @@ namespace BookStoreManagement.API.Controllers
             {
                 Title = dto.Title,
                 AuthorId = dto.AuthorId,
-                Quantity = dto.Quantity,
-                ImagePath = dto.ImagePath
+                ImagePath = dto.ImagePath,
+                Description = dto.Description
             };
 
-            var createdBook = await _bookService.CreateBook(book);
+            var createdBook = await _bookService.CreateBook(book, dto.CategoryIds);
 
             var result = new BookResponseDto
             {
@@ -61,6 +69,7 @@ namespace BookStoreManagement.API.Controllers
                 Title = createdBook.Title,
                 AuthorId = createdBook.AuthorId,
                 Quantity = createdBook.Quantity,
+                Price = createdBook.Price,
                 ImagePath = createdBook.ImagePath
             };
 
