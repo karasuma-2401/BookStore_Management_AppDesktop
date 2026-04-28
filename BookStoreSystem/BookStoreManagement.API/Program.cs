@@ -99,7 +99,9 @@
     builder.Services.AddScoped<IInvoiceService, InvoiceService>();
     builder.Services.AddScoped<IVoucherService, VoucherService>();
 
-var  app = builder.Build();
+    // Import
+    builder.Services.AddScoped<IImportService, ImportService>();
+var app = builder.Build();
     if (app.Environment.IsDevelopment())
     {
          app.UseSwagger();
