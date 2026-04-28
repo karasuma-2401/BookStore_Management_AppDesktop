@@ -21,6 +21,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly IBookApiService _apiService;
         private readonly CloudinaryService _cloudinaryService;
+        private readonly IDialogService _dialogService;
 
         [ObservableProperty]
         private ObservableCollection<Book> _books = new ObservableCollection<Book>();
@@ -28,10 +29,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty]
         private string _searchText = string.Empty;
 
-        public InventoryViewModel(IBookApiService apiService, CloudinaryService cloudinaryService)
+        public InventoryViewModel(IBookApiService apiService, CloudinaryService cloudinaryService, IDialogService dialogService)
         {
             _apiService = apiService;
             _cloudinaryService = cloudinaryService;
+            _dialogService = dialogService;
 
             WeakReferenceMessenger.Default.Register<BookChangedMessage>(this, (recipient, message) =>
             {
@@ -68,23 +70,16 @@ namespace BookStore_Management_AppDesktop.ViewModels
         }
 
 
-        public Action<string>? OnShowMessage { get; set; }
-        public Func<string, string, Task<bool>>? OnRequestConfirm { get; set; }
 
         [RelayCommand]
         private async Task DeleteBookAsync(Book selectedBook)
         {
             if (selectedBook == null) return;
 
-            bool isConfirmed = false;
-            if (OnRequestConfirm != null)
-            {
-                isConfirmed = await OnRequestConfirm.Invoke("Confirm Deletion", $"Are you sure you want to delete the book '{selectedBook.Title}'?");
-            }
+            bool isConfirmed = _dialogService.ShowDeleteConfirmation();
 
             if (isConfirmed)
             {
-
                 bool isSuccess = await _apiService.DeleteBookAsync(selectedBook.BookId);
 
                 if (isSuccess)
@@ -95,14 +90,13 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     }
 
                     Books.Remove(selectedBook);
-
                     WeakReferenceMessenger.Default.Send(new BookChangedMessage(BookChangedMessage.ChangeAction.Delete, selectedBook));
 
-                    OnShowMessage?.Invoke("Book deleted successfully!");
+                    _dialogService.ShowMessage("Book deleted successfully!");
                 }
                 else
                 {
-                    OnShowMessage?.Invoke("Book delete failed!");
+                    _dialogService.ShowMessage("Book delete failed!");
                 }
             }
         }
@@ -113,9 +107,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (selectedBook == null) return;
 
-            var editWindow = new EditBookWindow(selectedBook);
-            editWindow.ShowDialog(); 
-
+            _dialogService.ShowEditBookWindow(selectedBook);
         }
+    
     }
 }

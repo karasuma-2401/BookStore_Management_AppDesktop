@@ -52,6 +52,10 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<IAuthorApiService, AuthorApiService>();
             services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
 
+            services.AddSingleton<Wpf.Ui.IContentDialogService, Wpf.Ui.ContentDialogService>();
+            services.AddSingleton<IDialogService, DialogService>();
+
+
             // // Get ViewModels
             services.AddTransient<MainViewModel>();
             services.AddTransient<LoginViewModel>();
@@ -62,6 +66,8 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<BookViewModel>();
             services.AddTransient<BookDetailViewModel>();
             services.AddTransient<EmployeeViewModel>();
+            services.AddTransient<ImportCreateViewModel>(); 
+            services.AddTransient<ImportHistoryViewModel>();
 
 
             // // Get View 
@@ -74,6 +80,8 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<SettingsPage>();
             services.AddTransient<BookDetailPage>();
             services.AddTransient<EmployeePage>();
+            services.AddTransient<ImportHistoryPage>(); 
+            services.AddTransient<CreateImportPage>(); 
         }
     }
 

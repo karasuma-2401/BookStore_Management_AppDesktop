@@ -11,6 +11,7 @@ namespace BookStore_Management_AppDesktop.Models
         public int CurrentQuantity { get; set; } 
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(TotalLinePrice))]
         private int _importQuantity;
 
         [ObservableProperty]

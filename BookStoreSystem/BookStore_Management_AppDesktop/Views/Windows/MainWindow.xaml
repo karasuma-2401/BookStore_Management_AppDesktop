@@ -72,6 +72,10 @@
                 <ui:NavigationViewItem Tag="Inventory" Icon="{ui:SymbolIcon Box24}" Command="{Binding NavigateCommand}" CommandParameter="Inventory">
                     <TextBlock Text="Inventory" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
                 </ui:NavigationViewItem>
+
+                <ui:NavigationViewItem Tag="ImportHistory" Icon="{ui:SymbolIcon Receipt24}" Command="{Binding NavigateCommand}" CommandParameter="ImportHistory">
+                    <TextBlock Text="Imports History" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
+                </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>
 
             <ui:NavigationView.FooterMenuItems>
@@ -85,5 +89,8 @@
                 Background="{DynamicResource ContentBackgroundBrush}">
             <Frame x:Name="RootFrame" NavigationUIVisibility="Hidden"/>
         </Border>
+        <Grid>
+            <ContentPresenter x:Name="RootContentDialogPresenter" Grid.ColumnSpan="2" />
+        </Grid>
     </Grid>
 </Window>

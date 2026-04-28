@@ -12,6 +12,8 @@ namespace BookStore_Management_AppDesktop.Helpers.Enums
         Invoices,
         Inventory,
         Settings,
-        BookDetail
+        BookDetail,
+        ImportHistory, 
+        CreateImport
     }
 }
