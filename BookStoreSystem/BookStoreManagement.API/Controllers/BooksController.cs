@@ -51,7 +51,6 @@ namespace BookStoreManagement.API.Controllers
 
         // POST: api/books
         [HttpPost]
-        [HttpPost]
         public async Task<ActionResult<BookResponseDto>> PostBook(BookCreateDto dto)
         {
             var book = new Book

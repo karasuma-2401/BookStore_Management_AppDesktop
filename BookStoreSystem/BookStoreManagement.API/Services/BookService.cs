@@ -68,6 +68,7 @@ namespace BookStoreManagement.API.Services
                     AuthorId = b.AuthorId,
                     AuthorName = b.Author.Name,
                     Quantity = b.Quantity,
+                    Price = b.Price,
                     ImagePath = b.ImagePath,
                     BookCategories = string.Join(", ",
                         b.BookCategories.Select(bc => bc.Category.Name))
@@ -103,7 +104,6 @@ namespace BookStoreManagement.API.Services
                     Price = b.Price,
                     Description = b.Description,
                     ImagePath = b.ImagePath,
-
                     BookCategories = string.Join(", ",
                         b.BookCategories.Select(bc => bc.Category.Name))
                 })
@@ -132,7 +132,7 @@ namespace BookStoreManagement.API.Services
             if (id != book.BookId)
                 return false;
 
-            _context.Entry(book).State = EntityState.Modified;
+            _context.Entry(book).Property(b => b.Price).IsModified = false;
 
             try
             {
