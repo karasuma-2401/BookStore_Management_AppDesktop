@@ -16,6 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
@@ -30,18 +31,24 @@
                            Text="Inventory Management" 
                            Style="{StaticResource HeaderTextStyle}" />
 
-                <ui:TextBox Grid.Column="1" 
+                <ComboBox Grid.Column="1" 
+                          Width="160" Margin="0,0,15,0" VerticalAlignment="Center"
+                          SelectedIndex="0">
+                    <ComboBoxItem Content="Price: High to Low" />
+                    <ComboBoxItem Content="Price: Low to High" />
+                    <ComboBoxItem Content="Title: A - Z" />
+                </ComboBox>
+
+                <ui:TextBox Grid.Column="2" 
                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                     PlaceholderText="Search title, ID, or stock.." 
                     Icon="{ui:SymbolIcon Search24}"
                     Width="250" 
-                    Margin="0,0,15,0"
                     VerticalAlignment="Center"/>
-
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" Background="{DynamicResource CardBackgroundBrush}" Margin="20" CornerRadius="8">
+        <Border Grid.Row="1" Background="{DynamicResource CardBackgroundBrush}" Margin="20,20,20,10" CornerRadius="8">
             <DataGrid ItemsSource="{Binding Books}" AutoGenerateColumns="False" 
                       CanUserAddRows="False" 
                       IsReadOnly="True" 
@@ -116,7 +123,6 @@
                                       VerticalAlignment="Center" 
                                       HorizontalAlignment="Center">
                                     <MenuItem Padding="8,4" Background="Transparent" BorderThickness="0" Cursor="Hand">
-
                                         <MenuItem.Header>
                                             <ui:SymbolIcon Symbol="MoreHorizontal24" FontSize="20" Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
                                         </MenuItem.Header>
@@ -134,7 +140,6 @@
                                                   Foreground="{DynamicResource ErrorPrimaryBrush}"
                                                   Command="{Binding DataContext.DeleteBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                   CommandParameter="{Binding}"/>
-
                                     </MenuItem>
                                 </Menu>
                             </DataTemplate>
@@ -142,6 +147,35 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+        </Border>
+
+        <Border Grid.Row="2" Background="{DynamicResource SidebarBackgroundBrush}" Margin="20,0,20,20" Padding="20,10" CornerRadius="8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="{StaticResource FontSizeBody}" Foreground="{DynamicResource TextMutedBrush}">
+                    <Run Text="Showing Page " />
+                    <Run Text="{Binding CurrentPage, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    <Run Text=" of " />
+                    <Run Text="{Binding TotalPages, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    <Run Text="  (Total: " />
+                    <Run Text="{Binding TotalItems, Mode=OneWay}" FontWeight="Bold" />
+                    <Run Text=" items)" />
+                </TextBlock>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:Button Icon="{ui:SymbolIcon ChevronLeft24}" 
+                               Command="{Binding PreviousPageCommand}" 
+                               Appearance="Secondary" Margin="0,0,10,0" Padding="15,5" ToolTip="Previous Page"/>
+
+                    <ui:Button Icon="{ui:SymbolIcon ChevronRight24}" 
+                               Command="{Binding NextPageCommand}" 
+                               Appearance="Primary" Padding="15,5" ToolTip="Next Page"/>
+                </StackPanel>
+            </Grid>
         </Border>
     </Grid>
 </Page>

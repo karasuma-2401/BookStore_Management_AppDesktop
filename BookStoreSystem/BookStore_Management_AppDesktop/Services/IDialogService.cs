@@ -6,7 +6,7 @@ namespace BookStore_Management_AppDesktop.Services
     {
         void ShowMessage(string message);
 
-        bool ShowDeleteConfirmation();
+        bool ShowConfirmation(string message, string confirmText = "Confirm", bool isDanger = false);
 
         void ShowAddBookWindow();
 

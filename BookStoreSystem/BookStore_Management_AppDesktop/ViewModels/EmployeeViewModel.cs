@@ -1,5 +1,4 @@
 ﻿using BookStore_Management_AppDesktop.Models;
-using BookStore_Management_AppDesktop.Services.API;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
@@ -12,6 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using BookStore_Management_AppDesktop.Services;
+using BookStore_Management_AppDesktop.Services.API.Employee;
 
 
 namespace BookStore_Management_AppDesktop.ViewModels
@@ -19,6 +20,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
     public partial class EmployeeViewModel : ObservableObject
     {
         private readonly IEmployeeApiService _apiService;
+        private readonly IDialogService _dialogService;
         private List<Employee> _allEmployees = new();
         private CancellationTokenSource? _searchCts;
 
@@ -64,9 +66,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
             "pack://siteoforigin:,,,/Resources/Images/Twenty Years Later.webp"
         };
 
-        public EmployeeViewModel(IEmployeeApiService apiService) 
+        public EmployeeViewModel(IEmployeeApiService apiService, IDialogService dialogService) 
         {
             _apiService = apiService;
+            _dialogService = dialogService;
             _ = InitializeDataAsync();
         }
 
@@ -197,13 +200,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (employee == null) return;
 
-            var confirmDialog = new BookStore_Management_AppDesktop.Views.Windows.DeleteConfirmationWindow();
-            if (Application.Current.MainWindow != null)
-            {
-                confirmDialog.Owner = Application.Current.MainWindow;
-            }
+            bool isConfirmed = _dialogService.ShowConfirmation(
+                message: $"Are you sure you want to delete employee '{employee.FullName}'?\nThis action cannot be undone.",
+                confirmText: "Delete",
+                isDanger: true);
 
-            if (confirmDialog.ShowDialog() == true)
+            if (isConfirmed)
             {
                 try
                 {
@@ -218,23 +220,22 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
                         if (isUserDeleted)
                         {
-                            MessageBox.Show("Employee and associated User account deleted successfully!",
-                                            "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                            _dialogService.ShowMessage("Employee and associated User account deleted successfully!");
                         }
                         else
                         {
-                            MessageBox.Show("Employee deleted, but the User account could not be removed. It might be in use elsewhere.",
-                                            "Partial Success", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            _dialogService.ShowMessage("Employee deleted, but the User account could not be removed. It might be in use elsewhere.");
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Failed to delete the Employee record.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        _dialogService.ShowMessage("Failed to delete the Employee record.");
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"System Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    System.Diagnostics.Debug.WriteLine($"[DeleteEmployee Error]: {ex}");
+                    _dialogService.ShowMessage($"System Error: {ex.Message}");
                 }
             }
         }

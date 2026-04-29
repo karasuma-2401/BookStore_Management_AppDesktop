@@ -120,7 +120,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="Employee" Binding="{Binding User.FullName}" Width="*">
+                        <DataGridTextColumn Header="Employee" Binding="{Binding EmployeeName}" Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>

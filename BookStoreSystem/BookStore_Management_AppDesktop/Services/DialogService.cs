@@ -22,11 +22,11 @@ namespace BookStore_Management_AppDesktop.Services
             msgBox.ShowDialog();
         }
 
-        public bool ShowDeleteConfirmation()
+        public bool ShowConfirmation(string message, string confirmText = "Confirm", bool isDanger = false)
         {
-            var confirmWindow = new DeleteConfirmationWindow();
-            var result = confirmWindow.ShowDialog();
-            return result == true;
+            var window = new ConfirmWindow(message, confirmText, isDanger);
+            window.ShowDialog();
+            return window.DialogResult == true;
         }
 
         public void ShowAddBookWindow()

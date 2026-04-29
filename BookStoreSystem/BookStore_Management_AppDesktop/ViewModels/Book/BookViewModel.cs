@@ -3,14 +3,17 @@ using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Messages;
 using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs;
-using BookStore_Management_AppDesktop.Services.API;
+using BookStore_Management_AppDesktop.Services.API.Book;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace BookStore_Management_AppDesktop.ViewModels
@@ -30,38 +33,24 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty]
         private ObservableCollection<Book> _books = new ObservableCollection<Book>();
 
+        [ObservableProperty] private int _currentPage = 1;
+        [ObservableProperty] private int _pageSize = 12; 
+        [ObservableProperty] private int _totalItems;
+        [ObservableProperty] private int _totalPages = 1;
+
         public BookViewModel(IBookApiService apiService, INavigationService navigationService)
         {
             _apiService = apiService;
             _navigationService = navigationService;
 
-            WeakReferenceMessenger.Default.Register<BookChangedMessage>(this, (recipient, message) =>
+            WeakReferenceMessenger.Default.Register<BookChangedMessage>(this, async (recipient, message) =>
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                await Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
-                    switch (message.Action)
-                    {
-                        case BookChangedMessage.ChangeAction.Delete:
-                            var bookToRemove = Books.FirstOrDefault(b => b.BookId == message.ChangedBook.BookId);
-                            if (bookToRemove != null) Books.Remove(bookToRemove);
-                            break;
-
-                        case BookChangedMessage.ChangeAction.Add:
-                            Books.Insert(0, message.ChangedBook);
-                            break;
-
-                        case BookChangedMessage.ChangeAction.Update:
-                            var bookToUpdate = Books.FirstOrDefault(b => b.BookId == message.ChangedBook.BookId);
-                            if (bookToUpdate != null)
-                            {
-                                var index = Books.IndexOf(bookToUpdate);
-                                Books[index] = message.ChangedBook;
-                            }
-                            break;
-                    }
+                    await ExecuteSearchAsync();
                 });
             });
-   
+
         }
 
         public override async Task LoadDataAsync()
@@ -71,11 +60,16 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         partial void OnSearchTextChanged(string value)
         {
-            _ = _searchDebouncer.RunAsync(997, async (token) => await ExecuteSearchAsync(token));
+            _ = _searchDebouncer.RunAsync(997, async (token) =>
+            {
+                CurrentPage = 1; 
+                await ExecuteSearchAsync(token);
+            });
         }
 
         partial void OnSelectedSortChanged(string? value)
         {
+            CurrentPage = 1; 
             _ = ExecuteSearchAsync();
         }
 
@@ -83,20 +77,46 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             try
             {
+                string? sortBy = null;
+                string? sortOrder = null;
+
+                if (!string.IsNullOrEmpty(SelectedSort) && SelectedSort.Contains("_"))
+                {
+                    var parts = SelectedSort.Split('_');
+                    sortBy = parts[0];    
+                    sortOrder = parts[1]; 
+                }
+
                 var query = new BookQueryParameters
                 {
                     Keyword = SearchText,
-                    SortBy = SelectedSort
+                    SortBy = sortBy,
+                    SortOrder = sortOrder,
+                    PageNumber = CurrentPage,
+                    PageSize = PageSize
                 };
 
-                var booksFromApi = await _apiService.GetAllBooksAsync(query, token);
+                var response = await _apiService.GetAllBooksAsync(query, token);
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     Books.Clear();
-                    foreach (var book in booksFromApi)
+
+                    if (response != null && response.Data != null)
                     {
-                        Books.Add(book);
+                        foreach (var book in response.Data)
+                        {
+                            Books.Add(book);
+                        }
+
+                        TotalItems = response.TotalItems;
+                        TotalPages = response.TotalPages > 0 ? response.TotalPages : 1;
+
+                        if (CurrentPage > TotalPages)
+                        {
+                            CurrentPage = TotalPages;
+                            _ = ExecuteSearchAsync();
+                        }
                     }
                 });
             }

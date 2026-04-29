@@ -73,11 +73,7 @@
                                    Visibility="{Binding AuthorVM.IsShowAddButton, Converter={StaticResource BoolToVis}}" 
                                    Height="35" Padding="15,0"/>
                     </Grid>
-
-                    <TextBlock Text="Quantity" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,5,0,0" FontSize="{StaticResource FontSizeBody}"/>
-                    <ui:TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="e.g. 50" 
-                                FontSize="{StaticResource FontSizeBody}"
-                                Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Padding="10,8"/>
+                    
 
                     <TextBlock Text="Cover Image" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,15,0,0" FontSize="{StaticResource FontSizeBody}"/>
                     <Grid>

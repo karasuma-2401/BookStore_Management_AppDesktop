@@ -73,8 +73,8 @@
                     <TextBlock Text="Inventory" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem Tag="ImportHistory" Icon="{ui:SymbolIcon Receipt24}" Command="{Binding NavigateCommand}" CommandParameter="ImportHistory">
-                    <TextBlock Text="Imports History" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
+                <ui:NavigationViewItem Tag="Imports" Icon="{ui:SymbolIcon Receipt24}" Command="{Binding NavigateCommand}" CommandParameter="ImportHistory">
+                    <TextBlock Text="Imports" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
                 </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>
 

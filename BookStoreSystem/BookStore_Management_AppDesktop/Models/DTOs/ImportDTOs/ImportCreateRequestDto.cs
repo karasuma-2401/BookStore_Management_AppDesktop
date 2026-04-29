@@ -1,5 +1,4 @@
-﻿
-namespace BookStore_Management_AppDesktop.Models.DTOs
+﻿namespace BookStore_Management_AppDesktop.Models.DTOs.ImportDTOs
 {
     public class ImportCreateRequestDto
     {

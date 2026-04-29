@@ -2,17 +2,17 @@
 using BookStore_Management_AppDesktop.Messages;
 using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs;
-using BookStore_Management_AppDesktop.Services; // Dùng IDialogService
-using BookStore_Management_AppDesktop.Services.API;
+using BookStore_Management_AppDesktop.Services;
+using BookStore_Management_AppDesktop.Services.API.Book;
+using BookStore_Management_AppDesktop.Services.API.Import;
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging; // Dùng Messenger
+using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-
 namespace BookStore_Management_AppDesktop.ViewModels
 {
     public partial class ImportCreateViewModel : BaseViewModel
@@ -30,10 +30,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private decimal _tempImportPrice = 0;
         [ObservableProperty] private decimal _totalDraftAmount = 0;
 
-        public ImportCreateViewModel(IBookApiService apiService, IDialogService dialogService)
+        public ImportCreateViewModel(IBookApiService apiService, IDialogService dialogService, IImportApiService importApiService)
         {
             _apiService = apiService;
             _dialogService = dialogService;
+            _importApiService = importApiService;
 
             WeakReferenceMessenger.Default.Register<BookChangedMessage>(this, (recipient, message) =>
             {
@@ -63,21 +64,33 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         partial void OnSearchTextChanged(string value)
         {
+            if (SelectedSearchResult != null && value == SelectedSearchResult.Title)
+            {
+                return;
+            }
+
             _ = _searchDebouncer.RunAsync(400, async (token) =>
             {
-                if (string.IsNullOrWhiteSpace(SearchText))
+                if (string.IsNullOrWhiteSpace(value))
                 {
                     Application.Current.Dispatcher.Invoke(() => SearchResults.Clear());
                     return;
                 }
 
-                var query = new BookQueryParameters { Keyword = SearchText, PageSize = 10 };
+                var query = new BookQueryParameters { Keyword = value, PageSize = 10 };
                 var results = await _apiService.GetAllBooksAsync(query, token);
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     SearchResults.Clear();
-                    foreach (var book in results) SearchResults.Add(book);
+
+                    if (results != null && results.Data != null)
+                    {
+                        foreach (var book in results.Data)
+                        {
+                            SearchResults.Add(book);
+                        }
+                    }
                 });
             });
         }
@@ -158,7 +171,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [RelayCommand]
         private void ClearDraft()
         {
-            bool isConfirmed = _dialogService.ShowDeleteConfirmation();
+            bool isConfirmed = _dialogService.ShowConfirmation(
+                                                    message: "Do you want to process and confirm this import order?",
+                                                    confirmText: "Process Import",
+                                                    isDanger: false);
+
             if (isConfirmed)
             {
                 ClearDraftSafe();
@@ -181,7 +198,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 return;
             }
 
-            bool isConfirmed = _dialogService.ShowDeleteConfirmation();
+            bool isConfirmed = _dialogService.ShowConfirmation(
+                                                        message: "Do you want to process and confirm this import order?",
+                                                        confirmText: "Process Import",
+                                                        isDanger: false);
 
             if (isConfirmed)
             {

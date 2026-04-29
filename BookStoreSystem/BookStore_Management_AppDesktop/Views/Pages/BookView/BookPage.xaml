@@ -16,6 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
@@ -127,5 +128,34 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
+
+        <Border Grid.Row="2" Background="{DynamicResource SidebarBackgroundBrush}" Margin="25,0,25,20" Padding="20,10" CornerRadius="8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="{StaticResource FontSizeBody}" Foreground="{DynamicResource TextMutedBrush}">
+                    <Run Text="Showing Page " />
+                    <Run Text="{Binding CurrentPage, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    <Run Text=" of " />
+                    <Run Text="{Binding TotalPages, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    <Run Text="  (Total: " />
+                    <Run Text="{Binding TotalItems, Mode=OneWay}" FontWeight="Bold" />
+                    <Run Text=" books)" />
+                </TextBlock>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:Button Icon="{ui:SymbolIcon ChevronLeft24}" 
+                               Command="{Binding PreviousPageCommand}" 
+                               Appearance="Secondary" Margin="0,0,10,0" Padding="15,5" ToolTip="Previous Page"/>
+
+                    <ui:Button Icon="{ui:SymbolIcon ChevronRight24}" 
+                               Command="{Binding NextPageCommand}" 
+                               Appearance="Primary" Padding="15,5" ToolTip="Next Page"/>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Page>

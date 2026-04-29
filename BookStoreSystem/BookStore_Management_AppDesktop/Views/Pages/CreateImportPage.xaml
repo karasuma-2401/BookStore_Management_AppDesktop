@@ -90,6 +90,7 @@
                       HeadersVisibility="Column" GridLinesVisibility="Horizontal"
                       Background="Transparent" BorderThickness="0"
                       RowHeight="60" FontSize="15"
+                      Foreground="{DynamicResource TextOnLightBackgroudBrush}"
                       RowBackground="{DynamicResource CardBackgroundBrush}"
                       AlternatingRowBackground="{DynamicResource ContentBackgroundBrush}"
                       HorizontalGridLinesBrush="#E2E8F0" VerticalGridLinesBrush="Transparent">

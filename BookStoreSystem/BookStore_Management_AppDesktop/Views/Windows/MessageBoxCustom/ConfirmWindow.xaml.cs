@@ -12,17 +12,24 @@ using System.Windows.Shapes;
 
 namespace BookStore_Management_AppDesktop.Views.Windows
 {
-    /// <summary>
-    /// Interaction logic for DeleteConfirmationWindow.xaml
-    /// </summary>
-    public partial class DeleteConfirmationWindow : Window
+    public partial class ConfirmWindow : Window
     {
-        public DeleteConfirmationWindow()
+        public ConfirmWindow(string message, string confirmText = "Confirm", bool isDanger = false)
         {
             InitializeComponent();
+
+            txtMessage.Text = message;
+            btnConfirm.Content = confirmText;
+
+            if (isDanger)
+            {
+                DangerIcon.Visibility = Visibility.Visible;
+                InfoIcon.Visibility = Visibility.Collapsed;
+                btnConfirm.Background = (SolidColorBrush)FindResource("ErrorPrimaryBrush");
+            }
         }
 
-        private void Delete_Click(object sender, RoutedEventArgs e)
+        private void Confirm_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
             this.Close();
