@@ -8,9 +8,6 @@ using System.Windows.Input;
 
 namespace BookStore_Management_AppDesktop.Views.Windows
 {
-    /// <summary>
-    /// Interaction logic for AddBookWindow.xaml
-    /// </summary>
     public partial class AddBookWindow : Window
     {
         private readonly BookFormViewModel _viewModel;
@@ -21,11 +18,9 @@ namespace BookStore_Management_AppDesktop.Views.Windows
 
             _viewModel = App.ServiceProvider!.GetRequiredService<BookFormViewModel>();
 
-            _viewModel.OnShowMessage = (message) =>
-            {
-                var msgBox = new CustomMessageBox(message);
-                msgBox.ShowDialog();
-            };
+            var dialogService = App.ServiceProvider!.GetRequiredService<IDialogService>();
+
+            _viewModel.OnShowMessage = (message) => dialogService.ShowMessage(message);
 
             _viewModel.OnRequestClose = () => this.Close();
 

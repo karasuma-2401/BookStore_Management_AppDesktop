@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BookStore_Management_AppDesktop.Models.DTOs
+namespace BookStore_Management_AppDesktop.Models.DTOs.EmployeeDTOs
 {
     public class EmployeeCreateDto
     {

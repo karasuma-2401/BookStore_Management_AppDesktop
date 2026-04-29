@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BookStore_Management_AppDesktop.Services.API
+namespace BookStore_Management_AppDesktop.Services.API.Employee
 {
     public interface IEmployeeApiService
     {

@@ -1,5 +1,8 @@
 ﻿using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API;
+using BookStore_Management_AppDesktop.Services.API.Book;
+using BookStore_Management_AppDesktop.Services.API.Employee;
+using BookStore_Management_AppDesktop.Services.API.Import;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.ViewModels;
 using BookStore_Management_AppDesktop.Views.Pages;
@@ -51,6 +54,10 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<IBookApiService, BookApiService>(); 
             services.AddSingleton<IAuthorApiService, AuthorApiService>();
             services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
+            services.AddSingleton<IImportApiService, ImportApiService>();
+            services.AddSingleton<Wpf.Ui.IContentDialogService, Wpf.Ui.ContentDialogService>();
+            services.AddSingleton<IDialogService, DialogService>();
+
 
             // // Get ViewModels
             services.AddTransient<MainViewModel>();
@@ -62,6 +69,8 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<BookViewModel>();
             services.AddTransient<BookDetailViewModel>();
             services.AddTransient<EmployeeViewModel>();
+            services.AddTransient<ImportCreateViewModel>(); 
+            services.AddTransient<ImportHistoryViewModel>();
 
 
             // // Get View 
@@ -74,6 +83,8 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<SettingsPage>();
             services.AddTransient<BookDetailPage>();
             services.AddTransient<EmployeePage>();
+            services.AddTransient<ImportHistoryPage>(); 
+            services.AddTransient<CreateImportPage>(); 
         }
     }
 

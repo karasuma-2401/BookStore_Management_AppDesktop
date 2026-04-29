@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 using BookStore_Management_AppDesktop.Models.DTOs;
 using System.Linq;
 using System.Net.Http.Headers;
-namespace BookStore_Management_AppDesktop.Services.API
+using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs;
+namespace BookStore_Management_AppDesktop.Services.API.Book
 {
     public class BookApiService : IBookApiService
     {
@@ -32,21 +33,36 @@ namespace BookStore_Management_AppDesktop.Services.API
             }
         }
 
-        public async Task<List<Book>> GetAllBooksAsync()
+        public async Task<PagedResponse<Book>> GetAllBooksAsync(BookQueryParameters queryParams, CancellationToken ct = default)
         {
             try
             {
                 AddAuthorizationHeader();
 
-                var response = await _httpClient.GetAsync("book");
+                var query = new List<string>();
+
+                if (queryParams.CategoryId.HasValue) query.Add($"categoryId={queryParams.CategoryId.Value}");
+                if (queryParams.AuthorId.HasValue) query.Add($"authorId={queryParams.AuthorId.Value}");
+                if (!string.IsNullOrWhiteSpace(queryParams.Keyword)) query.Add($"keyword={Uri.EscapeDataString(queryParams.Keyword)}");
+                if (!string.IsNullOrWhiteSpace(queryParams.SortBy)) query.Add($"sortBy={queryParams.SortBy}");
+                if (!string.IsNullOrWhiteSpace(queryParams.SortOrder)) query.Add($"sortOrder={queryParams.SortOrder}");
+
+                query.Add($"page={queryParams.PageNumber}");
+                query.Add($"pageSize={queryParams.PageSize}");
+
+                string queryString = query.Count > 0 ? "?" + string.Join("&", query) : "";
+                string finalUrl = $"book{queryString}";
+
+                var response = await _httpClient.GetAsync(finalUrl, ct);
                 response.EnsureSuccessStatusCode();
 
-                var json = await response.Content.ReadAsStringAsync();
+                var json = await response.Content.ReadAsStringAsync(ct);
 
-                var dtos = JsonSerializer.Deserialize<List<BookResponseDto>>(json, _options) ?? new List<BookResponseDto>();
+                var pagedResult = JsonSerializer.Deserialize<PagedResponse<BookResponseDto>>(json, _options);
 
+                if (pagedResult == null) return new PagedResponse<Book>();
 
-                return dtos.Select(dto => new Book
+                var books = pagedResult.Data.Select(dto => new Book
                 {
                     BookId = dto.BookId,
                     Title = dto.Title,
@@ -56,28 +72,42 @@ namespace BookStore_Management_AppDesktop.Services.API
                     Quantity = dto.Quantity,
                     ImagePath = dto.ImagePath
                 }).ToList();
+
+                return new PagedResponse<Book>
+                {
+                    Page = pagedResult.Page,
+                    PageSize = pagedResult.PageSize,
+                    TotalItems = pagedResult.TotalItems,
+                    TotalPages = pagedResult.TotalPages,
+                    Data = books
+                };
+            }
+            catch (OperationCanceledException)
+            {
+                System.Diagnostics.Debug.WriteLine("The old request has been cancelled.");
+                throw;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"GetAllBooks Error: {ex.Message}");
-                return new List<Book>();
+                return new PagedResponse<Book>();
             }
         }
 
-        public async Task<bool> CreateBookAsync(Book newBook)
+        public async Task<Book?> CreateBookAsync(Book newBook)
         {
             try
             {
                 AddAuthorizationHeader();
+
+
                 var createDto = new BookCreateDto
                 {
                     Title = newBook.Title ?? string.Empty,
-
                     AuthorId = newBook.AuthorId,
-                    Price = newBook.Price,
-                    Quantity = newBook.Quantity,
-
-                    ImagePath = newBook.ImagePath ?? string.Empty
+                    ImagePath = newBook.ImagePath ?? string.Empty,
+                    Description = newBook.Description ?? string.Empty,
+                    CategoryIds = new List<int>() 
                 };
 
                 var json = JsonSerializer.Serialize(createDto, _options);
@@ -85,12 +115,38 @@ namespace BookStore_Management_AppDesktop.Services.API
 
                 var response = await _httpClient.PostAsync("book", content);
 
-                return response.IsSuccessStatusCode;
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    var dto = JsonSerializer.Deserialize<BookResponseDto>(jsonResponse, _options);
+
+                    if (dto != null)
+                    {
+                        return new Book
+                        {
+                            BookId = dto.BookId,
+                            Title = dto.Title,
+                            AuthorId = dto.AuthorId,
+                            AuthorName = dto.AuthorName,
+                            Price = dto.Price,
+                            Quantity = dto.Quantity,
+                            ImagePath = dto.ImagePath,
+                            Description = dto.Description
+                        };
+                    }
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Debug.WriteLine($"[API Fail] CreateBook Failed: {response.StatusCode} - {errorContent}");
+                }
+
+                return null;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"CreateBook Error: {ex.Message}");
-                return false;
+                System.Diagnostics.Debug.WriteLine($"[CRASH] CreateBook Exception: {ex.Message}");
+                return null;
             }
         }
 
@@ -158,7 +214,6 @@ namespace BookStore_Management_AppDesktop.Services.API
                     Title = updatedBook.Title ?? string.Empty,
                     AuthorId = updatedBook.AuthorId,
                     Price = updatedBook.Price,
-                    Quantity = updatedBook.Quantity,
                     ImagePath = updatedBook.ImagePath ?? string.Empty
                 };
 

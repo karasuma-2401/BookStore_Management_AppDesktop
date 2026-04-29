@@ -1,17 +1,19 @@
 ﻿using BookStore_Management_AppDesktop.Helpers;
+using BookStore_Management_AppDesktop.Messages;
 using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Models.DTOs;
 using BookStore_Management_AppDesktop.Services;
-using BookStore_Management_AppDesktop.Services.API;
-using BookStore_Management_AppDesktop.Views.Windows;
+using BookStore_Management_AppDesktop.Services.API.Book;
+using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using BookStore_Management_AppDesktop.ViewModels.Base; 
-using System.Collections.ObjectModel;
-using System.Windows;
-using static System.Reflection.Metadata.BlobBuilder;
 using CommunityToolkit.Mvvm.Messaging;
-using BookStore_Management_AppDesktop.Messages;
-using System.Linq;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using System.Collections.ObjectModel;
+using System.Drawing.Printing;
+using System.Globalization;
+using System.Threading.Tasks;
+using System.Windows;
 
 
 namespace BookStore_Management_AppDesktop.ViewModels
@@ -20,6 +22,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly IBookApiService _apiService;
         private readonly CloudinaryService _cloudinaryService;
+        private readonly IDialogService _dialogService;
+
+        private readonly DebounceHelper _searchDebouncer = new DebounceHelper();
 
         [ObservableProperty]
         private ObservableCollection<Book> _books = new ObservableCollection<Book>();
@@ -27,63 +32,111 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty]
         private string _searchText = string.Empty;
 
-        public InventoryViewModel(IBookApiService apiService, CloudinaryService cloudinaryService)
+        [ObservableProperty] private int _currentPage = 1;
+        [ObservableProperty] private int _pageSize = 10;
+        [ObservableProperty] private int _totalItems;
+        [ObservableProperty] private int _totalPages = 1;
+
+        [ObservableProperty] private string _sortBy = "price";
+        [ObservableProperty] private string _sortOrder = "desc";
+
+        public InventoryViewModel(IBookApiService apiService, CloudinaryService cloudinaryService, IDialogService dialogService)
         {
             _apiService = apiService;
             _cloudinaryService = cloudinaryService;
+            _dialogService = dialogService;
 
-            WeakReferenceMessenger.Default.Register<BookChangedMessage>(this, (recipient, message) =>
+            WeakReferenceMessenger.Default.Register<BookChangedMessage>(this, async (recipient, message) =>
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                await Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
-                    switch (message.Action)
-                    {
-                        case BookChangedMessage.ChangeAction.Delete:
-                            var bookToRemove = Books.FirstOrDefault(b => b.BookId == message.ChangedBook.BookId);
-                            if (bookToRemove != null) Books.Remove(bookToRemove);
-                            break;
-
-                        case BookChangedMessage.ChangeAction.Add:
-                            Books.Insert(0, message.ChangedBook);
-                            break;
-
-                        case BookChangedMessage.ChangeAction.Update:
-                            var bookToUpdate = Books.FirstOrDefault(b => b.BookId == message.ChangedBook.BookId);
-                            if (bookToUpdate != null)
-                            {
-                                var index = Books.IndexOf(bookToUpdate);
-                                Books[index] = message.ChangedBook;
-                            }
-                            break;
-                    }
+                    await LoadDataAsync();
                 });
             });
         }
 
         public override async Task LoadDataAsync()
         {
-            var booksFromApi = await _apiService.GetAllBooksAsync();
-            Books = new ObservableCollection<Book>(booksFromApi);
+            var query = new BookQueryParameters
+            {
+                Keyword = SearchText,
+                PageNumber = CurrentPage,
+                PageSize = PageSize,
+                SortBy = SortBy,
+                SortOrder = SortOrder
+            };
+
+            var response = await _apiService.GetAllBooksAsync(query);
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Books.Clear();
+                if (response.Data != null)
+                {
+                    foreach (var book in response.Data)
+                    {
+                        Books.Add(book);
+                    }
+                }
+
+                TotalItems = response.TotalItems;
+                TotalPages = response.TotalPages > 0 ? response.TotalPages : 1;
+
+                if (CurrentPage > TotalPages)
+                {
+                    CurrentPage = TotalPages;
+                    _ = LoadDataAsync();
+                }
+            });
         }
 
+        partial void OnSearchTextChanged(string value)
+        {
+            _ = _searchDebouncer.RunAsync(997, async (token) =>
+            {
+                CurrentPage = 1; 
+                await LoadDataAsync();
+            });
+        }
 
-        public Action<string>? OnShowMessage { get; set; }
-        public Func<string, string, Task<bool>>? OnRequestConfirm { get; set; }
+        partial void OnPageSizeChanged(int value)
+        {
+            CurrentPage = 1;
+            _ = LoadDataAsync();
+        }
+
+        [RelayCommand]
+        private async Task NextPage()
+        {
+            if (CurrentPage < TotalPages)
+            {
+                CurrentPage++;
+                await LoadDataAsync();
+            }
+        }
+
+        [RelayCommand]
+        private async Task PreviousPage()
+        {
+            if (CurrentPage > 1)
+            {
+                CurrentPage--;
+                await LoadDataAsync();
+            }
+        }
 
         [RelayCommand]
         private async Task DeleteBookAsync(Book selectedBook)
         {
             if (selectedBook == null) return;
 
-            bool isConfirmed = false;
-            if (OnRequestConfirm != null)
-            {
-                isConfirmed = await OnRequestConfirm.Invoke("Confirm Deletion", $"Are you sure you want to delete the book '{selectedBook.Title}'?");
-            }
+            bool isConfirmed = _dialogService.ShowConfirmation(
+                                                        message: "Do you want to delete this book?",
+                                                        confirmText: "Delete Book",
+                                                        isDanger: true);
 
             if (isConfirmed)
             {
-
                 bool isSuccess = await _apiService.DeleteBookAsync(selectedBook.BookId);
 
                 if (isSuccess)
@@ -93,15 +146,13 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         await _cloudinaryService.DeleteImageAsync(selectedBook.ImagePath);
                     }
 
-                    Books.Remove(selectedBook);
-
                     WeakReferenceMessenger.Default.Send(new BookChangedMessage(BookChangedMessage.ChangeAction.Delete, selectedBook));
 
-                    OnShowMessage?.Invoke("Book deleted successfully!");
+                    _dialogService.ShowMessage("Book deleted successfully!");
                 }
                 else
                 {
-                    OnShowMessage?.Invoke("Book delete failed!");
+                    _dialogService.ShowMessage("Book delete failed!");
                 }
             }
         }
@@ -112,9 +163,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (selectedBook == null) return;
 
-            var editWindow = new EditBookWindow(selectedBook);
-            editWindow.ShowDialog(); 
-
+            _dialogService.ShowEditBookWindow(selectedBook);
         }
+    
     }
 }

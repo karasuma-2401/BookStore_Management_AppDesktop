@@ -1,5 +1,5 @@
 ﻿using BookStore_Management_AppDesktop.Models;
-using BookStore_Management_AppDesktop.Models.DTOs;
+using BookStore_Management_AppDesktop.Models.DTOs.EmployeeDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace BookStore_Management_AppDesktop.Services.API
+namespace BookStore_Management_AppDesktop.Services.API.Employee
 {
     public class EmployeeApiService : IEmployeeApiService
     {

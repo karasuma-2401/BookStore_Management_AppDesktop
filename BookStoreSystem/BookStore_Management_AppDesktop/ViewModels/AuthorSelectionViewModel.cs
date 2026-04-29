@@ -54,6 +54,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 var text = value?.Trim() ?? string.Empty;
                 if (SetProperty(ref _searchAuthorText, text))
                 {
+                    if (_selectedAuthor != null && string.Equals(_selectedAuthor.Name, text, StringComparison.OrdinalIgnoreCase))
+                    {
+                        IsShowAddButton = false;
+                        return; 
+                    }
+
                     if (_selectedAuthor != null && !string.Equals(_selectedAuthor.Name, text, StringComparison.OrdinalIgnoreCase))
                     {
                         SelectedAuthor = null;
