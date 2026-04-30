@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using BookStore_Management_AppDesktop.Services;
-using BookStore_Management_AppDesktop.Services.API.Employee;
+using BookStore_Management_AppDesktop.Services.API.EmployeeServices; 
 
 
 namespace BookStore_Management_AppDesktop.ViewModels

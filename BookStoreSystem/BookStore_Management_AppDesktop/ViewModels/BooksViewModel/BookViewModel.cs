@@ -2,8 +2,8 @@
 using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Messages;
 using BookStore_Management_AppDesktop.Models;
-using BookStore_Management_AppDesktop.Models.DTOs;
-using BookStore_Management_AppDesktop.Services.API.Book;
+using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs; 
+using BookStore_Management_AppDesktop.Services.API.BookServices; 
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;

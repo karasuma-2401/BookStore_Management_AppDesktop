@@ -1,5 +1,6 @@
 ﻿using BookStore_Management_AppDesktop.Helpers.Enums;
-using BookStore_Management_AppDesktop.Views.Pages;
+using BookStore_Management_AppDesktop.Views.Pages.BookViews; 
+using BookStore_Management_AppDesktop.Views.Pages; 
 using BookStore_Management_AppDesktop.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using System;
