@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using BookStore_Management_AppDesktop.Messages;
-using BookStore_Management_AppDesktop.Services.API.Book;
+using BookStore_Management_AppDesktop.Services.API.BookServices; 
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
