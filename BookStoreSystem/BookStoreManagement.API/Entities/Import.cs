@@ -13,7 +13,7 @@ namespace BookStoreManagement.API.Models.Entities
 
         [Required]
         [Column("import_date")]
-        public DateTime ImportDate = DateTime.UtcNow;
+        public DateTime ImportDate { get; set; }
 
         [Column("user_id")]
         public int UserId {get; set;}
