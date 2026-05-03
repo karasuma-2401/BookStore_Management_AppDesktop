@@ -80,6 +80,7 @@ namespace BookStoreManagement.API.Services
         public async Task<IEnumerable<ImportResponseDto>> GetImports()
         {
             return await _context.Imports
+                .Include(i => i.User)
                 .Include(i => i.ImportDetails)
                     .ThenInclude(d => d.Book)
                 .Select(i => new ImportResponseDto
@@ -87,6 +88,7 @@ namespace BookStoreManagement.API.Services
                     ImportId = i.ImportId,
                     ImportDate = i.ImportDate,
                     UserId = i.UserId,
+                    UserName = i.User.Username,
                     Details = i.ImportDetails.Select(d => new ImportDetailResponseDto
                     {
                         BookId = d.BookId,
@@ -100,6 +102,7 @@ namespace BookStoreManagement.API.Services
         public async Task<ImportResponseDto?> GetImportById(int id)
         {
             var import = await _context.Imports
+                .Include(i => i.User)
                 .Include(i => i.ImportDetails)
                     .ThenInclude(d => d.Book)
                 .FirstOrDefaultAsync(i => i.ImportId == id);
@@ -111,6 +114,7 @@ namespace BookStoreManagement.API.Services
                 ImportId = import.ImportId,
                 ImportDate = import.ImportDate,
                 UserId = import.UserId,
+                UserName = import.User.Username,
                 Details = import.ImportDetails.Select(d => new ImportDetailResponseDto
                 {
                     BookId = d.BookId,
