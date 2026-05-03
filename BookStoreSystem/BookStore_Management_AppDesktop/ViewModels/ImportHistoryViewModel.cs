@@ -59,7 +59,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         ImportId = item.ImportId,
                         ImportDate = item.ImportDate.ToLocalTime(), // Đổi giờ UTC thành giờ Việt Nam
                         UserId = item.UserId,
-                        EmployeeName = $"Employee #{item.UserId}",
+                        EmployeeName = string.IsNullOrWhiteSpace(item.EmployeeName) ? "Unknown" : item.EmployeeName,
                         TotalItems = item.Details.Sum(d => d.Quantity),
                         TotalAmount = item.Details.Sum(d => d.Quantity * d.ImportPrice),
                         OriginalData = item
