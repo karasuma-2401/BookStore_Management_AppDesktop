@@ -81,6 +81,7 @@ namespace BookStoreManagement.API.Services
         {
             return await _context.Imports
                 .Include(i => i.User)
+                    .ThenInclude(u => u.Employee)
                 .Include(i => i.ImportDetails)
                     .ThenInclude(d => d.Book)
                 .Select(i => new ImportResponseDto
@@ -88,7 +89,7 @@ namespace BookStoreManagement.API.Services
                     ImportId = i.ImportId,
                     ImportDate = i.ImportDate,
                     UserId = i.UserId,
-                    UserName = i.User.Username,
+                    UserName = i.User.Employee.FullName,
                     Details = i.ImportDetails.Select(d => new ImportDetailResponseDto
                     {
                         BookId = d.BookId,
@@ -103,6 +104,7 @@ namespace BookStoreManagement.API.Services
         {
             var import = await _context.Imports
                 .Include(i => i.User)
+                    .ThenInclude(u => u.Employee)
                 .Include(i => i.ImportDetails)
                     .ThenInclude(d => d.Book)
                 .FirstOrDefaultAsync(i => i.ImportId == id);
@@ -114,7 +116,7 @@ namespace BookStoreManagement.API.Services
                 ImportId = import.ImportId,
                 ImportDate = import.ImportDate,
                 UserId = import.UserId,
-                UserName = import.User.Username,
+                UserName = import.User.Employee.FullName,
                 Details = import.ImportDetails.Select(d => new ImportDetailResponseDto
                 {
                     BookId = d.BookId,
