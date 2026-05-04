@@ -18,8 +18,7 @@ namespace BookStore_Management_AppDesktop.Models.DTOs.ImportDTOs
         public DateTime ImportDate { get; set; }
         public int UserId { get; set; }
 
-        public string EmployeeName { get; set; } = string.Empty;
-
+        public string UserName { get; set; } = string.Empty;
         public List<ImportDetailResponseDto> Details { get; set; } = new List<ImportDetailResponseDto>();
     }
 }

@@ -59,7 +59,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         ImportId = item.ImportId,
                         ImportDate = item.ImportDate.ToLocalTime(), // Đổi giờ UTC thành giờ Việt Nam
                         UserId = item.UserId,
-                        EmployeeName = string.IsNullOrWhiteSpace(item.EmployeeName) ? "Unknown" : item.EmployeeName,
+                        EmployeeName = string.IsNullOrWhiteSpace(item.UserName) ? "Unknown" : item.UserName,
                         TotalItems = item.Details.Sum(d => d.Quantity),
                         TotalAmount = item.Details.Sum(d => d.Quantity * d.ImportPrice),
                         OriginalData = item
@@ -80,7 +80,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (selectedImport == null) return;
 
-            MessageBox.Show($"View details for Import ID: {selectedImport.ImportId}", "Import Detail");
+            var detailWindow = new BookStore_Management_AppDesktop.Views.Windows.ImportDetailWindow(selectedImport);
+
+            detailWindow.ShowDialog();
         }
     }
 }
