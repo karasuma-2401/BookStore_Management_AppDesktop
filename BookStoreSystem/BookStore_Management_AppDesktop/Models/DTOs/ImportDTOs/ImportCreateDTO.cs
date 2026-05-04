@@ -6,7 +6,6 @@ namespace BookStore_Management_AppDesktop.Models.DTOs.ImportDTOs
 {
     public class ImportCreateDTO
     {
-        public int UserId { get; set; } 
         public List<ImportDetailCreateDTO> Details { get; set; } = new List<ImportDetailCreateDTO>();
     }
 
