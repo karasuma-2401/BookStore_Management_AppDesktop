@@ -2,7 +2,7 @@ namespace BookStoreManagement.API.Interfaces.Services
 {
     public interface IImportService
     {
-        Task<ImportResponseDto> CreateImport(ImportCreateDto dto);
+        Task<ImportResponseDto> CreateImport(ImportCreateDto dto, int userId);
 
         Task<IEnumerable<ImportResponseDto>> GetImports();
 
