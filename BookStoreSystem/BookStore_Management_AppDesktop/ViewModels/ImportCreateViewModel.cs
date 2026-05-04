@@ -208,7 +208,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             {
                 var importDto = new ImportCreateDTO
                 {
-                    UserId = 1, 
                     Details = DraftList.Select(item => new ImportDetailCreateDTO
                     {
                         BookId = item.BookId,
