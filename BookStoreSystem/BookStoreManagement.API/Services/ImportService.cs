@@ -13,7 +13,7 @@ namespace BookStoreManagement.API.Services
             _context = context;
         }
 
-        public async Task<ImportResponseDto> CreateImport(ImportCreateDto dto)
+        public async Task<ImportResponseDto> CreateImport(ImportCreateDto dto, int userId)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -21,7 +21,7 @@ namespace BookStoreManagement.API.Services
             {
                 var import = new Import
                 {
-                    UserId = dto.UserId,
+                    UserId = userId,
                     ImportDate = DateTime.UtcNow
                 };
 
@@ -35,7 +35,7 @@ namespace BookStoreManagement.API.Services
                     var book = await _context.Books.FindAsync(item.BookId);
 
                     if (book == null)
-                        throw new Exception($"BookId {item.BookId} không tồn tại");
+                        throw new Exception($"BookId {item.BookId} isn't exist");
 
                     book.Quantity += item.Quantity;
                     book.Price = item.ImportPrice;

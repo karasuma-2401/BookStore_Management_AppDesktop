@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using BookStoreManagement.API.Interfaces.Services;
 namespace BookStoreManagement.API.Controllers
 {
@@ -18,7 +19,8 @@ namespace BookStoreManagement.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ImportCreateDto dto)
         {
-            var result = await _service.CreateImport(dto);
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var result = await _service.CreateImport(dto, userId);
             return Ok(result);
         }
 
