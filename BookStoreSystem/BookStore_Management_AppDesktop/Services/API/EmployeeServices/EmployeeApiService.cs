@@ -1,16 +1,12 @@
-﻿using BookStore_Management_AppDesktop.Models;
-using BookStore_Management_AppDesktop.Models.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using BookStore_Management_AppDesktop.Models; 
+using BookStore_Management_AppDesktop.Models.DTOs.EmployeeDTOs;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
 
-namespace BookStore_Management_AppDesktop.Services.API
+namespace BookStore_Management_AppDesktop.Services.API.EmployeeServices
 {
     public class EmployeeApiService : IEmployeeApiService
     {

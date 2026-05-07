@@ -1,0 +1,178 @@
+﻿<Page x:Class="BookStore_Management_AppDesktop.Views.Pages.CreateImportPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d"
+      Title="Create Import" d:DesignHeight="700" d:DesignWidth="1000"
+      Background="{DynamicResource ContentBackgroundBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15,25,0">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="CREATE NEW IMPORT" FontSize="26" FontWeight="Black" 
+                           Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                <TextBlock Text="Search and add books to the draft before confirming the import" 
+                           Foreground="{DynamicResource TextSecondaryBrush}" FontSize="14" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,20,25,20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Margin="0,0,15,0">
+                    <TextBlock Text="Find Book (Enter name):" 
+                               Foreground="{DynamicResource TextPrimaryBrush}"
+                               FontSize="{StaticResource FontSizeBody}"
+                               FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <ComboBox IsEditable="True"
+                              IsTextSearchEnabled="False"
+                              StaysOpenOnEdit="True"
+                              ItemsSource="{Binding SearchResults}"
+                              DisplayMemberPath="Title"
+                              SelectedItem="{Binding SelectedSearchResult}"
+                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                              Height="40"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Margin="0,0,15,0">
+                    <TextBlock Text="Quantity:" 
+                               Foreground="{DynamicResource TextPrimaryBrush}"
+                               FontSize="{StaticResource FontSizeBody}"
+                               FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <ui:TextBox Text="{Binding TempImportQuantity, UpdateSourceTrigger=PropertyChanged}" 
+                                Height="40"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Margin="0,0,15,0">
+                    <TextBlock Text="Import Price (VND):" 
+                               Foreground="{DynamicResource TextPrimaryBrush}"
+                               FontSize="{StaticResource FontSizeBody}"
+                               FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <ui:TextBox Text="{Binding TempImportPrice, UpdateSourceTrigger=PropertyChanged}" 
+                                Height="40"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Bottom">
+                    <ui:Button Icon="{ui:SymbolIcon Add24}" 
+                               Content="Add to Draft" 
+                               Command="{Binding AddToDraftCommand}" 
+                               Style="{StaticResource PrimaryActionButtonStyle}"
+                               Background="{DynamicResource SuccessPrimaryBrush}"
+                               Foreground="{DynamicResource TextOnLightBackgroudBrush}"
+                               Margin="0,0,10,0"/>
+
+                    <ui:Button Icon="{ui:SymbolIcon DocumentAdd24}" 
+                               ToolTip="Add new book to catalog"
+                               Command="{Binding OpenCreateNewBookDialogCommand}" 
+                               Style="{StaticResource SecondaryActionButtonStyle}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" Background="{DynamicResource CardBackgroundBrush}" Margin="20" CornerRadius="8" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1">
+            <DataGrid ItemsSource="{Binding DraftList}" 
+                      AutoGenerateColumns="False" CanUserAddRows="False"
+                      HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                      Background="Transparent" BorderThickness="0"
+                      RowHeight="60" FontSize="15"
+                      Foreground="{DynamicResource TextOnLightBackgroudBrush}"
+                      RowBackground="{DynamicResource CardBackgroundBrush}"
+                      AlternatingRowBackground="{DynamicResource ContentBackgroundBrush}"
+                      HorizontalGridLinesBrush="#E2E8F0" VerticalGridLinesBrush="Transparent">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Book ID" Binding="{Binding BookId}" IsReadOnly="True" Width="80">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Padding" Value="10,0,0,0"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Book Title" Binding="{Binding Title}" IsReadOnly="True" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Stock" Binding="{Binding CurrentQuantity}" IsReadOnly="True" Width="80"/>
+
+                    <DataGridTextColumn Header="Import Qty" Binding="{Binding ImportQuantity, UpdateSourceTrigger=PropertyChanged}" Width="110"/>
+                    <DataGridTextColumn Header="Price" Binding="{Binding ImportPrice, UpdateSourceTrigger=PropertyChanged}" Width="130"/>
+
+                    <DataGridTextColumn Header="Line Total" Binding="{Binding TotalLinePrice, StringFormat={}{0:N0} VND}" IsReadOnly="True" Width="150">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="{DynamicResource SuccessPrimaryBrush}"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTemplateColumn Width="60">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ui:Button Icon="{ui:SymbolIcon Delete24}" 
+                                           Appearance="Transparent" 
+                                           Foreground="{DynamicResource ErrorPrimaryBrush}"
+                                           Command="{Binding DataContext.RemoveFromDraftCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                           CommandParameter="{Binding}"
+                                           Cursor="Hand"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <Border Grid.Row="3" Background="{DynamicResource CardBackgroundBrush}"
+                BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1"
+                CornerRadius="8" Padding="20" Margin="20,0,20,20">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="Total Amount:" VerticalAlignment="Center" 
+                           FontSize="{StaticResource FontSizeSubTitle}" 
+                           FontWeight="SemiBold" 
+                           Foreground="{DynamicResource TextMutedBrush}" 
+                           Margin="0,0,15,0"/>
+
+                <TextBlock Text="{Binding TotalDraftAmount, StringFormat={}{0:N0} VND}" 
+                           VerticalAlignment="Center" 
+                           Style="{StaticResource PriceTextStyle}" 
+                           Margin="0,0,30,0"/>
+                
+                <ui:Button Content="CLEAR DRAFT" 
+                   Icon="{ui:SymbolIcon Delete24}"
+                   Style="{StaticResource SecondaryActionButtonStyle}"
+                   Foreground="{DynamicResource ErrorPrimaryBrush}"
+                   Command="{Binding ClearDraftCommand}"
+                   Margin="0,0,10,0"/>
+
+                <ui:Button Content="CONFIRM IMPORT" 
+                           Icon="{ui:SymbolIcon Save24}"
+                           Style="{StaticResource PrimaryActionButtonStyle}"
+                           Command="{Binding ConfirmImportCommand}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

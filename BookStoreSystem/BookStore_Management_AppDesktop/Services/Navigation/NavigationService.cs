@@ -1,5 +1,6 @@
 ﻿using BookStore_Management_AppDesktop.Helpers.Enums;
-using BookStore_Management_AppDesktop.Views.Pages;
+using BookStore_Management_AppDesktop.Views.Pages.BookViews; 
+using BookStore_Management_AppDesktop.Views.Pages; 
 using BookStore_Management_AppDesktop.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -46,6 +47,12 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
                         break;
                     case PageType.BookDetail: 
                         newPage = _serviceProvider.GetRequiredService<BookDetailPage>();
+                        break;
+                    case PageType.ImportHistory:
+                        newPage = _serviceProvider.GetRequiredService<ImportHistoryPage>();
+                        break;
+                    case PageType.CreateImport:
+                        newPage = _serviceProvider.GetRequiredService<CreateImportPage>();
                         break;
                     case PageType.Invoices:
                         newPage = _serviceProvider.GetRequiredService<InvoicePage>();

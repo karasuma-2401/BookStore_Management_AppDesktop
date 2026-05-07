@@ -13,7 +13,7 @@ namespace BookStoreManagement.API.Services
             _context = context;
         }
 
-        public async Task<ImportResponseDto> CreateImport(ImportCreateDto dto)
+        public async Task<ImportResponseDto> CreateImport(ImportCreateDto dto, int userId)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -21,7 +21,7 @@ namespace BookStoreManagement.API.Services
             {
                 var import = new Import
                 {
-                    UserId = dto.UserId,
+                    UserId = userId,
                     ImportDate = DateTime.UtcNow
                 };
 
@@ -35,7 +35,7 @@ namespace BookStoreManagement.API.Services
                     var book = await _context.Books.FindAsync(item.BookId);
 
                     if (book == null)
-                        throw new Exception($"BookId {item.BookId} không tồn tại");
+                        throw new Exception($"BookId {item.BookId} isn't exist");
 
                     book.Quantity += item.Quantity;
                     book.Price = item.ImportPrice;
@@ -80,6 +80,8 @@ namespace BookStoreManagement.API.Services
         public async Task<IEnumerable<ImportResponseDto>> GetImports()
         {
             return await _context.Imports
+                .Include(i => i.User)
+                    .ThenInclude(u => u.Employee)
                 .Include(i => i.ImportDetails)
                     .ThenInclude(d => d.Book)
                 .Select(i => new ImportResponseDto
@@ -87,6 +89,7 @@ namespace BookStoreManagement.API.Services
                     ImportId = i.ImportId,
                     ImportDate = i.ImportDate,
                     UserId = i.UserId,
+                    UserName = i.User.Employee.FullName,
                     Details = i.ImportDetails.Select(d => new ImportDetailResponseDto
                     {
                         BookId = d.BookId,
@@ -100,6 +103,8 @@ namespace BookStoreManagement.API.Services
         public async Task<ImportResponseDto?> GetImportById(int id)
         {
             var import = await _context.Imports
+                .Include(i => i.User)
+                    .ThenInclude(u => u.Employee)
                 .Include(i => i.ImportDetails)
                     .ThenInclude(d => d.Book)
                 .FirstOrDefaultAsync(i => i.ImportId == id);
@@ -111,6 +116,7 @@ namespace BookStoreManagement.API.Services
                 ImportId = import.ImportId,
                 ImportDate = import.ImportDate,
                 UserId = import.UserId,
+                UserName = import.User.Employee.FullName,
                 Details = import.ImportDetails.Select(d => new ImportDetailResponseDto
                 {
                     BookId = d.BookId,

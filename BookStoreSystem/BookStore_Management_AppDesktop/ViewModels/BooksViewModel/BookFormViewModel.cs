@@ -1,6 +1,5 @@
 ﻿using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Services;
-using BookStore_Management_AppDesktop.Services.API;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
@@ -8,8 +7,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging; 
-using BookStore_Management_AppDesktop.Messages; 
+using CommunityToolkit.Mvvm.Messaging;
+using BookStore_Management_AppDesktop.Messages;
+using BookStore_Management_AppDesktop.Services.API.BookServices; 
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -24,8 +24,13 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private int _bookId;
         private int? _initialAuthorId;
 
+        // "HẠT SẠN" ĐÃ FIX: Biến lưu trữ số lượng hiện có của sách (chỉ dùng nội bộ, không show UI)
+        private int _originalQuantity = 0;
+
         [ObservableProperty] private string _title = string.Empty;
-        [ObservableProperty] private int _quantity;
+
+        // ĐÃ XÓA: [ObservableProperty] private int _quantity; (Vì không cho phép sửa tay nữa)
+
         [ObservableProperty] private string _localImagePath = string.Empty;
 
         [ObservableProperty]
@@ -53,9 +58,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
             _isEditMode = true;
             _bookId = bookToEdit.BookId;
             Title = bookToEdit.Title ?? string.Empty;
-            Quantity = bookToEdit.Quantity;
             LocalImagePath = bookToEdit.ImagePath ?? string.Empty;
             _initialAuthorId = bookToEdit.AuthorId;
+
+            // LƯU LẠI số lượng hiện có để khi gửi Messenger quay lại Inventory, 
+            // số lượng trên lưới không bị biến thành 0.
+            _originalQuantity = bookToEdit.Quantity;
         }
 
         public async Task InitializeAsync()
@@ -89,7 +97,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             var selectedAuthorId = AuthorVM.SelectedAuthor?.AuthorId;
             if (selectedAuthorId is null or 0) { OnShowMessage?.Invoke("Select author."); return; }
 
-            if (Quantity <= 0) { OnShowMessage?.Invoke("Quantity > 0."); return; }
+            // ĐÃ XÓA: Validation check Quantity <= 0 (Vì UI không có ô nhập nữa)
 
             try
             {
@@ -107,7 +115,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"[Cloudinary Error]: {ex}");
+                        System.Diagnostics.Debug.WriteLine($"[Cloudinary Error]: {ex}");
                         OnShowMessage?.Invoke("Upload failed.");
                         return;
                     }
@@ -118,27 +126,44 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     BookId = _isEditMode ? _bookId : 0,
                     Title = Title.Trim(),
                     AuthorId = selectedAuthorId,
-                    Quantity = Quantity,
+                    // QUY TẮC MỚI: 
+                    // Nếu thêm mới -> Quantity mặc định là 0.
+                    // Nếu sửa -> Trả lại số lượng cũ.
+                    Quantity = _isEditMode ? _originalQuantity : 0,
                     ImagePath = finalImageUrl
                 };
 
                 try
                 {
-                    bool ok = _isEditMode
-                        ? await _bookApiService.UpdateBookAsync(_bookId, book)
-                        : await _bookApiService.CreateBookAsync(book);
+                    if (_isEditMode)
+                    {
+                        bool isUpdated = await _bookApiService.UpdateBookAsync(_bookId, book);
+                        if (!isUpdated)
+                        {
+                            OnShowMessage?.Invoke("Update failed.");
+                            return;
+                        }
 
-                    if (!ok) { OnShowMessage?.Invoke("Save failed."); return; }
+                        WeakReferenceMessenger.Default.Send(new BookChangedMessage(BookChangedMessage.ChangeAction.Update, book));
+                    }
+                    else
+                    {
+                        var createdBook = await _bookApiService.CreateBookAsync(book);
+                        if (createdBook == null)
+                        {
+                            OnShowMessage?.Invoke("Create failed.");
+                            return;
+                        }
 
-                    var action = _isEditMode ? BookChangedMessage.ChangeAction.Update : BookChangedMessage.ChangeAction.Add;
-                    WeakReferenceMessenger.Default.Send(new BookChangedMessage(action, book));
+                        WeakReferenceMessenger.Default.Send(new BookChangedMessage(BookChangedMessage.ChangeAction.Add, createdBook));
+                    }
 
                     OnShowMessage?.Invoke("Success.");
                     OnRequestClose?.Invoke();
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"[API Error]: {ex}");
+                    System.Diagnostics.Debug.WriteLine($"[API Error]: {ex}");
                     OnShowMessage?.Invoke("Save failed.");
                 }
             }

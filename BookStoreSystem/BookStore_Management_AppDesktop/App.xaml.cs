@@ -1,8 +1,12 @@
 ﻿using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API;
+using BookStore_Management_AppDesktop.Services.API.BookServices; 
+using BookStore_Management_AppDesktop.Services.API.EmployeeServices;
+using BookStore_Management_AppDesktop.Services.API.Import;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.ViewModels;
 using BookStore_Management_AppDesktop.Views.Pages;
+using BookStore_Management_AppDesktop.Views.Pages.BookViews; 
 using BookStore_Management_AppDesktop.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +55,10 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<IBookApiService, BookApiService>(); 
             services.AddSingleton<IAuthorApiService, AuthorApiService>();
             services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
+            services.AddSingleton<IImportApiService, ImportApiService>();
+            services.AddSingleton<Wpf.Ui.IContentDialogService, Wpf.Ui.ContentDialogService>();
+            services.AddSingleton<IDialogService, DialogService>();
+
             services.AddSingleton<IInvoiceApiService, InvoiceApiService>();
 
             // // Get ViewModels
@@ -63,6 +71,8 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<BookViewModel>();
             services.AddTransient<BookDetailViewModel>();
             services.AddTransient<EmployeeViewModel>();
+            services.AddTransient<ImportCreateViewModel>(); 
+            services.AddTransient<ImportHistoryViewModel>();
             services.AddTransient<InvoiceViewModel>();
 
             // // Get View 
@@ -75,6 +85,8 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<SettingsPage>();
             services.AddTransient<BookDetailPage>();
             services.AddTransient<EmployeePage>();
+            services.AddTransient<ImportHistoryPage>(); 
+            services.AddTransient<CreateImportPage>(); 
             services.AddTransient<InvoicePage>();
         }
     }

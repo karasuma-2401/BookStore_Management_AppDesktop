@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BookStore_Management_AppDesktop.Models.DTOs
+namespace BookStore_Management_AppDesktop.Models.DTOs.EmployeeDTOs
 {
-    public class EmployeeUpdateDto
+    public class EmployeeResponseDto
     {
+        public int EmployeeId { get; set; }
+        public int UserId { get; set; }
         public string FullName { get; set; } = string.Empty;
-        public int Age { get; set; } 
+        public int Age { get; set; }
         public string Phone { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public decimal Salary { get; set; }

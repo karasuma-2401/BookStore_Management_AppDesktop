@@ -1,6 +1,7 @@
 ﻿using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs;
 using BookStore_Management_AppDesktop.Services.API;
+using BookStore_Management_AppDesktop.Services.API.EmployeeServices; 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 
 namespace BookStore_Management_AppDesktop.ViewModels
-{
+{ 
     public partial class AddEmployeeViewModel : ObservableObject
     {
         private readonly IEmployeeApiService _employeeApi;
@@ -31,7 +32,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private int _selectedUserId;
 
         [ObservableProperty]
-        private string _searchUserIDText;
+        private string _searchUserIDText = string.Empty;
 
         public AddEmployeeViewModel()
         {
