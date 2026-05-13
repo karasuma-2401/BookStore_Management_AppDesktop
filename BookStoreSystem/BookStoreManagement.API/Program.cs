@@ -98,9 +98,10 @@
     builder.Services.AddScoped<IEmployeeShift, EmployeeShiftService>();
     builder.Services.AddScoped<IInvoiceService, InvoiceService>();
     builder.Services.AddScoped<IVoucherService, VoucherService>();
+    builder.Services.AddScoped<ICustomerService, CustomerService>();
 
-    // Import
-    builder.Services.AddScoped<IImportService, ImportService>();
+// Import
+builder.Services.AddScoped<IImportService, ImportService>();
 var app = builder.Build();
     if (app.Environment.IsDevelopment())
     {
