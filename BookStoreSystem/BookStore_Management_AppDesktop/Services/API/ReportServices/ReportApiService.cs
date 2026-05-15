@@ -26,13 +26,19 @@ namespace BookStore_Management_AppDesktop.Services.API.ReportServices
             try
             {
                 AddAuthorizationHeader();
-                var response = await _httpClient.GetAsync($"api/report/monthly?month={month}&year={year}");
-                
+                var response = await _httpClient.GetAsync($"report/monthly?month={month}&year={year}");
+
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
                     return JsonSerializer.Deserialize<ReportSummaryDto>(json, _options);
                 }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Debug.WriteLine($"Error for call API: Code {response.StatusCode} - Content: {error}");
+                }
+
                 return null;
             }
             catch (Exception ex)
