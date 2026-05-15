@@ -1,0 +1,122 @@
+<Window
+    x:Class="BookStore_Management_AppDesktop.Views.Windows.EditCustomerWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="Edit Customer"
+    Width="500"
+    Height="450"
+    Background="{DynamicResource ContentBackgroundBrush}"
+    WindowStartupLocation="CenterOwner">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" Padding="30,20">
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,20"
+                    FontSize="18"
+                    FontWeight="Bold"
+                    Foreground="{DynamicResource TextPrimaryBrush}"
+                    Text="Edit Customer" />
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock
+                        Margin="0,0,0,5"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Text="Customer ID" />
+                    <ui:TextBox
+                        x:Name="IdTextBox"
+                        Background="{DynamicResource SidebarBackgroundBrush}"
+                        IsEnabled="False" />
+                </StackPanel>
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock
+                        Margin="0,0,0,5"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Text="Full Name *" />
+                    <ui:TextBox
+                        x:Name="NameTextBox"
+                        Background="{DynamicResource SidebarBackgroundBrush}"
+                        PlaceholderText="Enter customer name" />
+                </StackPanel>
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock
+                        Margin="0,0,0,5"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Text="Phone" />
+                    <ui:TextBox
+                        x:Name="PhoneTextBox"
+                        Background="{DynamicResource SidebarBackgroundBrush}"
+                        PlaceholderText="Enter phone number" />
+                </StackPanel>
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock
+                        Margin="0,0,0,5"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Text="Email" />
+                    <ui:TextBox
+                        x:Name="EmailTextBox"
+                        Background="{DynamicResource SidebarBackgroundBrush}"
+                        PlaceholderText="Enter email address" />
+                </StackPanel>
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock
+                        Margin="0,0,0,5"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Text="Address" />
+                    <ui:TextBox
+                        x:Name="AddressTextBox"
+                        Height="80"
+                        AcceptsReturn="True"
+                        Background="{DynamicResource SidebarBackgroundBrush}"
+                        PlaceholderText="Enter address" />
+                </StackPanel>
+
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock
+                        Margin="0,0,0,5"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Text="Total Debt" />
+                    <ui:TextBox
+                        x:Name="DebtTextBox"
+                        Background="{DynamicResource SidebarBackgroundBrush}"
+                        IsEnabled="False" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+        <Border
+            Grid.Row="1"
+            Padding="30,15"
+            Background="{DynamicResource SidebarBackgroundBrush}"
+            BorderBrush="{DynamicResource DividerBrush}"
+            BorderThickness="0,1,0,0">
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <ui:Button
+                    x:Name="CancelButton"
+                    Width="100"
+                    Margin="0,0,10,0"
+                    Appearance="Secondary"
+                    Click="CancelButton_Click"
+                    Content="Cancel" />
+
+                <ui:Button
+                    x:Name="SaveButton"
+                    Width="100"
+                    Appearance="Primary"
+                    Background="{DynamicResource NavyAccentBrush}"
+                    Click="SaveButton_Click"
+                    Content="Update" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
