@@ -5,18 +5,17 @@
     xmlns:converters="clr-namespace:BookStore_Management_AppDesktop.Converters"
     xmlns:local="clr-namespace:BookStore_Management_AppDesktop"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+
     <Application.Resources>
         <ResourceDictionary>
             <converters:BooleanToVisibilityConverter x:Key="BoolToVis" />
 
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/Styles/Colors.xaml" />
-
-                <ResourceDictionary Source="/Resources/Styles/Typography.xaml" />
-
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
 
+                <ResourceDictionary Source="/Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Typography.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Buttons.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
