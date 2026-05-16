@@ -6,7 +6,7 @@
     Title="BookStore Management"
     Width="1366"
     Height="768"
-    Background="{DynamicResource NavyPrimaryBrush}"
+    Background="{DynamicResource SidebarBackgroundBrush}"
     Foreground="{DynamicResource TextPrimaryBrush}"
     WindowStartupLocation="CenterScreen">
 
@@ -36,6 +36,7 @@
                         <TextBlock
                             Opacity="0"
                             Style="{StaticResource HeaderTextStyle}"
+                            Foreground="{DynamicResource TextPrimaryBrush}" 
                             Text="BOOKSTORE">
                             <TextBlock.RenderTransform>
                                 <TranslateTransform X="-30" />
@@ -151,12 +152,14 @@
                 </ui:NavigationViewItem>
             </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
+
         <Border
             Grid.Column="1"
             Background="{DynamicResource ContentBackgroundBrush}"
             CornerRadius="8">
             <Frame x:Name="RootFrame" NavigationUIVisibility="Hidden" />
         </Border>
+
         <Grid>
             <ContentPresenter x:Name="RootContentDialogPresenter" Grid.ColumnSpan="2" />
         </Grid>
