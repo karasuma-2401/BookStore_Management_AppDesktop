@@ -16,5 +16,6 @@
     <SolidColorBrush x:Key="SidebarAccentBrush" Color="#38BDF8" />
     <SolidColorBrush x:Key="ContentBackgroundBrush" Color="#F1F5F9" />
     <SolidColorBrush x:Key="CardBackgroundBrush" Color="White" />
+    <SolidColorBrush x:Key="DividerBrush" Color="#475569" />
 
 </ResourceDictionary>

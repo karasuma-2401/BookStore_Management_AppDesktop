@@ -1,21 +1,20 @@
-﻿using BookStore_Management_AppDesktop.Helpers.Enums;
+﻿using BookStore_Management_AppDesktop.Messages; 
+using BookStore_Management_AppDesktop.Messages.BookStore_Management_AppDesktop.Messages;
 using BookStore_Management_AppDesktop.Models;
-using BookStore_Management_AppDesktop.Services.API.BookServices; 
-using BookStore_Management_AppDesktop.Services.Navigation;
+using BookStore_Management_AppDesktop.Services.API.BookServices;
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging; 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
-    public partial class BookDetailViewModel : BaseViewModel, INavigatable  
+    public partial class BookDetailViewModel : BaseViewModel
     {
-        private readonly INavigationService _navigationService;
         private readonly IBookApiService _apiService;
 
         [ObservableProperty]
@@ -26,19 +25,15 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         public int BookId { get; set; }
 
-        public BookDetailViewModel(INavigationService navigationService, IBookApiService apiService)
+        public BookDetailViewModel(IBookApiService apiService)
         {
-            _navigationService = navigationService;
             _apiService = apiService;
-        }
 
-        public void OnNavigatedTo(object? parameter)
-        {
-            if (parameter is int id)
+            WeakReferenceMessenger.Default.Register<BookSelectedMessage>(this, (recipient, message) =>
             {
-                BookId = id;
-                _ = LoadDataAsync();
-            }
+                BookId = message.Value; 
+                _ = LoadDataAsync();    
+            });
         }
 
 
@@ -67,15 +62,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
         }
 
         [RelayCommand]
-        private void GoBack()
-        {
-            _navigationService.NavigateTo(PageType.Books);
-        }
-
-        [RelayCommand]
         private void AddToCart()
         {
             // TODO: Code logic Add book to cart
         }
+
     }
 }

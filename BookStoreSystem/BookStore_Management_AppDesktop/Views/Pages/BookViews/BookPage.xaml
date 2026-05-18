@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d" 
-      d:DesignHeight="700" d:DesignWidth="1000"
+      d:DesignHeight="700" d:DesignWidth="1200"
       Title="BookPage"
       Background="{DynamicResource ContentBackgroundBrush}"
       TextOptions.TextFormattingMode="Display"
@@ -13,155 +13,232 @@
       Loaded="Page_Loaded">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
 
-        <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Books" Style="{StaticResource HeaderTextStyle}" />
+            <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <ui:TextBox PlaceholderText="Search by title or category..." 
-                                Icon="{ui:SymbolIcon Search24}" 
-                                Width="300" Margin="0,0,15,0" 
-                                VerticalAlignment="Center" 
-                                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Grid.Column="0" Text="Books" Style="{StaticResource HeaderTextStyle}" />
 
-                    <ComboBox Width="180" Margin="0,0,15,0"
-                              SelectedValuePath="Tag"
-                              SelectedValue="{Binding SelectedSort}"
-                              VerticalAlignment="Center">
-                        <ComboBoxItem Content="Newest" Tag="" IsSelected="True"/>
-                        <ComboBoxItem Content="Price: Low to High" Tag="price_asc"/>
-                        <ComboBoxItem Content="Price: High to Low" Tag="price_desc"/>
-                        <ComboBoxItem Content="Title: A-Z" Tag="title_asc"/>
-                    </ComboBox>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <ui:TextBox PlaceholderText="Search by title or category..." 
+                                    Icon="{ui:SymbolIcon Search24}" 
+                                    Width="300" Margin="0,0,15,0" 
+                                    VerticalAlignment="Center" 
+                                    Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <ui:Button Icon="{ui:SymbolIcon Cart24}" 
-                               Style="{StaticResource PrimaryActionButtonStyle}"
-                               ToolTip="View Shopping Cart" 
-                               Padding="12,8"/>
-                </StackPanel>
-            </Grid>
-        </Border>
-
-        <ListView x:Name="BooksListView"
-                  Grid.Row="1"
-                  ItemsSource="{Binding Books}" 
-                  Background="Transparent"
-                  BorderThickness="0"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  Padding="10,10,10,20" d:ItemsSource="{d:SampleData ItemCount=5}">
-
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Border Width="210" 
-                            Background="{DynamicResource CardBackgroundBrush}" 
-                            Margin="15"
-                            BorderBrush="#E2E8F0" 
-                            BorderThickness="1" 
-                            CornerRadius="12"
-                            Cursor="Hand">
-
-                        <Border.InputBindings>
-                            <MouseBinding Gesture="LeftClick" 
-                                          Command="{Binding DataContext.ViewBookDetailCommand, RelativeSource={RelativeSource AncestorType=Page}}" 
-                                          CommandParameter="{Binding}" />
-                        </Border.InputBindings>
-
-                        <Border.Effect>
-                            <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="10" ShadowDepth="3"/>
-                        </Border.Effect>
-
-                        <StackPanel Margin="12">
-                            <Border CornerRadius="8" ClipToBounds="True" Margin="0,0,0,12" Background="{DynamicResource ContentBackgroundBrush}">
-                                <Image Height="250" Stretch="UniformToFill"
-                                       RenderOptions.BitmapScalingMode="HighQuality"
-                                       Source="{Binding ImagePath, IsAsync=True, TargetNullValue='https://via.placeholder.com/180x250?text=No+Image', FallbackValue='https://via.placeholder.com/180x250?text=No+Image'}">
-                                </Image>
-                            </Border>
-
-                            <TextBlock Text="{Binding Title}" 
-                                       Style="{StaticResource BookTitleTextStyle}"
-                                       Height="44" 
-                                       TextTrimming="CharacterEllipsis"
-                                       Margin="0,0,0,10"/>
-
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8" HorizontalAlignment="Left">
-                                <TextBlock Text="{Binding Price, StringFormat='{}{0:#,0}', TargetNullValue='0'}" 
-                                           Style="{StaticResource PriceTextStyle}"/>
-                                <TextBlock Text=" đ" 
-                                           FontSize="{StaticResource FontSizeBody}" 
-                                           FontWeight="SemiBold" 
-                                           Foreground="{DynamicResource TextSecondBrush}"
-                                           VerticalAlignment="Bottom"
-                                           Margin="2,0,0,1"/>
-                            </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,15,0" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Filter24" FontSize="16" Foreground="{DynamicResource TextSecondBrush}" Margin="0,0,5,0"/>
+                            <TextBlock Text="Sort by:" Foreground="{DynamicResource TextSecondBrush}" 
+                                       FontSize="{StaticResource FontSizeBody}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <ComboBox Width="160" SelectedValuePath="Tag" SelectedValue="{Binding SelectedSort}" VerticalAlignment="Center">
+                                <ComboBoxItem Content="Newest" Tag="" IsSelected="True"/>
+                                <ComboBoxItem Content="Price: Low to High" Tag="price_asc"/>
+                                <ComboBoxItem Content="Price: High to Low" Tag="price_desc"/>
+                                <ComboBoxItem Content="Title: A-Z" Tag="title_asc"/>
+                            </ComboBox>
                         </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ListView.ItemTemplate>
 
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Margin" Value="0"/>
-                    <Setter Property="Padding" Value="0"/>
-                    <Setter Property="Cursor" Value="Hand"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListViewItem">
-                                <ContentPresenter />
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
+                        <ui:Button Icon="{ui:SymbolIcon Cart24}" Style="{StaticResource PrimaryActionButtonStyle}" ToolTip="View Shopping Cart" Padding="12,8"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <ListView x:Name="BooksListView" Grid.Row="1" ItemsSource="{Binding Books}" 
+                      Background="Transparent" BorderThickness="0"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" Padding="10,10,10,20">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Width="210" Background="{DynamicResource CardBackgroundBrush}" 
+                                Margin="15" BorderBrush="{DynamicResource DividerBrush}" BorderThickness="1" 
+                                CornerRadius="12" Cursor="Hand">
+                            <Border.InputBindings>
+                                <MouseBinding Gesture="LeftClick" 
+                                              Command="{Binding DataContext.ViewBookDetailCommand, RelativeSource={RelativeSource AncestorType=Page}}" 
+                                              CommandParameter="{Binding}" />
+                            </Border.InputBindings>
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="10" ShadowDepth="3"/>
+                            </Border.Effect>
+
+                            <StackPanel Margin="12">
+                                <Border CornerRadius="8" ClipToBounds="True" Margin="0,0,0,12" Background="{DynamicResource ContentBackgroundBrush}">
+                                    <Image Height="250" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality"
+                                           Source="{Binding ImagePath, IsAsync=True, TargetNullValue='https://via.placeholder.com/180x250?text=No+Image', FallbackValue='https://via.placeholder.com/180x250?text=No+Image'}" />
+                                </Border>
+                                <TextBlock Text="{Binding Title}" Style="{StaticResource BookTitleTextStyle}" Height="44" TextTrimming="CharacterEllipsis" Margin="0,0,0,10"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8" HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding Price, StringFormat='{}{0:#,0}', TargetNullValue='0'}" Style="{StaticResource PriceTextStyle}"/>
+                                    <TextBlock Text=" đ" FontSize="{StaticResource FontSizeBody}" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondBrush}" VerticalAlignment="Bottom" Margin="2,0,0,1"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+
+            <Border Grid.Row="2" Background="{DynamicResource SidebarBackgroundBrush}" Margin="25,0,25,20" Padding="15,8" CornerRadius="8">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="{StaticResource FontSizeBody}" Foreground="{DynamicResource TextSecondBrush}">
+                        <Run Text="Showing Page " />
+                        <Run Text="{Binding CurrentPage, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                        <Run Text=" of " />
+                        <Run Text="{Binding TotalPages, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                        <Run Text="  (Total: " />
+                        <Run Text="{Binding TotalItems, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                        <Run Text=" books)" />
+                    </TextBlock>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <ui:Button Icon="{ui:SymbolIcon ChevronLeft24}" Command="{Binding PreviousPageCommand}" Style="{StaticResource SecondaryActionButtonStyle}" Padding="12,6" Margin="0,0,10,0" ToolTip="Previous Page"/>
+                        <ui:Button Icon="{ui:SymbolIcon ChevronRight24}" Command="{Binding NextPageCommand}" Style="{StaticResource SecondaryActionButtonStyle}" Padding="12,6" ToolTip="Next Page"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Border Grid.Column="1" 
+                Background="{DynamicResource SidebarBackgroundBrush}"
+                BorderBrush="{DynamicResource DividerBrush}"
+                BorderThickness="1,0,0,0"
+                Width="0" 
+                ClipToBounds="True">
+
+            <Border.Effect>
+                <DropShadowEffect Direction="180" ShadowDepth="2" BlurRadius="15" Opacity="0.1"/>
+            </Border.Effect>
+
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsDetailOpen}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width" To="380" Duration="0:0:0.3">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width" To="0" Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style>
-            </ListView.ItemContainerStyle>
-        </ListView>
+            </Border.Style>
 
-        <Border Grid.Row="2" Background="{DynamicResource SidebarBackgroundBrush}" Margin="25,0,25,20" Padding="20,10" CornerRadius="8">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+            <Grid x:Name="DetailContent" Width="380">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="{StaticResource FontSizeBody}" Foreground="{DynamicResource TextSecondBrush}">
-                    <Run Text="Showing Page " />
-                    <Run Text="{Binding CurrentPage, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
-                    <Run Text=" of " />
-                    <Run Text="{Binding TotalPages, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
-                    <Run Text="  (Total: " />
-                    <Run Text="{Binding TotalItems, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
-                    <Run Text=" books)" />
-                </TextBlock>
+                <Grid Grid.Row="0" Margin="25,20,20,20">
+                    <TextBlock Text="BOOK DETAILS" Style="{StaticResource BookTitleTextStyle}" 
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextPrimaryBrush}" />
 
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:Button Icon="{ui:SymbolIcon ChevronLeft24}" 
-                               Command="{Binding PreviousPageCommand}" 
-                               Style="{StaticResource SecondaryActionButtonStyle}" 
-                               Margin="0,0,10,0" ToolTip="Previous Page"/>
+                    <ui:Button Icon="{ui:SymbolIcon Dismiss24}" Appearance="Secondary" 
+                               HorizontalAlignment="Right"
+                               Padding="10,8"
+                               Command="{Binding DataContext.CloseDetailPaneCommand, RelativeSource={RelativeSource AncestorType=Page}}" />
+                </Grid>
 
-                    <ui:Button Icon="{ui:SymbolIcon ChevronRight24}" 
-                               Command="{Binding NextPageCommand}" 
-                               Style="{StaticResource PrimaryActionButtonStyle}" 
-                               ToolTip="Next Page"/>
-                </StackPanel>
+                <ScrollViewer Grid.Row="1" Padding="25,0,25,25" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Border CornerRadius="8" ClipToBounds="True" Margin="0,0,0,20" 
+                                BorderBrush="{DynamicResource DividerBrush}" BorderThickness="1">
+                            <Image Source="{Binding CurrentBook.ImagePath, TargetNullValue='https://via.placeholder.com/180x250?text=No+Image', FallbackValue='https://via.placeholder.com/180x250?text=No+Image'}" 
+                                   Stretch="Uniform" 
+                                   RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Border>
+
+                        <TextBlock Text="{Binding CurrentBook.Title}" FontSize="24" FontWeight="Black" 
+                                   Foreground="{DynamicResource TextPrimaryBrush}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                        <TextBlock FontSize="{StaticResource FontSizeBody}" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,20">
+                            <Run Text="Author: "/>
+                            <Run Text="{Binding CurrentBook.AuthorName, TargetNullValue='updating'}" FontWeight="SemiBold" />
+                        </TextBlock>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,25">
+                            <TextBlock Text="{Binding CurrentBook.Price, StringFormat='{}{0:#,0}', TargetNullValue='0'}" 
+                                       FontSize="28" FontWeight="Black" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
+                            <TextBlock Text=" đ" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Bottom" Margin="2,0,0,3"/>
+                        </StackPanel>
+
+                        <ui:Button Content="ADD TO CART" Icon="{ui:SymbolIcon Cart24}" 
+                                   Style="{StaticResource PrimaryActionButtonStyle}"
+                                   Command="{Binding AddToCartCommand}" 
+                                   HorizontalAlignment="Stretch" Padding="0,15" Margin="0,0,0,12" />
+
+                        <ui:Button Content="CLOSE DETAIL VIEW" Icon="{ui:SymbolIcon Dismiss24}"
+                                   Style="{StaticResource SecondaryActionButtonStyle}"
+                                   HorizontalAlignment="Stretch" Padding="0,12"
+                                   Command="{Binding DataContext.CloseDetailPaneCommand, RelativeSource={RelativeSource AncestorType=Page}}" />
+
+                        <Separator Margin="0,20" Background="{DynamicResource DividerBrush}"/>
+
+                        <TextBlock Text="SUMMARY" Style="{StaticResource BookTitleTextStyle}" 
+                                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10"/>
+                        <TextBlock Text="{Binding CurrentBook.Description, TargetNullValue='There are no reviews or descriptions for this book yet.'}" 
+                                   Style="{StaticResource BodyTextStyle}"
+                                   Foreground="{DynamicResource TextSecondBrush}" />
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Grid Grid.Row="1" Background="{DynamicResource SidebarBackgroundBrush}" 
+                      Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+                    <ui:ProgressRing IsIndeterminate="True" Width="50" Height="50" Foreground="{DynamicResource NavyAccentBrush}" />
+                </Grid>
             </Grid>
         </Border>
     </Grid>

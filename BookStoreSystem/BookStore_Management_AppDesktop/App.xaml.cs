@@ -90,7 +90,6 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<BookPage>();
             services.AddTransient<InventoryPage>();
             services.AddTransient<SettingsPage>();
-            services.AddTransient<BookDetailPage>();
             services.AddTransient<EmployeePage>();
             services.AddTransient<CustomerPage>();
             services.AddTransient<ImportHistoryPage>(); 
