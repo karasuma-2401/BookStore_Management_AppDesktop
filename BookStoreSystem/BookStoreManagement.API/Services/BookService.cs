@@ -70,8 +70,10 @@ namespace BookStoreManagement.API.Services
                     Quantity = b.Quantity,
                     Price = b.Price,
                     ImagePath = b.ImagePath,
-                    BookCategories = string.Join(", ",
-                        b.BookCategories.Select(bc => bc.Category.Name))
+                    CategoryNames = b.BookCategories
+                    .Select(bc => bc.Category.Name)
+                    .ToList(),
+                    CategoryIds = b.BookCategories.Select(bc => bc.CategoryId).ToList()
                 })
                 .ToListAsync();
 
@@ -104,8 +106,10 @@ namespace BookStoreManagement.API.Services
                     Price = b.Price,
                     Description = b.Description,
                     ImagePath = b.ImagePath,
-                    BookCategories = string.Join(", ",
-                        b.BookCategories.Select(bc => bc.Category.Name))
+                    CategoryNames = b.BookCategories
+                    .Select(bc => bc.Category.Name)
+                    .ToList(),
+                    CategoryIds = b.BookCategories.Select(bc => bc.CategoryId).ToList()
                 })
                 .FirstOrDefaultAsync();
         }
