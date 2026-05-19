@@ -80,6 +80,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<ImportCreateViewModel>(); 
             services.AddTransient<ImportHistoryViewModel>();
             services.AddTransient<ReportViewModel>();
+            services.AddTransient<CategorySelectionViewModel>();
 
 
             // // Get View 

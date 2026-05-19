@@ -5,17 +5,23 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-namespace BookStore_Management_AppDesktop.Services.API.BookServices; 
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System;
+
+namespace BookStore_Management_AppDesktop.Services.API.BookServices;
 
 public class BookApiService : IBookApiService
 {
     private static readonly HttpClient _httpClient = new HttpClient
     {
         BaseAddress = new Uri("https://localhost:7063/")
-    };  
+    };
 
-    private static readonly JsonSerializerOptions _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true }; 
-        
+    private static readonly JsonSerializerOptions _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
     private void AddAuthorizationHeader()
     {
         var token = Settings.Default.AccessToken;
@@ -66,7 +72,9 @@ public class BookApiService : IBookApiService
                 AuthorName = dto.AuthorName,
                 Price = dto.Price,
                 Quantity = dto.Quantity,
-                ImagePath = dto.ImagePath
+                ImagePath = dto.ImagePath,
+                Description = dto.Description,
+                CategoryNames = dto.BookCategories
             }).ToList();
 
             return new PagedResponse<Book>
@@ -96,14 +104,14 @@ public class BookApiService : IBookApiService
         {
             AddAuthorizationHeader();
 
-
             var createDto = new BookCreateDto
             {
                 Title = newBook.Title ?? string.Empty,
                 AuthorId = newBook.AuthorId,
                 ImagePath = newBook.ImagePath ?? string.Empty,
                 Description = newBook.Description ?? string.Empty,
-                CategoryIds = new List<int>() 
+
+                CategoryIds = newBook.CategoryIds ?? new List<int>()
             };
 
             var json = JsonSerializer.Serialize(createDto, _options);
@@ -127,7 +135,8 @@ public class BookApiService : IBookApiService
                         Price = dto.Price,
                         Quantity = dto.Quantity,
                         ImagePath = dto.ImagePath,
-                        Description = dto.Description
+                        Description = dto.Description,
+                        CategoryNames = dto.BookCategories
                     };
                 }
             }
@@ -171,7 +180,7 @@ public class BookApiService : IBookApiService
 
             if (!response.IsSuccessStatusCode)
             {
-                return null; 
+                return null;
             }
 
             var json = await response.Content.ReadAsStringAsync();
@@ -188,8 +197,9 @@ public class BookApiService : IBookApiService
                 AuthorName = dto.AuthorName,
                 Price = dto.Price,
                 Quantity = dto.Quantity,
-                ImagePath = dto.ImagePath
-
+                ImagePath = dto.ImagePath,
+                Description = dto.Description,
+                CategoryNames = dto.BookCategories
             };
         }
         catch (Exception ex)
@@ -210,7 +220,10 @@ public class BookApiService : IBookApiService
                 Title = updatedBook.Title ?? string.Empty,
                 AuthorId = updatedBook.AuthorId,
                 Price = updatedBook.Price,
-                ImagePath = updatedBook.ImagePath ?? string.Empty
+                ImagePath = updatedBook.ImagePath ?? string.Empty,
+                Description = updatedBook.Description ?? string.Empty,
+
+                CategoryIds = updatedBook.CategoryIds ?? new List<int>()
             };
 
             var json = JsonSerializer.Serialize(updateDto, _options);
@@ -224,5 +237,41 @@ public class BookApiService : IBookApiService
             System.Diagnostics.Debug.WriteLine($"UpdateBook Error: {ex.Message}");
             return false;
         }
+    }
+
+    public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
+    {
+        try
+        {
+            AddAuthorizationHeader();
+
+            var response = await _httpClient.GetAsync("category");
+
+            if (!response.IsSuccessStatusCode) return new List<Category>();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var categories = JsonSerializer.Deserialize<List<Category>>(json, _options);
+
+            return categories ?? new List<Category>();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"GetAllCategories Error: {ex.Message}");
+            return new List<Category>();
+        }
+    }
+
+    public async Task<Category?> CreateCategoryAsync(Category category)
+    {
+        AddAuthorizationHeader();
+        var json = JsonSerializer.Serialize(category, _options);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await _httpClient.PostAsync("category", content);
+        if (response.IsSuccessStatusCode)
+        {
+            var resJson = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<Category>(resJson, _options);
+        }
+        return null;
     }
 }

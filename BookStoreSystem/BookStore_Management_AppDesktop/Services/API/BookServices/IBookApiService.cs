@@ -16,4 +16,8 @@ public interface IBookApiService
     Task<bool> UpdateBookAsync(int id, Book updatedBook);
 
     Task<bool> DeleteBookAsync(int id);
+
+    Task<IEnumerable<Category>> GetAllCategoriesAsync();
+
+    Task<Category?> CreateCategoryAsync(Category category);
 }

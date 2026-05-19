@@ -1,6 +1,6 @@
 ﻿using BookStore_Management_AppDesktop.Helpers;
 using BookStore_Management_AppDesktop.Helpers.Enums;
-using BookStore_Management_AppDesktop.Messages; 
+using BookStore_Management_AppDesktop.Messages;
 using BookStore_Management_AppDesktop.Messages.BookStore_Management_AppDesktop.Messages;
 using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs;
@@ -30,6 +30,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private string? _selectedSort;
 
         [ObservableProperty]
+        private ObservableCollection<Category> _categories = new ObservableCollection<Category>();
+
+        [ObservableProperty]
+        private int _selectedCategoryId = 0;
+
+        [ObservableProperty]
         private ObservableCollection<Book> _books = new ObservableCollection<Book>();
 
         [ObservableProperty] private int _currentPage = 1;
@@ -55,7 +61,25 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         public override async Task LoadDataAsync()
         {
-            await ExecuteSearchAsync();
+            await LoadCategoriesAsync(); 
+            await ExecuteSearchAsync(); 
+        }
+
+        private async Task LoadCategoriesAsync()
+        {
+            var fetchedCategories = await _apiService.GetAllCategoriesAsync();
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Categories.Clear();
+                Categories.Add(new Category { CategoryId = 0, Name = "All Categories" });
+
+                foreach (var cat in fetchedCategories)
+                {
+                    Categories.Add(cat);
+                }
+                SelectedCategoryId = 0;
+            });
         }
 
         partial void OnSearchTextChanged(string value)
@@ -68,6 +92,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
         }
 
         partial void OnSelectedSortChanged(string? value)
+        {
+            CurrentPage = 1;
+            _ = ExecuteSearchAsync();
+        }
+
+        partial void OnSelectedCategoryIdChanged(int value)
         {
             CurrentPage = 1;
             _ = ExecuteSearchAsync();
@@ -92,6 +122,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     Keyword = SearchText,
                     SortBy = sortBy,
                     SortOrder = sortOrder,
+                    CategoryId = SelectedCategoryId == 0 ? null : SelectedCategoryId,
                     PageNumber = CurrentPage,
                     PageSize = PageSize
                 };
@@ -127,9 +158,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private void ViewBookDetail(Book selectedBook)
         {
             if (selectedBook == null) return;
-
             IsDetailOpen = true;
-
             WeakReferenceMessenger.Default.Send(new BookSelectedMessage(selectedBook.BookId));
         }
 
@@ -138,6 +167,5 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             IsDetailOpen = false;
         }
-
     }
 }

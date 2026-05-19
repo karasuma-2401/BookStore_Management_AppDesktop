@@ -4,12 +4,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using BookStore_Management_AppDesktop.Messages;
-using BookStore_Management_AppDesktop.Services.API.BookServices; 
+using BookStore_Management_AppDesktop.Services.API.BookServices;
+using System.Collections.Generic; 
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -19,19 +19,18 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly CloudinaryService _cloudinaryService;
 
         public AuthorSelectionViewModel AuthorVM { get; }
+        public CategorySelectionViewModel CategoryVM { get; }
 
         private bool _isEditMode;
         private int _bookId;
         private int? _initialAuthorId;
 
-        // "HẠT SẠN" ĐÃ FIX: Biến lưu trữ số lượng hiện có của sách (chỉ dùng nội bộ, không show UI)
         private int _originalQuantity = 0;
 
         [ObservableProperty] private string _title = string.Empty;
-
-        // ĐÃ XÓA: [ObservableProperty] private int _quantity; (Vì không cho phép sửa tay nữa)
-
         [ObservableProperty] private string _localImagePath = string.Empty;
+
+        [ObservableProperty] private string? _categoryNames = string.Empty;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
@@ -43,13 +42,16 @@ namespace BookStore_Management_AppDesktop.ViewModels
         public BookFormViewModel(
             IBookApiService bookApiService,
             CloudinaryService cloudinaryService,
-            AuthorSelectionViewModel authorVM)
+            AuthorSelectionViewModel authorVM,
+            CategorySelectionViewModel categoryVM)
         {
             _bookApiService = bookApiService;
             _cloudinaryService = cloudinaryService;
             AuthorVM = authorVM;
+            CategoryVM = categoryVM;
 
             AuthorVM.OnShowMessage = (msg) => OnShowMessage?.Invoke(msg);
+            CategoryVM.OnShowMessage = (msg) => OnShowMessage?.Invoke(msg);
             _isEditMode = false;
         }
 
@@ -60,15 +62,15 @@ namespace BookStore_Management_AppDesktop.ViewModels
             Title = bookToEdit.Title ?? string.Empty;
             LocalImagePath = bookToEdit.ImagePath ?? string.Empty;
             _initialAuthorId = bookToEdit.AuthorId;
-
-            // LƯU LẠI số lượng hiện có để khi gửi Messenger quay lại Inventory, 
-            // số lượng trên lưới không bị biến thành 0.
             _originalQuantity = bookToEdit.Quantity;
+
+            CategoryNames = bookToEdit.CategoryNames;
         }
 
         public async Task InitializeAsync()
         {
             await AuthorVM.InitializeAsync(_initialAuthorId);
+            await CategoryVM.InitializeAsync();
         }
 
         private bool CanExecuteAction() => !IsLoading;
@@ -97,7 +99,17 @@ namespace BookStore_Management_AppDesktop.ViewModels
             var selectedAuthorId = AuthorVM.SelectedAuthor?.AuthorId;
             if (selectedAuthorId is null or 0) { OnShowMessage?.Invoke("Select author."); return; }
 
-            // ĐÃ XÓA: Validation check Quantity <= 0 (Vì UI không có ô nhập nữa)
+            List<int> selectedCategoryIds = new List<int>();
+
+            if (!_isEditMode)
+            {
+                selectedCategoryIds = CategoryVM.GetSelectedCategoryIds();
+                if (selectedCategoryIds == null || selectedCategoryIds.Count == 0)
+                {
+                    OnShowMessage?.Invoke("Select at least one category.");
+                    return;
+                }
+            }
 
             try
             {
@@ -126,11 +138,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     BookId = _isEditMode ? _bookId : 0,
                     Title = Title.Trim(),
                     AuthorId = selectedAuthorId,
-                    // QUY TẮC MỚI: 
-                    // Nếu thêm mới -> Quantity mặc định là 0.
-                    // Nếu sửa -> Trả lại số lượng cũ.
                     Quantity = _isEditMode ? _originalQuantity : 0,
-                    ImagePath = finalImageUrl
+                    ImagePath = finalImageUrl,
+                    CategoryIds = selectedCategoryIds
                 };
 
                 try
@@ -143,7 +153,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                             OnShowMessage?.Invoke("Update failed.");
                             return;
                         }
-
                         WeakReferenceMessenger.Default.Send(new BookChangedMessage(BookChangedMessage.ChangeAction.Update, book));
                     }
                     else
@@ -154,7 +163,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                             OnShowMessage?.Invoke("Create failed.");
                             return;
                         }
-
                         WeakReferenceMessenger.Default.Send(new BookChangedMessage(BookChangedMessage.ChangeAction.Add, createdBook));
                     }
 

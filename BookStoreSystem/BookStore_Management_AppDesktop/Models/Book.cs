@@ -16,5 +16,9 @@ namespace BookStore_Management_AppDesktop.Models
 
         public string? Description { get; set; }
 
+        public List<int> CategoryIds { get; set; } = new List<int>();
+
+        public string? CategoryNames { get; set; }
+
     }
 }
