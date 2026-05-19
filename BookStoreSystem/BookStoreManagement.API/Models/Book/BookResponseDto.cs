@@ -16,7 +16,7 @@ namespace BookStoreManagement.API.Models.Book
         public string? Description { get; set; }
 
         public string ImagePath { get; set; } = string.Empty;
-        
-        public string BookCategories { get; set; } = string.Empty;
+        public List<int> CategoryIds { get; set; } = new List<int>();
+        public List<string> CategoryNames { get; set; }
     }
 }
