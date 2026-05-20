@@ -131,24 +131,32 @@ namespace BookStoreManagement.API.Services
             return book;
         }
 
-        public async Task<bool> UpdateBook(int id, Book book)
+        public async Task<bool> UpdateBook(int id, BookUpdateDto dto)
         {
-            if (id != book.BookId)
+            var book = await _context.Books
+                .Include(b => b.BookCategories)
+                .FirstOrDefaultAsync(b => b.BookId == id);
+
+            if (book == null)
                 return false;
 
-            _context.Entry(book).Property(b => b.Price).IsModified = false;
+            book.Title = dto.Title;
+            book.AuthorId = dto.AuthorId;
+            book.Quantity = dto.Quantity;
+            book.Description = dto.Description;
+            book.ImagePath = dto.ImagePath;
 
-            try
+            _context.BookCategories.RemoveRange(book.BookCategories);
+
+            var newCategories = dto.CategoryIds.Select(cid => new BookCategory
             {
-                await _context.SaveChangesAsync();
-            }
-            catch
-            {
-                if (!_context.Books.Any(e => e.BookId == id))
-                    return false;
-                else
-                    throw;
-            }
+                BookId = id,
+                CategoryId = cid
+            }).ToList();
+
+            await _context.BookCategories.AddRangeAsync(newCategories);
+
+            await _context.SaveChangesAsync();
 
             return true;
         }
