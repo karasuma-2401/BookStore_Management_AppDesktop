@@ -131,24 +131,54 @@ namespace BookStoreManagement.API.Services
             return book;
         }
 
-        public async Task<bool> UpdateBook(int id, Book book)
+        public async Task<bool> UpdateBook(int id, BookUpdateDto dto)
         {
-            if (id != book.BookId)
+            var book = await _context.Books
+                .Include(b => b.BookCategories)
+                .FirstOrDefaultAsync(b => b.BookId == id);
+
+            if (book == null)
                 return false;
 
-            _context.Entry(book).Property(b => b.Price).IsModified = false;
+            var categoryIds = dto.CategoryIds
+                .Distinct()
+                .ToList();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch
-            {
-                if (!_context.Books.Any(e => e.BookId == id))
-                    return false;
-                else
-                    throw;
-            }
+            var validCategoryIds = await _context.Categories
+                .Where(c => categoryIds.Contains(c.CategoryId))
+                .Select(c => c.CategoryId)
+                .ToListAsync();
+
+            if (validCategoryIds.Count != categoryIds.Count)
+                throw new Exception("One or more CategoryId is invalid");
+
+            book.Title = dto.Title;
+            book.AuthorId = dto.AuthorId;
+            book.Quantity = dto.Quantity;
+            book.Description = dto.Description;
+            book.ImagePath = dto.ImagePath;
+
+            var existingCategoryIds = book.BookCategories
+                .Select(bc => bc.CategoryId)
+                .ToList();
+
+            var toRemove = book.BookCategories
+                .Where(bc => !categoryIds.Contains(bc.CategoryId))
+                .ToList();
+
+            _context.BookCategories.RemoveRange(toRemove);
+
+            var toAdd = categoryIds
+                .Where(cid => !existingCategoryIds.Contains(cid))
+                .Select(cid => new BookCategory
+                {
+                    BookId = id,
+                    CategoryId = cid
+                });
+
+            await _context.BookCategories.AddRangeAsync(toAdd);
+
+            await _context.SaveChangesAsync();
 
             return true;
         }
