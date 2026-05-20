@@ -80,21 +80,12 @@ namespace BookStoreManagement.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBook(int id, BookUpdateDto dto)
         {
-            var book = new Book
-            {
-                BookId = id,
-                Title = dto.Title,
-                AuthorId = dto.AuthorId,
-                Quantity = dto.Quantity,
-                ImagePath = dto.ImagePath
-            };
-
-            var updated = await _bookService.UpdateBook(id, book);
+            var updated = await _bookService.UpdateBook(id, dto);
 
             if (!updated)
                 return NotFound();
 
-            return NoContent();
+            return Ok(new { message = "Update successful" });
         }
 
         // DELETE: api/books/id

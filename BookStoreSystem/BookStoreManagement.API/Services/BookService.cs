@@ -140,21 +140,43 @@ namespace BookStoreManagement.API.Services
             if (book == null)
                 return false;
 
+            var categoryIds = dto.CategoryIds
+                .Distinct()
+                .ToList();
+
+            var validCategoryIds = await _context.Categories
+                .Where(c => categoryIds.Contains(c.CategoryId))
+                .Select(c => c.CategoryId)
+                .ToListAsync();
+
+            if (validCategoryIds.Count != categoryIds.Count)
+                throw new Exception("One or more CategoryId is invalid");
+
             book.Title = dto.Title;
             book.AuthorId = dto.AuthorId;
             book.Quantity = dto.Quantity;
             book.Description = dto.Description;
             book.ImagePath = dto.ImagePath;
 
-            _context.BookCategories.RemoveRange(book.BookCategories);
+            var existingCategoryIds = book.BookCategories
+                .Select(bc => bc.CategoryId)
+                .ToList();
 
-            var newCategories = dto.CategoryIds.Select(cid => new BookCategory
-            {
-                BookId = id,
-                CategoryId = cid
-            }).ToList();
+            var toRemove = book.BookCategories
+                .Where(bc => !categoryIds.Contains(bc.CategoryId))
+                .ToList();
 
-            await _context.BookCategories.AddRangeAsync(newCategories);
+            _context.BookCategories.RemoveRange(toRemove);
+
+            var toAdd = categoryIds
+                .Where(cid => !existingCategoryIds.Contains(cid))
+                .Select(cid => new BookCategory
+                {
+                    BookId = id,
+                    CategoryId = cid
+                });
+
+            await _context.BookCategories.AddRangeAsync(toAdd);
 
             await _context.SaveChangesAsync();
 
