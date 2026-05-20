@@ -74,7 +74,11 @@ public class BookApiService : IBookApiService
                 Quantity = dto.Quantity,
                 ImagePath = dto.ImagePath,
                 Description = dto.Description,
-                CategoryNames = dto.BookCategories
+                CategoryNames = dto.CategoryNames != null && dto.CategoryNames.Any()
+                                ? string.Join(", ", dto.CategoryNames)
+                                : "Uncategorized",
+
+                CategoryIds = dto.CategoryIds ?? new List<int>()
             }).ToList();
 
             return new PagedResponse<Book>
@@ -136,7 +140,11 @@ public class BookApiService : IBookApiService
                         Quantity = dto.Quantity,
                         ImagePath = dto.ImagePath,
                         Description = dto.Description,
-                        CategoryNames = dto.BookCategories
+                        CategoryNames = dto.CategoryNames != null && dto.CategoryNames.Any()
+                                ? string.Join(", ", dto.CategoryNames)
+                                : "Uncategorized",
+
+                        CategoryIds = dto.CategoryIds ?? new List<int>()
                     };
                 }
             }
@@ -199,7 +207,12 @@ public class BookApiService : IBookApiService
                 Quantity = dto.Quantity,
                 ImagePath = dto.ImagePath,
                 Description = dto.Description,
-                CategoryNames = dto.BookCategories
+
+                CategoryNames = dto.CategoryNames != null && dto.CategoryNames.Any()
+                                ? string.Join(", ", dto.CategoryNames)
+                                : "Uncategorized",
+
+                CategoryIds = dto.CategoryIds ?? new List<int>()
             };
         }
         catch (Exception ex)

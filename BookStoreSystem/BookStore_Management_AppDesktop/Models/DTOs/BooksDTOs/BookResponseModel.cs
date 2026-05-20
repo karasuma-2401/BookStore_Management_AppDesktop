@@ -16,6 +16,7 @@ namespace BookStore_Management_AppDesktop.Models.DTOs.BookDTOs
 
         public string? Description { get; set; }
 
-        public string? BookCategories { get; set; }
+        public List<int> CategoryIds { get; set; } = new List<int>();
+        public List<string> CategoryNames { get; set; } = new List<string>();
     }
 }
