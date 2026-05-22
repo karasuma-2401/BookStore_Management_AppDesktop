@@ -10,6 +10,87 @@
       d:DesignWidth="1000"
       Title="InvoicePage">
 
+    <Page.Resources>
+        <Style x:Key="FilterMenuItemStyle" TargetType="MenuItem">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="20,0,25,0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#E2E8F0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border x:Name="MenuBorder" 
+                                Background="{TemplateBinding Background}" 
+                                BorderThickness="0" 
+                                SnapsToDevicePixels="True">
+                            <Grid>
+                                <Rectangle x:Name="ActiveIndicator" 
+                                           Width="3.5" 
+                                           HorizontalAlignment="Left" 
+                                           Fill="#00A3FF" 
+                                           Visibility="Collapsed"
+                                           Margin="1,6,0,6"/>
+
+                                <ContentPresenter ContentSource="Header" 
+                                                  Margin="{TemplateBinding Padding}" 
+                                                  VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Foreground" Value="#00A3FF"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter TargetName="ActiveIndicator" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2D3748" TargetName="MenuBorder"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ActionMenuItemStyle" TargetType="MenuItem">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="15,0,25,0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border x:Name="ActionBorder" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                            <Grid Margin="{TemplateBinding Padding}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="25"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <ContentPresenter x:Name="IconPresenter" 
+                                                  ContentSource="Icon" 
+                                                  Width="18" 
+                                                  Height="18" 
+                                                  Grid.Column="0"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"/>
+                                <ContentPresenter ContentSource="Header" 
+                                                  Grid.Column="1"
+                                                  VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2D3748" TargetName="ActionBorder"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -36,7 +117,6 @@
                            VerticalAlignment="Center"/>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-
                     <ui:TextBox 
                                 PlaceholderText="Search invoices..."
                                 Width="250"
@@ -51,13 +131,17 @@
                                Margin="0,0,10,0" 
                                Click="FilterButton_Click">
                         <ui:Button.ContextMenu>
-                            <ContextMenu x:Name="FilterMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                                <MenuItem Header="Total Amount"
-                                          IsChecked="{Binding IsTotalAmountSelected, Mode=OneWay}"
+                            <ContextMenu x:Name="FilterMenu" 
+                                         DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+                                         Background="#1E2530" BorderThickness="0">
+                                <MenuItem Header="Items"
+                                          Style="{StaticResource FilterMenuItemStyle}"
+                                          IsChecked="{Binding IsItemsSelected}"
                                           Command="{Binding ChangeFilterCommand}"
-                                          CommandParameter="Total Amount"/>
+                                          CommandParameter="Items"/>
                                 <MenuItem Header="Invoice Date"
-                                          IsChecked="{Binding IsInvoiceDateSelected, Mode=OneWay}"
+                                          Style="{StaticResource FilterMenuItemStyle}"
+                                          IsChecked="{Binding IsInvoiceDateSelected}"
                                           Command="{Binding ChangeFilterCommand}"
                                           CommandParameter="Invoice Date"/>
                             </ContextMenu>
@@ -147,22 +231,31 @@
                                             Padding="0" 
                                             BorderThickness="0"
                                             Cursor="Hand">
-                                        <TextBlock Text="⋮⋮⋮" 
-                                                   FontSize="16"
+                                        <TextBlock Text="⋮" 
+                                                   FontSize="20"
                                                    FontWeight="Bold"
                                                    Foreground="{DynamicResource TextOnLightBackgroudBrush}"
                                                    VerticalAlignment="Center"/>
                                         <Button.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Header="View Detail" 
+                                            <ContextMenu Background="#1E2530" BorderThickness="0">
+                                                <MenuItem Header="Edit" 
+                                                          Style="{StaticResource ActionMenuItemStyle}"
                                                           Command="{Binding DataContext.ViewInvoiceDetailCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                           CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
-                                                          Foreground="{DynamicResource SuccessPrimaryBrush}"/>
-                                                <Separator/>
-                                                <MenuItem Header="Cancel" 
+                                                          Foreground="#8CE855">
+                                                    <MenuItem.Icon>
+                                                        <ui:SymbolIcon Symbol="Edit24" Foreground="#8CE855" Filled="True"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="Delete" 
+                                                          Style="{StaticResource ActionMenuItemStyle}"
                                                           Command="{Binding DataContext.CancelInvoiceCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                           CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
-                                                          Foreground="{DynamicResource ErrorPrimaryBrush}"/>
+                                                          Foreground="#FF5B5B">
+                                                    <MenuItem.Icon>
+                                                        <ui:SymbolIcon Symbol="Delete24" Foreground="#FF5B5B" Filled="True"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
                                             </ContextMenu>
                                         </Button.ContextMenu>
                                     </Button>
@@ -173,36 +266,13 @@
                 </DataGrid>
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1" Margin="0 30 20 20">
-
-                    <TextBlock Text="Lines per page" 
-                               VerticalAlignment="Center" 
-                               Foreground="{DynamicResource TextSecondaryBrush}" 
-                               FontSize="13" 
-                               Margin="0,0,15,0"/>
-
+                    <TextBlock Text="Lines per page" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" Margin="0,0,15,0"/>
                     <Grid VerticalAlignment="Center" Margin="0,0,40,0">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding PageSize}" 
-                                       VerticalAlignment="Center" 
-                                       Foreground="{DynamicResource TextOnLightBackgroudBrush}" 
-                                       FontSize="14" 
-                                       FontWeight="SemiBold" 
-                                       Margin="0,0,5,0"/>
-                            <ui:SymbolIcon Symbol="ChevronDown24" 
-                                           Filled="False" 
-                                           Foreground="{DynamicResource TextSecondaryBrush}" 
-                                           FontSize="10" 
-                                           VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding PageSize}" VerticalAlignment="Center" Foreground="{DynamicResource TextOnLightBackgroudBrush}" FontSize="14" FontWeight="SemiBold" Margin="0,0,5,0"/>
+                            <ui:SymbolIcon Symbol="ChevronDown24" Filled="False" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="10" VerticalAlignment="Center"/>
                         </StackPanel>
-
-                        <ComboBox ItemsSource="{Binding PageSizeOptions}" 
-                                  SelectedItem="{Binding PageSize}" 
-                                  Width="50" 
-                                  Height="25" 
-                                  Background="Transparent" 
-                                  BorderThickness="0" 
-                                  Opacity="0.01" 
-                                  Cursor="Hand"/>
+                        <ComboBox ItemsSource="{Binding PageSizeOptions}" SelectedItem="{Binding PageSize}" Width="50" Height="25" Background="Transparent" BorderThickness="0" Opacity="0.01" Cursor="Hand"/>
                     </Grid>
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,30,0">
@@ -214,17 +284,8 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronLeft24}" 
-                                   Appearance="Transparent" 
-                                   Foreground="{DynamicResource TextSecondaryBrush}" 
-                                   Padding="5" 
-                                   Command="{Binding PreviousPageCommand}"/>
-
-                        <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronRight24}" 
-                                   Appearance="Transparent" 
-                                   Foreground="{DynamicResource TextSecondaryBrush}" 
-                                   Padding="5" 
-                                   Command="{Binding NextPageCommand}"/>
+                        <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronLeft24}" Appearance="Transparent" Foreground="{DynamicResource TextSecondaryBrush}" Padding="5" Command="{Binding PreviousPageCommand}"/>
+                        <ui:Button Icon="{ui:SymbolIcon Symbol=ChevronRight24}" Appearance="Transparent" Foreground="{DynamicResource TextSecondaryBrush}" Padding="5" Command="{Binding NextPageCommand}"/>
                     </StackPanel>
                 </StackPanel>
             </Grid>

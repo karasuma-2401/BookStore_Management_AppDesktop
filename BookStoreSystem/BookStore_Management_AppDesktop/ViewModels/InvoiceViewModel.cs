@@ -31,15 +31,18 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private string selectedFilter = "Invoice Date";
 
         [ObservableProperty]
+        private bool isInvoiceDateSelected = true;
+
+        [ObservableProperty]
+        private bool isItemsSelected = false;
+
+        [ObservableProperty]
         private int currentPage = 1;
 
         [ObservableProperty]
         private int pageSize = 8;
 
         public List<int> PageSizeOptions { get; } = new() { 5, 8, 10, 15, 20 };
-
-        public bool IsInvoiceDateSelected => SelectedFilter == "Invoice Date";
-        public bool IsTotalAmountSelected => SelectedFilter == "Total Amount";
 
         public int TotalInvoices => FilterData().Count();
         public int TotalPages => Math.Max(1, (int)Math.Ceiling((double)TotalInvoices / PageSize));
@@ -74,8 +77,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             _searchCts?.Cancel();
             _searchCts = new CancellationTokenSource();
             var token = _searchCts.Token;
-
-            // Xử lý Debounce trên UI Thread tránh sinh Worker Thread bất đồng bộ xung đột tài nguyên
             _ = UpdateSearchWithDebounceAsync(token);
         }
 
@@ -101,23 +102,49 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         partial void OnCurrentPageChanged(int value) => UpdateDisplayList();
 
+        /// <summary>
+        /// LOGIC LỌC DỮ LIỆU ĐÃ ĐƯỢC CHỈNH SỬA:
+        /// 1. Tìm kiếm thông minh theo chuỗi ngày hiển thị (dd/MM/yyyy) khi gõ số 4.
+        /// 2. XÓA BỎ HOÀN TOÀN TÍNH NĂNG TỰ ĐỘNG SẮP XẾP (SORT), GIỮ NGUYÊN TRẬT TỰ GỐC CỦA DB.
+        /// </summary>
         private IEnumerable<InvoiceListDto> FilterData()
         {
-            var filtered = _allInvoices.Where(i =>
-            {
-                if (string.IsNullOrWhiteSpace(SearchText)) return true;
-                string search = SearchText.ToLower();
+            var filtered = _allInvoices.AsEnumerable();
 
-                return i.InvoiceId.ToString().Contains(search)
-                    || (i.CustomerName?.ToLower().Contains(search) ?? false)
-                    || (i.StaffName?.ToLower().Contains(search) ?? false);
-            });
-
-            return SelectedFilter switch
+            if (!string.IsNullOrWhiteSpace(SearchText))
             {
-                "Total Amount" => filtered.OrderByDescending(i => i.Total),
-                _ => filtered.OrderByDescending(i => i.InvoiceDate)
-            };
+                string search = SearchText.Trim();
+
+                // TRƯỜNG HỢP 1: Nếu người dùng đang tick chọn Filter là "Items"
+                if (SelectedFilter == "Items")
+                {
+                    if (int.TryParse(search, out int searchNumber))
+                    {
+                        // Lọc chính xác theo số lượng vật phẩm (Items) có trong hóa đơn
+                        filtered = filtered.Where(i => i.TotalItems == searchNumber);
+                    }
+                    else
+                    {
+                        // Nếu đang chọn chế độ Items mà cố tình gõ chữ chữ cái -> Trả về trống
+                        return Enumerable.Empty<InvoiceListDto>();
+                    }
+                }
+                // TRƯỜNG HỢP 2: Đang để mặc định hoặc các trường thông tin khác
+                else
+                {
+                    filtered = filtered.Where(i =>
+                        (i.InvoiceId != null && i.InvoiceId.ToString().Contains(search, StringComparison.OrdinalIgnoreCase))
+                        || (i.CustomerName != null && i.CustomerName.Contains(search, StringComparison.OrdinalIgnoreCase))
+                        || (i.StaffName != null && i.StaffName.Contains(search, StringComparison.OrdinalIgnoreCase))
+                        || (i.Status != null && i.Status.Contains(search, StringComparison.OrdinalIgnoreCase))
+                        // Bỏ hoàn toàn .Value để sửa triệt để lỗi CS1061
+                        || (i.InvoiceDate.ToString("dd/MM/yyyy").Contains(search, StringComparison.OrdinalIgnoreCase))
+                    );
+                }
+            }
+
+            // Trả trực tiếp danh sách sau khi lọc để bảo toàn trật tự sắp xếp gốc ban đầu của Database/API.
+            return filtered;
         }
 
         private void UpdateDisplayList()
@@ -151,23 +178,25 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private void ChangeFilter(string filterType)
         {
             SelectedFilter = filterType;
-            OnPropertyChanged(nameof(IsInvoiceDateSelected));
-            OnPropertyChanged(nameof(IsTotalAmountSelected));
+
+            IsInvoiceDateSelected = (filterType == "Invoice Date");
+            IsItemsSelected = (filterType == "Items");
+
+            // Làm mới danh sách dựa trên từ khóa tìm kiếm hiện tại với bộ lọc mới, không can thiệp đảo lộn Sort nữa
+            CurrentPage = 1;
             UpdateDisplayList();
         }
 
         [RelayCommand]
         private void NextPage()
         {
-            if (CurrentPage < TotalPages)
-                CurrentPage++;
+            if (CurrentPage < TotalPages) CurrentPage++;
         }
 
         [RelayCommand]
         private void PreviousPage()
         {
-            if (CurrentPage > 1)
-                CurrentPage--;
+            if (CurrentPage > 1) CurrentPage--;
         }
 
         [RelayCommand]
@@ -190,8 +219,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
             if (invoice == null) return;
 
             var result = MessageBox.Show(
-                $"Bạn có chắc chắn muốn hủy hóa đơn #{invoice.InvoiceId}?",
-                "Xác nhận",
+                $"Bạn có chắc chắn muốn xóa/hủy hóa đơn #{invoice.InvoiceId}?",
+                "Xác nhận xóa",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning);
 
@@ -200,12 +229,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 bool success = await _apiService.CancelInvoiceAsync(invoice.InvoiceId);
                 if (success)
                 {
-                    MessageBox.Show("Hủy hóa đơn thành công.");
+                    MessageBox.Show("Xóa hóa đơn thành công.");
                     await InitializeDataAsync();
                 }
                 else
                 {
-                    MessageBox.Show("Hủy hóa đơn thất bại.");
+                    MessageBox.Show("Xóa hóa đơn thất bại.");
                 }
             }
         }
