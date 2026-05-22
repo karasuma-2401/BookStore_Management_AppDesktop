@@ -3,10 +3,12 @@ using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.Services.API.BookServices; 
 using BookStore_Management_AppDesktop.Services.API.EmployeeServices;
 using BookStore_Management_AppDesktop.Services.API.Import;
+using BookStore_Management_AppDesktop.Services.API.InvoiceServices;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.ViewModels;
 using BookStore_Management_AppDesktop.Views.Pages;
 using BookStore_Management_AppDesktop.Views.Pages.BookViews; 
+using BookStore_Management_AppDesktop.Views.Pages.InvoiceViews;
 using BookStore_Management_AppDesktop.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -74,6 +76,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<ImportCreateViewModel>(); 
             services.AddTransient<ImportHistoryViewModel>();
             services.AddTransient<InvoiceViewModel>();
+            services.AddTransient<InvoiceDetailViewModel>();
 
             // // Get View 
             services.AddTransient<MainWindow>();
@@ -88,6 +91,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<ImportHistoryPage>(); 
             services.AddTransient<CreateImportPage>(); 
             services.AddTransient<InvoicePage>();
+            services.AddTransient<InvoiceDetailPage>();
         }
     }
 
