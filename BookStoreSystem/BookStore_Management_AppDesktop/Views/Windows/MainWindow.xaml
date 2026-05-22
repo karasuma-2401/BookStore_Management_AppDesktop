@@ -1,11 +1,14 @@
-﻿<Window x:Class="BookStore_Management_AppDesktop.Views.Windows.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        Title="BookStore Management" Height="768" Width="1366"
-        WindowStartupLocation="CenterScreen"
-        Background="{DynamicResource NavyPrimaryBrush}"
-        Foreground="{DynamicResource TextPrimaryBrush}">
+﻿<Window
+    x:Class="BookStore_Management_AppDesktop.Views.Windows.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="BookStore Management"
+    Width="1366"
+    Height="768"
+    Background="{DynamicResource SidebarBackgroundBrush}"
+    Foreground="{DynamicResource TextPrimaryBrush}"
+    WindowStartupLocation="CenterScreen">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -13,36 +16,46 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ui:NavigationView x:Name="RootNavigation"
-                           Grid.Column="0"
-                           PaneDisplayMode="Left"
-                           IsBackButtonVisible="Collapsed"
-                           OpenPaneLength="250"
-                           Background="{DynamicResource SidebarBackgroundBrush}">
+        <ui:NavigationView
+            x:Name="RootNavigation"
+            Grid.Column="0"
+            Background="{DynamicResource SidebarBackgroundBrush}"
+            IsBackButtonVisible="Collapsed"
+            OpenPaneLength="250"
+            PaneDisplayMode="Left">
 
             <ui:NavigationView.PaneHeader>
                 <Grid Margin="15,20,0,20">
                     <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon Symbol="Library24" FontSize="25" Foreground="{DynamicResource NavyAccentBrush}" Margin="0,0,10,0"/>
+                        <ui:SymbolIcon
+                            Margin="0,0,10,0"
+                            FontSize="25"
+                            Foreground="{DynamicResource NavyAccentBrush}"
+                            Symbol="Library24" />
 
-                        <TextBlock Text="BOOKSTORE" 
-                                   Style="{StaticResource HeaderTextStyle}" 
-                                   Opacity="0">
+                        <TextBlock
+                            Opacity="0"
+                            Style="{StaticResource HeaderTextStyle}"
+                            Foreground="{DynamicResource TextPrimaryBrush}" 
+                            Text="BOOKSTORE">
                             <TextBlock.RenderTransform>
-                                <TranslateTransform X="-30"/>
+                                <TranslateTransform X="-30" />
                             </TextBlock.RenderTransform>
 
                             <TextBlock.Triggers>
                                 <EventTrigger RoutedEvent="Loaded">
                                     <BeginStoryboard>
-                                        <Storyboard>    
+                                        <Storyboard>
                                             <DoubleAnimation
-                                                Storyboard.TargetProperty="Opacity" From="0" To="1"
-                                                Duration="0:0:1.0"/>
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="0"
+                                                To="1"
+                                                Duration="0:0:1.0" />
                                             <DoubleAnimation
-                                                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" 
-                                                From="-30" To="0"
-                                                Duration="0:0:1.0"/>
+                                                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                From="-30"
+                                                To="0"
+                                                Duration="0:0:1.0" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </EventTrigger>
@@ -53,42 +66,97 @@
             </ui:NavigationView.PaneHeader>
 
             <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Tag="Books" Icon="{ui:SymbolIcon Book24}" Command="{Binding NavigateCommand}" CommandParameter="Books">
-                    <TextBlock Text="Books" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
+                <ui:NavigationViewItem
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="Books"
+                    Icon="{ui:SymbolIcon Book24}"
+                    Tag="Books">
+                    <TextBlock
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Books" />
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem Tag="Employees" Icon="{ui:SymbolIcon People24}" Command="{Binding NavigateCommand}" CommandParameter="Employees">
-                    <TextBlock Text="Employees" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
+                <ui:NavigationViewItem
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="Employees"
+                    Icon="{ui:SymbolIcon People24}"
+                    Tag="Employees">
+                    <TextBlock
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Employees" />
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem Tag="Customers" Icon="{ui:SymbolIcon Person24}">
-                    <TextBlock Text="Customers" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
+                <ui:NavigationViewItem
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="Customers"
+                    Icon="{ui:SymbolIcon Person24}"
+                    Tag="Customers">
+                    <TextBlock
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Customers" />
                 </ui:NavigationViewItem>
 
                 <ui:NavigationViewItem Tag="Invoice" Icon="{ui:SymbolIcon Document24}"  Command="{Binding NavigateCommand}" CommandParameter="Invoices">
                     <TextBlock Text="Invoice" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem Tag="Inventory" Icon="{ui:SymbolIcon Box24}" Command="{Binding NavigateCommand}" CommandParameter="Inventory">
-                    <TextBlock Text="Inventory" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
+                <ui:NavigationViewItem
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="Inventory"
+                    Icon="{ui:SymbolIcon Box24}"
+                    Tag="Inventory">
+                    <TextBlock
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Inventory" />
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem Tag="Imports" Icon="{ui:SymbolIcon Receipt24}" Command="{Binding NavigateCommand}" CommandParameter="ImportHistory">
-                    <TextBlock Text="Imports" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
+                <ui:NavigationViewItem
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="ImportHistory"
+                    Icon="{ui:SymbolIcon Receipt24}"
+                    Tag="Imports">
+                    <TextBlock
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Imports" />
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="Reports"
+                    Icon="{ui:SymbolIcon DataBarVertical24}"
+                    Tag="Reports">
+                    <TextBlock
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Reports" />
                 </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>
 
             <ui:NavigationView.FooterMenuItems>
-                <ui:NavigationViewItem Tag="Settings" Icon="{ui:SymbolIcon Settings24}" Command="{Binding NavigateCommand}" CommandParameter="Settings">
-                    <TextBlock Text="Settings" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
+                <ui:NavigationViewItem
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="Settings"
+                    Icon="{ui:SymbolIcon Settings24}"
+                    Tag="Settings">
+                    <TextBlock
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Settings" />
                 </ui:NavigationViewItem>
             </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
-        <Border Grid.Column="1" 
-                CornerRadius="8" 
-                Background="{DynamicResource ContentBackgroundBrush}">
-            <Frame x:Name="RootFrame" NavigationUIVisibility="Hidden"/>
+
+        <Border
+            Grid.Column="1"
+            Background="{DynamicResource ContentBackgroundBrush}"
+            CornerRadius="8">
+            <Frame x:Name="RootFrame" NavigationUIVisibility="Hidden" />
         </Border>
+
         <Grid>
             <ContentPresenter x:Name="RootContentDialogPresenter" Grid.ColumnSpan="2" />
         </Grid>

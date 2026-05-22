@@ -2,8 +2,11 @@
 using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.Services.API.BookServices; 
 using BookStore_Management_AppDesktop.Services.API.EmployeeServices;
+using BookStore_Management_AppDesktop.Services.API.ReportServices;
 using BookStore_Management_AppDesktop.Services.API.Import;
 using BookStore_Management_AppDesktop.Services.API.InvoiceServices;
+using BookStore_Management_AppDesktop.Services.API.CustomerServices;
+using BookStore_Management_AppDesktop.Services.Export;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.ViewModels;
 using BookStore_Management_AppDesktop.Views.Pages;
@@ -58,8 +61,11 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<IAuthorApiService, AuthorApiService>();
             services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
             services.AddSingleton<IImportApiService, ImportApiService>();
+            services.AddSingleton<ICustomerApiService, CustomerApiService>();
             services.AddSingleton<Wpf.Ui.IContentDialogService, Wpf.Ui.ContentDialogService>();
             services.AddSingleton<IDialogService, DialogService>();
+            services.AddSingleton<IReportApiService, ReportApiService>();
+            services.AddSingleton<IExportService, ExportService>();
 
             services.AddSingleton<IInvoiceApiService, InvoiceApiService>();
 
@@ -73,10 +79,13 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<BookViewModel>();
             services.AddTransient<BookDetailViewModel>();
             services.AddTransient<EmployeeViewModel>();
+            services.AddTransient<CustomerViewModel>();
             services.AddTransient<ImportCreateViewModel>(); 
             services.AddTransient<ImportHistoryViewModel>();
             services.AddTransient<InvoiceViewModel>();
             services.AddTransient<InvoiceDetailViewModel>();
+            services.AddTransient<ReportViewModel>();
+
 
             // // Get View 
             services.AddTransient<MainWindow>();
@@ -88,10 +97,12 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<SettingsPage>();
             services.AddTransient<BookDetailPage>();
             services.AddTransient<EmployeePage>();
+            services.AddTransient<CustomerPage>();
             services.AddTransient<ImportHistoryPage>(); 
             services.AddTransient<CreateImportPage>(); 
             services.AddTransient<InvoicePage>();
             services.AddTransient<InvoiceDetailPage>();
+            services.AddTransient<ReportPage>();
         }
     }
 
