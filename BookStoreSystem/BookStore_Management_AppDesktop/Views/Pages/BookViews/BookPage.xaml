@@ -46,10 +46,27 @@
                         <ComboBoxItem Content="Title: A-Z" Tag="title_asc"/>
                     </ComboBox>
 
-                    <ui:Button Icon="{ui:SymbolIcon Cart24}" 
-                               Style="{StaticResource PrimaryActionButtonStyle}"
-                               ToolTip="View Shopping Cart" 
-                               Padding="12,8"/>
+                    <Grid Width="50" Height="50" Margin="0,0,10,0">
+                        <ui:Button Icon="{ui:SymbolIcon Cart24}" 
+                                   Style="{StaticResource PrimaryActionButtonStyle}"
+                                   ToolTip="View Shopping Cart" 
+                                   Command="{Binding ViewCartCommand}"
+                                   Padding="12,8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                        <!-- Cart Item Badge -->
+                        <Border Background="{DynamicResource SuccessPrimaryBrush}" 
+                                CornerRadius="50"
+                                Width="24" Height="24" 
+                                HorizontalAlignment="Right" VerticalAlignment="Top"
+                                Visibility="{Binding CartItemCount, Converter={StaticResource IntToBoolConverter}, ConverterParameter=0}">
+                            <TextBlock Text="{Binding CartItemCount}" 
+                                       Foreground="White" 
+                                       FontWeight="Bold" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Center" 
+                                       FontSize="11"/>
+                        </Border>
+                    </Grid>
                 </StackPanel>
             </Grid>
         </Border>

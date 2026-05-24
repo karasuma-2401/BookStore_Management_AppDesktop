@@ -9,36 +9,42 @@
       d:DesignHeight="700" d:DesignWidth="1000"
       Title="EmployeePage">
 
-
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <!-- Gộp Row 0 và Row 1 cũ làm một để loại bỏ đường kẻ phân tách -->
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
+        <!-- Bọc toàn bộ phần Header và nút Add vào chung 1 Border duy nhất -->
+        <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15,25,20">
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Employee Management" FontSize="26" FontWeight="Black" 
+
+                <!-- Vùng Header cũ giữ nguyên -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Employee Management" FontSize="26" FontWeight="Black" 
                            Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
 
-                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal">
                     <ui:TextBox PlaceholderText="Search employees..." 
-                        Icon="{ui:SymbolIcon Search24}" Width="250" Margin="0,0,15,0" 
-                        VerticalAlignment="Center" Cursor="Pen"
-                        Background="Transparent" Foreground="White"
-                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                                Icon="{ui:SymbolIcon Search24}" Width="250" Margin="0,0,15,0" 
+                                VerticalAlignment="Center" Cursor="Pen"
+                                Background="Transparent" Foreground="White"
+                                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <ui:Button x:Name="FilterButton"
-                        Icon="{ui:SymbolIcon Filter24}" 
-                        Appearance="Secondary" 
-                        Margin="0,0,10,0" 
-                        Click="FilterButton_Click">
+                                Icon="{ui:SymbolIcon Filter24}" 
+                                Appearance="Secondary" 
+                                Margin="0,0,10,0" 
+                                Click="FilterButton_Click">
                         <ui:Button.ContextMenu>
                             <ContextMenu x:Name="FilterMenu">
                                 <ContextMenu.Resources>
@@ -57,8 +63,8 @@
                                                                 Visibility="Collapsed"/>
 
                                                         <ContentPresenter x:Name="HeaderHost" 
-                                                                  ContentSource="Header" 
-                                                                  Margin="15,8,15,8"/>  
+                                                                          ContentSource="Header" 
+                                                                          Margin="15,8,15,8"/>
                                                     </Grid>
                                                     <ControlTemplate.Triggers>
                                                         <Trigger Property="IsChecked" Value="True">
@@ -77,58 +83,38 @@
                                 </ContextMenu.Resources>
 
                                 <MenuItem Header="Full Name" 
-                                        IsChecked="{Binding IsFullNameSelected, Mode=OneWay}"
-                                        Command="{Binding ChangeFilterCommand}" 
-                                        CommandParameter="Full Name"
-                                        Icon="{ui:SymbolIcon Symbol=Person24}"/>
+                                          IsChecked="{Binding IsFullNameSelected, Mode=OneWay}"
+                                          Command="{Binding ChangeFilterCommand}" 
+                                          CommandParameter="Full Name"
+                                          Icon="{ui:SymbolIcon Symbol=Person24}"/>
 
                                 <MenuItem Header="Salary" 
-                                        IsChecked="{Binding IsSalarySelected, Mode=OneWay}"
-                                        Command="{Binding ChangeFilterCommand}" 
-                                        CommandParameter="Salary"
-                                        Icon="{ui:SymbolIcon Symbol=Money24}"/>   
+                                          IsChecked="{Binding IsSalarySelected, Mode=OneWay}"
+                                          Command="{Binding ChangeFilterCommand}" 
+                                          CommandParameter="Salary"
+                                          Icon="{ui:SymbolIcon Symbol=Money24}"/>
 
                                 <MenuItem Header="Address" 
-                                        IsChecked="{Binding IsAddressSelected, Mode=OneWay}"
-                                        Command="{Binding ChangeFilterCommand}" 
-                                        CommandParameter="Address"
-                                        Icon="{ui:SymbolIcon Symbol=Location24}"/>
+                                          IsChecked="{Binding IsAddressSelected, Mode=OneWay}"
+                                          Command="{Binding ChangeFilterCommand}" 
+                                          CommandParameter="Address"
+                                          Icon="{ui:SymbolIcon Symbol=Location24}"/>
                             </ContextMenu>
                         </ui:Button.ContextMenu>
                     </ui:Button>
-
-                    <Grid>
-                        <ui:Button Icon="{ui:SymbolIcon Symbol=Alert24, Filled=True}" Appearance="Secondary" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                        <Border Width="10" Height="10" CornerRadius="5" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,8,0" Background="{DynamicResource ErrorPrimaryBrush}" BorderBrush="{DynamicResource CardBackgroundBrush}" BorderThickness="1.5"/>
-                    </Grid>
-
-                    <Border Width="2" Height="30" Background="{DynamicResource TextSecondaryBrush}" Margin="15,0" VerticalAlignment="Center" Opacity="0.3"/>
-
-                    <TextBlock Text="Administrator" VerticalAlignment="Center" Margin="20,0,10,0" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
-
-                    <Border Width="54" Height="54" CornerRadius="27" BorderBrush="{DynamicResource SidebarAccentBrush}" BorderThickness="2" Margin="5,0,0,0" VerticalAlignment="Center">
-                        <Ellipse Width="50" Height="50" Cursor="Hand">
-                            <Ellipse.InputBindings>
-                                <MouseBinding MouseAction="LeftClick" Command="{Binding OpenAvatarModalCommand}"/>
-                            </Ellipse.InputBindings>
-                            <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding CurrentAvatarPath}" Stretch="UniformToFill" />
-                            </Ellipse.Fill>
-                        </Ellipse>
-                    </Border>
                 </StackPanel>
+
+                <!-- Nút Add New Employee được đưa vào đây, không còn bị chia border nên mất hẳn vạch trắng -->
+                <ui:Button Grid.Row="1" Grid.Column="0" Content="Add New Employee"
+                           Icon="{ui:SymbolIcon Add24}" Height="40"
+                           Background="{DynamicResource NavyAccentBrush}" Foreground="White" BorderThickness="0" 
+                           Appearance="Primary" Cursor="Hand" FontWeight="Bold" Margin="15,15,0,0"
+                           Command="{Binding OpenAddEmployeeWindowCommand}"/>
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" Background="{DynamicResource SidebarBackgroundBrush}">
-            <ui:Button Content="Add New Employee"
-                       Icon="{ui:SymbolIcon Add24}" Height="40"
-                       Background="{DynamicResource NavyAccentBrush}" Foreground="White" BorderThickness="0" 
-                       Appearance="Primary" Cursor="Hand" FontWeight="Bold" Margin="40 0 0 20"
-                       Command="{Binding OpenAddEmployeeWindowCommand}"/>
-        </Border>
-
-        <Border Grid.Row="2" Background="{DynamicResource CardBackgroundBrush}" Margin="20" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1" >
+        <!-- Phần DataGrid chuyển lên Grid.Row="1" -->
+        <Border Grid.Row="1" Background="{DynamicResource CardBackgroundBrush}" Margin="20" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1" >
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -260,22 +246,22 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <ui:Button Icon="{ui:SymbolIcon Symbol=MoreVertical24}" 
-                                           Appearance="Transparent" 
-                                           Background="Transparent"
-                                           Foreground="{DynamicResource TextOnLightBackgroudBrush}"
-                                           Padding="0"
-                                           Cursor="Hand"
-                                           Click="MoreButton_Click"
-                                           Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Page}}">
+                                               Appearance="Transparent" 
+                                               Background="Transparent"
+                                               Foreground="{DynamicResource TextThirdBrush}"
+                                               Padding="0"
+                                               Cursor="Hand"
+                                               Click="MoreButton_Click"
+                                               Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Page}}">
                                         <ui:Button.ContextMenu>
                                             <ContextMenu x:Name="ActionMenu" Padding="2" MinWidth="110">
 
                                                 <MenuItem Header="Edit" 
-                                                      Height="30" 
-                                                      Padding="5,0,10,0"
-                                                      Command="{Binding PlacementTarget.Tag.EditEmployeeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                      CommandParameter="{Binding}"
-                                                      Foreground="{DynamicResource SuccessPrimaryBrush}">
+                                                          Height="30" 
+                                                          Padding="5,0,10,0"
+                                                          Command="{Binding PlacementTarget.Tag.EditEmployeeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                          CommandParameter="{Binding}"
+                                                          Foreground="{DynamicResource SuccessPrimaryBrush}">
                                                     <MenuItem.Icon>
                                                         <ui:SymbolIcon Symbol="Edit24" FontSize="16" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
                                                     </MenuItem.Icon>
@@ -284,11 +270,11 @@
                                                 <Separator Background="#333333" Margin="5,2" Height="1"/>
 
                                                 <MenuItem Header="Delete" 
-                                                      Height="30"
-                                                      Padding="5,0,10,0"
-                                                      Command="{Binding PlacementTarget.Tag.DeleteEmployeeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                      CommandParameter="{Binding}"
-                                                      Foreground="{DynamicResource ErrorPrimaryBrush}">
+                                                          Height="30"
+                                                          Padding="5,0,10,0"
+                                                          Command="{Binding PlacementTarget.Tag.DeleteEmployeeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                          CommandParameter="{Binding}"
+                                                          Foreground="{DynamicResource ErrorPrimaryBrush}">
                                                     <MenuItem.Icon>
                                                         <ui:SymbolIcon Symbol="Delete24" FontSize="16" Foreground="{DynamicResource ErrorPrimaryBrush}"/>
                                                     </MenuItem.Icon>

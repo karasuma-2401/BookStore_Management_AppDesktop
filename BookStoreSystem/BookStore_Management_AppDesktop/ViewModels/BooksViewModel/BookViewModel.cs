@@ -3,6 +3,7 @@ using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Messages;
 using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs; 
+using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API.BookServices; 
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.ViewModels.Base;
@@ -22,6 +23,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly IBookApiService _apiService;
         private readonly INavigationService _navigationService;
+        private readonly ICartService _cartService;
         private readonly DebounceHelper _searchDebouncer = new DebounceHelper();
 
         [ObservableProperty]
@@ -37,11 +39,16 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private int _pageSize = 12; 
         [ObservableProperty] private int _totalItems;
         [ObservableProperty] private int _totalPages = 1;
+        [ObservableProperty] private int _cartItemCount = 0;
 
-        public BookViewModel(IBookApiService apiService, INavigationService navigationService)
+        public BookViewModel(IBookApiService apiService, INavigationService navigationService, ICartService cartService)
         {
             _apiService = apiService;
             _navigationService = navigationService;
+            _cartService = cartService;
+
+            // Subscribe to cart changes
+            _cartService.PropertyChanged += CartService_PropertyChanged;
 
             WeakReferenceMessenger.Default.Register<BookChangedMessage>(this, async (recipient, message) =>
             {
@@ -51,6 +58,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 });
             });
 
+        }
+
+        private void CartService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ICartService.ItemCount))
+            {
+                CartItemCount = _cartService.ItemCount;
+            }
         }
 
         public override async Task LoadDataAsync()
@@ -129,6 +144,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
             if (selectedBook == null) return;
 
             _navigationService.NavigateTo(PageType.BookDetail, selectedBook.BookId);
+        }
+
+        [RelayCommand]
+        private void ViewCart()
+        {
+            _navigationService.NavigateTo(PageType.SaleCart);
         }
     }
 }

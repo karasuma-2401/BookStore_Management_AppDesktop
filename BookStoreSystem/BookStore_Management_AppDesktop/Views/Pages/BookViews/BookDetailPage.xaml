@@ -71,6 +71,33 @@
                         <Run Text=" đ" FontSize="24" FontWeight="Black" Foreground="{DynamicResource NavyLightBrush}"/>
                     </TextBlock>
 
+                    <!-- Quantity Selector -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,30" VerticalAlignment="Center">
+                        <TextBlock Text="Quantity: " VerticalAlignment="Center" Margin="0,0,15,0" 
+                                   FontWeight="SemiBold" FontSize="14" 
+                                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+                        <Border Background="{DynamicResource NavyLightBrush}" CornerRadius="8" Padding="8">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:Button Content="−" Padding="12,8" 
+                                           Appearance="Transparent"
+                                           Foreground="White"
+                                           Command="{Binding DecreaseQuantityCommand}"
+                                           FontSize="16" FontWeight="Bold"/>
+                                <Rectangle Width="1" Margin="5,0" Fill="White" Opacity="0.3"/>
+                                <TextBlock Text="{Binding SelectedQuantity}" 
+                                           Width="50" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           FontWeight="Bold" FontSize="16"
+                                           Foreground="White"/>
+                                <Rectangle Width="1" Margin="5,0" Fill="White" Opacity="0.3"/>
+                                <ui:Button Content="+" Padding="12,8" 
+                                           Appearance="Transparent"
+                                           Foreground="White"
+                                           Command="{Binding IncreaseQuantityCommand}"
+                                           FontSize="16" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
                     <ui:Button Content="ADD TO CART" Icon="{ui:SymbolIcon Cart24}" 
                                Style="{StaticResource PrimaryActionButtonStyle}"
                                Command="{Binding AddToCartCommand}" 

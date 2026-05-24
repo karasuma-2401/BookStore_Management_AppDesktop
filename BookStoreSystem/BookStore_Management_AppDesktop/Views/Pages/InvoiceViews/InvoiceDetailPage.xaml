@@ -64,6 +64,17 @@
                         </StackPanel>
                     </Border>
                 </StackPanel>
+
+                <ui:Button Grid.Column="4"
+                   Icon="{ui:SymbolIcon Print24}"
+                   Content="Export Invoice"
+                   Appearance="Primary"
+                   Command="{Binding ExportInvoiceCommand}"
+                   VerticalAlignment="Center"
+                   Margin="30,0,0,0"
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextThirdBrush}"
+                   Cursor="Hand"/>
             </Grid>
         </Border>
 
@@ -156,15 +167,6 @@
                                                         Foreground="{DynamicResource NavyPrimaryBrush}"
                                                         Background="{DynamicResource ContentBackgroundBrush}"/>
                                         </StackPanel>
-
-                                        <ui:Button Grid.Row="6" 
-                                                   Style="{DynamicResource UpdateButtonStyle}"
-                                                   Content="Update Item"
-                                                   Margin="0,10,0,5"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center"
-                                                   Command="{Binding DataContext.UpdateDetailCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                   CommandParameter="{Binding}"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>

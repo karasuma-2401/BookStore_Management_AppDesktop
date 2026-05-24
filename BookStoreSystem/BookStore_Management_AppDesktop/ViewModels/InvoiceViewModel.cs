@@ -1,12 +1,14 @@
-﻿using BookStore_Management_AppDesktop.Models.DTOs.InvoiceDTOs;
+﻿using BookStore_Management_AppDesktop.Helpers.Enums;
+using BookStore_Management_AppDesktop.Models.DTOs.InvoiceDTOs;
+using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.Services.API.InvoiceServices;
 using BookStore_Management_AppDesktop.Services.Navigation;
-using BookStore_Management_AppDesktop.Helpers.Enums;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,6 +44,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty]
         private int pageSize = 8;
 
+        [ObservableProperty]
+        private bool isLoading;
+
         public List<int> PageSizeOptions { get; } = new() { 5, 8, 10, 15, 20 };
 
         public int TotalInvoices => FilterData().Count();
@@ -59,6 +64,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             try
             {
+                IsLoading = true;
                 var data = await _apiService.GetAllInvoicesAsync();
                 if (data != null)
                 {
@@ -68,7 +74,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Invoice Load Error: {ex.Message}");
+                Debug.WriteLine($"Invoice Load Error: {ex.Message}");
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 
@@ -103,9 +113,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
         partial void OnCurrentPageChanged(int value) => UpdateDisplayList();
 
         /// <summary>
-        /// LOGIC LỌC DỮ LIỆU ĐÃ ĐƯỢC CHỈNH SỬA:
-        /// 1. Tìm kiếm thông minh theo chuỗi ngày hiển thị (dd/MM/yyyy) khi gõ số 4.
-        /// 2. XÓA BỎ HOÀN TOÀN TÍNH NĂNG TỰ ĐỘNG SẮP XẾP (SORT), GIỮ NGUYÊN TRẬT TỰ GỐC CỦA DB.
+        /// DATA FILTERING LOGIC:
+        /// 1. Intelligent search by display date string format (dd/MM/yyyy).
+        /// 2. Preserves the original sorting order retrieved from the database/API.
         /// </summary>
         private IEnumerable<InvoiceListDto> FilterData()
         {
@@ -115,21 +125,21 @@ namespace BookStore_Management_AppDesktop.ViewModels
             {
                 string search = SearchText.Trim();
 
-                // TRƯỜNG HỢP 1: Nếu người dùng đang tick chọn Filter là "Items"
+                // CASE 1: Filter criteria is selected as "Items"
                 if (SelectedFilter == "Items")
                 {
                     if (int.TryParse(search, out int searchNumber))
                     {
-                        // Lọc chính xác theo số lượng vật phẩm (Items) có trong hóa đơn
+                        // Filter precisely by the total number of items in the invoice
                         filtered = filtered.Where(i => i.TotalItems == searchNumber);
                     }
                     else
                     {
-                        // Nếu đang chọn chế độ Items mà cố tình gõ chữ chữ cái -> Trả về trống
+                        // Return empty list if text is entered while in numeric mode
                         return Enumerable.Empty<InvoiceListDto>();
                     }
                 }
-                // TRƯỜNG HỢP 2: Đang để mặc định hoặc các trường thông tin khác
+                // CASE 2: Default filter or general keywords matching text properties
                 else
                 {
                     filtered = filtered.Where(i =>
@@ -137,13 +147,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         || (i.CustomerName != null && i.CustomerName.Contains(search, StringComparison.OrdinalIgnoreCase))
                         || (i.StaffName != null && i.StaffName.Contains(search, StringComparison.OrdinalIgnoreCase))
                         || (i.Status != null && i.Status.Contains(search, StringComparison.OrdinalIgnoreCase))
-                        // Bỏ hoàn toàn .Value để sửa triệt để lỗi CS1061
                         || (i.InvoiceDate.ToString("dd/MM/yyyy").Contains(search, StringComparison.OrdinalIgnoreCase))
                     );
                 }
             }
 
-            // Trả trực tiếp danh sách sau khi lọc để bảo toàn trật tự sắp xếp gốc ban đầu của Database/API.
             return filtered;
         }
 
@@ -182,7 +190,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             IsInvoiceDateSelected = (filterType == "Invoice Date");
             IsItemsSelected = (filterType == "Items");
 
-            // Làm mới danh sách dựa trên từ khóa tìm kiếm hiện tại với bộ lọc mới, không can thiệp đảo lộn Sort nữa
             CurrentPage = 1;
             UpdateDisplayList();
         }
@@ -209,7 +216,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Navigate Error: {ex.Message}");
+                Debug.WriteLine($"Navigate Error: {ex.Message}");
             }
         }
 
@@ -218,23 +225,42 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (invoice == null) return;
 
-            var result = MessageBox.Show(
-                $"Bạn có chắc chắn muốn xóa/hủy hóa đơn #{invoice.InvoiceId}?",
-                "Xác nhận xóa",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+            // Display confirmation dialog prior to execution
+            var result = MessageBox.Show($"Are you sure you want to cancel invoice #{invoice.InvoiceId}?",
+                                         "Confirm Cancellation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
-                bool success = await _apiService.CancelInvoiceAsync(invoice.InvoiceId);
-                if (success)
+                try
                 {
-                    MessageBox.Show("Xóa hóa đơn thành công.");
-                    await InitializeDataAsync();
+                    IsLoading = true;
+
+                    // Execute request against backend service endpoint
+                    bool isCanceled = await _apiService.CancelInvoiceAsync(invoice.InvoiceId);
+
+                    if (isCanceled)
+                    {
+                        MessageBox.Show("Invoice canceled successfully! Inventory stock levels have been restored.",
+                                        "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                        // Reload data records from server database to dynamically update state on the UI grid
+                        await InitializeDataAsync();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to cancel invoice. It may not exist or has already been canceled.",
+                                        "Notification", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Xóa hóa đơn thất bại.");
+                    Debug.WriteLine($"CancelInvoice ViewModel Error: {ex.Message}");
+                    MessageBox.Show("A system error occurred while attempting to cancel the invoice.",
+                                    "System Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    IsLoading = false;
                 }
             }
         }

@@ -1,14 +1,13 @@
 ﻿using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API.BookServices; 
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Windows;
 
 namespace BookStore_Management_AppDesktop.ViewModels
@@ -17,6 +16,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly INavigationService _navigationService;
         private readonly IBookApiService _apiService;
+        private readonly ICartService _cartService;
 
         [ObservableProperty]
         private Book? _currentBook;
@@ -24,12 +24,16 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty]
         private bool _isLoading;
 
+        [ObservableProperty]
+        private int _selectedQuantity = 1;
+
         public int BookId { get; set; }
 
-        public BookDetailViewModel(INavigationService navigationService, IBookApiService apiService)
+        public BookDetailViewModel(INavigationService navigationService, IBookApiService apiService, ICartService cartService)
         {
             _navigationService = navigationService;
             _apiService = apiService;
+            _cartService = cartService;
         }
 
         public void OnNavigatedTo(object? parameter)
@@ -73,9 +77,30 @@ namespace BookStore_Management_AppDesktop.ViewModels
         }
 
         [RelayCommand]
+        private void IncreaseQuantity()
+        {
+            SelectedQuantity++;
+        }
+
+        [RelayCommand]
+        private void DecreaseQuantity()
+        {
+            if (SelectedQuantity > 1)
+            {
+                SelectedQuantity--;
+            }
+        }
+
+        [RelayCommand]
         private void AddToCart()
         {
-            // TODO: Code logic Add book to cart
+            if (CurrentBook != null && SelectedQuantity > 0)
+            {
+                _cartService.AddToCart(CurrentBook, SelectedQuantity);
+                MessageBox.Show($"Added {SelectedQuantity} copy(ies) of '{CurrentBook.Title}' to cart!", 
+                    "Added to Cart", MessageBoxButton.OK, MessageBoxImage.Information);
+                SelectedQuantity = 1; // Reset quantity
+            }
         }
     }
 }

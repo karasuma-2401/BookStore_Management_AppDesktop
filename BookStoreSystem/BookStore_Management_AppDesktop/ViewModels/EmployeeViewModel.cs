@@ -1,7 +1,6 @@
 ﻿using BookStore_Management_AppDesktop.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,10 +9,8 @@ using System.Windows;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using BookStore_Management_AppDesktop.Services;
-using BookStore_Management_AppDesktop.Services.API.EmployeeServices; 
-
+using BookStore_Management_AppDesktop.Services.API.EmployeeServices;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -48,25 +45,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         public List<int> PageSizeOptions { get; set; } = new List<int> { 5, 8, 10, 12, 15 };
 
-        [ObservableProperty]
-        private string _currentAvatarPath = "pack://application:,,,/Resources/Images/default_user.png";
-
-        [ObservableProperty]
-        private string _tempAvatarPath;
-
-        public ObservableCollection<string> DefaultAvatars { get; set; } = new()
-        {
-            "pack://siteoforigin:,,,/Resources/Images/Forged of Fire.webp",
-            "pack://siteoforigin:,,,/Resources/Images/In an Instant.webp",
-            "pack://siteoforigin:,,,/Resources/Images/In Five Year.webp",
-            "pack://siteoforigin:,,,/Resources/Images/Night Road.webp",
-            "pack://siteoforigin:,,,/Resources/Images/Promise Me.webp",
-            "pack://siteoforigin:,,,/Resources/Images/Magic Hour A novel.webp",
-            "pack://siteoforigin:,,,/Resources/Images/God of Malice A Dark College.webp",
-            "pack://siteoforigin:,,,/Resources/Images/Twenty Years Later.webp"
-        };
-
-        public EmployeeViewModel(IEmployeeApiService apiService, IDialogService dialogService) 
+        public EmployeeViewModel(IEmployeeApiService apiService, IDialogService dialogService)
         {
             _apiService = apiService;
             _dialogService = dialogService;
@@ -179,9 +158,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (employee == null) return;
 
-
             var editViewModel = new UpdateEmployeeViewModel(employee);
-
             var editWindow = new BookStore_Management_AppDesktop.Views.Windows.EditEmployeeWindow(editViewModel);
 
             if (Application.Current.MainWindow != null)
@@ -286,32 +263,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             var addWin = new BookStore_Management_AppDesktop.Views.Windows.AddEmployeeWindow();
             if (Application.Current.MainWindow != null) addWin.Owner = Application.Current.MainWindow;
             if (addWin.ShowDialog() == true) await InitializeDataAsync();
-        }
-
-        [RelayCommand]
-        private void OpenAvatarModal()
-        {
-            TempAvatarPath = CurrentAvatarPath;
-            var editWindow = new BookStore_Management_AppDesktop.Views.Windows.AvatarEditView(this);
-            if (Application.Current.MainWindow != null) editWindow.Owner = Application.Current.MainWindow;
-            editWindow.ShowDialog();
-        }
-
-        [RelayCommand]
-        private void SaveAvatarChange(Window window)
-        {
-            CurrentAvatarPath = TempAvatarPath;
-            window?.Close();
-        }
-
-        [RelayCommand]
-        private void SelectDefaultAvatar(string path) => TempAvatarPath = path;
-
-        [RelayCommand]
-        private void UploadFromComputer()
-        {
-            var openFileDialog = new OpenFileDialog { Filter = "Images|*.png;*.jpg;*.jpeg;*.webp" };
-            if (openFileDialog.ShowDialog() == true) TempAvatarPath = openFileDialog.FileName;
         }
 
         [RelayCommand]

@@ -6,6 +6,7 @@
     <SolidColorBrush x:Key="TextSecondBrush" Color="#AAAAAA" />
     <SolidColorBrush x:Key="ErrorPrimaryBrush" Color="#FF4C4C" />
     <SolidColorBrush x:Key="SuccessPrimaryBrush" Color="#00DC82" />
+    <SolidColorBrush x:Key="TextThirdBrush" Color="Black"/>
 
     <SolidColorBrush x:Key="NavyPrimaryBrush" Color="#0A2A47" />
     <SolidColorBrush x:Key="NavyLightBrush" Color="#15436F" />

@@ -116,5 +116,41 @@ namespace BookStore_Management_AppDesktop.Services.API
             }
         }
 
+        public async Task<int?> CreateInvoiceAsync(InvoiceCreateDto invoiceCreateDto)
+        {
+            try
+            {
+                AddAuthorizationHeader();
+
+                var response = await _httpClient.PostAsJsonAsync("invoice/checkout", invoiceCreateDto);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Debug.WriteLine($"CreateInvoice Error: HTTP {response.StatusCode}");
+                    return null;
+                }
+
+                var options = new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                var result = await response.Content.ReadFromJsonAsync<CreateInvoiceResponse>(options);
+                return result?.InvoiceId;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CreateInvoice Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        private class CreateInvoiceResponse
+        {
+            public bool Success { get; set; }
+            public string? Message { get; set; }
+            public int? InvoiceId { get; set; }
+        }
+
     }
 }
