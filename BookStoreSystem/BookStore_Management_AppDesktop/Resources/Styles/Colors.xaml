@@ -18,4 +18,9 @@
     <SolidColorBrush x:Key="ContentBackgroundBrush" Color="#F1F5F9" />
     <SolidColorBrush x:Key="CardBackgroundBrush" Color="White" />
 
+    <SolidColorBrush x:Key="BorderBrush" Color="#CBD5E1" />
+    <SolidColorBrush x:Key="TextBodyBrush" Color="#64748B" />
+    <SolidColorBrush x:Key="InputBackgroundBrush" Color="White" />
+    <SolidColorBrush x:Key="AccentBlueBrush" Color="#0EA5E9" />
+
 </ResourceDictionary>

@@ -20,12 +20,12 @@
                            Command="{Binding ContinueShoppingCommand}"
                            Style="{StaticResource SecondaryActionButtonStyle}"
                            Margin="0,0,15,0"
-                           Foreground="White"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <TextBlock Text="Your Shopping Cart" 
                            Style="{StaticResource HeaderTextStyle}" 
                            FontSize="24" 
                            FontWeight="Bold"
-                           Foreground="White"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
             </StackPanel>
         </Grid>
 
@@ -48,8 +48,8 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-                        <ui:SymbolIcon Symbol="Cart24" Filled="True" FontSize="64" Foreground="#94A3B8"/>
-                        <TextBlock Text="Your cart is currently empty" FontSize="16" Margin="0,15,0,10" Foreground="#64748B" HorizontalAlignment="Center"/>
+                        <ui:SymbolIcon Symbol="Cart24" Filled="True" FontSize="64" Foreground="{DynamicResource TextSecondBrush}"/>
+                        <TextBlock Text="Your cart is currently empty" FontSize="16" Margin="0,15,0,10" Foreground="{DynamicResource TextBodyBrush}" HorizontalAlignment="Center"/>
                         <ui:Button Content="Shop Now" Command="{Binding ContinueShoppingCommand}" Appearance="Primary" HorizontalAlignment="Center"/>
                     </StackPanel>
 
@@ -60,7 +60,7 @@
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="10,15">
+                                <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="10,15">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="80"/>
@@ -70,28 +70,28 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Border Grid.Column="0" CornerRadius="6" ClipToBounds="True" Height="90" Width="65" Background="#F8FAFC">
+                                        <Border Grid.Column="0" CornerRadius="6" ClipToBounds="True" Height="90" Width="65" Background="{DynamicResource CardBackgroundBrush}">
                                             <Image Source="{Binding ImagePath, TargetNullValue='https://via.placeholder.com/65x90?text=No+Image'}" Stretch="UniformToFill"/>
                                         </Border>
 
                                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0">
-                                            <TextBlock Text="{Binding Title}" FontSize="15" FontWeight="SemiBold" Foreground="#1E293B" TextTrimming="CharacterEllipsis" MaxHeight="45" Margin="0,0,0,5"/>
-                                            <TextBlock Text="{Binding AuthorName}" FontSize="13" Foreground="#64748B"/>
-                                            <TextBlock Text="{Binding Price, StringFormat='{}{0:#,0} đ'}" FontSize="13" Foreground="#0EA5E9" FontWeight="Medium" Margin="0,4,0,0"/>
+                                            <TextBlock Text="{Binding Title}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextOnCardBrush}" TextTrimming="CharacterEllipsis" MaxHeight="45" Margin="0,0,0,5"/>
+                                            <TextBlock Text="{Binding AuthorName}" FontSize="13" Foreground="{DynamicResource TextBodyBrush}"/>
+                                            <TextBlock Text="{Binding Price, StringFormat='{}{0:#,0} đ'}" FontSize="13" Foreground="{DynamicResource AccentBlueBrush}" FontWeight="Medium" Margin="0,4,0,0"/>
                                         </StackPanel>
 
                                         <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                                             <ui:Button Icon="{ui:SymbolIcon Subtract24}" Command="{Binding DataContext.DecreaseQuantityCommand, RelativeSource={RelativeSource AncestorType=Page}}" CommandParameter="{Binding}" Padding="6" CornerRadius="4"/>
-                                            <TextBlock Text="{Binding Quantity}" Width="40" TextAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="SemiBold" Foreground="#1E293B"/>
+                                            <TextBlock Text="{Binding Quantity}" Width="40" TextAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextOnCardBrush}"/>
                                             <ui:Button Icon="{ui:SymbolIcon Add24}" Command="{Binding DataContext.IncreaseQuantityCommand, RelativeSource={RelativeSource AncestorType=Page}}" CommandParameter="{Binding}" Padding="6" CornerRadius="4"/>
                                         </StackPanel>
 
-                                        <TextBlock Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="#1E293B">
+                                        <TextBlock Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextOnCardBrush}">
                                             <Run Text="{Binding TotalLinePrice, Mode=OneWay, StringFormat='{}{0:#,0}'}"/>
-                                            <Run Text=" đ" FontSize="12" FontWeight="Normal" Foreground="#64748B"/>
+                                            <Run Text=" đ" FontSize="12" FontWeight="Normal" Foreground="{DynamicResource TextBodyBrush}"/>
                                         </TextBlock>
 
-                                        <ui:Button Grid.Column="4" Icon="{ui:SymbolIcon Delete24}" Command="{Binding DataContext.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=Page}}" CommandParameter="{Binding}" Appearance="Transparent" MouseOverBorderBrush="Red" Foreground="#94A3B8" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                        <ui:Button Grid.Column="4" Icon="{ui:SymbolIcon Delete24}" Command="{Binding DataContext.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=Page}}" CommandParameter="{Binding}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}" Margin="10,0,0,0" VerticalAlignment="Center"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
@@ -103,30 +103,30 @@
             <StackPanel Grid.Column="1">
                 <Border Background="{DynamicResource ContentBackgroundBrush}" CornerRadius="12" Padding="20" VerticalAlignment="Top">
                     <StackPanel>
-                        <TextBlock Text="Order Summary" FontSize="18" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,20"/>
+                        <TextBlock Text="Order Summary" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextOnCardBrush}" Margin="0,0,0,20"/>
                         <Grid Margin="0,0,0,12">
-                            <TextBlock Text="Subtotal" Foreground="#64748B" FontSize="14"/>
-                            <TextBlock HorizontalAlignment="Right" FontSize="14" FontWeight="Medium" Foreground="#1E293B">
+                            <TextBlock Text="Subtotal" Foreground="{DynamicResource TextBodyBrush}" FontSize="14"/>
+                            <TextBlock HorizontalAlignment="Right" FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextOnCardBrush}">
                                 <Run Text="{Binding TotalPrice, Mode=OneWay, StringFormat='{}{0:#,0}'}"/> 
-                                <Run Text="đ" Foreground="#64748B" FontSize="12"/>
+                                <Run Text="đ" Foreground="{DynamicResource TextBodyBrush}" FontSize="12"/>
                             </TextBlock>
                         </Grid>
                         <Grid Margin="0,0,0,15">
-                            <TextBlock Text="Discount" Foreground="#64748B" FontSize="14"/>
-                            <TextBlock HorizontalAlignment="Right" FontSize="14" Foreground="#22C55E" FontWeight="Medium">
+                            <TextBlock Text="Discount" Foreground="{DynamicResource TextBodyBrush}" FontSize="14"/>
+                            <TextBlock HorizontalAlignment="Right" FontSize="14" Foreground="{DynamicResource SuccessPrimaryBrush}" FontWeight="Medium">
                                 <Run Text="-"/>
                                 <Run Text="{Binding DiscountAmount, Mode=OneWay, StringFormat='{}{0:#,0}'}"/>
-                                <Run Text=" đ" Foreground="#64748B" FontSize="12"/>
+                                <Run Text=" đ" Foreground="{DynamicResource TextBodyBrush}" FontSize="12"/>
                             </TextBlock>
                         </Grid>
-                        <Separator Background="#E2E8F0" Margin="0,5,0,15"/>
+                        <Separator Background="{DynamicResource BorderBrush}" Margin="0,5,0,15"/>
                         <Grid Margin="0,0,0,25">
-                            <TextBlock Text="Total Amount" FontSize="16" FontWeight="SemiBold" Foreground="#1E293B" VerticalAlignment="Center"/>
+                            <TextBlock Text="Total Amount" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextOnCardBrush}" VerticalAlignment="Center"/>
                             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
-                                <TextBlock FontSize="20" FontWeight="Black" Foreground="#0EA5E9">
+                                <TextBlock FontSize="20" FontWeight="Black" Foreground="{DynamicResource AccentBlueBrush}">
                                     <Run Text="{Binding FinalTotal, Mode=OneWay, StringFormat='{}{0:#,0}'}"/>
                                 </TextBlock>
-                                <TextBlock FontSize="14" FontWeight="Medium" Foreground="#0EA5E9" Margin="5,0,0,0" VerticalAlignment="Bottom"> đ</TextBlock>
+                                <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource AccentBlueBrush}" Margin="5,0,0,0" VerticalAlignment="Bottom"> đ</TextBlock>
                             </StackPanel>
                         </Grid>
                         <ui:Button Content="CHECKOUT" Command="{Binding CheckoutCommand}" Appearance="Primary" Icon="{ui:SymbolIcon Cart24}" FontSize="15" FontWeight="Bold" Padding="15" Height="50" HorizontalAlignment="Stretch"/>
@@ -142,55 +142,23 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Border Height="38" Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6">
+                            <Border Height="38" Background="{DynamicResource InputBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6">
                                 <ComboBox ItemsSource="{Binding Customers}" 
-                                      SelectedValue="{Binding SelectedCustomerId, Mode=TwoWay}" 
-                                      DisplayMemberPath="Name" 
-                                      SelectedValuePath="CustomerId" 
-                                      Background="Transparent" BorderThickness="0" 
-                                      VerticalContentAlignment="Center" Margin="5,0,0,0"/>      
+                                          SelectedValue="{Binding SelectedCustomerId, Mode=TwoWay}" 
+                                          DisplayMemberPath="Name" 
+                                          SelectedValuePath="CustomerId" 
+                                          Background="Transparent" BorderThickness="0" 
+                                          VerticalContentAlignment="Center" Margin="5,0,0,0"/>
                             </Border>
 
-                            <ui:Button Grid.Column="1" 
-                               Icon="{ui:SymbolIcon Add24}" 
-                               Command="{Binding OpenAddCustomerDialogCommand}" 
-                               Margin="10,0,0,0" 
-                               Appearance="Secondary"/>
+                            <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Add24}" Command="{Binding OpenAddCustomerDialogCommand}" Margin="10,0,0,0" Appearance="Secondary"/>
                         </Grid>
 
                         <TextBlock Text="Voucher Code" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextOnCardBrush}" Margin="0,0,0,5"/>
-                        <Border Height="38" 
-                                Background="White" 
-                                BorderBrush="#CBD5E1" 
-                                BorderThickness="1" 
-                                CornerRadius="6" 
-                                Margin="0,0,0,10">
-
-                            <ui:TextBox Text="{Binding VoucherCodeInput, Mode=TwoWay}" 
-                                Background="Transparent" 
-                                BorderThickness="0"
-                                VerticalAlignment="Center" 
-                                VerticalContentAlignment="Center"
-                                Padding="10,0,0,0"
-                                Foreground="#1E293B">
-                                <ui:TextBox.Style>
-                                    <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
-                                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsFocused" Value="True">
-                                                <Setter Property="Background" Value="Transparent"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ui:TextBox.Style>
-                            </ui:TextBox>
+                        <Border Height="38" Background="{DynamicResource InputBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6" Margin="0,0,0,10">
+                            <ui:TextBox Text="{Binding VoucherCodeInput, Mode=TwoWay}" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" VerticalContentAlignment="Center" Padding="10,0,0,0" Foreground="{DynamicResource TextOnCardBrush}"/>
                         </Border>
-                        <ui:Button Content="APPLY VOUCHER" 
-                                   Command="{Binding ApplyVoucherCommand}" 
-                                   Appearance="Primary" 
-                                   Margin="0,0,0,15" 
-                                   HorizontalAlignment="Stretch" 
-                                   FontWeight="Bold"/>
+                        <ui:Button Content="APPLY VOUCHER" Command="{Binding ApplyVoucherCommand}" Appearance="Primary" Margin="0,0,0,15" HorizontalAlignment="Stretch" FontWeight="Bold"/>
                     </StackPanel>
                 </Border>
             </StackPanel>

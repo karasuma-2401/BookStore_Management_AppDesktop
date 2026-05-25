@@ -58,7 +58,7 @@
                         <StackPanel Orientation="Horizontal">
                             <ui:SymbolIcon Symbol="TicketHorizontal24" Foreground="{DynamicResource NavyPrimaryBrush}" Margin="0,0,6,0"/>
                             <TextBlock Text="{Binding Invoice.VoucherCode, StringFormat='Voucher: {0}'}" 
-                                       Foreground="{DynamicResource NavyPrimaryBrush}" 
+                                       Foreground="{DynamicResource SuccessPrimaryBrush}" 
                                        FontWeight="Black" 
                                        FontSize="13"/>
                         </StackPanel>
