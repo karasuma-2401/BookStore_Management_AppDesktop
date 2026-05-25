@@ -223,40 +223,33 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [RelayCommand]
         private async Task CancelInvoice(InvoiceListDto invoice)
         {
-            if (invoice == null) return;
+            if (invoice == null || invoice.Status == "Canceled") return;
 
-            // Display confirmation dialog prior to execution
             var result = MessageBox.Show($"Are you sure you want to cancel invoice #{invoice.InvoiceId}?",
-                                         "Confirm Cancellation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                                         "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
                 try
                 {
                     IsLoading = true;
-
-                    // Execute request against backend service endpoint
                     bool isCanceled = await _apiService.CancelInvoiceAsync(invoice.InvoiceId);
 
                     if (isCanceled)
                     {
-                        MessageBox.Show("Invoice canceled successfully! Inventory stock levels have been restored.",
-                                        "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                        // Cập nhật ngay trên UI mà không cần tải lại toàn bộ danh sách
+                        invoice.Status = "Canceled";
 
-                        // Reload data records from server database to dynamically update state on the UI grid
-                        await InitializeDataAsync();
+                        MessageBox.Show("Invoice canceled successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
-                        MessageBox.Show("Failed to cancel invoice. It may not exist or has already been canceled.",
-                                        "Notification", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Failed to cancel invoice.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"CancelInvoice ViewModel Error: {ex.Message}");
-                    MessageBox.Show("A system error occurred while attempting to cancel the invoice.",
-                                    "System Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine($"Error: {ex.Message}");
                 }
                 finally
                 {

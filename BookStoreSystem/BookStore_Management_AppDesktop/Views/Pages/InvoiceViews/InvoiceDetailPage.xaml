@@ -147,6 +147,7 @@
                                                         Text="{Binding Quantity, Mode=TwoWay}"
                                                         Background="{DynamicResource CardBackgroundBrush}"
                                                         BorderThickness="1"
+                                                        IsReadOnly="True"
                                                         BorderBrush="{DynamicResource BorderLightBrush}"/>
                                         </StackPanel>
 
