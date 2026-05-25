@@ -1,6 +1,7 @@
 ﻿using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Models;
-using BookStore_Management_AppDesktop.Services;
+using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs;
+using BookStore_Management_AppDesktop.Services.API.CartServices;
 using BookStore_Management_AppDesktop.Services.API.BookServices; 
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.ViewModels.Base;
@@ -96,7 +97,17 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (CurrentBook != null && SelectedQuantity > 0)
             {
-                _cartService.AddToCart(CurrentBook, SelectedQuantity);
+                // Convert Book to BookResponseDto for cart service
+                var bookDto = new BookResponseDto
+                {
+                    BookId = CurrentBook.BookId,
+                    Title = CurrentBook.Title,
+                    Price = CurrentBook.Price,
+                    ImagePath = CurrentBook.ImagePath,
+                    Quantity = CurrentBook.Quantity
+                };
+
+                _cartService.AddToCart(bookDto, SelectedQuantity);
                 MessageBox.Show($"Added {SelectedQuantity} copy(ies) of '{CurrentBook.Title}' to cart!", 
                     "Added to Cart", MessageBoxButton.OK, MessageBoxImage.Information);
                 SelectedQuantity = 1; // Reset quantity

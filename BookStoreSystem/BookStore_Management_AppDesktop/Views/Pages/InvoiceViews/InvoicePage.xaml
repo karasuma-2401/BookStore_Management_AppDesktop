@@ -253,8 +253,7 @@
                                                 <Separator Background="#333333" Margin="5,2" Height="1"/>
 
                                                 <!-- Nút Delete / Cancel Invoice -->
-                                                <MenuItem Header="Delete" 
-                                                      Height="30"
+                                                <MenuItem Header="Cancel" 
                                                       Padding="5,0,10,0"
                                                       Style="{StaticResource ActionMenuItemStyle}"
                                                       Command="{Binding DataContext.CancelInvoiceCommand, RelativeSource={RelativeSource AncestorType=Page}}"

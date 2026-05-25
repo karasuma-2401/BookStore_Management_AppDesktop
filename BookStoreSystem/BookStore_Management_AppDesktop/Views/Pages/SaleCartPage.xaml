@@ -107,54 +107,90 @@
                         <Grid Margin="0,0,0,12">
                             <TextBlock Text="Subtotal" Foreground="#64748B" FontSize="14"/>
                             <TextBlock HorizontalAlignment="Right" FontSize="14" FontWeight="Medium" Foreground="#1E293B">
-                                <Run Text="{Binding TotalPrice, Mode=OneWay, StringFormat='{}{0:#,0}'}"/> đ
+                                <Run Text="{Binding TotalPrice, Mode=OneWay, StringFormat='{}{0:#,0}'}"/> 
+                                <Run Text="đ" Foreground="#64748B" FontSize="12"/>
                             </TextBlock>
                         </Grid>
                         <Grid Margin="0,0,0,15">
                             <TextBlock Text="Discount" Foreground="#64748B" FontSize="14"/>
-                            <TextBlock HorizontalAlignment="Right" Text="0 đ" Foreground="Green" FontSize="14"/>
+                            <TextBlock HorizontalAlignment="Right" FontSize="14" Foreground="#22C55E" FontWeight="Medium">
+                                <Run Text="-"/>
+                                <Run Text="{Binding DiscountAmount, Mode=OneWay, StringFormat='{}{0:#,0}'}"/>
+                                <Run Text=" đ" Foreground="#64748B" FontSize="12"/>
+                            </TextBlock>
                         </Grid>
                         <Separator Background="#E2E8F0" Margin="0,5,0,15"/>
                         <Grid Margin="0,0,0,25">
                             <TextBlock Text="Total Amount" FontSize="16" FontWeight="SemiBold" Foreground="#1E293B" VerticalAlignment="Center"/>
-                            <TextBlock HorizontalAlignment="Right" FontSize="20" FontWeight="Black" Foreground="#0EA5E9">
-                                <Run Text="{Binding TotalPrice, Mode=OneWay, StringFormat='{}{0:#,0}'}"/>
-                                <Run Text=" đ" FontSize="14" FontWeight="Medium"/>
-                            </TextBlock>
+                            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+                                <TextBlock FontSize="20" FontWeight="Black" Foreground="#0EA5E9">
+                                    <Run Text="{Binding FinalTotal, Mode=OneWay, StringFormat='{}{0:#,0}'}"/>
+                                </TextBlock>
+                                <TextBlock FontSize="14" FontWeight="Medium" Foreground="#0EA5E9" Margin="5,0,0,0" VerticalAlignment="Bottom"> đ</TextBlock>
+                            </StackPanel>
                         </Grid>
-                        <ui:Button Content="CREATE INVOICE" Command="{Binding CreateInvoiceCommand}" Appearance="Primary" Icon="{ui:SymbolIcon Receipt24}" FontSize="15" FontWeight="Bold" Padding="15" Height="50" HorizontalAlignment="Stretch"/>
+                        <ui:Button Content="CHECKOUT" Command="{Binding CheckoutCommand}" Appearance="Primary" Icon="{ui:SymbolIcon Cart24}" FontSize="15" FontWeight="Bold" Padding="15" Height="50" HorizontalAlignment="Stretch"/>
                     </StackPanel>
                 </Border>
 
                 <Border Background="{DynamicResource ContentBackgroundBrush}" CornerRadius="12" Padding="20" Margin="0,15,0,0">
                     <StackPanel>
-                        <TextBlock Text="Customer" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextOnCardBrush}" Margin="0,0,0,5"/>
-                        <Border Height="38" Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Margin="0,0,0,15">
-                            <ComboBox SelectedValue="{Binding SelectedCustomerId, Mode=TwoWay}" DisplayMemberPath="CustomerName" SelectedValuePath="CustomerId" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Margin="5,0,0,0"/>
-                        </Border>
+                        <TextBlock Text="Customer" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Height="38" Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6">
+                                <ComboBox ItemsSource="{Binding Customers}" 
+                                      SelectedValue="{Binding SelectedCustomerId, Mode=TwoWay}" 
+                                      DisplayMemberPath="Name" 
+                                      SelectedValuePath="CustomerId" 
+                                      Background="Transparent" BorderThickness="0" 
+                                      VerticalContentAlignment="Center" Margin="5,0,0,0"/>      
+                            </Border>
+
+                            <ui:Button Grid.Column="1" 
+                               Icon="{ui:SymbolIcon Add24}" 
+                               Command="{Binding OpenAddCustomerDialogCommand}" 
+                               Margin="10,0,0,0" 
+                               Appearance="Secondary"/>
+                        </Grid>
 
                         <TextBlock Text="Voucher Code" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextOnCardBrush}" Margin="0,0,0,5"/>
-                        <Border Height="38" Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6">
-                            <Grid>
-                                <TextBlock Text="Enter discount code..." Foreground="{DynamicResource TextSecondBrush}" VerticalAlignment="Center" Margin="10,0,0,0" IsHitTestVisible="False">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding VoucherCodeInput}" Value="">
-                                                    <Setter Property="Visibility" Value="Visible"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding VoucherCodeInput}" Value="{x:Null}">
-                                                    <Setter Property="Visibility" Value="Visible"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-                                <ui:TextBox Text="{Binding VoucherCodeInput, Mode=TwoWay}" Background="Transparent" BorderThickness="0"/>
-                            </Grid>
+                        <Border Height="38" 
+                                Background="White" 
+                                BorderBrush="#CBD5E1" 
+                                BorderThickness="1" 
+                                CornerRadius="6" 
+                                Margin="0,0,0,10">
+
+                            <ui:TextBox Text="{Binding VoucherCodeInput, Mode=TwoWay}" 
+                                Background="Transparent" 
+                                BorderThickness="0"
+                                VerticalAlignment="Center" 
+                                VerticalContentAlignment="Center"
+                                Padding="10,0,0,0"
+                                Foreground="#1E293B">
+                                <ui:TextBox.Style>
+                                    <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+                                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsFocused" Value="True">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ui:TextBox.Style>
+                            </ui:TextBox>
                         </Border>
-                        <ui:Button Content="Continue Shopping" Command="{Binding ContinueShoppingCommand}" Appearance="Secondary" Margin="0,15,0,0" HorizontalAlignment="Stretch"/>
+                        <ui:Button Content="APPLY VOUCHER" 
+                                   Command="{Binding ApplyVoucherCommand}" 
+                                   Appearance="Primary" 
+                                   Margin="0,0,0,15" 
+                                   HorizontalAlignment="Stretch" 
+                                   FontWeight="Bold"/>
                     </StackPanel>
                 </Border>
             </StackPanel>

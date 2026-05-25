@@ -23,6 +23,12 @@ namespace BookStore_Management_AppDesktop.Views.Pages
             };
 
             this.DataContext = viewModel;
+
+            // Initialize async data
+            Loaded += async (s, e) =>
+            {
+                await viewModel.InitializeAsync();
+            };
         }
     }
 }

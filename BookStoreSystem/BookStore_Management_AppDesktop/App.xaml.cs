@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Windows;
+using BookStore_Management_AppDesktop.Services.API.CartServices;
 
 namespace BookStore_Management_AppDesktop
 {
@@ -70,6 +71,7 @@ namespace BookStore_Management_AppDesktop
 
             services.AddSingleton<IInvoiceApiService, InvoiceApiService>();
             services.AddSingleton<IInvoiceExportService, InvoiceExportService>(); // Đăng ký service mới vào DI container
+            services.AddSingleton<IVoucherApiService, VoucherApiService>();
 
             // // Get ViewModels
             services.AddTransient<MainViewModel>();

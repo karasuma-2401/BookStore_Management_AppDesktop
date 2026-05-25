@@ -1,4 +1,5 @@
 ﻿using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Models.DTOs.CustomerDTOs;
 
 namespace BookStore_Management_AppDesktop.Services
 {
@@ -11,5 +12,7 @@ namespace BookStore_Management_AppDesktop.Services
         void ShowAddBookWindow();
 
         void ShowEditBookWindow(Book bookToEdit);
+
+        CustomerResponseDto? ShowAddCustomerWindow();
     }
 }

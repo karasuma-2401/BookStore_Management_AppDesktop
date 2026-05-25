@@ -25,6 +25,8 @@ namespace BookStore_Management_AppDesktop.Services.API.CartServices
 
         // Tính tổng số lượng tất cả các cuốn sách có trong giỏ hàng
         public int ItemCount => _cartItems.Sum(item => item.Quantity);
+        public decimal TotalPrice => _cartItems.Sum(item => item.Quantity * item.Price);
+
 
         // Hàm helper kích hoạt thông báo thay đổi lên UI
         protected void OnPropertyChanged(string propertyName)
@@ -99,6 +101,31 @@ namespace BookStore_Management_AppDesktop.Services.API.CartServices
 
             var response = await _httpClient.PostAsJsonAsync("invoice/checkout", checkoutDto);
             return response.IsSuccessStatusCode;
+        }
+
+        public void UpdateQuantity(int bookId, int newQuantity)
+        {
+            // Tìm cuốn sách trong giỏ hàng theo ID
+            var item = _cartItems.FirstOrDefault(i => i.BookId == bookId);
+
+            if (item != null)
+            {
+                // Cập nhật số lượng
+                item.Quantity = newQuantity;
+
+                // Nếu số lượng <= 0 thì xóa luôn khỏi giỏ
+                if (item.Quantity <= 0)
+                {
+                    RemoveFromCart(bookId);
+                }
+                else
+                {
+                    // BẮT BUỘC: Thông báo UI cập nhật lại danh sách 
+                    // (Đặc biệt quan trọng nếu bạn có binding TotalPrice)
+                    OnPropertyChanged(nameof(ItemCount));
+                    OnPropertyChanged(nameof(TotalPrice)); // Nếu bạn đã khai báo property này
+                }
+            }
         }
     }
 }
