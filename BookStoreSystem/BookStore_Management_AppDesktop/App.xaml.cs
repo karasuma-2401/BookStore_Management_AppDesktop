@@ -4,18 +4,21 @@ using BookStore_Management_AppDesktop.Services.API.BookServices;
 using BookStore_Management_AppDesktop.Services.API.EmployeeServices;
 using BookStore_Management_AppDesktop.Services.API.ReportServices;
 using BookStore_Management_AppDesktop.Services.API.Import;
+using BookStore_Management_AppDesktop.Services.API.InvoiceServices;
 using BookStore_Management_AppDesktop.Services.API.CustomerServices;
 using BookStore_Management_AppDesktop.Services.Export;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.ViewModels;
 using BookStore_Management_AppDesktop.Views.Pages;
 using BookStore_Management_AppDesktop.Views.Pages.BookViews; 
+using BookStore_Management_AppDesktop.Views.Pages.InvoiceViews;
 using BookStore_Management_AppDesktop.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Windows;
+using BookStore_Management_AppDesktop.Services.API.CartServices;
 
 namespace BookStore_Management_AppDesktop
 {
@@ -54,8 +57,9 @@ namespace BookStore_Management_AppDesktop
             services.AddHttpClient<IAuthService, AuthService>();
             services.AddSingleton<CloudinaryService>();
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<ICartService, CartService>();
 
-            services.AddSingleton<IBookApiService, BookApiService>(); 
+            services.AddSingleton<IBookApiService, BookApiService>();
             services.AddSingleton<IAuthorApiService, AuthorApiService>();
             services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
             services.AddSingleton<IImportApiService, ImportApiService>();
@@ -65,6 +69,9 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<IReportApiService, ReportApiService>();
             services.AddSingleton<IExportService, ExportService>();
 
+            services.AddSingleton<IInvoiceApiService, InvoiceApiService>();
+            services.AddSingleton<IInvoiceExportService, InvoiceExportService>(); // Đăng ký service mới vào DI container
+            services.AddSingleton<IVoucherApiService, VoucherApiService>();
 
             // // Get ViewModels
             services.AddTransient<MainViewModel>();
@@ -79,7 +86,10 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<CustomerViewModel>();
             services.AddTransient<ImportCreateViewModel>(); 
             services.AddTransient<ImportHistoryViewModel>();
+            services.AddTransient<InvoiceViewModel>();
+            services.AddTransient<InvoiceDetailViewModel>();
             services.AddTransient<ReportViewModel>();
+            services.AddTransient<SaleCartViewModel>();
 
 
             // // Get View 
@@ -88,6 +98,8 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<AddBookWindow>(); 
             services.AddTransient<EditBookWindow>();
             services.AddTransient<BookPage>();
+            services.AddTransient<SaleCartPage>();
+            services.AddTransient<SaleCartViewModel>();
             services.AddTransient<InventoryPage>();
             services.AddTransient<SettingsPage>();
             services.AddTransient<BookDetailPage>();
@@ -95,6 +107,8 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<CustomerPage>();
             services.AddTransient<ImportHistoryPage>(); 
             services.AddTransient<CreateImportPage>(); 
+            services.AddTransient<InvoicePage>();
+            services.AddTransient<InvoiceDetailPage>();
             services.AddTransient<ReportPage>();
         }
     }

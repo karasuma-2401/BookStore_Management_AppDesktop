@@ -1,28 +1,28 @@
-﻿using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
+﻿    using System.Globalization;
+    using System.Windows;
+    using System.Windows.Data;
 
-namespace BookStore_Management_AppDesktop.Converters
-{
-    public class BooleanToVisibilityConverter : IValueConverter
+    namespace BookStore_Management_AppDesktop.Converters
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public class BooleanToVisibilityConverter : IValueConverter
         {
-            if (value is bool isVibible && isVibible)
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
             {
-                return Visibility.Visible;
+                if (value is bool isVibible && isVibible)
+                {
+                    return Visibility.Visible;
+                }
+
+                return Visibility.Collapsed;
             }
 
-            return Visibility.Collapsed;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is Visibility visibility && visibility  == Visibility.Visible)
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             {
-                return true;    
+                if (value is Visibility visibility && visibility  == Visibility.Visible)
+                {
+                    return true;    
+                }
+                return false;
             }
-            return false;
         }
     }
-}

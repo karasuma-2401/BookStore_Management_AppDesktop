@@ -1,4 +1,5 @@
 ﻿using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Models.DTOs.CustomerDTOs;
 using BookStore_Management_AppDesktop.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -39,6 +40,18 @@ namespace BookStore_Management_AppDesktop.Services
         {
             var editWindow = new EditBookWindow(bookToEdit);
             editWindow.ShowDialog();
+        }
+
+        public CustomerResponseDto? ShowAddCustomerWindow() // Trả về ResponseDto thay vì CreateDto
+        {
+            var window = _serviceProvider.GetRequiredService<AddCustomerWindow>();
+
+            if (window.ShowDialog() == true)
+            {
+                // Bạn cần thêm thuộc tính CustomerResult vào AddCustomerWindow
+                return window.CustomerResult;
+            }
+            return null;
         }
     }
 }

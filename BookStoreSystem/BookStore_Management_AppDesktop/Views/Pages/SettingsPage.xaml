@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d" 
-      d:DesignHeight="700" d:DesignWidth="1000"
+      d:DesignHeight="800" d:DesignWidth="1000"
       Title="SettingsPage"
       Background="{DynamicResource ContentBackgroundBrush}">
 
@@ -16,45 +16,97 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
-            <TextBlock Text="SYSTEM SETUP" Style="{StaticResource HeaderTextStyle}" />
+            <TextBlock Text="SYSTEM SETUP" Style="{StaticResource HeaderTextStyle}" Foreground="{DynamicResource TextPrimaryBrush}"/>
         </Border>
 
-        <StackPanel Grid.Row="1" Margin="30">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="30">
+                <TextBlock Text="Data and Sync" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" Foreground="{DynamicResource TextOnCardBrush}"/>
+                <ui:CardAction Command="{Binding RefreshDataCommand}" Margin="0,0,0,30" Padding="20">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ArrowSync24" FontSize="32" Foreground="{DynamicResource NavyAccentBrush}" Margin="0,0,20,0"/>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Reload data (Refresh Data)" Foreground="{DynamicResource TextOnCardBrush}"/>
+                            <TextBlock Text="Synchronize the latest data from the server." Foreground="{DynamicResource TextBodyBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ui:CardAction>
 
-            <TextBlock Text="Data and Sync" 
-                       FontSize="{StaticResource FontSizeSubTitle}" 
-                       FontWeight="Bold" 
-                       Margin="0,0,0,10"
-                       Foreground="{DynamicResource TextMutedBrush}"/>
-
-            <ui:CardAction Command="{Binding RefreshDataCommand}" 
-                           Margin="0,0,0,15"
-                           Padding="20"
-                           Background="{DynamicResource CardBackgroundBrush}"
-                           Cursor="Hand">
-
+                <TextBlock Text="Voucher Management" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" Foreground="{DynamicResource TextOnCardBrush}"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="380"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <ui:SymbolIcon Symbol="ArrowSync24" 
-                                   FontSize="32" 
-                                   Foreground="{DynamicResource NavyAccentBrush}" 
-                                   Margin="0,0,20,0"/>
+                    <ui:Card Grid.Column="0" Margin="0,0,20,0" Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="Create New Voucher" FontSize="14" FontWeight="Bold" Margin="0,0,0,15" Foreground="{DynamicResource TextOnCardBrush}"/>
 
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="Reload data (Refresh Data)" 
-                                   Style="{StaticResource BookTitleTextStyle}" />
+                            <TextBlock Text="Code" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextBodyBrush}" Margin="0,0,0,5"/>
+                            <Border Height="40" Background="{DynamicResource InputBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6" Margin="0,0,0,15">
+                                <ui:TextBox Text="{Binding NewVoucherCode}" PlaceholderText="e.g. SUMMER2026" BorderThickness="0" Background="Transparent"/>
+                            </Border>
 
-                        <TextBlock Text="Synchronize the latest data from the server. Use when you suspect data is skewed." 
-                                   Style="{StaticResource BodyTextStyle}" 
-                                   Margin="0,5,0,0" />
-                    </StackPanel>
+                            <Grid Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                                    <TextBlock Text="Discount (%)" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextBodyBrush}" Margin="0,0,0,5"/>
+                                    <Border Height="40" Background="{DynamicResource InputBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6">
+                                        <ui:TextBox Text="{Binding NewVoucherDiscountPercent}" PlaceholderText="0" BorderThickness="0" Background="Transparent"/>
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                    <TextBlock Text="Discount (đ)" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextBodyBrush}" Margin="0,0,0,5"/>
+                                    <Border Height="40" Background="{DynamicResource InputBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6">
+                                        <ui:TextBox Text="{Binding NewVoucherDiscountAmount}" PlaceholderText="0" BorderThickness="0" Background="Transparent"/>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock Text="Expiry Date" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextBodyBrush}" Margin="0,0,0,5"/>
+                            <Border Height="40" Background="{DynamicResource InputBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6" Margin="0,0,0,20">
+                                <ui:TextBox Text="{Binding NewVoucherExpiryDate, StringFormat='yyyy-MM-dd'}" BorderThickness="0" Background="Transparent"/>
+                            </Border>
+
+                            <TextBlock Text="Usage Limit" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextBodyBrush}" Margin="0,0,0,5"/>
+                            <Border Height="40" Background="{DynamicResource InputBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6" Margin="0,0,0,20">
+                                <ui:TextBox Text="{Binding NewVoucherUsageLimit}" PlaceholderText="e.g. 100" BorderThickness="0" Background="Transparent"/>
+                            </Border>
+
+                            <ui:Button Content="CREATE VOUCHER" Command="{Binding CreateVoucherCommand}" Appearance="Primary" HorizontalAlignment="Stretch" Height="40"/>
+                        </StackPanel>
+                    </ui:Card>
+
+                    <ui:Card Grid.Column="1" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="Active Vouchers" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="{DynamicResource TextOnCardBrush}"/>
+                            <ItemsControl ItemsSource="{Binding Vouchers}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="0,0,0,8" Padding="12" CornerRadius="8" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Code}" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource TextOnCardBrush}" Margin="0,0,0,4"/>
+                                                    <TextBlock Text="{Binding ExpiryDate, StringFormat='Expires: {0:yyyy-MM-dd}'}" FontSize="11" Foreground="{DynamicResource TextBodyBrush}"/>
+                                                </StackPanel>
+                                                <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Delete24}" Command="{Binding DataContext.DeleteVoucherCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" Appearance="Transparent" Foreground="{DynamicResource TextSecondBrush}"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ui:Card>
                 </Grid>
-            </ui:CardAction>
-
-        </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>

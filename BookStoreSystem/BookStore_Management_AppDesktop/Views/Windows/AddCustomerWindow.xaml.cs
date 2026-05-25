@@ -10,6 +10,7 @@ namespace BookStore_Management_AppDesktop.Views.Windows
     {
         private readonly ICustomerApiService _customerApiService;
         private readonly IDialogService _dialogService;
+        public CustomerResponseDto? CustomerResult { get; private set; }
 
         public AddCustomerWindow()
         {
@@ -40,6 +41,7 @@ namespace BookStore_Management_AppDesktop.Views.Windows
                 if (result != null)
                 {
                     _dialogService.ShowMessage($"Customer {result.Name} added successfully!");
+                    CustomerResult = result; // Gán k?t qu? vào ?ây
                     this.DialogResult = true;
                     this.Close();
                 }

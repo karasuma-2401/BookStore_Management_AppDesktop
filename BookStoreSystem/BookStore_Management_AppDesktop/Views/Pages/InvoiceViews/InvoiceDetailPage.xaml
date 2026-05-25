@@ -1,0 +1,180 @@
+﻿<Page x:Class="BookStore_Management_AppDesktop.Views.Pages.InvoiceViews.InvoiceDetailPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d" 
+      d:DesignHeight="750" d:DesignWidth="1100"
+      Title="InvoiceDetailPage"
+      Background="{DynamicResource ContentBackgroundBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <ui:Button Grid.Column="0" 
+                           Icon="{ui:SymbolIcon ChevronLeft24}" 
+                           Appearance="Transparent" 
+                           Foreground="{DynamicResource TextPrimaryBrush}"
+                           Command="{Binding BackToListCommand}"
+                           Margin="0,0,15,0" 
+                           Cursor="Hand"/>
+
+                <TextBlock Grid.Column="1" 
+                           Text="Invoice Details" 
+                           FontSize="22"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Invoice.VoucherCode}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Invoice.VoucherCode}" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+
+                    <Border Background="{DynamicResource ActionPrimaryBrush}" CornerRadius="6" Padding="10,5">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="TicketHorizontal24" Foreground="{DynamicResource NavyPrimaryBrush}" Margin="0,0,6,0"/>
+                            <TextBlock Text="{Binding Invoice.VoucherCode, StringFormat='Voucher: {0}'}" 
+                                       Foreground="{DynamicResource SuccessPrimaryBrush}" 
+                                       FontWeight="Black" 
+                                       FontSize="13"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <ui:Button Grid.Column="4"
+                   Icon="{ui:SymbolIcon Print24}"
+                   Content="Export Invoice"
+                   Appearance="Primary"
+                   Command="{Binding ExportInvoiceCommand}"
+                   VerticalAlignment="Center"
+                   Margin="30,0,0,0"
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextThirdBrush}"
+                   Cursor="Hand"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="25,20">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+                    <TextBlock Text="Purchased Items" 
+                               FontSize="18" 
+                               FontWeight="Bold" 
+                               Foreground="{DynamicResource NavyPrimaryBrush}" 
+                               Margin="10,0,0,15"/>
+
+                    <ItemsControl ItemsSource="{Binding Invoice.Items}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Width="336" 
+                                        Background="{DynamicResource CardBackgroundBrush}" 
+                                        Margin="10" 
+                                        Padding="22" 
+                                        CornerRadius="8" 
+                                        BorderThickness="1" 
+                                        BorderBrush="{DynamicResource BorderLightBrush}">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="12" ShadowDepth="1" Opacity="0.06" Color="#000000"/>
+                                    </Border.Effect>
+
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <ui:TextBlock Grid.Row="0" 
+                                                      Text="Book Information" 
+                                                      FontSize="16" 
+                                                      FontWeight="Bold" 
+                                                      Foreground="{DynamicResource NavyPrimaryBrush}" 
+                                                      Margin="0,0,0,15"/>
+
+                                        <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                                            <ui:TextBlock Text="Invoice ID" Style="{DynamicResource FormLabelStyle}" Margin="0,0,0,6"/>
+                                            <ui:TextBox Style="{DynamicResource RoundedTextBoxInnerStyle}"
+                                                        Text="{Binding DataContext.Invoice.InvoiceId, RelativeSource={RelativeSource AncestorType=Page}, Mode=OneWay}" 
+                                                        IsReadOnly="True" 
+                                                        Background="{DynamicResource ContentBackgroundBrush}"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Row="2" Margin="0,0,0,10">
+                                            <ui:TextBlock Text="Book Title" Style="{DynamicResource FormLabelStyle}" Margin="0,0,0,6"/>
+                                            <ui:TextBox Style="{DynamicResource RoundedTextBoxInnerStyle}"
+                                                        Text="{Binding BookTitle, Mode=OneWay}" 
+                                                        IsReadOnly="True" 
+                                                        Background="{DynamicResource ContentBackgroundBrush}"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Row="3" Margin="0,0,0,10">
+                                            <ui:TextBlock Text="Quantity" Style="{DynamicResource FormLabelStyle}" Margin="0,0,0,6"/>
+                                            <ui:TextBox Style="{DynamicResource RoundedTextBoxInnerStyle}"
+                                                        Text="{Binding Quantity, Mode=TwoWay}"
+                                                        Background="{DynamicResource CardBackgroundBrush}"
+                                                        BorderThickness="1"
+                                                        IsReadOnly="True"
+                                                        BorderBrush="{DynamicResource BorderLightBrush}"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Row="4" Margin="0,0,0,10">
+                                            <ui:TextBlock Text="Unit Price" Style="{DynamicResource FormLabelStyle}" Margin="0,0,0,6"/>
+                                            <ui:TextBox Style="{DynamicResource RoundedTextBoxInnerStyle}"
+                                                        Text="{Binding SalePrice, StringFormat='{}{0:N0} đ', Mode=OneWay}" 
+                                                        IsReadOnly="True" 
+                                                        Background="{DynamicResource ContentBackgroundBrush}"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Row="5" Margin="0,0,0,20">
+                                            <ui:TextBlock Text="Subtotal" Style="{DynamicResource FormLabelStyle}" Margin="0,0,0,6" FontWeight="SemiBold"/>
+                                            <ui:TextBox Style="{DynamicResource RoundedTextBoxInnerStyle}"
+                                                        Text="{Binding SubTotal, StringFormat='{}{0:N0} đ', Mode=OneWay}" 
+                                                        IsReadOnly="True" 
+                                                        FontWeight="Bold"
+                                                        Foreground="{DynamicResource NavyPrimaryBrush}"
+                                                        Background="{DynamicResource ContentBackgroundBrush}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Page>

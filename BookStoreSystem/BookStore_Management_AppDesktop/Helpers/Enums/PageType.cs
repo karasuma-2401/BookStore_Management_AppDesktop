@@ -16,5 +16,7 @@ namespace BookStore_Management_AppDesktop.Helpers.Enums
         ImportHistory, 
         CreateImport,
         Reports,
+        InvoiceDetail,
+        SaleCart
     }
 }

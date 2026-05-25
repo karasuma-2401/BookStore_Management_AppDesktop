@@ -99,11 +99,8 @@
                         Text="Customers" />
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem Icon="{ui:SymbolIcon Document24}" Tag="Invoice">
-                    <TextBlock
-                        FontSize="{StaticResource FontSizeSubTitle}"
-                        FontWeight="SemiBold"
-                        Text="Invoice" />
+                <ui:NavigationViewItem Tag="Invoice" Icon="{ui:SymbolIcon Document24}"  Command="{Binding NavigateCommand}" CommandParameter="Invoices">
+                    <TextBlock Text="Invoice" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
                 </ui:NavigationViewItem>
 
                 <ui:NavigationViewItem

@@ -22,7 +22,7 @@ namespace BookStoreManagement.API.Validators
 
             RuleFor(x => x.ExpiryDate)
                 .NotEmpty().WithMessage("Expiry date is required.")
-                .Must(date => date > DateTime.UtcNow).WithMessage("Expiry date must be in the future.");
+                .Must(date => date.Value.Date >= DateTime.UtcNow.Date).WithMessage("Expiry date must be in the future.");
 
             RuleFor(x => x.UsageLimit)
                 .GreaterThan(0).WithMessage("Usage limit must be greater than 0.");

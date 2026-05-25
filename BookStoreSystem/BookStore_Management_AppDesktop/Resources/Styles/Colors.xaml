@@ -6,6 +6,7 @@
     <SolidColorBrush x:Key="TextSecondBrush" Color="#AAAAAA" />
     <SolidColorBrush x:Key="ErrorPrimaryBrush" Color="#FF4C4C" />
     <SolidColorBrush x:Key="SuccessPrimaryBrush" Color="#00DC82" />
+    <SolidColorBrush x:Key="TextThirdBrush" Color="Black"/>
 
     <SolidColorBrush x:Key="NavyPrimaryBrush" Color="#0A2A47" />
     <SolidColorBrush x:Key="NavyLightBrush" Color="#15436F" />
@@ -16,5 +17,10 @@
     <SolidColorBrush x:Key="SidebarAccentBrush" Color="#38BDF8" />
     <SolidColorBrush x:Key="ContentBackgroundBrush" Color="#F1F5F9" />
     <SolidColorBrush x:Key="CardBackgroundBrush" Color="White" />
+
+    <SolidColorBrush x:Key="BorderBrush" Color="#CBD5E1" />
+    <SolidColorBrush x:Key="TextBodyBrush" Color="#64748B" />
+    <SolidColorBrush x:Key="InputBackgroundBrush" Color="White" />
+    <SolidColorBrush x:Key="AccentBlueBrush" Color="#0EA5E9" />
 
 </ResourceDictionary>

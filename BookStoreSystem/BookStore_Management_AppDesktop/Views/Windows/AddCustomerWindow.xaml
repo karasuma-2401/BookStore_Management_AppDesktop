@@ -6,7 +6,7 @@
     Title="Add New Customer"
     Width="500"
     Height="400"
-    Background="{DynamicResource ContentBackgroundBrush}"
+    Background="{DynamicResource SidebarBackgroundBrush}" 
     WindowStartupLocation="CenterOwner">
 
     <Grid>
@@ -14,7 +14,8 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ScrollViewer Grid.Row="0" Padding="30,20">
+
+        <ScrollViewer Grid.Row="0" Padding="30,20" Background="{DynamicResource ContentBackgroundBrush}">
             <StackPanel>
                 <TextBlock
                     Margin="0,0,0,10"
@@ -22,61 +23,42 @@
                     FontWeight="Bold"
                     Foreground="{DynamicResource TextPrimaryBrush}"
                     Text="Add New Customer" />
+
                 <StackPanel>
-                    <TextBlock
-                        FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
-                        Text="Full Name *" />
-                    <ui:TextBox
-                        x:Name="NameTextBox"
-                        Background="{DynamicResource SidebarBackgroundBrush}"
-                        PlaceholderText="Enter customer name" />
+                    <TextBlock FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Text="Full Name *" />
+                    <ui:TextBox x:Name="NameTextBox" PlaceholderText="Enter customer name" />
                 </StackPanel>
+
                 <StackPanel>
-                    <TextBlock
-                        FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
-                        Text="Phone" />
-                    <ui:TextBox
-                        x:Name="PhoneTextBox"
-                        Background="{DynamicResource SidebarBackgroundBrush}"
-                        PlaceholderText="Enter phone number" />
+                    <TextBlock FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Text="Phone" />
+                    <ui:TextBox x:Name="PhoneTextBox" PlaceholderText="Enter phone number" />
                 </StackPanel>
+
                 <StackPanel>
-                    <TextBlock
-                        FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
-                        Text="Email" />
-                    <ui:TextBox
-                        x:Name="EmailTextBox"
-                        Background="{DynamicResource SidebarBackgroundBrush}"
-                        PlaceholderText="Enter email address" />
+                    <TextBlock FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Text="Email" />
+                    <ui:TextBox x:Name="EmailTextBox" PlaceholderText="Enter email address" />
                 </StackPanel>
+
                 <StackPanel>
-                    <TextBlock
-                        FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
-                        Text="Address" />
-                    <ui:TextBox
-                        x:Name="AddressTextBox"
-                        Height="80"
-                        AcceptsReturn="True"
-                        Background="{DynamicResource SidebarBackgroundBrush}"
-                        PlaceholderText="Enter address" />
+                    <TextBlock FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Text="Address" />
+                    <ui:TextBox x:Name="AddressTextBox" Height="80" AcceptsReturn="True" PlaceholderText="Enter address" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
+
         <Border
-            Grid.Row="1"
-            Padding="30,15"
-            Background="{DynamicResource SidebarBackgroundBrush}"
-            BorderBrush="{DynamicResource DividerBrush}"
-            BorderThickness="0,1,0,0">
+                Grid.Row="1"
+                Padding="30,20"
+                Background="{DynamicResource ContentBackgroundBrush}" 
+                BorderBrush="{DynamicResource DividerBrush}"
+                BorderThickness="0,1,0,0">
+
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                 <ui:Button
                     x:Name="CancelButton"
                     Width="100"
-                    Appearance="Secondary"
+                    Margin="0,0,12,0"
+                    Appearance="Primary"
                     Click="CancelButton_Click"
                     Content="Cancel" />
 
@@ -84,9 +66,9 @@
                     x:Name="SaveButton"
                     Width="100"
                     Appearance="Primary"
-                    Background="{DynamicResource NavyAccentBrush}"
                     Click="SaveButton_Click"
-                    Content="Save" />
+                    Content="Save"
+                    Icon="{ui:SymbolIcon Save24}" />
             </StackPanel>
         </Border>
     </Grid>
