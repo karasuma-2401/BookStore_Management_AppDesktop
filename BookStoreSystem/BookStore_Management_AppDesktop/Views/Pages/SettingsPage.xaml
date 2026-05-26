@@ -21,16 +21,6 @@
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="30">
-                <TextBlock Text="Data and Sync" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" Foreground="{DynamicResource TextOnCardBrush}"/>
-                <ui:CardAction Command="{Binding RefreshDataCommand}" Margin="0,0,0,30" Padding="20">
-                    <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon Symbol="ArrowSync24" FontSize="32" Foreground="{DynamicResource NavyAccentBrush}" Margin="0,0,20,0"/>
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="Reload data (Refresh Data)" Foreground="{DynamicResource TextOnCardBrush}"/>
-                            <TextBlock Text="Synchronize the latest data from the server." Foreground="{DynamicResource TextBodyBrush}"/>
-                        </StackPanel>
-                    </StackPanel>
-                </ui:CardAction>
 
                 <TextBlock Text="Voucher Management" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" Foreground="{DynamicResource TextOnCardBrush}"/>
                 <Grid>

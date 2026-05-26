@@ -3,6 +3,8 @@ using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Book;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR; 
+using BookStoreManagement.API.Hubs;  
 
 namespace BookStoreManagement.API.Controllers
 {
@@ -12,10 +14,12 @@ namespace BookStoreManagement.API.Controllers
     public class BooksController : ControllerBase
     {
         private readonly IBookService _bookService;
+        private readonly IHubContext<BookHub, IBookHubClient> _hubContext;
 
-        public BooksController(IBookService bookService)
+        public BooksController(IBookService bookService, IHubContext<BookHub, IBookHubClient> hubContext)
         {
             _bookService = bookService;
+            _hubContext = hubContext;
         }
 
         // GET: api/books
@@ -73,6 +77,8 @@ namespace BookStoreManagement.API.Controllers
                 ImagePath = createdBook.ImagePath
             };
 
+            await _hubContext.Clients.All.BookCreated(result);
+
             return CreatedAtAction(nameof(GetBook), new { id = result.BookId }, result);
         }
 
@@ -85,6 +91,14 @@ namespace BookStoreManagement.API.Controllers
             if (!updated)
                 return NotFound();
 
+            await _hubContext.Clients.All.BookUpdated(id, new
+            {
+                Title = dto.Title,
+                AuthorId = dto.AuthorId,
+                ImagePath = dto.ImagePath,
+                Description = dto.Description
+            });
+
             return Ok(new { message = "Update successful" });
         }
 
@@ -96,6 +110,8 @@ namespace BookStoreManagement.API.Controllers
 
             if (!deleted)
                 return NotFound();
+
+            await _hubContext.Clients.All.BookDeleted(id);
 
             return NoContent();
         }

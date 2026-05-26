@@ -1,13 +1,15 @@
 ﻿using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.Services.API.BookServices; 
+using BookStore_Management_AppDesktop.Services.API.CartServices;
+using BookStore_Management_AppDesktop.Services.API.CustomerServices;
 using BookStore_Management_AppDesktop.Services.API.EmployeeServices;
-using BookStore_Management_AppDesktop.Services.API.ReportServices;
 using BookStore_Management_AppDesktop.Services.API.Import;
 using BookStore_Management_AppDesktop.Services.API.InvoiceServices;
-using BookStore_Management_AppDesktop.Services.API.CustomerServices;
+using BookStore_Management_AppDesktop.Services.API.ReportServices;
 using BookStore_Management_AppDesktop.Services.Export;
 using BookStore_Management_AppDesktop.Services.Navigation;
+using BookStore_Management_AppDesktop.Services.Realtime;
 using BookStore_Management_AppDesktop.ViewModels;
 using BookStore_Management_AppDesktop.Views.Pages;
 using BookStore_Management_AppDesktop.Views.Pages.BookViews; 
@@ -18,7 +20,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Windows;
-using BookStore_Management_AppDesktop.Services.API.CartServices;
 
 namespace BookStore_Management_AppDesktop
 {
@@ -58,6 +59,7 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<CloudinaryService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ICartService, CartService>();
+            services.AddSingleton<IBookHubService, BookHubService>();
 
             services.AddSingleton<IBookApiService, BookApiService>();
             services.AddSingleton<IAuthorApiService, AuthorApiService>();
