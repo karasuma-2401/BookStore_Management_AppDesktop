@@ -36,7 +36,6 @@ public class BookApiService : IBookApiService
             AddAuthorizationHeader();
 
             var query = new List<string>();
-
             if (queryParams.CategoryId.HasValue) query.Add($"categoryId={queryParams.CategoryId.Value}");
             if (queryParams.AuthorId.HasValue) query.Add($"authorId={queryParams.AuthorId.Value}");
             if (!string.IsNullOrWhiteSpace(queryParams.Keyword)) query.Add($"keyword={Uri.EscapeDataString(queryParams.Keyword)}");
@@ -63,10 +62,15 @@ public class BookApiService : IBookApiService
                 BookId = dto.BookId,
                 Title = dto.Title,
                 AuthorId = dto.AuthorId,
-                AuthorName = dto.AuthorName,
+                AuthorName = dto.AuthorName, 
                 Price = dto.Price,
                 Quantity = dto.Quantity,
-                ImagePath = dto.ImagePath
+                ImagePath = dto.ImagePath,
+                Description = dto.Description,
+                CategoryNames = dto.CategoryNames != null && dto.CategoryNames.Any()
+                                    ? string.Join(", ", dto.CategoryNames)
+                                    : "Uncategorized",
+                CategoryIds = dto.CategoryIds ?? new List<int>()
             }).ToList();
 
             return new PagedResponse<Book>
@@ -115,7 +119,6 @@ public class BookApiService : IBookApiService
             {
                 var jsonResponse = await response.Content.ReadAsStringAsync();
                 var dto = JsonSerializer.Deserialize<BookResponseDto>(jsonResponse, _options);
-
                 if (dto != null)
                 {
                     return new Book
@@ -127,7 +130,11 @@ public class BookApiService : IBookApiService
                         Price = dto.Price,
                         Quantity = dto.Quantity,
                         ImagePath = dto.ImagePath,
-                        Description = dto.Description
+                        Description = dto.Description,
+                        CategoryNames = dto.CategoryNames != null && dto.CategoryNames.Any()
+                                        ? string.Join(", ", dto.CategoryNames)
+                                        : "Uncategorized",
+                        CategoryIds = dto.CategoryIds ?? new List<int>()
                     };
                 }
             }
@@ -188,8 +195,12 @@ public class BookApiService : IBookApiService
                 AuthorName = dto.AuthorName,
                 Price = dto.Price,
                 Quantity = dto.Quantity,
-                ImagePath = dto.ImagePath
-
+                ImagePath = dto.ImagePath,
+                Description = dto.Description,
+                CategoryNames = dto.CategoryNames != null && dto.CategoryNames.Any()
+                                     ? string.Join(", ", dto.CategoryNames)
+                                     : "Uncategorized",
+                CategoryIds = dto.CategoryIds ?? new List<int>()
             };
         }
         catch (Exception ex)

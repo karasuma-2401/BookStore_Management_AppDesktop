@@ -57,49 +57,63 @@ namespace BookStoreManagement.API.Controllers
         [HttpPost]
         public async Task<ActionResult<BookResponseDto>> PostBook(BookCreateDto dto)
         {
-            var book = new Book
+            try
             {
-                Title = dto.Title,
-                AuthorId = dto.AuthorId,
-                ImagePath = dto.ImagePath,
-                Description = dto.Description
-            };
+                var book = new Book
+                {
+                    Title = dto.Title,
+                    AuthorId = dto.AuthorId,
+                    ImagePath = dto.ImagePath,
+                    Description = dto.Description
+                };
 
-            var createdBook = await _bookService.CreateBook(book, dto.CategoryIds);
+                var result = await _bookService.CreateBook(book, dto.CategoryIds);
 
-            var result = new BookResponseDto
+                if (result == null)
+                    return BadRequest("Could not create book with provided information.");
+
+                await _hubContext.Clients.All.BookCreated(result);
+
+                return CreatedAtAction(nameof(GetBook), new { id = result.BookId }, result);
+            }
+            catch (KeyNotFoundException ex)
             {
-                BookId = createdBook.BookId,
-                Title = createdBook.Title,
-                AuthorId = createdBook.AuthorId,
-                Quantity = createdBook.Quantity,
-                Price = createdBook.Price,
-                ImagePath = createdBook.ImagePath
-            };
-
-            await _hubContext.Clients.All.BookCreated(result);
-
-            return CreatedAtAction(nameof(GetBook), new { id = result.BookId }, result);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new { message = "An internal server error occurred.", details = ex.Message });
+            }
         }
 
         // PUT: api/books/id
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBook(int id, BookUpdateDto dto)
         {
-            var updated = await _bookService.UpdateBook(id, dto);
-
-            if (!updated)
-                return NotFound();
-
-            await _hubContext.Clients.All.BookUpdated(id, new
+            try
             {
-                Title = dto.Title,
-                AuthorId = dto.AuthorId,
-                ImagePath = dto.ImagePath,
-                Description = dto.Description
-            });
+                var updated = await _bookService.UpdateBook(id, dto);
 
-            return Ok(new { message = "Update successful" });
+                if (!updated)
+                    return NotFound();
+
+                var freshBookData = await _bookService.GetBookById(id);
+
+                if (freshBookData != null)
+                {
+                    await _hubContext.Clients.All.BookUpdated(id, freshBookData);
+                }
+
+                return Ok(new { message = "Update successful" });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred during update.", details = ex.Message });
+            }
         }
 
         // DELETE: api/books/id

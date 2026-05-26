@@ -1,0 +1,80 @@
+﻿<UserControl x:Class="BookStore_Management_AppDesktop.Views.UserControls.BookCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d" 
+             d:DesignHeight="420" d:DesignWidth="240">
+
+    <Border Width="210" 
+            Background="{DynamicResource CardBackgroundBrush}" 
+            Margin="10"
+            BorderBrush="#E2E8F0" 
+            BorderThickness="1" 
+            CornerRadius="12"
+            Cursor="Hand"
+            Padding="12">
+        <Border.InputBindings>
+            <MouseBinding Gesture="LeftClick" 
+                          Command="{Binding DataContext.ViewBookDetailCommand, RelativeSource={RelativeSource AncestorType=Page}}" 
+                          CommandParameter="{Binding}" />
+        </Border.InputBindings>
+
+        <Border.Effect>
+            <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="10" ShadowDepth="3"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" CornerRadius="8" ClipToBounds="True" Margin="0,0,0,10" Background="{DynamicResource ContentBackgroundBrush}">
+                <Image Height="220" Stretch="UniformToFill"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       Source="{Binding ImagePath, IsAsync=True, TargetNullValue='https://via.placeholder.com/180x250?text=No+Image', FallbackValue='https://via.placeholder.com/180x250?text=No+Image'}">
+                </Image>
+            </Border>
+
+            <TextBlock Grid.Row="1" Text="{Binding Title}" 
+                       Style="{StaticResource BookTitleTextStyle}"
+                       Height="42" 
+                       TextTrimming="CharacterEllipsis" 
+                       TextWrapping="Wrap"
+                       Margin="0,0,0,4"/>
+
+            <TextBlock Grid.Row="2" Text="{Binding AuthorName, TargetNullValue='Unknown Author'}" 
+                       FontSize="12" 
+                       FontWeight="Medium"
+                       Foreground="{DynamicResource TextSecondBrush}"
+                       TextTrimming="CharacterEllipsis"
+                       Margin="0,0,0,4"/>
+
+            <TextBlock Grid.Row="3" Text="{Binding CategoryNames}" 
+                       FontSize="11" 
+                       FontStyle="Italic"
+                       Foreground="{DynamicResource TextSecondBrush}"
+                       TextTrimming="CharacterEllipsis"
+                       Margin="0,0,0,8"/>
+
+            <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                <TextBlock Text="{Binding Price, StringFormat='{}{0:#,0}', TargetNullValue='0'}" 
+                           Style="{StaticResource PriceTextStyle}"
+                           FontSize="15"
+                           FontWeight="Bold"/>
+                <TextBlock Text=" đ" 
+                           FontSize="{StaticResource FontSizeBody}" 
+                           FontWeight="SemiBold" 
+                           Foreground="{DynamicResource TextSecondBrush}"
+                           VerticalAlignment="Bottom"
+                           Margin="1,0,0,2"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

@@ -114,12 +114,23 @@ namespace BookStoreManagement.API.Services
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<Book> CreateBook(Book book, List<int> categoryIds)
+        public async Task<BookResponseDto?> CreateBook(Book book, List<int> categoryIds)
         {
+            var authorExists = await _context.Authors.AnyAsync(a => a.AuthorId == book.AuthorId);
+            if (!authorExists)
+                throw new KeyNotFoundException($"AuthorId {book.AuthorId} does not exist.");
+
+            var distinctCategoryIds = categoryIds.Distinct().ToList();
+            var validCategoryCount = await _context.Categories.CountAsync(c => distinctCategoryIds.Contains(c.CategoryId));
+
+            if (validCategoryCount != distinctCategoryIds.Count)
+                throw new KeyNotFoundException("One or more CategoryIds are invalid.");
+
             book.Quantity = 0;
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
-            var bookCategories = categoryIds.Select(cid => new BookCategory
+
+            var bookCategories = distinctCategoryIds.Select(cid => new BookCategory
             {
                 BookId = book.BookId,
                 CategoryId = cid
@@ -128,7 +139,7 @@ namespace BookStoreManagement.API.Services
             _context.BookCategories.AddRange(bookCategories);
             await _context.SaveChangesAsync();
 
-            return book;
+            return await GetBookById(book.BookId);
         }
 
         public async Task<bool> UpdateBook(int id, BookUpdateDto dto)
@@ -140,17 +151,18 @@ namespace BookStoreManagement.API.Services
             if (book == null)
                 return false;
 
-            var categoryIds = dto.CategoryIds
-                .Distinct()
-                .ToList();
+            var authorExists = await _context.Authors.AnyAsync(a => a.AuthorId == dto.AuthorId);
+            if (!authorExists)
+                throw new KeyNotFoundException($"AuthorId {dto.AuthorId} does not exist.");
 
+            var categoryIds = dto.CategoryIds.Distinct().ToList();
             var validCategoryIds = await _context.Categories
                 .Where(c => categoryIds.Contains(c.CategoryId))
                 .Select(c => c.CategoryId)
                 .ToListAsync();
 
             if (validCategoryIds.Count != categoryIds.Count)
-                throw new Exception("One or more CategoryId is invalid");
+                throw new KeyNotFoundException("One or more CategoryId is invalid.");
 
             book.Title = dto.Title;
             book.AuthorId = dto.AuthorId;
@@ -158,13 +170,8 @@ namespace BookStoreManagement.API.Services
             book.Description = dto.Description;
             book.ImagePath = dto.ImagePath;
 
-            var existingCategoryIds = book.BookCategories
-                .Select(bc => bc.CategoryId)
-                .ToList();
-
-            var toRemove = book.BookCategories
-                .Where(bc => !categoryIds.Contains(bc.CategoryId))
-                .ToList();
+            var existingCategoryIds = book.BookCategories.Select(bc => bc.CategoryId).ToList();
+            var toRemove = book.BookCategories.Where(bc => !categoryIds.Contains(bc.CategoryId)).ToList();
 
             _context.BookCategories.RemoveRange(toRemove);
 
@@ -177,7 +184,6 @@ namespace BookStoreManagement.API.Services
                 });
 
             await _context.BookCategories.AddRangeAsync(toAdd);
-
             await _context.SaveChangesAsync();
 
             return true;

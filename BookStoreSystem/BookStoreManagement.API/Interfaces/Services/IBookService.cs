@@ -14,7 +14,7 @@ namespace BookStoreManagement.API.Interfaces.Services
                 int page,
                 int pageSize);
         Task<BookResponseDto?> GetBookById(int id);
-        Task<Book> CreateBook(Book book, List<int> categoryIds);
+        Task<BookResponseDto?> CreateBook(Book book, List<int> categoryIds);
         Task<bool> UpdateBook(int id, BookUpdateDto dto);
         Task<bool> DeleteBook(int id);
     }

@@ -4,7 +4,9 @@ using BookStore_Management_AppDesktop.Services.API.BookServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
+using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -110,7 +112,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 {
                     BookId = _isEditMode ? _bookId : 0,
                     Title = Title.Trim(),
-                    AuthorId = selectedAuthorId,
+                    AuthorId = selectedAuthorId.Value,
                     Quantity = _isEditMode ? _originalQuantity : 0,
                     ImagePath = finalImageUrl
                 };
