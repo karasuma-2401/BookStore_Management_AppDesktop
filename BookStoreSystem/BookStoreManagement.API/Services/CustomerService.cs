@@ -14,6 +14,7 @@ public class CustomerService : ICustomerService
     public async Task<IEnumerable<CustomerResponseDto>> GetCustomers()
     {
         return await _context.Customers
+            .Where(c => !c.IsDeleted)
             .Select(c => new CustomerResponseDto
             {
                 CustomerId = c.CustomerId,
@@ -29,7 +30,7 @@ public class CustomerService : ICustomerService
     public async Task<CustomerResponseDto?> GetCustomerById(int id)
     {
         return await _context.Customers
-            .Where(c => c.CustomerId == id)
+            .Where(c => c.CustomerId == id && !c.IsDeleted)
             .Select(c => new CustomerResponseDto
             {
                 CustomerId = c.CustomerId,
@@ -69,7 +70,8 @@ public class CustomerService : ICustomerService
 
     public async Task<bool> UpdateCustomer(int id, CustomerUpdateDto dto)
     {
-        var customer = await _context.Customers.FindAsync(id);
+        var customer = await _context.Customers
+            .FirstOrDefaultAsync(c => c.CustomerId == id && !c.IsDeleted);
 
         if (customer == null)
             return false;
@@ -85,12 +87,32 @@ public class CustomerService : ICustomerService
 
     public async Task<bool> DeleteCustomer(int id)
     {
-        var customer = await _context.Customers.FindAsync(id);
+        var customer = await _context.Customers
+            .FirstOrDefaultAsync(c => c.CustomerId == id && !c.IsDeleted);
 
         if (customer == null)
             return false;
 
-        _context.Customers.Remove(customer);
+        customer.IsDeleted = true;
+        customer.DeletedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> RestoreCustomer(int id)
+    {
+        var customer = await _context.Customers
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(c => c.CustomerId == id);
+
+        if (customer == null || !customer.IsDeleted)
+            return false;
+
+        customer.IsDeleted = false;
+        customer.DeletedAt = null;
+
         await _context.SaveChangesAsync();
 
         return true;

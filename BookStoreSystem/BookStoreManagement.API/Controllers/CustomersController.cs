@@ -64,4 +64,15 @@ public class CustomersController : ControllerBase
 
         return NoContent();
     }
+    // PATCH /customer/restore/1
+    [HttpPatch("restore/{id}")]
+    public async Task<IActionResult> RestoreCustomer(int id)
+    {
+        var restored = await _customerService.RestoreCustomer(id);
+
+        if (!restored)
+            return NotFound();
+
+        return Ok(new { message = "Customer restored successfully" });
+    }
 }
