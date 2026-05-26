@@ -29,7 +29,11 @@ namespace BookStoreManagement.API.Models.Entities
 
         [Column("debt", TypeName = "decimal(12,2)")]
         public decimal Debt {get; set;} = 0;
-        public bool IsDeleted { get; set; } = false;
+        
+        [Column("is_deleted")]
+        public bool IsDeleted { get; set; }
+
+        [Column("deleted_at")]
         public DateTime? DeletedAt { get; set; }
         public ICollection<Invoice> Invoices {get; set; } = new List<Invoice>();
         public ICollection<Payment> Payments {get; set; } = new List<Payment>();
