@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using BookStoreManagement.API.Interfaces.Services;
+using Microsoft.AspNetCore.SignalR; 
+using BookStoreManagement.API.Hubs;   
+
 namespace BookStoreManagement.API.Controllers
 {
     [Route("import")]
@@ -10,10 +13,12 @@ namespace BookStoreManagement.API.Controllers
     public class ImportsController : ControllerBase
     {
         private readonly IImportService _service;
+        private readonly IHubContext<BookHub, IBookHubClient> _hubContext;
 
-        public ImportsController(IImportService service)
+        public ImportsController(IImportService service, IHubContext<BookHub, IBookHubClient> hubContext)
         {
             _service = service;
+            _hubContext = hubContext;
         }
 
         [HttpPost]
@@ -21,6 +26,17 @@ namespace BookStoreManagement.API.Controllers
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var result = await _service.CreateImport(dto, userId);
+
+            if (result != null && dto.Details != null)
+            {
+                foreach (var detail in dto.Details)
+                {
+                    await _hubContext.Clients.All.InventoryStockChanged(detail.BookId, detail.Quantity);
+                }
+
+                await _hubContext.Clients.All.ImportCreated();
+            }
+
             return Ok(result);
         }
 

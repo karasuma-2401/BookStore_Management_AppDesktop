@@ -2,6 +2,7 @@
 using BookStore_Management_AppDesktop.Models.DTOs;
 using BookStore_Management_AppDesktop.Services.API.Import;
 using BookStore_Management_AppDesktop.Services.Navigation;
+using BookStore_Management_AppDesktop.Services.Realtime; 
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -9,7 +10,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows; // ĐÃ FIX LỖI Application và MessageBox
+using System.Windows;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -21,8 +22,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
         public string EmployeeName { get; set; } = string.Empty;
         public int TotalItems { get; set; }
         public decimal TotalAmount { get; set; }
-
-        // ĐÃ FIX CẢNH BÁO CS8618: Thêm dấu ? để cho phép Null
         public object? OriginalData { get; set; }
     }
 
@@ -30,18 +29,28 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly INavigationService _navigationService;
         private readonly IImportApiService _importApiService;
+        private readonly IBookHubService _hubService;
 
-        [ObservableProperty]
-        private ObservableCollection<ImportHistoryUIModel> _importHistory = new ObservableCollection<ImportHistoryUIModel>();
+        [ObservableProperty] private ObservableCollection<ImportHistoryUIModel> _importHistory = new ObservableCollection<ImportHistoryUIModel>();
+        [ObservableProperty] private bool _isLoading;
 
-        // ĐÃ FIX LỖI CS0103: Tự khai báo thuộc tính IsLoading
-        [ObservableProperty]
-        private bool _isLoading;
-
-        public ImportHistoryViewModel(INavigationService navigationService, IImportApiService importApiService)
+        public ImportHistoryViewModel(
+            INavigationService navigationService,
+            IImportApiService importApiService,
+            IBookHubService hubService) 
         {
             _navigationService = navigationService;
             _importApiService = importApiService;
+            _hubService = hubService;
+            _hubService.ImportCreated += OnImportRealtimeCreated;
+        }
+
+        private void OnImportRealtimeCreated()
+        {
+            Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                await LoadDataAsync();
+            });
         }
 
         public override async Task LoadDataAsync()
@@ -57,7 +66,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     ImportHistory.Add(new ImportHistoryUIModel
                     {
                         ImportId = item.ImportId,
-                        ImportDate = item.ImportDate.ToLocalTime(), // Đổi giờ UTC thành giờ Việt Nam
+                        ImportDate = item.ImportDate.ToLocalTime(), 
                         UserId = item.UserId,
                         EmployeeName = string.IsNullOrWhiteSpace(item.UserName) ? "Unknown" : item.UserName,
                         TotalItems = item.Details.Sum(d => d.Quantity),

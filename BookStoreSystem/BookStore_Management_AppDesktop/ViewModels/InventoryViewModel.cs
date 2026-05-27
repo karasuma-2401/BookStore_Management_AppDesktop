@@ -1,17 +1,13 @@
 ﻿using BookStore_Management_AppDesktop.Helpers;
-using BookStore_Management_AppDesktop.Messages;
 using BookStore_Management_AppDesktop.Models;
-using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs; 
+using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs;
 using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API.BookServices;
+using BookStore_Management_AppDesktop.Services.Realtime; 
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using System.Collections.ObjectModel;
-using System.Drawing.Printing;
-using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -23,14 +19,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly IBookApiService _apiService;
         private readonly CloudinaryService _cloudinaryService;
         private readonly IDialogService _dialogService;
+        private readonly IBookHubService _hubService;
 
         private readonly DebounceHelper _searchDebouncer = new DebounceHelper();
 
-        [ObservableProperty]
-        private ObservableCollection<Book> _books = new ObservableCollection<Book>();
-
-        [ObservableProperty]
-        private string _searchText = string.Empty;
+        [ObservableProperty] private ObservableCollection<Book> _books = new ObservableCollection<Book>();
+        [ObservableProperty] private string _searchText = string.Empty;
 
         [ObservableProperty] private int _currentPage = 1;
         [ObservableProperty] private int _pageSize = 10;
@@ -40,18 +34,28 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private string _sortBy = "price";
         [ObservableProperty] private string _sortOrder = "desc";
 
-        public InventoryViewModel(IBookApiService apiService, CloudinaryService cloudinaryService, IDialogService dialogService)
+        public InventoryViewModel(
+            IBookApiService apiService,
+            CloudinaryService _cloudinaryService,
+            IDialogService dialogService,
+            IBookHubService hubService) 
         {
             _apiService = apiService;
-            _cloudinaryService = cloudinaryService;
+            this._cloudinaryService = _cloudinaryService;
             _dialogService = dialogService;
+            _hubService = hubService;
 
-            WeakReferenceMessenger.Default.Register<BookChangedMessage>(this, async (recipient, message) =>
+            _hubService.BookCreated += (b) => RefreshInventoryGrid();
+            _hubService.BookDeleted += (id) => RefreshInventoryGrid();
+            _hubService.BookUpdated += (id) => RefreshInventoryGrid();
+            _hubService.InventoryStockChanged += (id, qty) => RefreshInventoryGrid();
+        }
+
+        private void RefreshInventoryGrid()
+        {
+            Application.Current.Dispatcher.InvokeAsync(async () =>
             {
-                await Application.Current.Dispatcher.InvokeAsync(async () =>
-                {
-                    await LoadDataAsync();
-                });
+                await LoadDataAsync();
             });
         }
 
@@ -146,8 +150,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         await _cloudinaryService.DeleteImageAsync(selectedBook.ImagePath);
                     }
 
-                    WeakReferenceMessenger.Default.Send(new BookChangedMessage(BookChangedMessage.ChangeAction.Delete, selectedBook));
-
                     _dialogService.ShowMessage("Book deleted successfully!");
                 }
                 else
@@ -162,7 +164,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private void EditBook(Book selectedBook)
         {
             if (selectedBook == null) return;
-
             _dialogService.ShowEditBookWindow(selectedBook);
         }
     

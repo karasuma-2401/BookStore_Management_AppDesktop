@@ -1,14 +1,11 @@
-﻿using BookStore_Management_AppDesktop.Messages;
-using BookStore_Management_AppDesktop.Services.API;
+﻿using BookStore_Management_AppDesktop.Services.API;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Security.Policy;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -16,26 +13,19 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly IVoucherApiService _voucherApiService;
 
-        [ObservableProperty]
-        private ObservableCollection<VoucherDto> vouchers = new();
+        [ObservableProperty] private ObservableCollection<VoucherDto> vouchers = new();
 
-        [ObservableProperty]
-        private string? newVoucherCode;
+        [ObservableProperty] private string? newVoucherCode;
 
-        [ObservableProperty]
-        private int? newVoucherDiscountPercent;
+        [ObservableProperty] private int? newVoucherDiscountPercent;
 
-        [ObservableProperty]
-        private decimal? newVoucherDiscountAmount;
+        [ObservableProperty] private decimal? newVoucherDiscountAmount;
 
-        [ObservableProperty]
-        private DateTime? newVoucherExpiryDate = DateTime.UtcNow.AddMonths(1);
+        [ObservableProperty] private DateTime? newVoucherExpiryDate = DateTime.UtcNow.AddMonths(1);
 
-        [ObservableProperty]
-        private int? newVoucherUsageLimit;
+        [ObservableProperty] private int? newVoucherUsageLimit;
 
-        [ObservableProperty]
-        private bool isLoading;
+        [ObservableProperty] private bool isLoading;
 
         public Action<string>? OnShowMessage { get; set; }
 
@@ -49,13 +39,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             await LoadVouchersAsync();
         }
 
-        [RelayCommand]
-        private void RefreshData()
-        {
-            WeakReferenceMessenger.Default.Send(new RefreshDataMessage());
-
-            OnShowMessage?.Invoke("Data has been successfully refreshed from the server!");
-        }
+      
 
         [RelayCommand]
         private async Task LoadVouchers()
@@ -90,14 +74,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [RelayCommand]
         private async Task CreateVoucher()
         {
-            // 1. Kiểm tra Client-side (ViewModel) trước khi gọi API
             if (string.IsNullOrWhiteSpace(NewVoucherCode))
             {
                 OnShowMessage?.Invoke("Voucher code is required.");
                 return;
             }
 
-            // Kiểm tra Regex giống phía Backend để bắt lỗi sớm
             var codeRegex = new System.Text.RegularExpressions.Regex(@"^[A-Z0-9]+$");
             if (!codeRegex.IsMatch(NewVoucherCode.ToUpper().Trim()))
             {
@@ -140,8 +122,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 }
                 else
                 {
-                    // Nếu API trả về null (thường do lỗi 400 Bad Request), 
-                    // thông báo lỗi chung chung hoặc từ log của API
                     OnShowMessage?.Invoke("Failed to create voucher. Please check your data.");
                 }
             }

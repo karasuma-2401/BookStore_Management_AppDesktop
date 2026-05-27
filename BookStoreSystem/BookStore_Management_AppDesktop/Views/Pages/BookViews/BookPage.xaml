@@ -4,7 +4,7 @@
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
           xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
           xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-          mc:Ignorable="d" 
+          xmlns:uc="clr-namespace:BookStore_Management_AppDesktop.Views.UserControls" mc:Ignorable="d" 
           d:DesignHeight="700" d:DesignWidth="1000"
           Title="BookPage"
           Background="{DynamicResource ContentBackgroundBrush}"
@@ -31,15 +31,15 @@
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <ui:TextBox PlaceholderText="Search by title or category..." 
-                                    Icon="{ui:SymbolIcon Search24}" 
-                                    Width="300" Margin="0,0,15,0" 
-                                    VerticalAlignment="Center" 
-                                    Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+                                Icon="{ui:SymbolIcon Search24}" 
+                                Width="300" Margin="0,0,15,0" 
+                                VerticalAlignment="Center" 
+                                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
                     <ComboBox Width="180" Margin="0,0,15,0"
-                                  SelectedValuePath="Tag"
-                                  SelectedValue="{Binding SelectedSort}"
-                                  VerticalAlignment="Center">
+                              SelectedValuePath="Tag"
+                              SelectedValue="{Binding SelectedSort}"
+                              VerticalAlignment="Center">
                         <ComboBoxItem Content="Newest" Tag="" IsSelected="True"/>
                         <ComboBoxItem Content="Price: Low to High" Tag="price_asc"/>
                         <ComboBoxItem Content="Price: High to Low" Tag="price_desc"/>
@@ -48,23 +48,22 @@
 
                     <Grid Width="50" Height="50" Margin="0,0,10,0">
                         <ui:Button Icon="{ui:SymbolIcon Cart24}" 
-                                       Style="{StaticResource PrimaryActionButtonStyle}"
-                                       ToolTip="View Shopping Cart" 
-                                       Command="{Binding ViewCartCommand}"
-                                       Padding="12,8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                   Style="{StaticResource PrimaryActionButtonStyle}"
+                                   ToolTip="View Shopping Cart" 
+                                   Command="{Binding ViewCartCommand}"
+                                   Padding="12,8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                        <!-- Cart Item Badge -->
                         <Border Background="{DynamicResource SuccessPrimaryBrush}" 
-                                    CornerRadius="50"
-                                    Width="24" Height="24" 
-                                    HorizontalAlignment="Right" VerticalAlignment="Top"
-                                    Visibility="{Binding CartItemCount, Converter={StaticResource IntToBoolConverter}, ConverterParameter=0}">
+                                CornerRadius="50"
+                                Width="24" Height="24" 
+                                HorizontalAlignment="Right" VerticalAlignment="Top"
+                                Visibility="{Binding CartItemCount, Converter={StaticResource IntToBoolConverter}, ConverterParameter=0}">
                             <TextBlock Text="{Binding CartItemCount}" 
-                                           Foreground="White" 
-                                           FontWeight="Bold" 
-                                           HorizontalAlignment="Center" 
-                                           VerticalAlignment="Center" 
-                                           FontSize="11"/>
+                                       Foreground="White" 
+                                       FontWeight="Bold" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Center" 
+                                       FontSize="11"/>
                         </Border>
                     </Grid>
                 </StackPanel>
@@ -72,12 +71,12 @@
         </Border>
 
         <ListView x:Name="BooksListView"
-                      Grid.Row="1"
-                      ItemsSource="{Binding Books}" 
-                      Background="Transparent"
-                      BorderThickness="0"
-                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                      Padding="10,10,10,20" d:ItemsSource="{d:SampleData ItemCount=5}">
+                  Grid.Row="1"
+                  ItemsSource="{Binding Books}" 
+                  Background="Transparent"
+                  BorderThickness="0"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  Padding="10,10,10,20" d:ItemsSource="{d:SampleData ItemCount=5}">
 
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -87,50 +86,7 @@
 
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Border Width="210" 
-                                Background="{DynamicResource CardBackgroundBrush}" 
-                                Margin="15"
-                                BorderBrush="#E2E8F0" 
-                                BorderThickness="1" 
-                                CornerRadius="12"
-                                Cursor="Hand">
-
-                        <Border.InputBindings>
-                            <MouseBinding Gesture="LeftClick" 
-                                              Command="{Binding DataContext.ViewBookDetailCommand, RelativeSource={RelativeSource AncestorType=Page}}" 
-                                              CommandParameter="{Binding}" />
-                        </Border.InputBindings>
-
-                        <Border.Effect>
-                            <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="10" ShadowDepth="3"/>
-                        </Border.Effect>
-
-                        <StackPanel Margin="12">
-                            <Border CornerRadius="8" ClipToBounds="True" Margin="0,0,0,12" Background="{DynamicResource ContentBackgroundBrush}">
-                                <Image Height="250" Stretch="UniformToFill"
-                                           RenderOptions.BitmapScalingMode="HighQuality"
-                                           Source="{Binding ImagePath, IsAsync=True, TargetNullValue='https://via.placeholder.com/180x250?text=No+Image', FallbackValue='https://via.placeholder.com/180x250?text=No+Image'}">
-                                </Image>
-                            </Border>
-
-                            <TextBlock Text="{Binding Title}" 
-                                           Style="{StaticResource BookTitleTextStyle}"
-                                           Height="44" 
-                                           TextTrimming="CharacterEllipsis"
-                                           Margin="0,0,0,10"/>
-
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8" HorizontalAlignment="Left">
-                                <TextBlock Text="{Binding Price, StringFormat='{}{0:#,0}', TargetNullValue='0'}" 
-                                               Style="{StaticResource PriceTextStyle}"/>
-                                <TextBlock Text=" đ" 
-                                               FontSize="{StaticResource FontSizeBody}" 
-                                               FontWeight="SemiBold" 
-                                               Foreground="{DynamicResource TextSecondBrush}"
-                                               VerticalAlignment="Bottom"
-                                               Margin="2,0,0,1"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
+                    <uc:BookCard />
                 </DataTemplate>
             </ListView.ItemTemplate>
 
@@ -170,14 +126,14 @@
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                     <ui:Button Icon="{ui:SymbolIcon ChevronLeft24}" 
-                                   Command="{Binding PreviousPageCommand}" 
-                                   Style="{StaticResource SecondaryActionButtonStyle}" 
-                                   Margin="0,0,10,0" ToolTip="Previous Page"/>
+                               Command="{Binding PreviousPageCommand}" 
+                               Style="{StaticResource SecondaryActionButtonStyle}" 
+                               Margin="0,0,10,0" ToolTip="Previous Page"/>
 
                     <ui:Button Icon="{ui:SymbolIcon ChevronRight24}" 
-                                   Command="{Binding NextPageCommand}" 
-                                   Style="{StaticResource PrimaryActionButtonStyle}" 
-                                   ToolTip="Next Page"/>
+                               Command="{Binding NextPageCommand}" 
+                               Style="{StaticResource PrimaryActionButtonStyle}" 
+                               ToolTip="Next Page"/>
                 </StackPanel>
             </Grid>
         </Border>

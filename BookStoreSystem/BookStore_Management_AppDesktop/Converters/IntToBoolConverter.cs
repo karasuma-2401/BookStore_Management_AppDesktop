@@ -1,4 +1,6 @@
+using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 
 namespace BookStore_Management_AppDesktop.Converters
@@ -9,11 +11,20 @@ namespace BookStore_Management_AppDesktop.Converters
         {
             if (value is int intValue)
             {
-                if (int.TryParse(parameter?.ToString() ?? "0", out int compareValue))
+                int.TryParse(parameter?.ToString() ?? "0", out int compareValue);
+                bool isGreater = intValue > compareValue;
+
+                if (targetType == typeof(Visibility))
                 {
-                    return intValue > compareValue;
+                    return isGreater ? Visibility.Visible : Visibility.Collapsed;
                 }
-                return intValue > 0;
+
+                return isGreater;
+            }
+
+            if (targetType == typeof(Visibility))
+            {
+                return Visibility.Collapsed;
             }
             return false;
         }

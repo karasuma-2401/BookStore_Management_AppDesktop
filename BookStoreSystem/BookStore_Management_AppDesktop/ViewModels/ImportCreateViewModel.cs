@@ -1,27 +1,28 @@
 ﻿using BookStore_Management_AppDesktop.Helpers;
-using BookStore_Management_AppDesktop.Messages;
 using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs;
 using BookStore_Management_AppDesktop.Models.DTOs.ImportDTOs;
 using BookStore_Management_AppDesktop.Services;
-using BookStore_Management_AppDesktop.Services.API.BookServices; 
+using BookStore_Management_AppDesktop.Services.API.BookServices;
 using BookStore_Management_AppDesktop.Services.API.Import;
+using BookStore_Management_AppDesktop.Services.Realtime; 
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+
 namespace BookStore_Management_AppDesktop.ViewModels
 {
     public partial class ImportCreateViewModel : BaseViewModel
     {
         private readonly IBookApiService _apiService;
-        private readonly IDialogService _dialogService; 
+        private readonly IDialogService _dialogService;
         private readonly DebounceHelper _searchDebouncer = new DebounceHelper();
         private readonly IImportApiService _importApiService;
+        private readonly IBookHubService _hubService; 
 
         [ObservableProperty] private ObservableCollection<ImportCartItem> _draftList = new ObservableCollection<ImportCartItem>();
         [ObservableProperty] private string _searchText = string.Empty;
@@ -31,35 +32,39 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private decimal _tempImportPrice = 0;
         [ObservableProperty] private decimal _totalDraftAmount = 0;
 
-        public ImportCreateViewModel(IBookApiService apiService, IDialogService dialogService, IImportApiService importApiService)
+        public ImportCreateViewModel(
+            IBookApiService apiService,
+            IDialogService dialogService,
+            IImportApiService importApiService,
+            IBookHubService hubService) 
         {
             _apiService = apiService;
             _dialogService = dialogService;
             _importApiService = importApiService;
+            _hubService = hubService;
 
-            WeakReferenceMessenger.Default.Register<BookChangedMessage>(this, (recipient, message) =>
+            _hubService.BookCreated += OnBookCreatedRealtime;
+        }
+
+        private void OnBookCreatedRealtime(Book newBook)
+        {
+            if (newBook == null) return;
+
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                if (message.Action == BookChangedMessage.ChangeAction.Add)
+                var newItem = new ImportCartItem
                 {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        var newBook = message.ChangedBook;
+                    BookId = newBook.BookId,
+                    Title = newBook.Title ?? "New Book",
+                    AuthorName = newBook.AuthorName ?? string.Empty,
+                    CurrentQuantity = newBook.Quantity,
+                    ImportQuantity = 1,
+                    ImportPrice = 0
+                };
 
-                        var newItem = new ImportCartItem
-                        {
-                            BookId = newBook.BookId,
-                            Title = newBook.Title ?? "New Book",
-                            AuthorName = newBook.AuthorName ?? string.Empty,
-                            CurrentQuantity = newBook.Quantity,
-                            ImportQuantity = 1, 
-                            ImportPrice = 0    
-                        };
-
-                        newItem.PropertyChanged += DraftItem_PropertyChanged;
-                        DraftList.Add(newItem);
-                        RecalculateTotalAmount();
-                    });
-                }
+                newItem.PropertyChanged += DraftItem_PropertyChanged;
+                DraftList.Add(newItem);
+                RecalculateTotalAmount();
             });
         }
 
