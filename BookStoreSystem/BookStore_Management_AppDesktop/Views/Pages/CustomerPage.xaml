@@ -12,7 +12,6 @@
     d:DesignWidth="1000"
     Background="{DynamicResource ContentBackgroundBrush}"
     mc:Ignorable="d">
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -38,9 +37,9 @@
                         Text="Customer Management" />
                     <TextBlock
                         Margin="0,5,0,0"
-                        FontSize="12"
-                        Foreground="{DynamicResource TextSecondaryBrush}"
-                        Text="Manage all your customers and their information" />
+                        FontSize="10"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Text="Manage all customers and their information" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="2"
@@ -97,28 +96,24 @@
                                         </Setter>
                                     </Style>
                                 </ContextMenu.Resources>
-
                                 <MenuItem
                                     Command="{Binding ChangeFilterCommand}"
                                     CommandParameter="Name"
                                     Header="Name"
                                     Icon="{ui:SymbolIcon Symbol=Person24}"
                                     IsChecked="{Binding IsNameSelected, Mode=OneWay}" />
-
                                 <MenuItem
                                     Command="{Binding ChangeFilterCommand}"
                                     CommandParameter="Phone"
                                     Header="Phone"
                                     Icon="{ui:SymbolIcon Symbol=Call24}"
                                     IsChecked="{Binding IsPhoneSelected, Mode=OneWay}" />
-
                                 <MenuItem
                                     Command="{Binding ChangeFilterCommand}"
                                     CommandParameter="Email"
                                     Header="Email"
                                     Icon="{ui:SymbolIcon Symbol=Mail24}"
                                     IsChecked="{Binding IsEmailSelected, Mode=OneWay}" />
-
                                 <MenuItem
                                     Command="{Binding ChangeFilterCommand}"
                                     CommandParameter="Debt"
@@ -129,6 +124,7 @@
                         </ui:Button.ContextMenu>
                     </ui:Button>
                     <ui:Button
+                        Margin="5,0,10,0"
                         Appearance="Secondary"
                         Command="{Binding RefreshCommand}"
                         Icon="{ui:SymbolIcon ArrowSync24}"
@@ -164,7 +160,7 @@
                         Margin="0,0,0,10"
                         FontSize="12"
                         FontWeight="Bold"
-                        Foreground="{DynamicResource TextSecondaryBrush}"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
                         Text="TOTAL CUSTOMERS" />
                     <TextBlock
                         FontSize="28"
@@ -190,7 +186,7 @@
                         Margin="0,0,0,10"
                         FontSize="12"
                         FontWeight="Bold"
-                        Foreground="{DynamicResource TextSecondaryBrush}"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
                         Text="TOTAL DEBT" />
                     <TextBlock
                         FontSize="28"
@@ -216,7 +212,7 @@
                         Margin="0,0,0,10"
                         FontSize="12"
                         FontWeight="Bold"
-                        Foreground="{DynamicResource TextSecondaryBrush}"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
                         Text="AVERAGE DEBT" />
                     <TextBlock
                         FontSize="28"
@@ -232,8 +228,6 @@
                 </StackPanel>
             </Border>
         </UniformGrid>
-
-        <!--  DataGrid  -->
         <Border
             Grid.Row="2"
             Margin="20,10,20,20"
@@ -247,7 +241,6 @@
                     ShadowDepth="2"
                     Color="Black" />
             </Border.Effect>
-
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -269,7 +262,6 @@
                     BorderThickness="0"
                     GridLinesVisibility="Horizontal"
                     HeadersVisibility="Column"
-                    HorizontalGridLinesBrush="{DynamicResource DividerBrush}"
                     IsReadOnly="True"
                     ItemsSource="{Binding Customers}"
                     PreviewMouseLeftButtonDown="CustomerDataGrid_PreviewMouseLeftButtonDown"
@@ -278,7 +270,7 @@
                         <DataGridTextColumn
                             Width="60"
                             Binding="{Binding CustomerId}"
-                            Foreground="{DynamicResource TextSecondaryBrush}"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
                             Header="ID">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -357,12 +349,12 @@
                                             CommandParameter="{Binding}"
                                             Icon="{ui:SymbolIcon Edit24}"
                                             ToolTip="Edit" />
-
                                         <ui:Button
                                             Padding="5"
                                             Appearance="Secondary"
                                             Command="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.DeleteCustomerCommand}"
                                             CommandParameter="{Binding}"
+                                            Foreground="{DynamicResource ErrorPrimaryBrush}"
                                             Icon="{ui:SymbolIcon Delete24}"
                                             ToolTip="Delete" />
                                     </StackPanel>
@@ -382,7 +374,6 @@
                         Click="PreviousButton_Click"
                         Command="{Binding}"
                         Content="Previous" />
-
                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                         <TextBlock
                             Margin="0,0,5,0"
@@ -392,24 +383,24 @@
                         <TextBlock
                             Margin="0,0,5,0"
                             VerticalAlignment="Center"
-                            Foreground="{DynamicResource TextSecondaryBrush}"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
                             Text=" of " />
                         <TextBlock
                             VerticalAlignment="Center"
                             Foreground="{DynamicResource TextPrimaryBrush}"
                             Text="{Binding TotalPages}" />
                     </StackPanel>
-
                     <ui:Button
                         Margin="15,0,15,0"
                         Appearance="Secondary"
                         Click="NextButton_Click"
                         Command="{Binding}"
                         Content="Next" />
-
                     <ComboBox
                         Width="70"
-                        Background="{DynamicResource ContentBackgroundBrush}"
+                        Background="Transparent"
+                        BorderBrush="White"
+                        Foreground="White"
                         ItemsSource="{Binding PageSizeOptions}"
                         SelectedItem="{Binding PageSize}" />
                 </StackPanel>

@@ -4,9 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="Add New Customer"
-    Width="500"
-    Height="400"
-    Background="{DynamicResource SidebarBackgroundBrush}" 
+    Width="450"
+    Height="600"
+    Background="{DynamicResource SidebarBackgroundBrush}"
     WindowStartupLocation="CenterOwner">
 
     <Grid>
@@ -14,62 +14,119 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <ScrollViewer
+            Grid.Row="0"
+            Padding="30,20"
+            Background="{DynamicResource ContentBackgroundBrush}">
 
-        <ScrollViewer Grid.Row="0" Padding="30,20" Background="{DynamicResource ContentBackgroundBrush}">
             <StackPanel>
+
                 <TextBlock
-                    Margin="0,0,0,10"
-                    FontSize="18"
+                    Margin="0,0,0,20"
+                    HorizontalAlignment="Center"
+                    FontSize="28"
                     FontWeight="Bold"
                     Foreground="{DynamicResource TextPrimaryBrush}"
                     Text="Add New Customer" />
+                <StackPanel Margin="0,0,0,15">
 
-                <StackPanel>
-                    <TextBlock FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Text="Full Name *" />
-                    <ui:TextBox x:Name="NameTextBox" PlaceholderText="Enter customer name" />
+                    <TextBlock
+                        Margin="0,0,0,8"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Text="Full Name *" />
+
+                    <ui:TextBox
+                        x:Name="NameTextBox"
+                        Height="42"
+                        PlaceholderText="Enter customer name" />
+
+                </StackPanel>
+                <StackPanel Margin="0,0,0,15">
+
+                    <TextBlock
+                        Margin="0,0,0,8"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Text="Phone" />
+
+                    <ui:TextBox
+                        x:Name="PhoneTextBox"
+                        Height="42"
+                        PlaceholderText="Enter phone number" />
+
+                </StackPanel>
+                <StackPanel Margin="0,0,0,15">
+
+                    <TextBlock
+                        Margin="0,0,0,8"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Text="Email" />
+
+                    <ui:TextBox
+                        x:Name="EmailTextBox"
+                        Height="42"
+                        PlaceholderText="Enter email address" />
+
+                </StackPanel>
+                <StackPanel Margin="0,0,0,15">
+
+                    <TextBlock
+                        Margin="0,0,0,8"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Text="Address" />
+
+                    <ui:TextBox
+                        x:Name="AddressTextBox"
+                        Height="90"
+                        VerticalContentAlignment="Top"
+                        AcceptsReturn="True"
+                        PlaceholderText="Enter address"
+                        TextWrapping="Wrap" />
+
                 </StackPanel>
 
-                <StackPanel>
-                    <TextBlock FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Text="Phone" />
-                    <ui:TextBox x:Name="PhoneTextBox" PlaceholderText="Enter phone number" />
-                </StackPanel>
-
-                <StackPanel>
-                    <TextBlock FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Text="Email" />
-                    <ui:TextBox x:Name="EmailTextBox" PlaceholderText="Enter email address" />
-                </StackPanel>
-
-                <StackPanel>
-                    <TextBlock FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Text="Address" />
-                    <ui:TextBox x:Name="AddressTextBox" Height="80" AcceptsReturn="True" PlaceholderText="Enter address" />
-                </StackPanel>
             </StackPanel>
-        </ScrollViewer>
 
+        </ScrollViewer>
         <Border
-                Grid.Row="1"
-                Padding="30,20"
-                Background="{DynamicResource ContentBackgroundBrush}" 
-                BorderBrush="{DynamicResource DividerBrush}"
-                BorderThickness="0,1,0,0">
+            Grid.Row="1"
+            Padding="30,20"
+            Background="{DynamicResource SidebarBackgroundBrush}"
+            BorderBrush="{DynamicResource DividerBrush}"
+            BorderThickness="0,1,0,0">
 
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                 <ui:Button
                     x:Name="CancelButton"
-                    Width="100"
+                    Width="110"
+                    Height="42"
                     Margin="0,0,12,0"
-                    Appearance="Primary"
+                    BorderBrush="{StaticResource ErrorPrimaryBrush}"
                     Click="CancelButton_Click"
-                    Content="Cancel" />
-
+                    Content="Cancel"
+                    Foreground="{StaticResource ErrorPrimaryBrush}"
+                    Style="{StaticResource OutlineButtonStyle}" />
                 <ui:Button
                     x:Name="SaveButton"
-                    Width="100"
-                    Appearance="Primary"
+                    Width="110"
+                    Height="42"
+                    BorderBrush="{StaticResource NavyAccentBrush}"
                     Click="SaveButton_Click"
                     Content="Save"
-                    Icon="{ui:SymbolIcon Save24}" />
+                    Foreground="{StaticResource NavyAccentBrush}"
+                    Style="{StaticResource OutlineButtonStyle}" />
+
             </StackPanel>
+
         </Border>
+
     </Grid>
+
 </Window>

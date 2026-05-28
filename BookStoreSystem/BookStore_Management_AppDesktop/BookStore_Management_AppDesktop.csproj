@@ -56,7 +56,7 @@
 	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
 	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
 	<PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.4" />
-	<PackageReference Include="WPF-UI" Version="4.2.0" />
+	<PackageReference Include="WPF-UI" Version="4.3.0" />
   </ItemGroup>
 
 	<ItemGroup>
