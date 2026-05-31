@@ -23,8 +23,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="144" />
+            <RowDefinition />
         </Grid.RowDefinitions>
 
         <Border
@@ -46,8 +46,8 @@
                         Text="Financial Report" />
                     <TextBlock
                         Margin="0,5,0,0"
-                        FontSize="14"
-                        Foreground="{DynamicResource TextSecondaryBrush}"
+                        FontSize="12"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
                         Text="Overview of revenue, costs and top selling books" />
                 </StackPanel>
 
@@ -64,7 +64,9 @@
                     <ComboBox
                         Width="80"
                         Margin="0,0,20,0"
-                        Background="{DynamicResource ContentBackgroundBrush}"
+                        Background="Transparent"
+                        BorderBrush="{StaticResource TextPrimaryBrush}"
+                        Foreground="{StaticResource TextPrimaryBrush}"
                         ItemsSource="{Binding Months}"
                         SelectedItem="{Binding SelectedMonth}" />
 
@@ -77,13 +79,15 @@
                     <ComboBox
                         Width="90"
                         Margin="0,0,20,0"
-                        Background="{DynamicResource ContentBackgroundBrush}"
+                        Background="Transparent"
+                        BorderBrush="{StaticResource TextPrimaryBrush}"
+                        Foreground="{StaticResource TextPrimaryBrush}"
                         ItemsSource="{Binding Years}"
                         SelectedItem="{Binding SelectedYear}" />
 
                     <ui:Button
-                        Padding="20,8"
                         Margin="0,0,10,0"
+                        Padding="20,8"
                         Appearance="Primary"
                         Background="{DynamicResource NavyAccentBrush}"
                         Command="{Binding GenerateReportCommand}"
@@ -92,9 +96,22 @@
                     <ui:Button
                         Padding="20,8"
                         Appearance="Secondary"
-                        Background="{DynamicResource SidebarAccentBrush}"
+                        BorderBrush="{StaticResource SuccessPrimaryBrush}"
                         Command="{Binding ExportToExcelCommand}"
-                        Content="Export to Excel" />
+                        Foreground="{StaticResource SuccessPrimaryBrush}"
+                        Style="{DynamicResource OutlineButtonStyle}">
+
+                        <StackPanel Orientation="Horizontal">
+
+                            <ui:SymbolIcon Margin="0,0,8,0" Symbol="{x:Static ui:SymbolRegular.Save24}" />
+
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontWeight="SemiBold"
+                                Text="Export to Excel" />
+
+                        </StackPanel>
+                    </ui:Button>
                 </StackPanel>
             </Grid>
         </Border>
@@ -102,116 +119,164 @@
         <UniformGrid
             Grid.Row="1"
             Margin="20,20,20,10"
-            Columns="4"
+            Columns="3"
             Rows="1">
             <Border
-                Margin="5"
-                Padding="20"
+                Margin="8"
+                Padding="18"
                 Background="{DynamicResource SidebarBackgroundBrush}"
-                CornerRadius="12">
+                CornerRadius="16">
+
                 <Border.Effect>
                     <DropShadowEffect
-                        BlurRadius="10"
-                        Opacity="0.1"
-                        ShadowDepth="2"
+                        BlurRadius="15"
+                        Opacity="0.08"
+                        ShadowDepth="3"
                         Color="Black" />
                 </Border.Effect>
-                <StackPanel>
-                    <TextBlock
-                        Margin="0,0,0,10"
-                        FontSize="12"
-                        FontWeight="Bold"
-                        Foreground="{DynamicResource TextSecondaryBrush}"
-                        Text="TOTAL REVENUE" />
-                    <TextBlock
-                        FontSize="28"
-                        FontWeight="Black"
-                        Foreground="{DynamicResource SuccessPrimaryBrush}"
-                        Text="{Binding TotalRevenue, StringFormat={}{0:N0} ₫}" />
-                </StackPanel>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel>
+                        <TextBlock
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Foreground="#A0A0A0"
+                            Text="TOTAL REVENUE" />
+
+                        <TextBlock
+                            Margin="0,12,0,0"
+                            FontSize="30"
+                            FontWeight="Black"
+                            Foreground="{DynamicResource SuccessPrimaryBrush}"
+                            Text="{Binding TotalRevenue, StringFormat={}{0:N0} ₫}" />
+                    </StackPanel>
+
+                    <Border
+                        Grid.Column="1"
+                        Width="52"
+                        Height="52"
+                        Background="#163D2A"
+                        CornerRadius="12">
+
+                        <ui:SymbolIcon
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="24"
+                            Foreground="#4ADE80"
+                            Symbol="{x:Static ui:SymbolRegular.ArrowUp24}" />
+                    </Border>
+                </Grid>
+            </Border>
+            <Border
+                Margin="8"
+                Padding="18"
+                Background="{DynamicResource SidebarBackgroundBrush}"
+                CornerRadius="16">
+
+                <Border.Effect>
+                    <DropShadowEffect
+                        BlurRadius="15"
+                        Opacity="0.08"
+                        ShadowDepth="3"
+                        Color="Black" />
+                </Border.Effect>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel>
+                        <TextBlock
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Foreground="#A0A0A0"
+                            Text="TOTAL IMPORT COST" />
+
+                        <TextBlock
+                            Margin="0,12,0,0"
+                            FontSize="30"
+                            FontWeight="Black"
+                            Foreground="{DynamicResource ErrorPrimaryBrush}"
+                            Text="{Binding TotalImportCost, StringFormat={}{0:N0} ₫}" />
+                    </StackPanel>
+
+                    <Border
+                        Grid.Column="1"
+                        Width="52"
+                        Height="52"
+                        Background="#3B1F1F"
+                        CornerRadius="12">
+
+                        <ui:SymbolIcon
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="24"
+                            Foreground="#F87171"
+                            Symbol="{x:Static ui:SymbolRegular.ArrowTrendingDown24}" />
+                    </Border>
+                </Grid>
+            </Border>
+            <Border
+                Margin="8"
+                Padding="18"
+                Background="{DynamicResource SidebarBackgroundBrush}"
+                CornerRadius="16">
+
+                <Border.Effect>
+                    <DropShadowEffect
+                        BlurRadius="15"
+                        Opacity="0.08"
+                        ShadowDepth="3"
+                        Color="Black" />
+                </Border.Effect>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel>
+                        <TextBlock
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Foreground="#A0A0A0"
+                            Text="BOOKS SOLD" />
+
+                        <TextBlock
+                            Margin="0,12,0,0"
+                            FontSize="30"
+                            FontWeight="Black"
+                            Foreground="{DynamicResource SidebarAccentBrush}"
+                            Text="{Binding TotalBooksSold}" />
+                    </StackPanel>
+
+                    <Border
+                        Grid.Column="1"
+                        Width="52"
+                        Height="52"
+                        Background="#60A5FF"
+                        CornerRadius="12">
+
+                        <ui:SymbolIcon
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="24"
+                            Foreground="White"
+                            Symbol="{x:Static ui:SymbolRegular.Library24}" />
+                    </Border>
+                </Grid>
             </Border>
 
-            <Border
-                Margin="5"
-                Padding="20"
-                Background="{DynamicResource SidebarBackgroundBrush}"
-                CornerRadius="12">
-                <Border.Effect>
-                    <DropShadowEffect
-                        BlurRadius="10"
-                        Opacity="0.1"
-                        ShadowDepth="2"
-                        Color="Black" />
-                </Border.Effect>
-                <StackPanel>
-                    <TextBlock
-                        Margin="0,0,0,10"
-                        FontSize="12"
-                        FontWeight="Bold"
-                        Foreground="{DynamicResource TextSecondaryBrush}"
-                        Text="TOTAL IMPORT COST" />
-                    <TextBlock
-                        FontSize="28"
-                        FontWeight="Black"
-                        Foreground="{DynamicResource ErrorPrimaryBrush}"
-                        Text="{Binding TotalImportCost, StringFormat={}{0:N0} ₫}" />
-                </StackPanel>
-            </Border>
-
-            <Border
-                Margin="5"
-                Padding="20"
-                Background="{DynamicResource SidebarBackgroundBrush}"
-                CornerRadius="12">
-                <Border.Effect>
-                    <DropShadowEffect
-                        BlurRadius="10"
-                        Opacity="0.1"
-                        ShadowDepth="2"
-                        Color="Black" />
-                </Border.Effect>
-                <StackPanel>
-                    <TextBlock
-                        Margin="0,0,0,10"
-                        FontSize="12"
-                        FontWeight="Bold"
-                        Foreground="{DynamicResource TextSecondaryBrush}"
-                        Text="NET PROFIT" />
-                    <TextBlock
-                        FontSize="28"
-                        FontWeight="Black"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
-                        Text="{Binding Profit, StringFormat={}{0:N0} ₫}" />
-                </StackPanel>
-            </Border>
-
-            <Border
-                Margin="5"
-                Padding="20"
-                Background="{DynamicResource SidebarBackgroundBrush}"
-                CornerRadius="12">
-                <Border.Effect>
-                    <DropShadowEffect
-                        BlurRadius="10"
-                        Opacity="0.1"
-                        ShadowDepth="2"
-                        Color="Black" />
-                </Border.Effect>
-                <StackPanel>
-                    <TextBlock
-                        Margin="0,0,0,10"
-                        FontSize="12"
-                        FontWeight="Bold"
-                        Foreground="{DynamicResource TextSecondaryBrush}"
-                        Text="BOOKS SOLD" />
-                    <TextBlock
-                        FontSize="28"
-                        FontWeight="Black"
-                        Foreground="{DynamicResource SidebarAccentBrush}"
-                        Text="{Binding TotalBooksSold}" />
-                </StackPanel>
-            </Border>
         </UniformGrid>
+
 
         <Grid Grid.Row="2" Margin="20,10,20,20">
             <Grid.ColumnDefinitions>
@@ -285,7 +350,8 @@
                     <TextBlock
                         Grid.Row="0"
                         Margin="0,0,0,15"
-                        FontSize="16"
+                        HorizontalAlignment="Center"
+                        FontSize="24"
                         FontWeight="Bold"
                         Foreground="{DynamicResource TextPrimaryBrush}"
                         Text="Top 5 Selling Books" />
@@ -297,7 +363,6 @@
                         BorderThickness="0"
                         GridLinesVisibility="Horizontal"
                         HeadersVisibility="Column"
-                        HorizontalGridLinesBrush="{DynamicResource DividerBrush}"
                         IsReadOnly="True"
                         ItemsSource="{Binding TopBooks}"
                         RowBackground="Transparent">
@@ -322,6 +387,7 @@
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="HorizontalAlignment" Value="Right" />
                                         <Setter Property="FontWeight" Value="Bold" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>

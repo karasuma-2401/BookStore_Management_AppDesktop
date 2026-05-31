@@ -4,9 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="Edit Customer"
-    Width="500"
-    Height="450"
-    Background="{DynamicResource ContentBackgroundBrush}"
+    Width="450"
+    Height="600"
+    Background="{DynamicResource SidebarBackgroundBrush}"
     WindowStartupLocation="CenterOwner">
 
     <Grid>
@@ -15,10 +15,14 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Row="0" Padding="30,20">
+        <ScrollViewer
+            Grid.Row="0"
+            Padding="30,20"
+            Background="{StaticResource SidebarBackgroundBrush}">
             <StackPanel>
                 <TextBlock
                     Margin="0,0,0,20"
+                    HorizontalAlignment="Center"
                     FontSize="18"
                     FontWeight="Bold"
                     Foreground="{DynamicResource TextPrimaryBrush}"
@@ -104,18 +108,24 @@
                 <ui:Button
                     x:Name="CancelButton"
                     Width="100"
+                    Height="42"
                     Margin="0,0,10,0"
                     Appearance="Secondary"
+                    BorderBrush="{StaticResource ErrorPrimaryBrush}"
                     Click="CancelButton_Click"
-                    Content="Cancel" />
+                    Content="Cancel"
+                    Foreground="{StaticResource ErrorPrimaryBrush}"
+                    Style="{DynamicResource OutlineButtonStyle}" />
 
                 <ui:Button
                     x:Name="SaveButton"
                     Width="100"
                     Appearance="Primary"
-                    Background="{DynamicResource NavyAccentBrush}"
+                    BorderBrush="{StaticResource NavyAccentBrush}"
                     Click="SaveButton_Click"
-                    Content="Update" />
+                    Content="Update"
+                    Foreground="{StaticResource NavyAccentBrush}"
+                    Style="{DynamicResource OutlineButtonStyle}" />
             </StackPanel>
         </Border>
     </Grid>
