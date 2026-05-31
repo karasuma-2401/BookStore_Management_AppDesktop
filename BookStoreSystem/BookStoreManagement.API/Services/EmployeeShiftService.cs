@@ -5,6 +5,7 @@ using BookStoreManagement.API.Models.Shift;
 using BookStoreManagement.API.Validators;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace BookStoreManagement.API.Services
 {
@@ -21,7 +22,6 @@ namespace BookStoreManagement.API.Services
 
         public async Task<string?> AssignShiftAsync(ShiftAssignDto dto)
         {
-
             if (!await _context.Shifts.AnyAsync(s => s.ShiftId == dto.ShiftId))
                 return "Shift not found.";
 
@@ -36,23 +36,25 @@ namespace BookStoreManagement.API.Services
                 EmployeeId = dto.EmployeeId,
                 ShiftId = dto.ShiftId,
                 WorkDate = dto.WorkDate,
+                Status = "Scheduled",
+                CheckInTime = null,
+                IsPaid = true
             };
 
             _context.EmployeeShifts.Add(employeeshift);
             var result = await _context.SaveChangesAsync();
             return result > 0 ? null : "Could not save the assignment to database.";
-
-
         }
+
         public async Task<IEnumerable<EmployeeShiftResponseDto>> GetScheduleAsync(DateTime startDate, DateTime endDate, int? employeeId = null)
         {
             var start = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
             var end = DateTime.SpecifyKind(endDate.Date, DateTimeKind.Utc);
 
             var query = _context.EmployeeShifts
-            .Include(es => es.Employee)
-            .Include(es => es.Shift)
-            .Where(es => es.WorkDate >= start && es.WorkDate <= end);
+                .Include(es => es.Employee)
+                .Include(es => es.Shift)
+                .Where(es => es.WorkDate >= start && es.WorkDate <= end);
 
             if (employeeId.HasValue)
             {
@@ -66,7 +68,10 @@ namespace BookStoreManagement.API.Services
                     FullName = es.Employee.FullName,
                     ShiftName = es.Shift.ShiftName,
                     WorkTime = $"{es.Shift.StartTime} - {es.Shift.EndTime}",
-                    WorkDate = es.WorkDate.ToString("yyyy-MM-dd")
+                    WorkDate = es.WorkDate.ToString("yyyy-MM-dd"),
+                    Status = es.Status,
+                    CheckInTime = es.CheckInTime,
+                    IsPaid = es.IsPaid
                 })
                 .ToListAsync();
         }
@@ -80,6 +85,103 @@ namespace BookStoreManagement.API.Services
             return await _context.SaveChangesAsync() > 0;
         }
 
+        public async Task<string?> CheckInAsync(int assignmentId, int currentUserId)
+        {
 
+            var assignment = await _context.EmployeeShifts
+            .Include(es => es.Employee)
+            .Include(es => es.Shift)
+            .FirstOrDefaultAsync(es => es.Id == assignmentId);
+
+            if (assignment == null) return "Assignment not found.";
+
+            if (assignment.Employee.UserId != currentUserId)
+                return "You do not have permission to check in for this shift.";
+
+            if (assignment.Status != "Scheduled")
+                return "Cannot check in. Current status is " + assignment.Status;
+
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime nowVn = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
+
+
+            DateTime shiftStartTime = assignment.WorkDate.Date.Add(assignment.Shift.StartTime);
+
+            // Cho phép trễ tối đa 15 phút (Grace period)
+            DateTime lateThreshold = shiftStartTime.AddMinutes(15);
+
+ 
+            if (nowVn < shiftStartTime.AddMinutes(-30))
+                return "It is too early to check in for this shift.";
+
+            if (nowVn > lateThreshold)
+            {
+                assignment.Status = "Late";
+            }
+            else
+            {
+                assignment.Status = "Present";
+            }
+
+            assignment.CheckInTime = DateTime.UtcNow;
+
+            var result = await _context.SaveChangesAsync();
+            return result > 0 ? null : "Failed to save check-in.";
+        }
+
+        public async Task<bool> ApproveCompensationAsync(int assignmentId)
+        {
+            var assignment = await _context.EmployeeShifts.FindAsync(assignmentId);
+
+            if (assignment == null) return false;
+
+            if (assignment.Status != "Absent") return false;
+
+            assignment.Status = "Compensated";
+            assignment.IsPaid = true;
+
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<PayslipDto?> CalculateSalaryAsync(int employeeId, int month, int year)
+        {
+
+            var employee = await _context.Employees.FindAsync(employeeId);
+            if (employee == null) return null;
+
+            var shiftsInMonth = await _context.EmployeeShifts
+                .Where(es => es.EmployeeId == employeeId
+                          && es.WorkDate.Month == month
+                          && es.WorkDate.Year == year)
+                .ToListAsync();
+
+            int totalAssigned = shiftsInMonth.Count;
+
+            var payslip = new PayslipDto
+            {
+                EmployeeId = employeeId,
+                FullName = employee.FullName,
+                Month = month,
+                Year = year,
+                Salary = employee.Salary,
+                TotalAssignedShifts = totalAssigned,
+                WorkedShifts = 0,
+                AbsentShifts = 0,
+                ActualSalary = 0
+            };
+
+            if (totalAssigned == 0)
+            {
+                return payslip;
+            }
+
+            payslip.WorkedShifts = shiftsInMonth.Count(es => es.IsPaid);
+            payslip.AbsentShifts = totalAssigned - payslip.WorkedShifts;
+
+            decimal salaryPerShift = payslip.Salary / (decimal)totalAssigned;
+            payslip.ActualSalary = Math.Round(salaryPerShift * payslip.WorkedShifts, 0);
+
+            return payslip;
+        }
     }
 }
