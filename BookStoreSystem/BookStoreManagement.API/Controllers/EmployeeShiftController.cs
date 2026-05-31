@@ -80,5 +80,20 @@ namespace BookStoreManagement.API.Controllers
 
             return Ok(new { message = "Compensation approved successfully!" });
         }
+
+        [HttpGet("payroll/{employeeId}")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> GetPayroll(int employeeId, [FromQuery] int month, [FromQuery] int year)
+        {
+            if (month < 1 || month > 12 || year < 2000)
+                return BadRequest(new { message = "Invalid month or year." });
+
+            var payslip = await _employeeShiftService.CalculateSalaryAsync(employeeId, month, year);
+
+            if (payslip == null)
+                return NotFound(new { message = "Employee not found." });
+
+            return Ok(payslip);
+        }
     }
 }

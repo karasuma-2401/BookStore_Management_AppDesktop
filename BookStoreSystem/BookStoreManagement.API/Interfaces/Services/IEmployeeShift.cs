@@ -10,6 +10,6 @@ namespace BookStoreManagement.API.Interfaces.Services
         Task<bool> DeleteAssignmentAsync(int id);
         Task<string?> CheckInAsync(int assignmentId, int currentUserId);
         Task<bool> ApproveCompensationAsync(int assignmentId);
-
+        Task<PayslipDto?> CalculateSalaryAsync(int employeeId, int month, int year);
     }
 }

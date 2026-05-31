@@ -142,5 +142,46 @@ namespace BookStoreManagement.API.Services
 
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<PayslipDto?> CalculateSalaryAsync(int employeeId, int month, int year)
+        {
+
+            var employee = await _context.Employees.FindAsync(employeeId);
+            if (employee == null) return null;
+
+            var shiftsInMonth = await _context.EmployeeShifts
+                .Where(es => es.EmployeeId == employeeId
+                          && es.WorkDate.Month == month
+                          && es.WorkDate.Year == year)
+                .ToListAsync();
+
+            int totalAssigned = shiftsInMonth.Count;
+
+            var payslip = new PayslipDto
+            {
+                EmployeeId = employeeId,
+                FullName = employee.FullName,
+                Month = month,
+                Year = year,
+                Salary = employee.Salary,
+                TotalAssignedShifts = totalAssigned,
+                WorkedShifts = 0,
+                AbsentShifts = 0,
+                ActualSalary = 0
+            };
+
+            if (totalAssigned == 0)
+            {
+                return payslip;
+            }
+
+            payslip.WorkedShifts = shiftsInMonth.Count(es => es.IsPaid);
+            payslip.AbsentShifts = totalAssigned - payslip.WorkedShifts;
+
+            decimal salaryPerShift = payslip.Salary / (decimal)totalAssigned;
+            payslip.ActualSalary = Math.Round(salaryPerShift * payslip.WorkedShifts, 0);
+
+            return payslip;
+        }
     }
 }
