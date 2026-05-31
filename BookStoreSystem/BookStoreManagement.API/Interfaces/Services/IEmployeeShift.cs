@@ -8,5 +8,8 @@ namespace BookStoreManagement.API.Interfaces.Services
         Task<string?> AssignShiftAsync(ShiftAssignDto dto);
         Task<IEnumerable<EmployeeShiftResponseDto>> GetScheduleAsync(DateTime startDate, DateTime endDate, int? employeeId = null);
         Task<bool> DeleteAssignmentAsync(int id);
+        Task<string?> CheckInAsync(int assignmentId, int currentUserId);
+        Task<bool> ApproveCompensationAsync(int assignmentId);
+
     }
 }

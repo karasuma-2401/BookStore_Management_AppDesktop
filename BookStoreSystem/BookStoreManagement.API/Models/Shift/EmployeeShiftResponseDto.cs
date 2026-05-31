@@ -7,5 +7,8 @@
         public string ShiftName { get; set; } = string.Empty;
         public string WorkTime { get; set; } = string.Empty;
         public string WorkDate { get; set; }
+        public string Status { get; set; } = string.Empty;
+        public DateTime? CheckInTime { get; set; }
+        public bool IsPaid { get; set; }
     }
 }

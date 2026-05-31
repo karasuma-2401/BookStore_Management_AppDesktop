@@ -99,7 +99,7 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<BookStoreManagement.API.Interfaces.Services.IUserService, BookStoreManagement.API.Services.UserService>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<BookStoreManagement.API.Interfaces.Services.IEmailService, BookStoreManagement.API.Services.EmailService>();
-
+builder.Services.AddHostedService<BookStoreManagement.API.BackgroundJobs.AttendanceScannerService>();
 // Book CRUD
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();

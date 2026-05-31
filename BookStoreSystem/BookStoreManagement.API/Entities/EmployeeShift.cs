@@ -20,6 +20,16 @@ namespace BookStoreManagement.API.Models.Entities
         [Column("work_date")]
         public DateTime WorkDate {get; set;}
 
+        [Column("status")]
+        [MaxLength(20)]
+        public string Status { get; set; } = "Scheduled"; // Scheduled, Present, Absent, Compensated
+
+        [Column("check_in_time")]
+        public DateTime? CheckInTime { get; set; }
+
+        [Column("is_paid")]
+        public bool IsPaid { get; set; } = true;
+
         [ForeignKey("EmployeeId")]
         public Employee Employee {get; set;} = null!;
 
