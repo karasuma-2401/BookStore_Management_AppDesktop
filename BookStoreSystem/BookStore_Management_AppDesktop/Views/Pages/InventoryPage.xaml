@@ -4,13 +4,14 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:uc="clr-namespace:BookStore_Management_AppDesktop.Views.UserControls"
       Title="InventoryPage" 
       Background="{DynamicResource ContentBackgroundBrush}" 
       TextOptions.TextFormattingMode="Display"
       UseLayoutRounding="True"
       Loaded="Page_Loaded"
-       mc:Ignorable="d" 
-        d:DesignHeight="700" d:DesignWidth="1000">
+      mc:Ignorable="d" 
+      d:DesignHeight="700" d:DesignWidth="1000">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -40,11 +41,11 @@
                 </ComboBox>
 
                 <ui:TextBox Grid.Column="2" 
-                    Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                    PlaceholderText="Search title, ID, or stock.." 
-                    Icon="{ui:SymbolIcon Search24}"
-                    Width="250" 
-                    VerticalAlignment="Center"/>
+                            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                            PlaceholderText="Search title, ID, or stock.." 
+                            Icon="{ui:SymbolIcon Search24}"
+                            Width="250" 
+                            VerticalAlignment="Center"/>
             </Grid>
         </Border>
 
@@ -65,7 +66,8 @@
                       EnableColumnVirtualization="True"
                       VirtualizingPanel.IsVirtualizing="True"
                       VirtualizingPanel.VirtualizationMode="Recycling"
-                      ScrollViewer.CanContentScroll="True" >
+                      ScrollViewer.CanContentScroll="True"
+                      ScrollViewer.VerticalScrollBarVisibility="Disabled">
 
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding BookId}" Width="60">
@@ -96,7 +98,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="Category"  Width="150">
+                    <DataGridTextColumn Header="Category" Width="150">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -149,33 +151,12 @@
             </DataGrid>
         </Border>
 
-        <Border Grid.Row="2" Background="{DynamicResource SidebarBackgroundBrush}" Margin="20,0,20,20" Padding="20,10" CornerRadius="8">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="{StaticResource FontSizeBody}" Foreground="{DynamicResource TextMutedBrush}">
-                    <Run Text="Showing Page " />
-                    <Run Text="{Binding CurrentPage, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
-                    <Run Text=" of " />
-                    <Run Text="{Binding TotalPages, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
-                    <Run Text="  (Total: " />
-                    <Run Text="{Binding TotalItems, Mode=OneWay}" FontWeight="Bold" />
-                    <Run Text=" items)" />
-                </TextBlock>
-
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:Button Icon="{ui:SymbolIcon ChevronLeft24}" 
-                               Command="{Binding PreviousPageCommand}" 
-                               Appearance="Secondary" Margin="0,0,10,0" Padding="15,5" ToolTip="Previous Page"/>
-
-                    <ui:Button Icon="{ui:SymbolIcon ChevronRight24}" 
-                               Command="{Binding NextPageCommand}" 
-                               Appearance="Primary" Padding="15,5" ToolTip="Next Page"/>
-                </StackPanel>
-            </Grid>
-        </Border>
+        <uc:PaginationControl Grid.Row="2" Margin="20,0,20,20"
+                               CurrentPage="{Binding CurrentPage}"
+                               TotalPages="{Binding TotalPages}"
+                               TotalItems="{Binding TotalItems}"
+                               ItemName="items"
+                               PreviousPageCommand="{Binding PreviousPageCommand}"
+                               NextPageCommand="{Binding NextPageCommand}"/>
     </Grid>
 </Page>

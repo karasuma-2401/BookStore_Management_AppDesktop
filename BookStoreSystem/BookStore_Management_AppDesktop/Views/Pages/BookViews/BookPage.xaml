@@ -4,13 +4,18 @@
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
           xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
           xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-          xmlns:uc="clr-namespace:BookStore_Management_AppDesktop.Views.UserControls" mc:Ignorable="d" 
+          xmlns:uc="clr-namespace:BookStore_Management_AppDesktop.Views.UserControls" 
+          mc:Ignorable="d" 
           d:DesignHeight="700" d:DesignWidth="1000"
           Title="BookPage"
           Background="{DynamicResource ContentBackgroundBrush}"
           TextOptions.TextFormattingMode="Display"
           UseLayoutRounding="True"
           Loaded="Page_Loaded">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="NativeBoolToVis" />
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -19,7 +24,12 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,6">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -27,7 +37,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Books" Style="{StaticResource HeaderTextStyle}" />
+                <TextBlock Grid.Column="0" Text="Books" Style="{StaticResource HeaderTextStyle}" VerticalAlignment="Center" />
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <ui:TextBox PlaceholderText="Search by title or category..." 
@@ -51,11 +61,13 @@
                                    Style="{StaticResource PrimaryActionButtonStyle}"
                                    ToolTip="View Shopping Cart" 
                                    Command="{Binding ViewCartCommand}"
-                                   Padding="12,8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                   Width="46" Height="46" Padding="0" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                         <Border Background="{DynamicResource SuccessPrimaryBrush}" 
                                 CornerRadius="50"
-                                Width="24" Height="24" 
+                                Width="22" Height="22" 
+                                Margin="0,0,-2,0"
                                 HorizontalAlignment="Right" VerticalAlignment="Top"
                                 Visibility="{Binding CartItemCount, Converter={StaticResource IntToBoolConverter}, ConverterParameter=0}">
                             <TextBlock Text="{Binding CartItemCount}" 
@@ -71,12 +83,12 @@
         </Border>
 
         <ListView x:Name="BooksListView"
-                  Grid.Row="1"
+                  Grid.Row="1" Grid.Column="0"
                   ItemsSource="{Binding Books}" 
                   Background="Transparent"
                   BorderThickness="0"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  Padding="10,10,10,20" d:ItemsSource="{d:SampleData ItemCount=5}">
+                  ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,10,10,10" d:ItemsSource="{d:SampleData ItemCount=5}">
 
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -107,35 +119,15 @@
             </ListView.ItemContainerStyle>
         </ListView>
 
-        <Border Grid.Row="2" Background="{DynamicResource SidebarBackgroundBrush}" Margin="25,0,25,20" Padding="20,10" CornerRadius="8">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+        <uc:PaginationControl Grid.Row="2" Grid.Column="0" Margin="25,0,25,15"
+                               CurrentPage="{Binding CurrentPage}"
+                               TotalPages="{Binding TotalPages}"
+                               TotalItems="{Binding TotalItems}"
+                               ItemName="books"
+                               PreviousPageCommand="{Binding PreviousPageCommand}"
+                               NextPageCommand="{Binding NextPageCommand}"/>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="{StaticResource FontSizeBody}" Foreground="{DynamicResource TextSecondBrush}">
-                        <Run Text="Showing Page " />
-                        <Run Text="{Binding CurrentPage, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
-                        <Run Text=" of " />
-                        <Run Text="{Binding TotalPages, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
-                        <Run Text="  (Total: " />
-                        <Run Text="{Binding TotalItems, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
-                        <Run Text=" books)" />
-                </TextBlock>
-
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:Button Icon="{ui:SymbolIcon ChevronLeft24}" 
-                               Command="{Binding PreviousPageCommand}" 
-                               Style="{StaticResource SecondaryActionButtonStyle}" 
-                               Margin="0,0,10,0" ToolTip="Previous Page"/>
-
-                    <ui:Button Icon="{ui:SymbolIcon ChevronRight24}" 
-                               Command="{Binding NextPageCommand}" 
-                               Style="{StaticResource PrimaryActionButtonStyle}" 
-                               ToolTip="Next Page"/>
-                </StackPanel>
-            </Grid>
-        </Border>
+        <uc:BookDetailPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1"
+                            Visibility="{Binding IsDetailPanelOpen, Converter={StaticResource NativeBoolToVis}}"/>
     </Grid>
 </Page>

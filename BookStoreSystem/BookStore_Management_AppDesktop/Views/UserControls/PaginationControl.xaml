@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="BookStore_Management_AppDesktop.Views.UserControls.PaginationControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d" 
+             x:Name="parent"
+             d:DesignWidth="800">
+
+    <Border Background="{DynamicResource SidebarBackgroundBrush}" Padding="20,12" CornerRadius="8">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="{StaticResource FontSizeBody}" Foreground="{DynamicResource TextSecondBrush}">
+                <Run Text="Showing Page " />
+                <Run Text="{Binding CurrentPage, ElementName=parent, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                <Run Text=" of " />
+                <Run Text="{Binding TotalPages, ElementName=parent, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                <Run Text="  (Total: " />
+                <Run Text="{Binding TotalItems, ElementName=parent, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                <Run Text=" " />
+                <Run Text="{Binding ItemName, ElementName=parent, Mode=OneWay}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                <Run Text=")" />
+            </TextBlock>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <ui:Button Icon="{ui:SymbolIcon ChevronLeft24}" 
+                           Command="{Binding PreviousPageCommand, ElementName=parent}" 
+                           Appearance="Secondary"
+                           Width="28" Height="28" Padding="0" Margin="0,0,8,0" 
+                           ToolTip="Previous Page"/>
+
+                <ui:Button Icon="{ui:SymbolIcon ChevronRight24}" 
+                           Command="{Binding NextPageCommand, ElementName=parent}" 
+                           Appearance="Secondary"       
+                           Width="28" Height="28" Padding="0"
+                           ToolTip="Next Page"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

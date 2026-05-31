@@ -5,16 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
-             d:DesignHeight="420" d:DesignWidth="240">
+             d:DesignHeight="360" d:DesignWidth="195">
 
-    <Border Width="210" 
+    <Border Width="185" 
             Background="{DynamicResource CardBackgroundBrush}" 
-            Margin="10"
+            Margin="6"
             BorderBrush="#E2E8F0" 
             BorderThickness="1" 
             CornerRadius="12"
             Cursor="Hand"
             Padding="12">
+
         <Border.InputBindings>
             <MouseBinding Gesture="LeftClick" 
                           Command="{Binding DataContext.ViewBookDetailCommand, RelativeSource={RelativeSource AncestorType=Page}}" 
@@ -35,29 +36,29 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" CornerRadius="8" ClipToBounds="True" Margin="0,0,0,10" Background="{DynamicResource ContentBackgroundBrush}">
-                <Image Height="220" Stretch="UniformToFill"
+            <Border Grid.Row="0" CornerRadius="8" ClipToBounds="True" Margin="0,0,0,8" Background="{DynamicResource ContentBackgroundBrush}">
+                <Image Height="185" Stretch="UniformToFill"
                        RenderOptions.BitmapScalingMode="HighQuality"
-                       Source="{Binding ImagePath, IsAsync=True, TargetNullValue='https://via.placeholder.com/180x250?text=No+Image', FallbackValue='https://via.placeholder.com/180x250?text=No+Image'}">
+                       Source="{Binding ImagePath, IsAsync=True, TargetNullValue='https://via.placeholder.com/185x220?text=No+Image', FallbackValue='https://via.placeholder.com/185x220?text=No+Image'}">
                 </Image>
             </Border>
 
             <TextBlock Grid.Row="1" Text="{Binding Title}" 
                        Style="{StaticResource BookTitleTextStyle}"
-                       Height="42" 
+                       Height="38" FontSize="14"
                        TextTrimming="CharacterEllipsis" 
                        TextWrapping="Wrap"
                        Margin="0,0,0,4"/>
 
             <TextBlock Grid.Row="2" Text="{Binding AuthorName, TargetNullValue='Unknown Author'}" 
-                       FontSize="12" 
+                       FontSize="11" 
                        FontWeight="Medium"
                        Foreground="{DynamicResource TextSecondBrush}"
                        TextTrimming="CharacterEllipsis"
-                       Margin="0,0,0,4"/>
+                       Margin="0,0,0,2"/>
 
             <TextBlock Grid.Row="3" Text="{Binding CategoryNames}" 
-                       FontSize="11" 
+                       FontSize="10" 
                        FontStyle="Italic"
                        Foreground="{DynamicResource TextSecondBrush}"
                        TextTrimming="CharacterEllipsis"
@@ -69,7 +70,7 @@
                            FontSize="15"
                            FontWeight="Bold"/>
                 <TextBlock Text=" đ" 
-                           FontSize="{StaticResource FontSizeBody}" 
+                           FontSize="11" 
                            FontWeight="SemiBold" 
                            Foreground="{DynamicResource TextSecondBrush}"
                            VerticalAlignment="Bottom"
