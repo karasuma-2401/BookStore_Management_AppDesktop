@@ -31,13 +31,13 @@
                 <ui:Button Icon="{ui:SymbolIcon ChevronLeft24}" 
                            Command="{Binding PreviousPageCommand, ElementName=parent}" 
                            Appearance="Secondary"
-                           Width="38" Height="38" Padding="0" Margin="0,0,8,0" 
+                           Width="28" Height="28" Padding="0" Margin="0,0,8,0" 
                            ToolTip="Previous Page"/>
 
                 <ui:Button Icon="{ui:SymbolIcon ChevronRight24}" 
                            Command="{Binding NextPageCommand, ElementName=parent}" 
-                           Appearance="Secondary"
-                           Width="38" Height="38" Padding="0"
+                           Appearance="Secondary"       
+                           Width="28" Height="28" Padding="0"
                            ToolTip="Next Page"/>
             </StackPanel>
         </Grid>

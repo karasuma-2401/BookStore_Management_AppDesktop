@@ -29,7 +29,7 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,15">
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="{DynamicResource SidebarBackgroundBrush}" Padding="25,6">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -37,7 +37,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Books" Style="{StaticResource HeaderTextStyle}" />
+                <TextBlock Grid.Column="0" Text="Books" Style="{StaticResource HeaderTextStyle}" VerticalAlignment="Center" />
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <ui:TextBox PlaceholderText="Search by title or category..." 
@@ -61,11 +61,13 @@
                                    Style="{StaticResource PrimaryActionButtonStyle}"
                                    ToolTip="View Shopping Cart" 
                                    Command="{Binding ViewCartCommand}"
-                                   Padding="12,8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                   Width="46" Height="46" Padding="0" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                         <Border Background="{DynamicResource SuccessPrimaryBrush}" 
                                 CornerRadius="50"
-                                Width="24" Height="24" 
+                                Width="22" Height="22" 
+                                Margin="0,0,-2,0"
                                 HorizontalAlignment="Right" VerticalAlignment="Top"
                                 Visibility="{Binding CartItemCount, Converter={StaticResource IntToBoolConverter}, ConverterParameter=0}">
                             <TextBlock Text="{Binding CartItemCount}" 
@@ -86,8 +88,7 @@
                   Background="Transparent"
                   BorderThickness="0"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                  Padding="10,10,10,20" d:ItemsSource="{d:SampleData ItemCount=5}">
+                  ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,10,10,10" d:ItemsSource="{d:SampleData ItemCount=5}">
 
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -118,7 +119,7 @@
             </ListView.ItemContainerStyle>
         </ListView>
 
-        <uc:PaginationControl Grid.Row="2" Grid.Column="0" Margin="25,0,25,20"
+        <uc:PaginationControl Grid.Row="2" Grid.Column="0" Margin="25,0,25,15"
                                CurrentPage="{Binding CurrentPage}"
                                TotalPages="{Binding TotalPages}"
                                TotalItems="{Binding TotalItems}"

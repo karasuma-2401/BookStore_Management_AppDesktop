@@ -31,7 +31,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private ObservableCollection<Book> _books = new ObservableCollection<Book>();
 
         [ObservableProperty] private int _currentPage = 1;
-        [ObservableProperty] private int _pageSize = 10;
+        [ObservableProperty] private int _pageSize = 15;
         [ObservableProperty] private int _totalItems;
         [ObservableProperty] private int _totalPages = 1;
         [ObservableProperty] private int _cartItemCount = 0;
