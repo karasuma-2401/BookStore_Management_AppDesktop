@@ -46,9 +46,6 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
                     case PageType.Settings:
                         newPage = App.ServiceProvider!.GetRequiredService<SettingsPage>();
                         break;
-                    case PageType.BookDetail: 
-                        newPage = _serviceProvider.GetRequiredService<BookDetailPage>();
-                        break;
                     case PageType.ImportHistory:
                         newPage = _serviceProvider.GetRequiredService<ImportHistoryPage>();
                         break;

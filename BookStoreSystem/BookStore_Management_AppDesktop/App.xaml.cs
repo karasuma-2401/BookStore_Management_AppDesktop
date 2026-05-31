@@ -72,7 +72,7 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<IExportService, ExportService>();
 
             services.AddSingleton<IInvoiceApiService, InvoiceApiService>();
-            services.AddSingleton<IInvoiceExportService, InvoiceExportService>(); // Đăng ký service mới vào DI container
+            services.AddSingleton<IInvoiceExportService, InvoiceExportService>(); 
             services.AddSingleton<IVoucherApiService, VoucherApiService>();
 
             // // Get ViewModels
@@ -83,7 +83,6 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<AuthorSelectionViewModel>();
             services.AddTransient<BookViewModel>();
-            services.AddTransient<BookDetailViewModel>();
             services.AddTransient<EmployeeViewModel>();
             services.AddTransient<CustomerViewModel>();
             services.AddTransient<ImportCreateViewModel>(); 
@@ -104,7 +103,6 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<SaleCartViewModel>();
             services.AddTransient<InventoryPage>();
             services.AddTransient<SettingsPage>();
-            services.AddTransient<BookDetailPage>();
             services.AddTransient<EmployeePage>();
             services.AddTransient<CustomerPage>();
             services.AddTransient<ImportHistoryPage>(); 
