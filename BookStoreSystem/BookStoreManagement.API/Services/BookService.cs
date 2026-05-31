@@ -66,9 +66,10 @@ namespace BookStoreManagement.API.Services
                     BookId = b.BookId,
                     Title = b.Title,
                     AuthorId = b.AuthorId,
-                    AuthorName = b.Author.Name,
+                    AuthorName = b.Author != null ? b.Author.Name : null,
                     Quantity = b.Quantity,
                     Price = b.Price,
+                    Description = b.Description,
                     ImagePath = b.ImagePath,
                     CategoryNames = b.BookCategories
                     .Select(bc => bc.Category.Name)
