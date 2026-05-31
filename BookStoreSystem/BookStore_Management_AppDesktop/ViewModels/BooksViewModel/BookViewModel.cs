@@ -26,22 +26,25 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly IBookHubService _hubService;
         private readonly DebounceHelper _searchDebouncer = new DebounceHelper();
 
-        // --- KHAY CHỨA DỮ LIỆU DANH SÁCH ---
         [ObservableProperty] private string _searchText = string.Empty;
         [ObservableProperty] private string? _selectedSort;
         [ObservableProperty] private ObservableCollection<Book> _books = new ObservableCollection<Book>();
 
         [ObservableProperty] private int _currentPage = 1;
-        [ObservableProperty] private int _pageSize = 12;
+        [ObservableProperty] private int _pageSize = 10;
         [ObservableProperty] private int _totalItems;
         [ObservableProperty] private int _totalPages = 1;
         [ObservableProperty] private int _cartItemCount = 0;
 
-        // --- BỔ SUNG: KHỐI THUỘC TÍNH ĐIỀU KHIỂN SIDE PANEL REALTIME ---
         [ObservableProperty] private bool _isDetailPanelOpen;
         [ObservableProperty] private Book? _currentDetailBook;
         [ObservableProperty] private int _selectedQuantity = 1;
         [ObservableProperty] private bool _isDetailLoading;
+
+        partial void OnCurrentPageChanged(int value)
+        {
+            _ = ExecuteSearchAsync();
+        }
 
         public BookViewModel(
             IBookApiService apiService,
@@ -251,6 +254,26 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private void ViewCart()
         {
             _navigationService.NavigateTo(PageType.SaleCart);
+        }
+
+        [RelayCommand]
+        private async Task NextPageAsync()
+        {
+            if (CurrentPage < TotalPages)
+            {
+                CurrentPage++;
+                await ExecuteSearchAsync();
+            }
+        }
+
+        [RelayCommand]
+        private async Task PreviousPageAsync()
+        {
+            if (CurrentPage > 1)
+            {
+                CurrentPage--;
+                await ExecuteSearchAsync();
+            }
         }
     }
 }
