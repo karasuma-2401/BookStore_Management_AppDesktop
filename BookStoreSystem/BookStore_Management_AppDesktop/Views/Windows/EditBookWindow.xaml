@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        Title="Edit Book" Height="700" Width="450"
+        Title="Edit Book" Height="750" Width="600" 
         WindowStartupLocation="CenterScreen"
         WindowStyle="None" 
         AllowsTransparency="True" 
@@ -30,78 +30,142 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,25" 
+                <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,20" 
                             MouseLeftButtonDown="Window_MouseLeftButtonDown" Cursor="SizeAll" Background="Transparent">
-                    <TextBlock Text="EDIT BOOK" 
-                               Style="{StaticResource HeaderTextStyle}" 
-                               HorizontalAlignment="Center"/>
-                    <TextBlock Text="Book Store Management System" 
-                               Style="{StaticResource BodyTextStyle}" 
-                               HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBlock Text="EDIT BOOK" Style="{StaticResource HeaderTextStyle}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Book Store Management System" Style="{StaticResource BodyTextStyle}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                 </StackPanel>
 
-                <StackPanel Grid.Row="1">
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,-15,0" Padding="0,0,15,0">
+                    <StackPanel>
 
-                    <TextBlock Text="Title" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="{StaticResource FontSizeBody}"/>
-                    <ui:TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter book title..." 
-                                FontSize="{StaticResource FontSizeBody}"
-                                Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Padding="10,8"/>
+                        <TextBlock Text="Title" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="{StaticResource FontSizeBody}"/>
+                        <ui:TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter book title..." 
+                                    FontSize="{StaticResource FontSizeBody}" Margin="0,0,0,15"
+                                    Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Padding="10,8"/>
 
-                    <TextBlock Text="Author" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,15,0,0" FontSize="{StaticResource FontSizeBody}"/>
-                    <Grid Margin="0,0,0,15">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Price (VNĐ)" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="{StaticResource FontSizeBody}"/>
+                        <ui:TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="0" 
+                                    FontSize="{StaticResource FontSizeBody}" Margin="0,0,0,15"
+                                    Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Padding="10,8"/>
 
-                        <ComboBox Grid.Column="0"
-                                  IsEditable="True" 
-                                  IsTextSearchEnabled="False"
-                                  StaysOpenOnEdit="True"
-                                  ItemsSource="{Binding AuthorVM.DisplayAuthors}" 
-                                  DisplayMemberPath="Name" 
-                                  Text="{Binding AuthorVM.SearchAuthorText, UpdateSourceTrigger=PropertyChanged}"
-                                  SelectedItem="{Binding AuthorVM.SelectedAuthor}"
-                                  HorizontalAlignment="Stretch"
-                                  Margin="0,0,10,0" Height="35" FontSize="{StaticResource FontSizeBody}"/>
 
-                        <ui:Button Grid.Column="1"
-                                   Icon="{ui:SymbolIcon Add24}"
-                                   Content="Add"
-                                   Style="{StaticResource SecondaryActionButtonStyle}"
-                                   Command="{Binding AuthorVM.AddAuthorCommand}"
-                                   Visibility="{Binding AuthorVM.IsShowAddButton, Converter={StaticResource BoolToVis}}" 
-                                   Height="35" Padding="15,0"/>
-                    </Grid>
-                    
+                        <TextBlock Text="Author" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="{StaticResource FontSizeBody}"/>
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True"
+                                      ItemsSource="{Binding AuthorVM.DisplayAuthors}" DisplayMemberPath="Name" 
+                                      Text="{Binding AuthorVM.SearchAuthorText, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedItem="{Binding AuthorVM.SelectedAuthor}" HorizontalAlignment="Stretch" Margin="0,0,10,0" Height="35" FontSize="{StaticResource FontSizeBody}"/>
+                            <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Add24}" Content="Add" Style="{StaticResource SecondaryActionButtonStyle}"
+                                       Command="{Binding AuthorVM.AddAuthorCommand}" Visibility="{Binding AuthorVM.IsShowAddButton, Converter={StaticResource BoolToVis}}" 
+                                       Height="35" Padding="15,0"/>
+                        </Grid>
 
-                    <TextBlock Text="Cover Image" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,15,0,0" FontSize="{StaticResource FontSizeBody}"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Categories" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5" FontSize="{StaticResource FontSizeBody}"/>
 
-                        <ui:TextBox Grid.Column="0" Text="{Binding LocalImagePath}" IsReadOnly="True" PlaceholderText="No image selected..." 
+                        <Grid Margin="0,0,0,15">
+                            <Border Background="{DynamicResource SidebarBackgroundBrush}" 
+                                    BorderBrush="{DynamicResource NavyLightBrush}" BorderThickness="1" 
+                                    CornerRadius="4" MinHeight="38" Padding="5">
+
+                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ItemsControl ItemsSource="{Binding CategoryVM.SelectedCategories}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="{DynamicResource NavyAccentBrush}" CornerRadius="12" Margin="0,0,5,5" Padding="10,4,5,4">
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Name}" Foreground="White" FontSize="12" FontWeight="SemiBold" Margin="0,0,5,0"/>
+                                                        <ui:Button Icon="{ui:SymbolIcon Dismiss24}" Appearance="Transparent" Foreground="White" 
+                                                                   Command="{Binding DataContext.CategoryVM.RemoveCategoryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                   CommandParameter="{Binding}"
+                                                                   Padding="0" Width="16" Height="16" Cursor="Hand"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                    <ui:TextBox Text="{Binding CategoryVM.SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                                                Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimaryBrush}"
+                                                MinWidth="150" VerticalAlignment="Center" Margin="5,0,0,5"
+                                                PlaceholderText="Type to search or add category..."/>
+                                </WrapPanel>
+                            </Border>
+
+                            <Popup IsOpen="{Binding CategoryVM.IsDropdownOpen}" StaysOpen="False" Placement="Bottom" MinWidth="250" MaxHeight="200" AllowsTransparency="True">
+                                <Border Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" BorderThickness="1" CornerRadius="4" Margin="0,2,0,0">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.3"/>
+                                    </Border.Effect>
+                                    <StackPanel>
+                                        <ItemsControl ItemsSource="{Binding CategoryVM.SuggestedCategories}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <ui:Button Content="{Binding Name}" 
+                                                               Command="{Binding DataContext.CategoryVM.SelectCategoryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                               CommandParameter="{Binding}"
+                                                               Appearance="Transparent"
+                                                               HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                                                               Foreground="{DynamicResource TextPrimaryBrush}" Padding="15,10" Cursor="Hand"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+
+                                        <ui:Button Visibility="{Binding CategoryVM.CanAddNewCategory, Converter={StaticResource BoolToVis}}"
+                                                   Command="{Binding CategoryVM.CreateNewCategoryCommand}"
+                                                   Appearance="Transparent"
+                                                   HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                                                   Foreground="{DynamicResource TextPrimaryBrush}" Padding="15,10" Cursor="Hand">
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon Symbol="Add24" Foreground="{DynamicResource SuccessPrimaryBrush}" Margin="0,0,10,0"/>
+                                                <TextBlock Text="Add new category: " Foreground="{DynamicResource TextMutedBrush}" FontStyle="Italic"/>
+                                                <TextBlock Text="{Binding CategoryVM.SearchText}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                            </StackPanel>
+                                        </ui:Button>
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <TextBlock Text="Description" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="{StaticResource FontSizeBody}"/>
+                        <ui:TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter book description..." 
+                                    TextWrapping="Wrap" AcceptsReturn="True" Height="90" Margin="0,0,0,15" VerticalContentAlignment="Top"
                                     FontSize="{StaticResource FontSizeBody}"
-                                    Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Margin="0,0,10,0" Padding="10,8"/>
+                                    Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Padding="10,8"/>
 
-                        <ui:Button Grid.Column="1" Content="Browse" 
-                                   Command="{Binding SelectImageCommand}" 
-                                   Style="{StaticResource SecondaryActionButtonStyle}"
-                                   Height="35" Padding="15,0"/>
-                    </Grid>
 
-                    <Border BorderBrush="{DynamicResource NavyLightBrush}" BorderThickness="1" CornerRadius="8" 
-                            Width="140" Height="190" HorizontalAlignment="Center" 
-                            Background="{DynamicResource SidebarBackgroundBrush}" Margin="0,15,0,0">
-                        <Image Source="{Binding LocalImagePath}" Stretch="Uniform" Margin="2"/>
-                    </Border>
-                </StackPanel>
+                        <TextBlock Text="Cover Image" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="{StaticResource FontSizeBody}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ui:TextBox Grid.Column="0" Text="{Binding LocalImagePath}" IsReadOnly="True" PlaceholderText="No image selected..." 
+                                        FontSize="{StaticResource FontSizeBody}"
+                                        Foreground="{DynamicResource TextPrimaryBrush}" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource NavyLightBrush}" Margin="0,0,10,0" Padding="10,8"/>
+                            <ui:Button Grid.Column="1" Content="Browse" Command="{Binding SelectImageCommand}" 
+                                       Style="{StaticResource SecondaryActionButtonStyle}" Height="35" Padding="15,0"/>
+                        </Grid>
+
+                        <Border BorderBrush="{DynamicResource NavyLightBrush}" BorderThickness="1" CornerRadius="8" 
+                                Width="140" Height="190" HorizontalAlignment="Center" 
+                                Background="{DynamicResource SidebarBackgroundBrush}" Margin="0,15,0,10">
+                            <Image Source="{Binding LocalImagePath}" Stretch="Uniform" Margin="2"/>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
 
                 <Grid Grid.Row="2" Margin="0,20,0,0">
-                    <ui:ProgressRing IsIndeterminate="True" 
-                                     Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}" 
+                    <ui:ProgressRing IsIndeterminate="True" Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}" 
                                      HorizontalAlignment="Left" Width="24" Height="24" Foreground="{DynamicResource NavyAccentBrush}"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

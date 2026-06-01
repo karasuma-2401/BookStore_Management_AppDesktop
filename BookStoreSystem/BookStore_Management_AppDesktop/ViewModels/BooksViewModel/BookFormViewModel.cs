@@ -5,7 +5,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookStore_Management_AppDesktop.ViewModels
@@ -17,13 +19,18 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         public AuthorSelectionViewModel AuthorVM { get; }
 
+        public CategorySelectionViewModel CategoryVM { get; }
+
         private bool _isEditMode;
         private int _bookId;
         private int? _initialAuthorId;
+        private List<int>? _initialCategoryIds; 
         private int _originalQuantity = 0;
 
         [ObservableProperty] private string _title = string.Empty;
         [ObservableProperty] private string _localImagePath = string.Empty;
+
+        [ObservableProperty] private string _description = string.Empty;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
@@ -35,13 +42,16 @@ namespace BookStore_Management_AppDesktop.ViewModels
         public BookFormViewModel(
             IBookApiService bookApiService,
             CloudinaryService cloudinaryService,
-            AuthorSelectionViewModel authorVM)
+            AuthorSelectionViewModel authorVM,
+            CategorySelectionViewModel categoryVM) 
         {
             _bookApiService = bookApiService;
             _cloudinaryService = cloudinaryService;
             AuthorVM = authorVM;
+            CategoryVM = categoryVM;
 
             AuthorVM.OnShowMessage = (msg) => OnShowMessage?.Invoke(msg);
+            CategoryVM.OnShowMessage = (msg) => OnShowMessage?.Invoke(msg);
             _isEditMode = false;
         }
 
@@ -53,11 +63,15 @@ namespace BookStore_Management_AppDesktop.ViewModels
             LocalImagePath = bookToEdit.ImagePath ?? string.Empty;
             _initialAuthorId = bookToEdit.AuthorId;
             _originalQuantity = bookToEdit.Quantity;
+
+            Description = bookToEdit.Description ?? string.Empty;
+            _initialCategoryIds = bookToEdit.CategoryIds;
         }
 
         public async Task InitializeAsync()
         {
             await AuthorVM.InitializeAsync(_initialAuthorId);
+           await CategoryVM.InitializeAsync(_initialCategoryIds);
         }
 
         private bool CanExecuteAction() => !IsLoading;
@@ -85,6 +99,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
             var selectedAuthorId = AuthorVM.SelectedAuthor?.AuthorId;
             if (selectedAuthorId is null or 0) { OnShowMessage?.Invoke("Select author."); return; }
+
+            var selectedCategoryIds = CategoryVM.GetSelectedCategoryIds();
+            if (!selectedCategoryIds.Any()) { OnShowMessage?.Invoke("Please select at least one category."); return; }
 
             try
             {
@@ -114,7 +131,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     Title = Title.Trim(),
                     AuthorId = selectedAuthorId.Value,
                     Quantity = _isEditMode ? _originalQuantity : 0,
-                    ImagePath = finalImageUrl
+                    ImagePath = finalImageUrl,
+
+                    Description = Description.Trim(),
+                    CategoryIds = selectedCategoryIds
                 };
 
                 if (_isEditMode)
