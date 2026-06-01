@@ -3,14 +3,15 @@ using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs;
 using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API.BookServices;
-using BookStore_Management_AppDesktop.Services.Realtime; 
+using BookStore_Management_AppDesktop.Services.Realtime;
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -31,17 +32,16 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private int _totalItems;
         [ObservableProperty] private int _totalPages = 1;
 
-        [ObservableProperty] private string _sortBy = "price";
-        [ObservableProperty] private string _sortOrder = "desc";
+        [ObservableProperty] private string? _selectedSort = "price_desc";
 
         public InventoryViewModel(
             IBookApiService apiService,
-            CloudinaryService _cloudinaryService,
+            CloudinaryService cloudinaryService,
             IDialogService dialogService,
-            IBookHubService hubService) 
+            IBookHubService hubService)
         {
             _apiService = apiService;
-            this._cloudinaryService = _cloudinaryService;
+            _cloudinaryService = cloudinaryService;
             _dialogService = dialogService;
             _hubService = hubService;
 
@@ -55,58 +55,84 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             Application.Current.Dispatcher.InvokeAsync(async () =>
             {
-                await LoadDataAsync();
+                await ExecuteSearchAsync();
             });
+        }
+
+        partial void OnSelectedSortChanged(string? value)
+        {
+            CurrentPage = 1;
+            _ = ExecuteSearchAsync();
         }
 
         public override async Task LoadDataAsync()
         {
-            var query = new BookQueryParameters
-            {
-                Keyword = SearchText,
-                PageNumber = CurrentPage,
-                PageSize = PageSize,
-                SortBy = SortBy,
-                SortOrder = SortOrder
-            };
+            await ExecuteSearchAsync();
+        }
 
-            var response = await _apiService.GetAllBooksAsync(query);
-
-            Application.Current.Dispatcher.Invoke(() =>
+        private async Task ExecuteSearchAsync(CancellationToken token = default)
+        {
+            try
             {
-                Books.Clear();
-                if (response.Data != null)
+                string? sortBy = null;
+                string? sortOrder = null;
+
+                if (!string.IsNullOrEmpty(SelectedSort) && SelectedSort.Contains("_"))
                 {
-                    foreach (var book in response.Data)
+                    var parts = SelectedSort.Split('_');
+                    sortBy = parts[0];
+                    sortOrder = parts[1];
+                }
+
+                var query = new BookQueryParameters
+                {
+                    Keyword = SearchText?.Trim(),
+                    PageNumber = CurrentPage,
+                    PageSize = PageSize,
+                    SortBy = sortBy,
+                    SortOrder = sortOrder
+                };
+
+                var response = await _apiService.GetAllBooksAsync(query, token);
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Books.Clear();
+                    if (response != null && response.Data != null)
                     {
-                        Books.Add(book);
+                        foreach (var book in response.Data)
+                        {
+                            Books.Add(book);
+                        }
+
+                        TotalItems = response.TotalItems;
+                        TotalPages = response.TotalPages > 0 ? response.TotalPages : 1;
+
+                        if (CurrentPage > TotalPages)
+                        {
+                            CurrentPage = TotalPages;
+                            _ = ExecuteSearchAsync();
+                        }
                     }
-                }
-
-                TotalItems = response.TotalItems;
-                TotalPages = response.TotalPages > 0 ? response.TotalPages : 1;
-
-                if (CurrentPage > TotalPages)
-                {
-                    CurrentPage = TotalPages;
-                    _ = LoadDataAsync();
-                }
-            });
+                });
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Inventory Search Error]: {ex.Message}");
+            }
         }
 
         partial void OnSearchTextChanged(string value)
         {
             _ = _searchDebouncer.RunAsync(997, async (token) =>
             {
-                CurrentPage = 1; 
-                await LoadDataAsync();
+                CurrentPage = 1;
+                // 🎯 ĐÃ VÁ LỖI: Truyền token vào để hủy luồng chạy cũ
+                await ExecuteSearchAsync(token);
             });
-        }
-
-        partial void OnPageSizeChanged(int value)
-        {
-            CurrentPage = 1;
-            _ = LoadDataAsync();
         }
 
         [RelayCommand]
@@ -115,7 +141,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             if (CurrentPage < TotalPages)
             {
                 CurrentPage++;
-                await LoadDataAsync();
+                await ExecuteSearchAsync();
             }
         }
 
@@ -125,7 +151,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             if (CurrentPage > 1)
             {
                 CurrentPage--;
-                await LoadDataAsync();
+                await ExecuteSearchAsync();
             }
         }
 
@@ -159,13 +185,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
             }
         }
 
-
         [RelayCommand]
         private void EditBook(Book selectedBook)
         {
             if (selectedBook == null) return;
             _dialogService.ShowEditBookWindow(selectedBook);
         }
-    
     }
 }
