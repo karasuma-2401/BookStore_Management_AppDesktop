@@ -39,7 +39,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private decimal finalTotal;
 
         [ObservableProperty]
-        private int _totalQuantity;
+        private int totalQuantity;
 
         [ObservableProperty]
         private bool isLoading;
@@ -54,7 +54,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private string? appliedVoucherMessage;
 
         [ObservableProperty]
-        private bool _isVoucherValid;
+        private bool isVoucherValid;
 
         [ObservableProperty]
         private ObservableCollection<CustomerResponseDto> customers = new();

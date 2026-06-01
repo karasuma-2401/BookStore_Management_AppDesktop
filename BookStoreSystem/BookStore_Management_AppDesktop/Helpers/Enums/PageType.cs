@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,6 +17,13 @@ namespace BookStore_Management_AppDesktop.Helpers.Enums
         CreateImport,
         Reports,
         InvoiceDetail,
-        SaleCart
+        SaleCart,
+        AbsenceManagement,
+        ShiftAssign,
+        Payslip,
+        ShiftSchedule,
+        AbsenceManagementPage,
+        PayrollManagement,
+        KioskCheckIn
     }
 }

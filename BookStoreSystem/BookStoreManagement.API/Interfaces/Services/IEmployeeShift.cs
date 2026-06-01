@@ -1,4 +1,4 @@
-﻿using BookStoreManagement.API.Models.Entities;
+using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Models.Shift;
 
 namespace BookStoreManagement.API.Interfaces.Services
@@ -11,5 +11,7 @@ namespace BookStoreManagement.API.Interfaces.Services
         Task<string?> CheckInAsync(int assignmentId, int currentUserId);
         Task<bool> ApproveCompensationAsync(int assignmentId);
         Task<PayslipDto?> CalculateSalaryAsync(int employeeId, int month, int year);
+        Task<ShiftDayDetailResponseDto> GetDayDetailAsync(DateTime date);
+        Task<KioskCheckInResponseDto> KioskCheckInAsync(int employeeId);
     }
 }

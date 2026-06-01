@@ -1,4 +1,4 @@
-﻿    using System.Globalization;
+    using System.Globalization;
     using System.Windows;
     using System.Windows.Data;
 
@@ -8,12 +8,14 @@
         {
             public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
             {
-                if (value is bool isVibible && isVibible)
+                bool isVisible = value is bool b && b;
+
+                if (parameter is string paramStr && paramStr.Equals("Inverted", StringComparison.OrdinalIgnoreCase))
                 {
-                    return Visibility.Visible;
+                    isVisible = !isVisible;
                 }
 
-                return Visibility.Collapsed;
+                return isVisible ? Visibility.Visible : Visibility.Collapsed;
             }
 
             public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

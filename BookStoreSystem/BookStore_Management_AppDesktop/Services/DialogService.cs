@@ -53,5 +53,24 @@ namespace BookStore_Management_AppDesktop.Services
             }
             return null;
         }
+
+        public async Task ShowErrorAsync(string title, string message)
+        {
+            // Bạn có thể dùng ContentDialog hoặc MessageBox tùy vào UI bạn đang dùng
+            System.Windows.MessageBox.Show(message, title, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            await Task.CompletedTask;
+        }
+
+        public async Task ShowSuccessAsync(string title, string message)
+        {
+            System.Windows.MessageBox.Show(message, title, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+            await Task.CompletedTask;
+        }
+
+        public async Task<bool> ShowConfirmationAsync(string title, string message)
+        {
+            var result = System.Windows.MessageBox.Show(message, title, System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question);
+            return await Task.FromResult(result == System.Windows.MessageBoxResult.Yes);
+        }
     }
 }

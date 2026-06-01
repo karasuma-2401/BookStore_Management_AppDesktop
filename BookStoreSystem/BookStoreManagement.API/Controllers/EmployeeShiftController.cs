@@ -1,4 +1,4 @@
-﻿using BookStoreManagement.API.Interfaces.Services;
+using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Shift;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -94,6 +94,25 @@ namespace BookStoreManagement.API.Controllers
                 return NotFound(new { message = "Employee not found." });
 
             return Ok(payslip);
+        }
+
+        [HttpGet("day-detail")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> GetDayDetail([FromQuery] DateTime date)
+        {
+            var dayDetail = await _employeeShiftService.GetDayDetailAsync(date);
+            return Ok(dayDetail);
+        }
+
+        [HttpPost("kiosk-checkin")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> KioskCheckIn([FromBody] KioskCheckInRequestDto dto)
+        {
+            if (dto == null || dto.EmployeeId <= 0)
+                return BadRequest(new { message = "Invalid Employee ID." });
+
+            var result = await _employeeShiftService.KioskCheckInAsync(dto.EmployeeId);
+            return Ok(result);
         }
     }
 }

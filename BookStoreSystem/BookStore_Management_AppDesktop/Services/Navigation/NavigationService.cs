@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Helpers.Enums;
+using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Views.Pages.BookViews; 
 using BookStore_Management_AppDesktop.Views.Pages; 
 using BookStore_Management_AppDesktop.Views.Pages.InvoiceViews;
@@ -66,6 +66,27 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
                         break;
                     case PageType.SaleCart:
                         newPage = _serviceProvider.GetRequiredService<SaleCartPage>();
+                        break;
+                    case PageType.Payslip:
+                        newPage = _serviceProvider.GetRequiredService<PayrollPage>();
+                        break;
+                    case PageType.ShiftAssign:
+                        newPage = _serviceProvider.GetRequiredService<ShiftSchedulePage>();
+                        break;
+                    case PageType.AbsenceManagement:
+                        newPage = _serviceProvider.GetRequiredService<AbsenceManagementPage>();
+                        break;
+                    case PageType.ShiftSchedule:
+                        newPage = _serviceProvider.GetRequiredService<ShiftSchedulePage>();
+                        break;
+                    case PageType.AbsenceManagementPage:
+                        newPage = _serviceProvider.GetRequiredService<AbsenceManagementPage>();
+                        break;
+                    case PageType.PayrollManagement:
+                        newPage = _serviceProvider.GetRequiredService<PayrollPage>();
+                        break;
+                    case PageType.KioskCheckIn:
+                        newPage = _serviceProvider.GetRequiredService<KioskCheckInPage>();
                         break;
                 }
 

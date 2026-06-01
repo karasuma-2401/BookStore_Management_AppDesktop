@@ -1,10 +1,10 @@
-﻿<Window x:Class="BookStore_Management_AppDesktop.Views.Windows.ConfirmWindow"
+<Window x:Class="BookStore_Management_AppDesktop.Views.Windows.ConfirmWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="Confirmation" 
-        MinHeight="170" Width="450" 
-        SizeToContent="Height"
+        MinHeight="170" MinWidth="420" MaxWidth="600"
+        SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" 
         WindowStyle="None" 
@@ -24,16 +24,22 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="0">
-                <Grid Margin="0,0,16,0">
+            <!-- Grid with columns to cleanly separate the icon and wrap the message text at any size -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" Margin="0,0,16,0" VerticalAlignment="Center">
                     <ui:SymbolIcon x:Name="DangerIcon" Symbol="Delete24" Filled="True" FontSize="28" Foreground="{DynamicResource ErrorPrimaryBrush}" Visibility="Collapsed"/>
                     <ui:SymbolIcon x:Name="InfoIcon" Symbol="QuestionCircle24" Filled="True" FontSize="28" Foreground="{DynamicResource NavyAccentBrush}" Visibility="Visible"/>
                 </Grid>
 
-                <TextBlock x:Name="txtMessage" Text="Are you sure?"
+                <TextBlock x:Name="txtMessage" Grid.Column="1" Text="Are you sure?"
                            FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"
-                           Foreground="{DynamicResource TextOnLightBackgroudBrush}" TextWrapping="Wrap" MaxWidth="320"/>
-            </StackPanel>
+                           Foreground="{DynamicResource TextOnLightBackgroudBrush}" TextWrapping="Wrap"/>
+            </Grid>
 
             <UniformGrid Grid.Row="1" Columns="2" Margin="0,24,0,0" VerticalAlignment="Bottom">
                 <Button Content="Cancel" Height="42" Margin="0,0,8,0" Cursor="Hand" IsCancel="True" Click="Cancel_Click">

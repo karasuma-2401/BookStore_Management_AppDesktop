@@ -1,4 +1,4 @@
-﻿using BookStoreManagement.API.Data;
+using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Models.Voucher;
@@ -49,13 +49,24 @@ namespace BookStoreManagement.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _voucherService.DeleteAsync(id);
-            if (!result)
+            try
             {
-                return NotFound(new { Message = "Voucher not found." });
-            }
+                var result = await _voucherService.DeleteAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { Message = "Voucher not found." });
+                }
 
-            return Ok(new { Message = "Voucher deleted successfully." });
+                return Ok(new { Message = "Voucher deleted successfully." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = ex.Message });
+            }
         }
 
     }

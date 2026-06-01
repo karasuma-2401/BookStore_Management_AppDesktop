@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
+using System.Diagnostics;
 
 namespace BookStore_Management_AppDesktop.Services.API
 {
@@ -9,7 +11,7 @@ namespace BookStore_Management_AppDesktop.Services.API
     {
         Task<List<VoucherDto>> GetAllVouchersAsync();
         Task<VoucherDto?> CreateVoucherAsync(VoucherCreateRequestDto dto);
-        Task<bool> DeleteVoucherAsync(int id);
+        Task<(bool Success, string Message)> DeleteVoucherAsync(int id);
     }
 
     public class VoucherApiService : IVoucherApiService
@@ -43,7 +45,8 @@ namespace BookStore_Management_AppDesktop.Services.API
                 if (!response.IsSuccessStatusCode)
                     return new List<VoucherDto>();
 
-                return await response.Content.ReadFromJsonAsync<List<VoucherDto>>()
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                return await response.Content.ReadFromJsonAsync<List<VoucherDto>>(options)
                        ?? new List<VoucherDto>();
             }
             catch (Exception ex)
@@ -62,26 +65,33 @@ namespace BookStore_Management_AppDesktop.Services.API
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    // ĐỌC NỘI DUNG LỖI TỪ BACKEND
                     var errorContent = await response.Content.ReadAsStringAsync();
                     Debug.WriteLine($"CreateVoucher Error: HTTP {response.StatusCode}. Details: {errorContent}");
-
-                    // Nếu bạn muốn hiển thị lỗi này lên UI, bạn có thể ném exception kèm message
-                    throw new Exception($"Server error: {errorContent}");
+                    throw new Exception($"Failed to create voucher: {errorContent}");
                 }
 
                 var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 var result = await response.Content.ReadFromJsonAsync<CreateVoucherResponse>(options);
                 return result?.Data;
             }
+            catch (HttpRequestException ex)
+            {
+                Debug.WriteLine($"CreateVoucher HttpError: {ex.Message}");
+                throw new Exception($"Network error: {ex.Message}");
+            }
+            catch (JsonException ex)
+            {
+                Debug.WriteLine($"CreateVoucher JsonError: {ex.Message}");
+                throw new Exception($"Invalid response format: {ex.Message}");
+            }
             catch (Exception ex)
             {
                 Debug.WriteLine($"CreateVoucher Exception: {ex.Message}");
-                throw; // Ném lại lỗi để ViewModel bắt được
+                throw;
             }
         }
 
-        public async Task<bool> DeleteVoucherAsync(int id)
+        public async Task<(bool Success, string Message)> DeleteVoucherAsync(int id)
         {
             try
             {
@@ -89,12 +99,47 @@ namespace BookStore_Management_AppDesktop.Services.API
 
                 var response = await _httpClient.DeleteAsync($"voucher/{id}");
 
-                return response.IsSuccessStatusCode;
+                if (response.IsSuccessStatusCode)
+                {
+                    string message = "Voucher deleted successfully.";
+                    try
+                    {
+                        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                        var successObj = await response.Content.ReadFromJsonAsync<JsonElement>(options);
+                        if (successObj.ValueKind == JsonValueKind.Object && successObj.TryGetProperty("message", out var msgProp))
+                        {
+                            message = msgProp.GetString() ?? message;
+                        }
+                    }
+                    catch
+                    {
+                        // Ignore JSON parsing errors for success
+                    }
+                    return (true, message);
+                }
+                else
+                {
+                    string errorMessage = "Failed to delete voucher";
+                    try
+                    {
+                        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                        var errorObj = await response.Content.ReadFromJsonAsync<JsonElement>(options);
+                        if (errorObj.ValueKind == JsonValueKind.Object && errorObj.TryGetProperty("message", out var msgProp))
+                        {
+                            errorMessage = msgProp.GetString() ?? errorMessage;
+                        }
+                    }
+                    catch
+                    {
+                        errorMessage = response.ReasonPhrase ?? errorMessage;
+                    }
+                    return (false, errorMessage);
+                }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"DeleteVoucher Error: {ex.Message}");
-                return false;
+                return (false, ex.Message);
             }
         }
 

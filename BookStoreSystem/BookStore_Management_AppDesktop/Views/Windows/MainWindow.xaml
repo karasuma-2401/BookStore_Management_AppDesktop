@@ -1,4 +1,4 @@
-﻿<Window
+<Window
     x:Class="BookStore_Management_AppDesktop.Views.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -134,18 +134,58 @@
                         FontWeight="SemiBold"
                         Text="Reports" />
                 </ui:NavigationViewItem>
+                <ui:NavigationViewItem
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="Payslip"
+                    Icon="{ui:SymbolIcon Money24}"
+                    Tag="Payslip">
+                        <TextBlock
+                            FontSize="{StaticResource FontSizeSubTitle}"
+                            FontWeight="SemiBold"
+                            Text="Payroll" />
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="ShiftAssign"
+                    Icon="{ui:SymbolIcon PersonClock24}"
+                    Tag="ShiftAssign">
+                    <TextBlock
+                            FontSize="{StaticResource FontSizeSubTitle}"
+                            FontWeight="SemiBold"
+                            Text="Shift Schedule" />
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="AbsenceManagement"
+                    Icon="{ui:SymbolIcon Dismiss24}"
+                    Tag="AbsenceManagement">
+                    <TextBlock
+                            FontSize="{StaticResource FontSizeSubTitle}"
+                            FontWeight="SemiBold"
+                            Text="Absence Management" />
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="KioskCheckIn"
+                    Icon="{ui:SymbolIcon Clock24}"
+                    Tag="KioskCheckIn">
+                    <TextBlock
+                            FontSize="{StaticResource FontSizeSubTitle}"
+                            FontWeight="SemiBold"
+                            Text="Check-in Kiosk" />
+                </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>
 
             <ui:NavigationView.FooterMenuItems>
                 <ui:NavigationViewItem
                     Command="{Binding NavigateCommand}"
                     CommandParameter="Settings"
-                    Icon="{ui:SymbolIcon Settings24}"
+                    Icon="{ui:SymbolIcon TicketHorizontal24}"
                     Tag="Settings">
                     <TextBlock
                         FontSize="{StaticResource FontSizeSubTitle}"
                         FontWeight="SemiBold"
-                        Text="Settings" />
+                        Text="Vouchers" />
                 </ui:NavigationViewItem>
             </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
