@@ -14,5 +14,9 @@ namespace BookStore_Management_AppDesktop.Services
         void ShowEditBookWindow(Book bookToEdit);
 
         CustomerResponseDto? ShowAddCustomerWindow();
+
+        Task ShowErrorAsync(string title, string message);
+        Task ShowSuccessAsync(string title, string message);
+        Task<bool> ShowConfirmationAsync(string title, string message);
     }
 }

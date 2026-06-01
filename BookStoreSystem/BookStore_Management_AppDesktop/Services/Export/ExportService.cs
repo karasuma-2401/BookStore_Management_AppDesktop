@@ -1,8 +1,11 @@
 using BookStore_Management_AppDesktop.Models.DTOs.ReportDTOs;
+using BookStore_Management_AppDesktop.Models.DTOs.ShiftDTOs;
 using ClosedXML.Excel;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -123,6 +126,145 @@ namespace BookStore_Management_AppDesktop.Services.Export
             catch (Exception ex)
             {
                 MessageBox.Show($"Error exporting report: {ex.Message}", "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+        }
+
+        public async Task<bool> ExportScheduleToExcelAsync(
+            int month,
+            int year,
+            IEnumerable<EmployeeShiftResponseDto> shifts)
+        {
+            try
+            {
+                var fileName = $"ShiftSchedule_{GetMonthName(month)}_{year}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+                var downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                downloadsPath = Path.Combine(downloadsPath, "Downloads");
+
+                if (!Directory.Exists(downloadsPath))
+                {
+                    Directory.CreateDirectory(downloadsPath);
+                }
+
+                var filePath = Path.Combine(downloadsPath, fileName);
+
+                using (var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add("Schedule");
+
+                    // Title block
+                    var titleCell = worksheet.Cell("A1");
+                    titleCell.Value = $"SHIFT SCHEDULE - {GetMonthName(month).ToUpper()} {year}";
+                    titleCell.Style.Font.Bold = true;
+                    titleCell.Style.Font.FontSize = 16;
+                    titleCell.Style.Font.FontColor = XLColor.White;
+                    titleCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#0F172A");
+                    titleCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    worksheet.Range("A1:F1").Merge();
+
+                    // Metadata
+                    worksheet.Cell(3, 1).Value = "Exported On:";
+                    worksheet.Cell(3, 1).Style.Font.Bold = true;
+                    worksheet.Cell(3, 2).Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+                    int total = shifts.Count();
+                    int present = shifts.Count(s => s.Status.Equals("Present", StringComparison.OrdinalIgnoreCase));
+                    int late = shifts.Count(s => s.Status.Equals("Late", StringComparison.OrdinalIgnoreCase));
+                    int absent = shifts.Count(s => s.Status.Equals("Absent", StringComparison.OrdinalIgnoreCase));
+                    int compensated = shifts.Count(s => s.Status.Equals("Compensated", StringComparison.OrdinalIgnoreCase));
+                    int scheduled = shifts.Count(s => s.Status.Equals("Scheduled", StringComparison.OrdinalIgnoreCase));
+
+                    worksheet.Cell(4, 1).Value = "Total Shifts:";
+                    worksheet.Cell(4, 1).Style.Font.Bold = true;
+                    worksheet.Cell(4, 2).Value = total;
+
+                    worksheet.Cell(5, 1).Value = "Breakdown:";
+                    worksheet.Cell(5, 1).Style.Font.Bold = true;
+                    worksheet.Cell(5, 2).Value = $"Present: {present} | Late: {late} | Absent: {absent} | Compensated: {compensated} | Scheduled: {scheduled}";
+                    worksheet.Range("B5:F5").Merge();
+
+                    // Table headers
+                    var headers = new[] { "Date", "Day of Week", "Employee Name", "Shift", "Time", "Status" };
+                    for (int col = 1; col <= headers.Length; col++)
+                    {
+                        var cell = worksheet.Cell(7, col);
+                        cell.Value = headers[col - 1];
+                        cell.Style.Font.Bold = true;
+                        cell.Style.Font.FontColor = XLColor.White;
+                        cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#1E293B");
+                        cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    }
+
+                    // Table data
+                    int currentRow = 8;
+                    foreach (var s in shifts.OrderBy(x => x.WorkDate))
+                    {
+                        var dateCell = worksheet.Cell(currentRow, 1);
+                        dateCell.Value = s.WorkDate;
+                        dateCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        string dayName = "Unknown";
+                        if (DateTime.TryParse(s.WorkDate, out var dt))
+                        {
+                            dayName = dt.ToString("dddd");
+                        }
+                        var dayCell = worksheet.Cell(currentRow, 2);
+                        dayCell.Value = dayName;
+                        dayCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        worksheet.Cell(currentRow, 3).Value = s.FullName;
+
+                        var shiftCell = worksheet.Cell(currentRow, 4);
+                        shiftCell.Value = s.ShiftName;
+                        shiftCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        var timeCell = worksheet.Cell(currentRow, 5);
+                        timeCell.Value = s.WorkTime;
+                        timeCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        var statusCell = worksheet.Cell(currentRow, 6);
+                        statusCell.Value = s.Status;
+                        statusCell.Style.Font.Bold = true;
+                        statusCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        // Apply status coloring
+                        var statusColor = s.Status.ToLower() switch
+                        {
+                            "present" => XLColor.FromHtml("#10B981"),
+                            "late" => XLColor.FromHtml("#F97316"),
+                            "absent" => XLColor.FromHtml("#EF4444"),
+                            "compensated" => XLColor.FromHtml("#F59E0B"),
+                            "scheduled" => XLColor.FromHtml("#0EA5E9"),
+                            _ => XLColor.Gray
+                        };
+                        statusCell.Style.Font.FontColor = statusColor;
+
+                        // Add borders
+                        for (int col = 1; col <= 6; col++)
+                        {
+                            worksheet.Cell(currentRow, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                            if (currentRow % 2 == 0)
+                            {
+                                worksheet.Cell(currentRow, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#F8FAFC");
+                            }
+                        }
+
+                        currentRow++;
+                    }
+
+                    // Auto fit column widths
+                    worksheet.Columns().AdjustToContents();
+
+                    workbook.SaveAs(filePath);
+                }
+
+                MessageBox.Show($"Schedule exported successfully to:\n{filePath}", "Export Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error exporting schedule: {ex.Message}", "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }

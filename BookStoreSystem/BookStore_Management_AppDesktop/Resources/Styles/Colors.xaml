@@ -23,4 +23,18 @@
     <SolidColorBrush x:Key="InputBackgroundBrush" Color="White" />
     <SolidColorBrush x:Key="AccentBlueBrush" Color="#0EA5E9" />
 
+    <!-- Additional Color Resources for Better Visibility -->
+    <SolidColorBrush x:Key="WarningBrush" Color="#F59E0B" />
+    <SolidColorBrush x:Key="InfoBrush" Color="#3B82F6" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#EF4444" />
+    <SolidColorBrush x:Key="LightGrayBrush" Color="#E5E7EB" />
+    <SolidColorBrush x:Key="DarkGrayBrush" Color="#374151" />
+
+    <!-- Status Colors for Shifts -->
+    <SolidColorBrush x:Key="StatusScheduledBrush" Color="#38BDF8" />
+    <SolidColorBrush x:Key="StatusPresentBrush" Color="#10B981" />
+    <SolidColorBrush x:Key="StatusAbsentBrush" Color="#EF4444" />
+    <SolidColorBrush x:Key="StatusCompensatedBrush" Color="#F59E0B" />
+    <SolidColorBrush x:Key="StatusLateBrush" Color="#F97316" />
+
 </ResourceDictionary>

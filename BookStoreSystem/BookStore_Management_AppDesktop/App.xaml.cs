@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Services;
+using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.Services.API.BookServices; 
 using BookStore_Management_AppDesktop.Services.API.CartServices;
@@ -74,6 +74,9 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<IInvoiceApiService, InvoiceApiService>();
             services.AddSingleton<IInvoiceExportService, InvoiceExportService>(); 
             services.AddSingleton<IVoucherApiService, VoucherApiService>();
+            services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
+            services.AddSingleton<IEmployeeShiftApiService, EmployeeShiftApiService>();
+            
 
             // // Get ViewModels
             services.AddTransient<MainViewModel>();
@@ -91,6 +94,10 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<InvoiceDetailViewModel>();
             services.AddTransient<ReportViewModel>();
             services.AddTransient<SaleCartViewModel>();
+            services.AddTransient<ShiftScheduleViewModel>();
+            services.AddTransient<PayrollViewModel>();
+            services.AddTransient<AbsenceManagementViewModel>();
+            services.AddTransient<KioskCheckInViewModel>();
 
 
             // // Get View 
@@ -100,7 +107,6 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<EditBookWindow>();
             services.AddTransient<BookPage>();
             services.AddTransient<SaleCartPage>();
-            services.AddTransient<SaleCartViewModel>();
             services.AddTransient<InventoryPage>();
             services.AddTransient<SettingsPage>();
             services.AddTransient<EmployeePage>();
@@ -110,6 +116,10 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<InvoicePage>();
             services.AddTransient<InvoiceDetailPage>();
             services.AddTransient<ReportPage>();
+            services.AddTransient<ShiftSchedulePage>();
+            services.AddTransient<PayrollPage>();
+            services.AddTransient<AbsenceManagementPage>();
+            services.AddTransient<KioskCheckInPage>();
         }
     }
 

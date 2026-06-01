@@ -1,4 +1,4 @@
-﻿using BookStoreManagement.API.Data;
+using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Models.Shift;
@@ -28,14 +28,25 @@ namespace BookStoreManagement.API.Services
             if (!await _context.Employees.AnyAsync(e => e.EmployeeId == dto.EmployeeId))
                 return "Employee not found.";
 
-            if (await _context.EmployeeShifts.AnyAsync(es => es.EmployeeId == dto.EmployeeId && es.WorkDate == dto.WorkDate))
+            // Validation: Cannot schedule a shift for a date or month in the past
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime nowVn = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
+            var todayVn = nowVn.Date;
+
+            if (dto.WorkDate.Date < todayVn)
+                return "Cannot schedule a shift for a date or month in the past.";
+
+            // Đảm bảo kiểu múi giờ là UTC và chỉ lấy phần Ngày (Date) cho PostgreSQL timestamptz
+            var workDateUtc = DateTime.SpecifyKind(dto.WorkDate.Date, DateTimeKind.Utc);
+
+            if (await _context.EmployeeShifts.AnyAsync(es => es.EmployeeId == dto.EmployeeId && es.WorkDate == workDateUtc))
                 return "Employee already has a shift assigned for this date.";
 
             var employeeshift = new EmployeeShift
             {
                 EmployeeId = dto.EmployeeId,
                 ShiftId = dto.ShiftId,
-                WorkDate = dto.WorkDate,
+                WorkDate = workDateUtc,
                 Status = "Scheduled",
                 CheckInTime = null,
                 IsPaid = true
@@ -48,32 +59,33 @@ namespace BookStoreManagement.API.Services
 
         public async Task<IEnumerable<EmployeeShiftResponseDto>> GetScheduleAsync(DateTime startDate, DateTime endDate, int? employeeId = null)
         {
-            var start = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
-            var end = DateTime.SpecifyKind(endDate.Date, DateTimeKind.Utc);
+            var startUtc = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
+            var endUtc = DateTime.SpecifyKind(endDate.Date.AddDays(1), DateTimeKind.Utc);
 
-            var query = _context.EmployeeShifts
+            IQueryable<EmployeeShift> query = _context.EmployeeShifts
                 .Include(es => es.Employee)
                 .Include(es => es.Shift)
-                .Where(es => es.WorkDate >= start && es.WorkDate <= end);
+                // Sử dụng khoảng ngày bao phủ toàn bộ ngày cuối cùng
+                .Where(es => es.WorkDate >= startUtc && es.WorkDate < endUtc);
 
             if (employeeId.HasValue)
             {
                 query = query.Where(es => es.EmployeeId == employeeId.Value);
             }
 
-            return await query
-                .Select(es => new EmployeeShiftResponseDto
-                {
-                    Id = es.Id,
-                    FullName = es.Employee.FullName,
-                    ShiftName = es.Shift.ShiftName,
-                    WorkTime = $"{es.Shift.StartTime} - {es.Shift.EndTime}",
-                    WorkDate = es.WorkDate.ToString("yyyy-MM-dd"),
-                    Status = es.Status,
-                    CheckInTime = es.CheckInTime,
-                    IsPaid = es.IsPaid
-                })
-                .ToListAsync();
+            var list = await query.ToListAsync();
+
+            return list.Select(es => new EmployeeShiftResponseDto
+            {
+                Id = es.Id,
+                FullName = es.Employee?.FullName ?? string.Empty,
+                ShiftName = es.Shift?.ShiftName ?? string.Empty,
+                WorkTime = es.Shift != null ? $"{es.Shift.StartTime} - {es.Shift.EndTime}" : string.Empty,
+                WorkDate = es.WorkDate.ToString("yyyy-MM-dd"),
+                Status = es.Status,
+                CheckInTime = es.CheckInTime,
+                IsPaid = es.IsPaid
+            }).ToList();
         }
 
         public async Task<bool> DeleteAssignmentAsync(int id)
@@ -114,13 +126,18 @@ namespace BookStoreManagement.API.Services
             if (nowVn < shiftStartTime.AddMinutes(-30))
                 return "It is too early to check in for this shift.";
 
-            if (nowVn > lateThreshold)
+            if (nowVn <= shiftStartTime)
+            {
+                assignment.Status = "Present";
+            }
+            else if (nowVn <= lateThreshold)
             {
                 assignment.Status = "Late";
             }
             else
             {
-                assignment.Status = "Present";
+                assignment.Status = "Absent";
+                assignment.IsPaid = false;
             }
 
             assignment.CheckInTime = DateTime.UtcNow;
@@ -145,14 +162,18 @@ namespace BookStoreManagement.API.Services
 
         public async Task<PayslipDto?> CalculateSalaryAsync(int employeeId, int month, int year)
         {
-
             var employee = await _context.Employees.FindAsync(employeeId);
             if (employee == null) return null;
 
+            // Xác định khoảng thời gian đầu tháng và đầu tháng tiếp theo ở dạng UTC
+            var startDate = new DateTime(year, month, 1, 0, 0, 0, DateTimeKind.Utc);
+            var endDate = startDate.AddMonths(1);
+
             var shiftsInMonth = await _context.EmployeeShifts
+                .Include(es => es.Shift)
                 .Where(es => es.EmployeeId == employeeId
-                          && es.WorkDate.Month == month
-                          && es.WorkDate.Year == year)
+                          && es.WorkDate >= startDate
+                          && es.WorkDate < endDate)
                 .ToListAsync();
 
             int totalAssigned = shiftsInMonth.Count;
@@ -175,13 +196,190 @@ namespace BookStoreManagement.API.Services
                 return payslip;
             }
 
-            payslip.WorkedShifts = shiftsInMonth.Count(es => es.IsPaid);
-            payslip.AbsentShifts = totalAssigned - payslip.WorkedShifts;
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime nowVn = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
 
-            decimal salaryPerShift = payslip.Salary / (decimal)totalAssigned;
-            payslip.ActualSalary = Math.Round(salaryPerShift * payslip.WorkedShifts, 0);
+            int workedCount = 0;
+            int absentCount = 0;
+
+            foreach (var es in shiftsInMonth)
+            {
+                if (es.Status == "Present" || es.Status == "Late" || es.Status == "Compensated")
+                {
+                    workedCount++;
+                }
+                else if (es.Status == "Absent")
+                {
+                    absentCount++;
+                }
+                else if (es.Status == "Scheduled")
+                {
+                    // Nếu thời điểm hiện tại đã vượt quá giờ kết thúc ca làm việc,
+                    // mà nhân viên chưa check-in (vẫn ở trạng thái Scheduled) thì tính là Absent
+                    var shiftEndTime = es.WorkDate.Date.Add(es.Shift?.EndTime ?? TimeSpan.Zero);
+                    if (nowVn > shiftEndTime)
+                    {
+                        absentCount++;
+                    }
+                }
+            }
+
+            payslip.WorkedShifts = workedCount;
+            payslip.AbsentShifts = absentCount;
+
+            // Tính lương trực tiếp theo ca: Lương thực nhận = Đơn giá mỗi ca * Số ca thực làm - 20% phạt ca vắng mặt
+            var baseSalary = payslip.Salary * payslip.WorkedShifts;
+            var fine = payslip.Salary * 0.20m * payslip.AbsentShifts;
+            payslip.ActualSalary = Math.Max(0, Math.Round(baseSalary - fine, 0));
 
             return payslip;
+        }
+
+        public async Task<ShiftDayDetailResponseDto> GetDayDetailAsync(DateTime date)
+        {
+            var dateUtc = DateTime.SpecifyKind(date.Date, DateTimeKind.Utc);
+            var nextDayUtc = dateUtc.AddDays(1);
+
+            var shifts = await _context.Shifts.OrderBy(s => s.StartTime).ToListAsync();
+            var assignments = await _context.EmployeeShifts
+                .Include(es => es.Employee)
+                .Include(es => es.Shift)
+                .Where(es => es.WorkDate >= dateUtc && es.WorkDate < nextDayUtc)
+                .ToListAsync();
+
+            var response = new ShiftDayDetailResponseDto
+            {
+                Date = date.Date,
+                Shifts = new List<ShiftDayItemDto>()
+            };
+
+            foreach (var shift in shifts)
+            {
+                var assignment = assignments.FirstOrDefault(a => a.ShiftId == shift.ShiftId);
+                var item = new ShiftDayItemDto
+                {
+                    ShiftId = shift.ShiftId,
+                    ShiftName = shift.ShiftName,
+                    WorkTime = $"{shift.StartTime:hh\\:mm} - {shift.EndTime:hh\\:mm}",
+                    Status = "Empty"
+                };
+
+                if (assignment != null)
+                {
+                    item.AssignmentId = assignment.Id;
+                    item.EmployeeId = assignment.EmployeeId;
+                    item.FullName = assignment.Employee.FullName;
+                    item.Status = assignment.Status;
+                    item.CheckInTime = assignment.CheckInTime;
+                    item.IsPaid = assignment.IsPaid;
+                }
+
+                response.Shifts.Add(item);
+            }
+
+            return response;
+        }
+
+        public async Task<KioskCheckInResponseDto> KioskCheckInAsync(int employeeId)
+        {
+            var employee = await _context.Employees.FindAsync(employeeId);
+            if (employee == null)
+            {
+                return new KioskCheckInResponseDto { Success = false, Message = "Employee not found." };
+            }
+
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime nowVn = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
+            var todayUtc = DateTime.SpecifyKind(nowVn.Date, DateTimeKind.Utc);
+
+            var assignment = await _context.EmployeeShifts
+                .Include(es => es.Employee)
+                .Include(es => es.Shift)
+                .FirstOrDefaultAsync(es => es.EmployeeId == employeeId && es.WorkDate == todayUtc);
+
+            if (assignment == null)
+            {
+                return new KioskCheckInResponseDto 
+                { 
+                    Success = false, 
+                    Message = $"No shift scheduled for today ({nowVn:dd/MM/yyyy}) for {employee.FullName}." 
+                };
+            }
+
+            if (assignment.Status == "Present" || assignment.Status == "Late")
+            {
+                return new KioskCheckInResponseDto
+                {
+                    Success = false,
+                    Message = "You have already checked in for this shift.",
+                    EmployeeName = employee.FullName,
+                    ShiftName = assignment.Shift?.ShiftName ?? string.Empty,
+                    WorkTime = assignment.Shift != null ? $"{assignment.Shift.StartTime:hh\\:mm} - {assignment.Shift.EndTime:hh\\:mm}" : string.Empty,
+                    CheckInTime = assignment.CheckInTime,
+                    Status = assignment.Status
+                };
+            }
+
+            if (assignment.Status != "Scheduled")
+            {
+                return new KioskCheckInResponseDto
+                {
+                    Success = false,
+                    Message = $"Cannot check in. Current shift status is {assignment.Status}.",
+                    EmployeeName = employee.FullName
+                };
+            }
+
+            DateTime shiftStartTime = assignment.WorkDate.Date.Add(assignment.Shift?.StartTime ?? TimeSpan.Zero);
+            DateTime lateThreshold = shiftStartTime.AddMinutes(15);
+
+            if (nowVn < shiftStartTime.AddMinutes(-30))
+            {
+                return new KioskCheckInResponseDto
+                {
+                    Success = false,
+                    Message = "It is too early to check in for this shift. Please wait until 30 minutes before starting time.",
+                    EmployeeName = employee.FullName,
+                    ShiftName = assignment.Shift?.ShiftName ?? string.Empty,
+                    WorkTime = assignment.Shift != null ? $"{assignment.Shift.StartTime:hh\\:mm} - {assignment.Shift.EndTime:hh\\:mm}" : string.Empty,
+                    Status = "Scheduled"
+                };
+            }
+
+            string newStatus = "Present";
+            bool isPaid = true;
+            string message = "Check-in successful! Welcome to work.";
+            bool success = true;
+
+            if (nowVn > shiftStartTime && nowVn <= lateThreshold)
+            {
+                newStatus = "Late";
+                message = "Check-in successful! (You arrived late)";
+            }
+            else if (nowVn > lateThreshold)
+            {
+                newStatus = "Absent";
+                isPaid = false;
+                success = false;
+                message = "You are more than 15 minutes late. You have been marked as Absent.";
+            }
+
+            assignment.Status = newStatus;
+            assignment.IsPaid = isPaid;
+            assignment.CheckInTime = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return new KioskCheckInResponseDto
+            {
+                Success = success,
+                Message = message,
+                EmployeeName = employee.FullName,
+                ShiftName = assignment.Shift?.ShiftName ?? string.Empty,
+                WorkTime = assignment.Shift != null ? $"{assignment.Shift.StartTime:hh\\:mm} - {assignment.Shift.EndTime:hh\\:mm}" : string.Empty,
+                CheckInTime = assignment.CheckInTime,
+                Status = newStatus
+            };
         }
     }
 }

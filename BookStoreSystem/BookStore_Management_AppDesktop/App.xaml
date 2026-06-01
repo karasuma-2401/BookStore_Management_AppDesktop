@@ -1,4 +1,4 @@
-﻿<Application
+<Application
     x:Class="BookStore_Management_AppDesktop.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -12,6 +12,9 @@
             <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <converters:IntToBoolConverter x:Key="IntToBoolConverter" />
             <converters:CollectionEmptyToVisibilityConverter x:Key="CollectionEmptyToVisibilityConverter" />
+            <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+            <converters:StatusToSoftBackgroundConverter x:Key="StatusToSoftBackgroundConverter" />
+            <converters:StatusToForegroundConverter x:Key="StatusToForegroundConverter" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Dark" />

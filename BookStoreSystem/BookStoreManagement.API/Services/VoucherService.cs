@@ -1,4 +1,4 @@
-﻿using BookStoreManagement.API.Data;
+using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Models.Voucher;
@@ -61,8 +61,23 @@ namespace BookStoreManagement.API.Services
             var voucher = await _context.Vouchers.FindAsync(id);
             if (voucher == null) return false;
 
-            _context.Vouchers.Remove(voucher);
-            return await _context.SaveChangesAsync() > 0;
+            try
+            {
+                _context.Vouchers.Remove(voucher);
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch (DbUpdateException)
+            {
+                // Reset EF Core state for this entity
+                _context.Entry(voucher).State = EntityState.Unchanged;
+
+                // Soft-deactivate by setting expiry date to yesterday and capping limit
+                voucher.ExpiryDate = DateTime.UtcNow.AddDays(-1);
+                voucher.UsageLimit = voucher.UsedCount;
+                await _context.SaveChangesAsync();
+
+                throw new InvalidOperationException("Voucher has already been used in invoices. It cannot be deleted from history, but it has been deactivated & expired successfully!");
+            }
         }
     }
 }

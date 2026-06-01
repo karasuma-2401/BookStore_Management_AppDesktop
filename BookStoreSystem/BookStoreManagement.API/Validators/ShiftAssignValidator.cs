@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using BookStoreManagement.API.Models.Shift;
 
 namespace BookStoreManagement.API.Validators
@@ -21,7 +21,9 @@ namespace BookStoreManagement.API.Validators
 
         private bool BeAValidDate(DateTime date)
         {
-            return date.Date >= DateTime.Today;
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime nowVn = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
+            return date.Date >= nowVn.Date;
         }
 
     }
