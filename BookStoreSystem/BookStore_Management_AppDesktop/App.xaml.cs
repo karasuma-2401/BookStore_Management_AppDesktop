@@ -2,6 +2,7 @@
 using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.Services.API.BookServices; 
 using BookStore_Management_AppDesktop.Services.API.CartServices;
+using BookStore_Management_AppDesktop.Services.API.CategoryServices;
 using BookStore_Management_AppDesktop.Services.API.CustomerServices;
 using BookStore_Management_AppDesktop.Services.API.EmployeeServices;
 using BookStore_Management_AppDesktop.Services.API.Import;
@@ -74,6 +75,7 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<IInvoiceApiService, InvoiceApiService>();
             services.AddSingleton<IInvoiceExportService, InvoiceExportService>(); 
             services.AddSingleton<IVoucherApiService, VoucherApiService>();
+            services.AddSingleton<ICategoryApiService, CategoryApiService>();
 
             // // Get ViewModels
             services.AddTransient<MainViewModel>();
@@ -91,6 +93,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<InvoiceDetailViewModel>();
             services.AddTransient<ReportViewModel>();
             services.AddTransient<SaleCartViewModel>();
+            services.AddTransient<CategorySelectionViewModel>();
 
 
             // // Get View 

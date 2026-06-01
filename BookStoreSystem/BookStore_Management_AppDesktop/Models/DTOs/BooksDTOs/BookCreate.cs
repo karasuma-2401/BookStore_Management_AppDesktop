@@ -11,6 +11,5 @@ namespace BookStore_Management_AppDesktop.Models.DTOs.BookDTOs
         public string? Description { get; set; }
         public string ImagePath { get; set; } = string.Empty;
         public List<int> CategoryIds { get; set; } = new List<int>();
-
     }
 }
