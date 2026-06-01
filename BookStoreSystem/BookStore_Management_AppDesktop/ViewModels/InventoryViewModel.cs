@@ -27,7 +27,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private string _searchText = string.Empty;
 
         [ObservableProperty] private int _currentPage = 1;
-        [ObservableProperty] private int _pageSize = 10;
+        [ObservableProperty] private int _pageSize = 12;
         [ObservableProperty] private int _totalItems;
         [ObservableProperty] private int _totalPages = 1;
 

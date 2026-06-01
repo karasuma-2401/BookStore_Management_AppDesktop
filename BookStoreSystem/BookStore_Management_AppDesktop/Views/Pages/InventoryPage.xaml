@@ -53,7 +53,7 @@
             <DataGrid ItemsSource="{Binding Books}" AutoGenerateColumns="False" 
                       CanUserAddRows="False" 
                       IsReadOnly="True" 
-                      RowHeight="70" HeadersVisibility="Column"
+                      RowHeight="50" HeadersVisibility="Column"
                       Foreground="{DynamicResource TextOnLightBackgroudBrush}" 
                       Background="Transparent" 
                       CanUserResizeColumns="False" 
@@ -80,25 +80,27 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*">
+                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="3*">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="Author" Binding="{Binding AuthorName}" Width="150">
+                    <DataGridTextColumn Header="Author" Binding="{Binding AuthorName}" Width="2*">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="Category" Width="150">
+                    <DataGridTextColumn Header="Category" Binding="{Binding CategoryNames}" Width="2*">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
