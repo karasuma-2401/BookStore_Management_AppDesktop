@@ -36,25 +36,25 @@
 				<StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
 					<!-- Bộ lọc Trạng thái -->
 					<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
-						<TextBlock Text="Status:" Foreground="#94A3B8" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+						<TextBlock Text="Status:" Foreground="{DynamicResource SlateBorderBrush}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
 						<ComboBox x:Name="StatusFilterComboBox"
 								  ItemsSource="{Binding AvailableStatuses}" 
 								  SelectedItem="{Binding SelectedStatusFilter}"
 								  SelectionChanged="StatusFilterComboBox_SelectionChanged"
-								  Width="130" Height="32" Background="#0F172A"
-								  Foreground="White" BorderBrush="#38BDF8" BorderThickness="1" Padding="8,4"
+								  Width="130" Height="32" Background="{DynamicResource SlateDarkBrush}"
+								  Foreground="White" BorderBrush="{DynamicResource SidebarAccentBrush}" BorderThickness="1" Padding="8,4"
 								  VerticalAlignment="Center"/>
 					</StackPanel>
 
 					<!-- Bộ lọc Ca trực -->
 					<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
-						<TextBlock Text="Shift:" Foreground="#94A3B8" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+						<TextBlock Text="Shift:" Foreground="{DynamicResource SlateBorderBrush}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
 						<ComboBox x:Name="ShiftFilterComboBox"
 								  ItemsSource="{Binding AvailableShifts}" 
 								  SelectedItem="{Binding SelectedShiftFilter}"
 								  SelectionChanged="ShiftFilterComboBox_SelectionChanged"
-								  Width="130" Height="32" Background="#0F172A"
-								  Foreground="White" BorderBrush="#38BDF8" BorderThickness="1" Padding="8,4"
+								  Width="130" Height="32" Background="{DynamicResource SlateDarkBrush}"
+								  Foreground="White" BorderBrush="{DynamicResource SidebarAccentBrush}" BorderThickness="1" Padding="8,4"
 								  VerticalAlignment="Center"/>
 					</StackPanel>
 
@@ -68,7 +68,7 @@
 					<!-- Nút Export -->
 					<ui:Button Content="Export" Icon="{ui:SymbolIcon ArrowDownload24}"
 							   Command="{Binding ExportScheduleCommand}"
-							   Background="#10B981" Foreground="White" BorderThickness="0"
+							   Background="{DynamicResource StatusPresentBrush}" Foreground="White" BorderThickness="0"
 							   Padding="10,6" FontSize="12" Margin="0,0,15,0" VerticalAlignment="Center"/>
 
 					<!-- Điều hướng tháng -->
@@ -77,24 +77,24 @@
 					
 					<ui:Button Icon="{ui:SymbolIcon ChevronLeft24}"
 							   Command="{Binding PreviousMonthCommand}"
-							   Background="#0F172A" Foreground="White" BorderBrush="#38BDF8" BorderThickness="1"
+							   Background="{DynamicResource SlateDarkBrush}" Foreground="White" BorderBrush="{DynamicResource SidebarAccentBrush}" BorderThickness="1"
 							   Padding="8" Margin="0,0,5,0" VerticalAlignment="Center"/>
 					
 					<ui:Button Icon="{ui:SymbolIcon ChevronRight24}"
 							   Command="{Binding NextMonthCommand}"
-							   Background="#0F172A" Foreground="White" BorderBrush="#38BDF8" BorderThickness="1"
+							   Background="{DynamicResource SlateDarkBrush}" Foreground="White" BorderBrush="{DynamicResource SidebarAccentBrush}" BorderThickness="1"
 							   Padding="8" VerticalAlignment="Center"/>
 				</StackPanel>
 			</Grid>
 		</Border>
 
-		<Border Grid.Row="1" Background="{DynamicResource CardBackgroundBrush}" Margin="20" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1">
+		<Border Grid.Row="1" Background="{DynamicResource CardBackgroundBrush}" Margin="20" CornerRadius="8" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1">
 			<Grid>
 				<Border Background="White" Opacity="0.1" CornerRadius="8" Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
 				<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
 					<ProgressBar Width="150" Height="8" IsIndeterminate="True" Foreground="{DynamicResource SidebarAccentBrush}" Margin="0,0,0,15"/>
-					<TextBlock Text="{Binding LoadingMessage}" Foreground="#64748B" TextAlignment="Center" FontSize="14"/>
+					<TextBlock Text="{Binding LoadingMessage}" Foreground="{DynamicResource TextBodyBrush}" TextAlignment="Center" FontSize="14"/>
 				</StackPanel>
 
 				<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="20">
@@ -115,13 +115,13 @@
 								<ColumnDefinition Width="*"/>
 							</Grid.ColumnDefinitions>
 
-							<TextBlock Grid.Column="0" Text="Monday" FontWeight="Bold" TextAlignment="Center" Foreground="#1E293B" Padding="5"/>
-							<TextBlock Grid.Column="1" Text="Tuesday" FontWeight="Bold" TextAlignment="Center" Foreground="#1E293B" Padding="5"/>
-							<TextBlock Grid.Column="2" Text="Wednesday" FontWeight="Bold" TextAlignment="Center" Foreground="#1E293B" Padding="5"/>
-							<TextBlock Grid.Column="3" Text="Thursday" FontWeight="Bold" TextAlignment="Center" Foreground="#1E293B" Padding="5"/>
-							<TextBlock Grid.Column="4" Text="Friday" FontWeight="Bold" TextAlignment="Center" Foreground="#1E293B" Padding="5"/>
-							<TextBlock Grid.Column="5" Text="Saturday" FontWeight="Bold" TextAlignment="Center" Foreground="#1E293B" Padding="5"/>
-							<TextBlock Grid.Column="6" Text="Sunday" FontWeight="Bold" TextAlignment="Center" Foreground="#1E293B" Padding="5"/>
+							<TextBlock Grid.Column="0" Text="Monday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
+							<TextBlock Grid.Column="1" Text="Tuesday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
+							<TextBlock Grid.Column="2" Text="Wednesday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
+							<TextBlock Grid.Column="3" Text="Thursday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
+							<TextBlock Grid.Column="4" Text="Friday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
+							<TextBlock Grid.Column="5" Text="Saturday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
+							<TextBlock Grid.Column="6" Text="Sunday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
 						</Grid>
 
 						<ItemsControl Grid.Row="1" ItemsSource="{Binding ScheduleCells}">
@@ -133,7 +133,7 @@
 
 							<ItemsControl.ItemTemplate>
 								<DataTemplate>
-									<Border BorderBrush="#E2E8F0" BorderThickness="1" Margin="2" CornerRadius="4" Padding="8" MinHeight="150">
+									<Border BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Margin="2" CornerRadius="4" Padding="8" MinHeight="150">
 										<Border.InputBindings>
 											<MouseBinding MouseAction="LeftDoubleClick"
 														  Command="{Binding DataContext.AssignShiftCommand, RelativeSource={RelativeSource AncestorType=Page}}"
@@ -141,7 +141,7 @@
 										</Border.InputBindings>
 										<Border.Style>
 											<Style TargetType="Border">
-												<Setter Property="Background" Value="#F8F9FA"/>
+												<Setter Property="Background" Value="{DynamicResource LightGrayBgBrush}"/>
 												<Style.Triggers>
 													<DataTrigger Binding="{Binding IsDummy}" Value="True">
 														<Setter Property="Background" Value="Transparent"/>
@@ -159,8 +159,8 @@
 											</Grid.RowDefinitions>
 
 											<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
-												<TextBlock Text="{Binding DayNumber}" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,5,0"/>
-												<TextBlock Text="{Binding DayOfWeek}" Foreground="#64748B" FontSize="12"/>
+												<TextBlock Text="{Binding DayNumber}" FontWeight="Bold" Foreground="{DynamicResource TextOnCardBrush}" Margin="0,0,5,0"/>
+												<TextBlock Text="{Binding DayOfWeek}" Foreground="{DynamicResource TextBodyBrush}" FontSize="12"/>
 											</StackPanel>
 
 											<ItemsControl Grid.Row="1" ItemsSource="{Binding Shifts}">
@@ -178,8 +178,8 @@
 
 																<StackPanel Grid.Column="0" VerticalAlignment="Center">
 																	<TextBlock Text="{Binding FullName}" FontWeight="Bold" Foreground="{Binding Status, Converter={StaticResource StatusToForegroundConverter}}" FontSize="12"/>
-																	<TextBlock Text="{Binding ShiftName}" Foreground="#475569" FontSize="11" FontWeight="SemiBold" Margin="0,1,0,0"/>
-																	<TextBlock Text="{Binding WorkTime}" Foreground="#64748B" FontSize="10" Margin="0,1,0,0"/>
+																	<TextBlock Text="{Binding ShiftName}" Foreground="{DynamicResource SlateLightBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,1,0,0"/>
+																	<TextBlock Text="{Binding WorkTime}" Foreground="{DynamicResource TextBodyBrush}" FontSize="10" Margin="0,1,0,0"/>
 																	<TextBlock Text="{Binding Status}" Foreground="{Binding Status, Converter={StaticResource StatusToForegroundConverter}}" FontSize="9.5" FontWeight="SemiBold" FontStyle="Italic" Margin="0,2,0,0"/>
 																</StackPanel>
 

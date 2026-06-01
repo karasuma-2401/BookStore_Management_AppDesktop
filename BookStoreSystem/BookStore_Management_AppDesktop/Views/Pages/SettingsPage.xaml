@@ -12,11 +12,11 @@
     <Page.Resources>
         <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
             <Style.Resources>
-                <SolidColorBrush x:Key="TextControlForeground" Color="#1E293B"/>
-                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#1E293B"/>
-                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#1E293B"/>
-                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#94A3B8"/>
-                <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#94A3B8"/>
+                <SolidColorBrush x:Key="TextControlForeground" Color="{DynamicResource TextOnCardColor}"/>
+                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="{DynamicResource TextOnCardColor}"/>
+                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="{DynamicResource TextOnCardColor}"/>
+                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="{DynamicResource SlateBorderColor}"/>
+                <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="{DynamicResource SlateBorderColor}"/>
                 <SolidColorBrush x:Key="TextControlBackground" Color="Transparent"/>
                 <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent"/>
                 <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent"/>
@@ -46,11 +46,11 @@
 
                     <ui:Card Grid.Column="0" Margin="0,0,20,0" Padding="20">
                         <StackPanel>
-                            <TextBlock Text="Create New Voucher" FontSize="14" FontWeight="Bold" Margin="0,0,0,15" Foreground="#1E293B"/>
+                            <TextBlock Text="Create New Voucher" FontSize="14" FontWeight="Bold" Margin="0,0,0,15" Foreground="{DynamicResource TextOnCardBrush}"/>
 
-                            <TextBlock Text="Code" FontSize="12" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,5"/>
-                            <Border Height="40" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Margin="0,0,0,15">
-                                <ui:TextBox Text="{Binding NewVoucherCode}" PlaceholderText="e.g. SUMMER2026" BorderThickness="0" Background="Transparent" Foreground="#1E293B" CaretBrush="#1E293B"/>
+                            <TextBlock Text="Code" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SlateLightBrush}" Margin="0,0,0,5"/>
+                            <Border Height="40" Background="White" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" CornerRadius="6" Margin="0,0,0,15">
+                                <ui:TextBox Text="{Binding NewVoucherCode}" PlaceholderText="e.g. SUMMER2026" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource TextOnCardBrush}" CaretBrush="{DynamicResource TextOnCardBrush}"/>
                             </Border>
 
                             <Grid Margin="0,0,0,15">
@@ -59,27 +59,27 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,5,0">
-                                    <TextBlock Text="Discount (%)" FontSize="12" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,5"/>
-                                    <Border Height="40" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6">
-                                        <ui:TextBox Text="{Binding NewVoucherDiscountPercent}" PlaceholderText="0" BorderThickness="0" Background="Transparent" Foreground="#1E293B" CaretBrush="#1E293B"/>
+                                    <TextBlock Text="Discount (%)" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SlateLightBrush}" Margin="0,0,0,5"/>
+                                    <Border Height="40" Background="White" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" CornerRadius="6">
+                                        <ui:TextBox Text="{Binding NewVoucherDiscountPercent}" PlaceholderText="0" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource TextOnCardBrush}" CaretBrush="{DynamicResource TextOnCardBrush}"/>
                                     </Border>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="5,0,0,0">
-                                    <TextBlock Text="Discount (đ)" FontSize="12" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,5"/>
-                                    <Border Height="40" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6">
-                                        <ui:TextBox Text="{Binding NewVoucherDiscountAmount}" PlaceholderText="0" BorderThickness="0" Background="Transparent" Foreground="#1E293B" CaretBrush="#1E293B"/>
+                                    <TextBlock Text="Discount (đ)" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SlateLightBrush}" Margin="0,0,0,5"/>
+                                    <Border Height="40" Background="White" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" CornerRadius="6">
+                                        <ui:TextBox Text="{Binding NewVoucherDiscountAmount}" PlaceholderText="0" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource TextOnCardBrush}" CaretBrush="{DynamicResource TextOnCardBrush}"/>
                                     </Border>
                                 </StackPanel>
                             </Grid>
 
-                            <TextBlock Text="Expiry Date" FontSize="12" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,5"/>
-                            <Border Height="40" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Margin="0,0,0,20">
-                                <ui:TextBox Text="{Binding NewVoucherExpiryDate, StringFormat='yyyy-MM-dd'}" BorderThickness="0" Background="Transparent" Foreground="#1E293B" CaretBrush="#1E293B"/>
+                            <TextBlock Text="Expiry Date" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SlateLightBrush}" Margin="0,0,0,5"/>
+                            <Border Height="40" Background="White" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" CornerRadius="6" Margin="0,0,0,20">
+                                <ui:TextBox Text="{Binding NewVoucherExpiryDate, StringFormat='yyyy-MM-dd'}" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource TextOnCardBrush}" CaretBrush="{DynamicResource TextOnCardBrush}"/>
                             </Border>
 
-                            <TextBlock Text="Usage Limit" FontSize="12" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,5"/>
-                            <Border Height="40" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Margin="0,0,0,20">
-                                <ui:TextBox Text="{Binding NewVoucherUsageLimit}" PlaceholderText="e.g. 100" BorderThickness="0" Background="Transparent" Foreground="#1E293B" CaretBrush="#1E293B"/>
+                            <TextBlock Text="Usage Limit" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SlateLightBrush}" Margin="0,0,0,5"/>
+                            <Border Height="40" Background="White" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" CornerRadius="6" Margin="0,0,0,20">
+                                <ui:TextBox Text="{Binding NewVoucherUsageLimit}" PlaceholderText="e.g. 100" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource TextOnCardBrush}" CaretBrush="{DynamicResource TextOnCardBrush}"/>
                             </Border>
 
                             <ui:Button Content="CREATE VOUCHER" Command="{Binding CreateVoucherCommand}" Appearance="Primary" HorizontalAlignment="Stretch" Height="40"/>
