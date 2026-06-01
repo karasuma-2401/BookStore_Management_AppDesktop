@@ -33,11 +33,12 @@
                            Style="{StaticResource HeaderTextStyle}" />
 
                 <ComboBox Grid.Column="1" 
-                          Width="160" Margin="0,0,15,0" VerticalAlignment="Center"
-                          SelectedIndex="0">
-                    <ComboBoxItem Content="Price: High to Low" />
-                    <ComboBoxItem Content="Price: Low to High" />
-                    <ComboBoxItem Content="Title: A - Z" />
+                          Width="180" Margin="0,0,15,0" VerticalAlignment="Center"
+                          SelectedValuePath="Tag"
+                          SelectedValue="{Binding SelectedSort}">
+                    <ComboBoxItem Content="Price: High to Low" Tag="price_desc" IsSelected="True"/>
+                    <ComboBoxItem Content="Price: Low to High" Tag="price_asc"/>
+                    <ComboBoxItem Content="Title: A - Z" Tag="title_asc"/>
                 </ComboBox>
 
                 <ui:TextBox Grid.Column="2" 
@@ -53,7 +54,8 @@
             <DataGrid ItemsSource="{Binding Books}" AutoGenerateColumns="False" 
                       CanUserAddRows="False" 
                       IsReadOnly="True" 
-                      RowHeight="70" HeadersVisibility="Column"
+                      CanUserSortColumns="False" 
+                      RowHeight="50" HeadersVisibility="Column"
                       Foreground="{DynamicResource TextOnLightBackgroudBrush}" 
                       Background="Transparent" 
                       CanUserResizeColumns="False" 
@@ -80,30 +82,42 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*">
+                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="3*">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="Author" Binding="{Binding AuthorName}" Width="150">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="Category" Width="150">
+                    <DataGridTextColumn Header="Author" Binding="{Binding AuthorName}" Width="2*">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
                                 <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Category" Binding="{Binding CategoryNames}" Width="2*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat='{}{0:#,0} đ'}" Width="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextOnLightBackgroudBrush}"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -121,9 +135,7 @@
                     <DataGridTemplateColumn Header="Actions" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Menu Background="Transparent" 
-                                      VerticalAlignment="Center" 
-                                      HorizontalAlignment="Center">
+                                <Menu Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center">
                                     <MenuItem Padding="8,4" Background="Transparent" BorderThickness="0" Cursor="Hand">
                                         <MenuItem.Header>
                                             <ui:SymbolIcon Symbol="MoreHorizontal24" FontSize="20" Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
@@ -134,9 +146,7 @@
                                                   Foreground="{DynamicResource SuccessPrimaryBrush}"
                                                   Command="{Binding DataContext.EditBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                   CommandParameter="{Binding}"/>
-
                                         <Separator/>
-
                                         <MenuItem Header="Delete" 
                                                   Icon="{ui:SymbolIcon Delete24}" 
                                                   Foreground="{DynamicResource ErrorPrimaryBrush}"

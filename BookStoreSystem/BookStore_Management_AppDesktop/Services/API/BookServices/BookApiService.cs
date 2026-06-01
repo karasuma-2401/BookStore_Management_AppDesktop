@@ -107,7 +107,7 @@ public class BookApiService : IBookApiService
                 AuthorId = newBook.AuthorId,
                 ImagePath = newBook.ImagePath ?? string.Empty,
                 Description = newBook.Description ?? string.Empty,
-                CategoryIds = new List<int>() 
+                CategoryIds = newBook.CategoryIds ?? new List<int>()
             };
 
             var json = JsonSerializer.Serialize(createDto, _options);
@@ -220,8 +220,9 @@ public class BookApiService : IBookApiService
                 BookId = id,
                 Title = updatedBook.Title ?? string.Empty,
                 AuthorId = updatedBook.AuthorId,
-                Price = updatedBook.Price,
-                ImagePath = updatedBook.ImagePath ?? string.Empty
+                ImagePath = updatedBook.ImagePath ?? string.Empty,
+                Description = updatedBook.Description ?? string.Empty,
+                CategoryIds = updatedBook.CategoryIds ?? new List<int>()
             };
 
             var json = JsonSerializer.Serialize(updateDto, _options);

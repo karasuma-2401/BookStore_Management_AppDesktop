@@ -41,10 +41,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private int _selectedQuantity = 1;
         [ObservableProperty] private bool _isDetailLoading;
 
-        partial void OnCurrentPageChanged(int value)
-        {
-            _ = ExecuteSearchAsync();
-        }
 
         public BookViewModel(
             IBookApiService apiService,
@@ -61,7 +57,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
             _hubService.BookCreated += OnBookRealtimeChanged;
             _hubService.BookDeleted += OnBookIdRealtimeChanged;
-            _hubService.BookUpdated += OnBookRealtimeUpdated; 
+            _hubService.BookUpdated += OnBookRealtimeUpdated;
             _hubService.InventoryStockChanged += OnStockRealtimeChanged;
         }
 
@@ -147,7 +143,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
                 var query = new BookQueryParameters
                 {
-                    Keyword = SearchText,
+                    Keyword = SearchText?.Trim(),
+
                     SortBy = sortBy,
                     SortOrder = sortOrder,
                     PageNumber = CurrentPage,
