@@ -104,8 +104,7 @@
                     Command="{Binding NavigateCommand}"
                     CommandParameter="Invoices"
                     Icon="{ui:SymbolIcon Document24}"
-                    Tag="Invoice"
-                    Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
+                    Tag="Invoice">
                     <TextBlock
                         FontSize="{StaticResource FontSizeSubTitle}"
                         FontWeight="SemiBold"
