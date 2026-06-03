@@ -1,4 +1,5 @@
-﻿using BookStore_Management_AppDesktop.Helpers.Enums;
+﻿using BookStore_Management_AppDesktop.Helpers;
+using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -8,6 +9,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
     public partial class MainViewModel : ObservableObject
     {
         private readonly INavigationService _navigationService;
+        public bool IsAdmin => AppSession.IsAdmin;
 
  
         public MainViewModel(INavigationService navigationService)
