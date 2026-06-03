@@ -29,5 +29,4 @@ public partial class BookPage : Page
             _isDataLoaded = true;
         }
     }
-
 }
