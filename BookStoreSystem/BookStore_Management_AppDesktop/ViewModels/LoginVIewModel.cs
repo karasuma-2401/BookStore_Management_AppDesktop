@@ -8,6 +8,8 @@ using BookStore_Management_AppDesktop.Views.UserControls;
 using System.ComponentModel.DataAnnotations;
 using BookStore_Management_AppDesktop.Services;
 using System.Windows.Threading;
+using System.IdentityModel.Tokens.Jwt;
+using BookStore_Management_AppDesktop.Helpers;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -87,6 +89,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 IsLoading = false;
                 return;
             }
+
+            var handler = new JwtSecurityTokenHandler(); 
+            var jwtToken = handler.ReadJwtToken(loginResult.AccessToken); 
+            var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "role" || c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"); 
+            AppSession.CurrentRole = roleClaim != null ? roleClaim.Value : "Staff";
 
             Settings.Default.AccessToken = loginResult.AccessToken;
             Settings.Default.Save();

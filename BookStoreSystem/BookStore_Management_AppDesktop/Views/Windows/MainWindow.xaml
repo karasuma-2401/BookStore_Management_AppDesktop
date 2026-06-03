@@ -34,9 +34,9 @@
                             Symbol="Library24" />
 
                         <TextBlock
+                            Foreground="{DynamicResource TextPrimaryBrush}"
                             Opacity="0"
                             Style="{StaticResource HeaderTextStyle}"
-                            Foreground="{DynamicResource TextPrimaryBrush}" 
                             Text="BOOKSTORE">
                             <TextBlock.RenderTransform>
                                 <TranslateTransform X="-30" />
@@ -81,7 +81,8 @@
                     Command="{Binding NavigateCommand}"
                     CommandParameter="Employees"
                     Icon="{ui:SymbolIcon People24}"
-                    Tag="Employees">
+                    Tag="Employees"
+                    Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
                     <TextBlock
                         FontSize="{StaticResource FontSizeSubTitle}"
                         FontWeight="SemiBold"
@@ -99,8 +100,16 @@
                         Text="Customers" />
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem Tag="Invoice" Icon="{ui:SymbolIcon Document24}"  Command="{Binding NavigateCommand}" CommandParameter="Invoices">
-                    <TextBlock Text="Invoice" FontSize="{StaticResource FontSizeSubTitle}" FontWeight="SemiBold"/>
+                <ui:NavigationViewItem
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="Invoices"
+                    Icon="{ui:SymbolIcon Document24}"
+                    Tag="Invoice"
+                    Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
+                    <TextBlock
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Invoice" />
                 </ui:NavigationViewItem>
 
                 <ui:NavigationViewItem
@@ -128,7 +137,8 @@
                     Command="{Binding NavigateCommand}"
                     CommandParameter="Reports"
                     Icon="{ui:SymbolIcon DataBarVertical24}"
-                    Tag="Reports">
+                    Tag="Reports"
+                    Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
                     <TextBlock
                         FontSize="{StaticResource FontSizeSubTitle}"
                         FontWeight="SemiBold"
@@ -138,31 +148,34 @@
                     Command="{Binding NavigateCommand}"
                     CommandParameter="Payslip"
                     Icon="{ui:SymbolIcon Money24}"
-                    Tag="Payslip">
-                        <TextBlock
-                            FontSize="{StaticResource FontSizeSubTitle}"
-                            FontWeight="SemiBold"
-                            Text="Payroll" />
+                    Tag="Payslip"
+                    Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
+                    <TextBlock
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Payroll" />
                 </ui:NavigationViewItem>
                 <ui:NavigationViewItem
                     Command="{Binding NavigateCommand}"
                     CommandParameter="ShiftAssign"
                     Icon="{ui:SymbolIcon PersonClock24}"
-                    Tag="ShiftAssign">
+                    Tag="ShiftAssign"
+                    Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
                     <TextBlock
-                            FontSize="{StaticResource FontSizeSubTitle}"
-                            FontWeight="SemiBold"
-                            Text="Shift Schedule" />
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Shift Schedule" />
                 </ui:NavigationViewItem>
                 <ui:NavigationViewItem
                     Command="{Binding NavigateCommand}"
                     CommandParameter="AbsenceManagement"
                     Icon="{ui:SymbolIcon Dismiss24}"
-                    Tag="AbsenceManagement">
+                    Tag="AbsenceManagement"
+                    Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
                     <TextBlock
-                            FontSize="{StaticResource FontSizeSubTitle}"
-                            FontWeight="SemiBold"
-                            Text="Absence Management" />
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Absence Management" />
                 </ui:NavigationViewItem>
                 <ui:NavigationViewItem
                     Command="{Binding NavigateCommand}"
@@ -170,9 +183,9 @@
                     Icon="{ui:SymbolIcon Clock24}"
                     Tag="KioskCheckIn">
                     <TextBlock
-                            FontSize="{StaticResource FontSizeSubTitle}"
-                            FontWeight="SemiBold"
-                            Text="Check-in Kiosk" />
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Check-in Kiosk" />
                 </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>
 
@@ -181,7 +194,8 @@
                     Command="{Binding NavigateCommand}"
                     CommandParameter="Settings"
                     Icon="{ui:SymbolIcon TicketHorizontal24}"
-                    Tag="Settings">
+                    Tag="Settings"
+                    Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
                     <TextBlock
                         FontSize="{StaticResource FontSizeSubTitle}"
                         FontWeight="SemiBold"

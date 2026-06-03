@@ -1,8 +1,8 @@
-    using System.Globalization;
-    using System.Windows;
-    using System.Windows.Data;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
 
-    namespace BookStore_Management_AppDesktop.Converters
+namespace BookStore_Management_AppDesktop.Converters
     {
         public class BooleanToVisibilityConverter : IValueConverter
         {
