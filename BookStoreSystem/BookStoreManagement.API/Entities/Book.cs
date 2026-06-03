@@ -31,9 +31,13 @@ namespace BookStoreManagement.API.Models.Entities
         [Column("description", TypeName = "text")]
         public string? Description { get; set; }
 
-        [ForeignKey("AuthorId")]
-        public Author? Author {get; set;}
-        
+        [Column("is_deleted")]
+        public bool IsDeleted { get; set; }
+
+        [Column("deleted_at")]
+        public DateTime? DeletedAt { get; set; }
+        public ICollection<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
+
         public ICollection<BookCategory> BookCategories {get; set;} = new List <BookCategory>();
     }
 }
