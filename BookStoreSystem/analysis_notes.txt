@@ -1,0 +1,1 @@
+Search results available via file_search and get_files_in_project. Next steps: open BookDetailPanel.xaml and its code-behind to inspect Loaded handler signature.
