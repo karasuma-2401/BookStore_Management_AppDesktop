@@ -56,12 +56,19 @@ namespace BookStoreManagement.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmployee(int id)
         {
-            var success = await _employeeService.DeleteEmployeeAsync(id);
-            return success
-                ? NoContent()
-                : NotFound(new { message = "Employee not found." });
-        }
+            try
+            {
+                var success = await _employeeService.DeleteEmployeeAsync(id);
+                return success
+                   ? NoContent()
+                   : NotFound(new { message = "Employee not found." });
 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
 
     }
 }

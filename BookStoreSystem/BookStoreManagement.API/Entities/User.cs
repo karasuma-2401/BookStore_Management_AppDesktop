@@ -23,10 +23,6 @@ namespace BookStoreManagement.API.Models.Entities
         [Column("password_hash")]
         public string PasswordHash {get; set;} = string.Empty;
 
-        [MaxLength(200)]
-        [Column("full_name")]
-        public string? FullName {get; set;}
-
         [Column("role_id")]
         public string RoleId {get; set;} = "staff";
 
@@ -35,15 +31,6 @@ namespace BookStoreManagement.API.Models.Entities
 
         [Column("status")]
         public int Status { get; set; } = 1;
-
-        [Column("reset_token")]
-        public string? ResetToken { get; set; }
-
-        [Column("reset_token_expires")]
-        public DateTime? ResetTokenExpires { get; set; }
-
-        [Column("email")]
-        public string Email { get; set; } = string.Empty;
 
         public virtual Employee? Employee { get; set; }
 
