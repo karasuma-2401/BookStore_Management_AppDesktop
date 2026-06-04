@@ -17,10 +17,6 @@ namespace BookStoreManagement.API.Validators
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Quantity must be >= 0");
 
-
-            RuleFor(x => x.ImagePath)
-                .NotEmpty().WithMessage("ImagePath is required");
-
             RuleFor(x => x.Description)
                 .MaximumLength(5000)
                 .When(x => x.Description != null)
