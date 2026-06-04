@@ -16,6 +16,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -50,12 +51,63 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" Background="{DynamicResource CardBackgroundBrush}" Margin="20,20,20,10" CornerRadius="8">
+        <Grid Grid.Row="1" Margin="20,15,20,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <uc:StatCardControl 
+                    Width="240" Height="95" Margin="0,0,20,0"
+                    Title="Total Books" 
+                    Value="{Binding TotalBooksCount}" 
+                    CardBackground="#EBF5FF"
+                    IconColor="#3498DB"
+                    IconData="M18,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V4A2,2 0 0,0 18,2M18,20H6V4H8V12L10.5,9.5L13,12V4H18V20Z" />
+
+                <uc:StatCardControl 
+                    Width="240" Height="95"
+                    Title="Low Stock" 
+                    Value="{Binding LowStockBooksCount}" 
+                    CardBackground="#FFF4E6"
+                    IconColor="#F39C12"
+                    IconData="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                <ui:Button Command="{Binding OpenAuthorManagementCommand}"
+                           Appearance="Secondary"
+                           Height="50"
+                           Padding="18,0"
+                           Margin="0,0,12,0"
+                           Background="{DynamicResource CardBackgroundBrush}"
+                           BorderBrush="#E2E8F0"
+                           BorderThickness="1"
+                           Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="People24" FontSize="20" Margin="0,0,10,0" Foreground="{DynamicResource SystemAccentColorBrush}"/>
+                        <TextBlock Text="Authors" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
+                    </StackPanel>
+                </ui:Button>
+
+                <ui:Button Command="{Binding OpenCategoryManagementCommand}"
+                           Appearance="Secondary"
+                           Height="50"
+                           Padding="18,0"
+                           Background="{DynamicResource CardBackgroundBrush}"
+                           BorderBrush="#E2E8F0"
+                           BorderThickness="1"
+                           Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Grid24" FontSize="20" Margin="0,0,10,0" Foreground="{DynamicResource SystemAccentColorBrush}"/>
+                        <TextBlock Text="Categories" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
+                    </StackPanel>
+                </ui:Button>
+            </StackPanel>
+        </Grid>
+
+        <Border Grid.Row="2" Background="{DynamicResource CardBackgroundBrush}" Margin="20,15,20,10" CornerRadius="8">
             <DataGrid ItemsSource="{Binding Books}" AutoGenerateColumns="False" 
                       CanUserAddRows="False" 
                       IsReadOnly="True" 
                       CanUserSortColumns="False" 
-                      RowHeight="50" HeadersVisibility="Column"
+                      RowHeight="65" HeadersVisibility="Column"
                       Foreground="{DynamicResource TextOnLightBackgroudBrush}" 
                       Background="Transparent" 
                       CanUserResizeColumns="False" 
@@ -71,6 +123,17 @@
                       ScrollViewer.CanContentScroll="True"
                       ScrollViewer.VerticalScrollBarVisibility="Disabled">
 
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorBrush}"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding BookId}" Width="60">
                         <DataGridTextColumn.ElementStyle>
@@ -82,35 +145,37 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="3*">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="FontWeight" Value="Bold"/>
-                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Book Details" Width="3*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel VerticalAlignment="Center" Margin="5,0">
+                                    <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextOnLightBackgroudBrush}" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding DisplayAuthorNames}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
-                    <DataGridTextColumn Header="Author" Binding="{Binding AuthorName}" Width="2*">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
-                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="Category" Binding="{Binding CategoryNames}" Width="2*">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
-                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Category" Width="2*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ItemsControl ItemsSource="{Binding CategoryNames}" VerticalAlignment="Center">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#F1F5F9" CornerRadius="4" Padding="8,3" Margin="0,2,6,2">
+                                                <TextBlock Text="{Binding}" FontSize="11" Foreground="#475569" FontWeight="Medium"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
                     <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat='{}{0:#,0} đ'}" Width="120">
                         <DataGridTextColumn.ElementStyle>
@@ -122,38 +187,63 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="Stock" Binding="{Binding Quantity}" Width="100">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="FontWeight" Value="SemiBold"/>
-                                <Setter Property="Foreground" Value="{DynamicResource TextOnLightBackgroudBrush}"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Stock Status" Width="150">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5,0">
+                                    <ui:SymbolIcon x:Name="StockIcon" Symbol="CheckmarkCircle24" FontSize="18" Margin="0,0,8,0" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
+                                    <TextBlock x:Name="StockText" Text="{Binding Quantity, StringFormat='{}{0} In Stock'}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Quantity}" Value="0">
+                                        <Setter TargetName="StockIcon" Property="Symbol" Value="DismissCircle24"/>
+                                        <Setter TargetName="StockIcon" Property="Foreground" Value="{DynamicResource ErrorPrimaryBrush}"/>
+                                        <Setter TargetName="StockText" Property="Text" Value="Out of Stock"/>
+                                        <Setter TargetName="StockText" Property="Foreground" Value="{DynamicResource ErrorPrimaryBrush}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Quantity}" Value="1">
+                                        <Setter TargetName="StockIcon" Property="Symbol" Value="Warning24"/>
+                                        <Setter TargetName="StockIcon" Property="Foreground" Value="{DynamicResource ErrorPrimaryBrush}"/>
+                                        <Setter TargetName="StockText" Property="Text" Value="Low Stock (1 left)"/>
+                                        <Setter TargetName="StockText" Property="Foreground" Value="{DynamicResource ErrorPrimaryBrush}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Quantity}" Value="2">
+                                        <Setter TargetName="StockIcon" Property="Symbol" Value="Warning24"/>
+                                        <Setter TargetName="StockIcon" Property="Foreground" Value="{DynamicResource ErrorPrimaryBrush}"/>
+                                        <Setter TargetName="StockText" Property="Text" Value="Low Stock (2 left)"/>
+                                        <Setter TargetName="StockText" Property="Foreground" Value="{DynamicResource ErrorPrimaryBrush}"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
                     <DataGridTemplateColumn Header="Actions" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Menu Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                    <MenuItem Padding="8,4" Background="Transparent" BorderThickness="0" Cursor="Hand">
-                                        <MenuItem.Header>
-                                            <ui:SymbolIcon Symbol="MoreHorizontal24" FontSize="20" Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
-                                        </MenuItem.Header>
+                                <Border Background="#F1F5F9" CornerRadius="6" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True">
+                                    <Menu Background="Transparent" BorderThickness="0">
+                                        <MenuItem Padding="10,6" Background="Transparent" BorderThickness="0" Cursor="Hand">
+                                            <MenuItem.Header>
+                                                <ui:SymbolIcon Symbol="MoreVertical24" FontSize="18" Foreground="#475569"/>
+                                            </MenuItem.Header>
 
-                                        <MenuItem Header="Edit" 
-                                                  Icon="{ui:SymbolIcon Edit24}"
-                                                  Foreground="{DynamicResource SuccessPrimaryBrush}"
-                                                  Command="{Binding DataContext.EditBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                  CommandParameter="{Binding}"/>
-                                        <Separator/>
-                                        <MenuItem Header="Delete" 
-                                                  Icon="{ui:SymbolIcon Delete24}" 
-                                                  Foreground="{DynamicResource ErrorPrimaryBrush}"
-                                                  Command="{Binding DataContext.DeleteBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                  CommandParameter="{Binding}"/>
-                                    </MenuItem>
-                                </Menu>
+                                            <MenuItem Header="Edit" 
+                                                      Icon="{ui:SymbolIcon Edit24}"
+                                                      Foreground="{DynamicResource SuccessPrimaryBrush}"
+                                                      Command="{Binding DataContext.EditBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                      CommandParameter="{Binding}"/>
+
+                                            <Separator Background="#E2E8F0"/>
+
+                                            <MenuItem Header="Delete" 
+                                                      Icon="{ui:SymbolIcon Delete24}" 
+                                                      Foreground="{DynamicResource ErrorPrimaryBrush}"
+                                                      Command="{Binding DataContext.DeleteBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                      CommandParameter="{Binding}"/>
+                                        </MenuItem>
+                                    </Menu>
+                                </Border>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -161,7 +251,7 @@
             </DataGrid>
         </Border>
 
-        <uc:PaginationControl Grid.Row="2" Margin="20,0,20,20"
+        <uc:PaginationControl Grid.Row="3" Margin="20,0,20,20"
                                CurrentPage="{Binding CurrentPage}"
                                TotalPages="{Binding TotalPages}"
                                TotalItems="{Binding TotalItems}"

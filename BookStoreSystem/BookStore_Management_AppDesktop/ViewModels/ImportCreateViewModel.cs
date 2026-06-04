@@ -5,7 +5,7 @@ using BookStore_Management_AppDesktop.Models.DTOs.ImportDTOs;
 using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API.BookServices;
 using BookStore_Management_AppDesktop.Services.API.Import;
-using BookStore_Management_AppDesktop.Services.Realtime; 
+using BookStore_Management_AppDesktop.Services.Realtime;
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -22,7 +22,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly IDialogService _dialogService;
         private readonly DebounceHelper _searchDebouncer = new DebounceHelper();
         private readonly IImportApiService _importApiService;
-        private readonly IBookHubService _hubService; 
+        private readonly IBookHubService _hubService;
 
         [ObservableProperty] private ObservableCollection<ImportCartItem> _draftList = new ObservableCollection<ImportCartItem>();
         [ObservableProperty] private string _searchText = string.Empty;
@@ -36,7 +36,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             IBookApiService apiService,
             IDialogService dialogService,
             IImportApiService importApiService,
-            IBookHubService hubService) 
+            IBookHubService hubService)
         {
             _apiService = apiService;
             _dialogService = dialogService;
@@ -56,7 +56,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 {
                     BookId = newBook.BookId,
                     Title = newBook.Title ?? "New Book",
-                    AuthorName = newBook.AuthorName ?? string.Empty,
+                    AuthorName = newBook.DisplayAuthorNames,
                     CurrentQuantity = newBook.Quantity,
                     ImportQuantity = 1,
                     ImportPrice = 0
@@ -130,7 +130,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 {
                     BookId = SelectedSearchResult.BookId,
                     Title = SelectedSearchResult.Title ?? string.Empty,
-                    AuthorName = SelectedSearchResult.AuthorName ?? string.Empty,
+                    AuthorName = SelectedSearchResult.DisplayAuthorNames,
                     CurrentQuantity = SelectedSearchResult.Quantity,
                     ImportQuantity = TempImportQuantity,
                     ImportPrice = TempImportPrice
@@ -228,7 +228,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     if (isSuccess)
                     {
                         _dialogService.ShowMessage("Import successful! The inventory has been updated.");
-                        ClearDraftSafe(); 
+                        ClearDraftSafe();
                     }
                     else
                     {

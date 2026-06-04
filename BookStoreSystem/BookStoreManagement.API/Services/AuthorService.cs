@@ -1,7 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using BookStoreManagement.API.Data;
+using BookStoreManagement.API.DTOs.Authors;
 using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreManagement.API.Services
 {
@@ -14,9 +15,18 @@ namespace BookStoreManagement.API.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Author>> GetAll()
+        public async Task<IEnumerable<AuthorResponseDto>> GetAll()
         {
-            return await _context.Authors.ToListAsync();
+            var authors = await _context.Authors
+                .Include(a => a.BookAuthors)
+                .ToListAsync();
+
+            return authors.Select(a => new AuthorResponseDto
+            {
+                AuthorId = a.AuthorId,
+                Name = a.Name,
+                HasBooks = a.BookAuthors.Any()
+            }).ToList();
         }
 
         public async Task<Author?> GetById(int id)
@@ -42,10 +52,17 @@ namespace BookStoreManagement.API.Services
 
         public async Task<bool> Delete(int id)
         {
-            var a = await _context.Authors.FindAsync(id);
-            if (a == null) return false;
+            var author = await _context.Authors.FindAsync(id);
+            if (author == null) return false;
 
-            _context.Authors.Remove(a);
+            bool hasBooksLinked = await _context.BookAuthors.AnyAsync(ba => ba.AuthorId == id);
+
+            if (hasBooksLinked)
+            {
+                throw new InvalidOperationException("Cannot delete this author because they are linked to existing books.");
+            }
+
+            _context.Authors.Remove(author);
             await _context.SaveChangesAsync();
             return true;
         }

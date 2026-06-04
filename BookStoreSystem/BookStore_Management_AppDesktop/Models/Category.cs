@@ -9,6 +9,8 @@ namespace BookStore_Management_AppDesktop.Models
         public int CategoryId { get; set; }
         public string Name { get; set; } = string.Empty;
 
+        public bool HasBooks { get; set; }
+
         public override string ToString()
         {
             return Name;

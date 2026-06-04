@@ -1,6 +1,7 @@
 ﻿using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs;
 using BookStore_Management_AppDesktop.Services.API;
+using BookStore_Management_AppDesktop.Services.API.AuthorServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -57,7 +58,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     if (_selectedAuthor != null && string.Equals(_selectedAuthor.Name, text, StringComparison.OrdinalIgnoreCase))
                     {
                         IsShowAddButton = false;
-                        return; 
+                        return;
                     }
 
                     if (_selectedAuthor != null && !string.Equals(_selectedAuthor.Name, text, StringComparison.OrdinalIgnoreCase))
@@ -137,7 +138,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
             try
             {
                 IsLoading = true;
-                var created = await _authorApiService.CreateAuthorAsync(new AuthorCreateDto { Name = SearchAuthorText.Trim() });
+
+                var created = await _authorApiService.CreateAuthorAsync(SearchAuthorText.Trim());
 
                 if (created == null)
                 {
@@ -146,9 +148,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 }
 
                 _allAuthors.Add(created);
-
                 SelectedAuthor = created;
-
                 OnShowMessage?.Invoke($"Added '{created.Name}'");
             }
             catch (Exception ex)

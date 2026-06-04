@@ -16,13 +16,14 @@ namespace BookStore_Management_AppDesktop.Services.Realtime
         public event Action<int>? BookUpdated;
         public event Action<int, int>? InventoryStockChanged;
         public event Action? ImportCreated;
+        public event Action<int, string>? AuthorUpdated;
 
         public BookHubService()
         {
             _connection = new HubConnectionBuilder()
                 .WithUrl("https://localhost:7063/hub/books", options =>
                 {
-                    options.AccessTokenProvider = () => Task.FromResult(Settings.Default.AccessToken ?? string.Empty);
+                    options.AccessTokenProvider = () => Task.FromResult<string?>(Settings.Default.AccessToken ?? string.Empty);
                 })
                 .WithAutomaticReconnect() 
                 .Build();
@@ -49,6 +50,9 @@ namespace BookStore_Management_AppDesktop.Services.Realtime
                 Debug.WriteLine("[SignalR] Reconnected successfully.");
                 return Task.CompletedTask;
             };
+
+            _connection.On<int, string>("AuthorUpdated", (authorId, newName) =>
+                AuthorUpdated?.Invoke(authorId, newName));
         }
 
         public async Task StartAsync()
