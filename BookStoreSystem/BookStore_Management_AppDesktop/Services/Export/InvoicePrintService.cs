@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models.DTOs.InvoiceDTOs;
+using BookStore_Management_AppDesktop.Models.DTOs.InvoiceDTOs;
 using BookStore_Management_AppDesktop.Services.API;
 using ClosedXML.Excel;
 using System;
@@ -186,6 +186,110 @@ namespace BookStore_Management_AppDesktop.Services.Export
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Error exporting invoice: {ex.Message}", "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+            });
+        }
+
+        public async Task<bool> ExportPaymentHistoryToExcelAsync(InvoiceDetailResponseDto invoice, System.Collections.Generic.List<PaymentResponseDto> payments)
+        {
+            if (invoice == null || payments == null)
+            {
+                MessageBox.Show("No data available to export!", "Export Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    var fileName = $"PaymentHistory_Invoice_{invoice.InvoiceId}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+                    var downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+
+                    if (!Directory.Exists(downloadsPath))
+                    {
+                        Directory.CreateDirectory(downloadsPath);
+                    }
+
+                    var filePath = Path.Combine(downloadsPath, fileName);
+
+                    using (var workbook = new XLWorkbook())
+                    {
+                        var worksheet = workbook.Worksheets.Add("Payment History");
+                        worksheet.ShowGridLines = true;
+
+                        worksheet.Column(1).Width = 15;  // Payment ID
+                        worksheet.Column(2).Width = 25;  // Date
+                        worksheet.Column(3).Width = 25;  // Staff
+                        worksheet.Column(4).Width = 20;  // Amount
+
+                        var titleCell = worksheet.Cell("A1");
+                        titleCell.Value = "PAYMENT HISTORY - INVOICE #" + invoice.InvoiceId;
+                        titleCell.Style.Font.Bold = true;
+                        titleCell.Style.Font.FontSize = 16;
+                        worksheet.Range("A1:D1").Merge().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        worksheet.Cell("A3").Value = "Customer:";
+                        worksheet.Cell("B3").Value = invoice.CustomerName ?? "Guest";
+                        worksheet.Cell("A4").Value = "Invoice Total:";
+                        worksheet.Cell("B4").Value = invoice.Total;
+                        worksheet.Cell("B4").Style.NumberFormat.Format = "#,##0\" đ\"";
+
+                        worksheet.Cell("A5").Value = "Total Paid:";
+                        worksheet.Cell("B5").Value = invoice.PaidAmount;
+                        worksheet.Cell("B5").Style.NumberFormat.Format = "#,##0\" đ\"";
+                        worksheet.Cell("B5").Style.Font.Bold = true;
+
+                        worksheet.Cell("A6").Value = "Remaining Due:";
+                        worksheet.Cell("B6").Value = invoice.RemainingAmount;
+                        worksheet.Cell("B6").Style.NumberFormat.Format = "#,##0\" đ\"";
+                        worksheet.Cell("B6").Style.Font.Bold = true;
+
+                        worksheet.Range("A3:A6").Style.Font.Italic = true;
+
+                        int currentRow = 8;
+                        worksheet.Cell(currentRow, 1).Value = "Payment ID";
+                        worksheet.Cell(currentRow, 2).Value = "Payment Date";
+                        worksheet.Cell(currentRow, 3).Value = "Cashier (Staff)";
+                        worksheet.Cell(currentRow, 4).Value = "Paid Amount";
+
+                        var headerRange = worksheet.Range(currentRow, 1, currentRow, 4);
+                        headerRange.Style.Font.Bold = true;
+                        headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
+                        headerRange.Style.Border.TopBorder = XLBorderStyleValues.Thin;
+                        headerRange.Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+                        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        currentRow++;
+
+                        foreach (var payment in payments)
+                        {
+                            worksheet.Cell(currentRow, 1).Value = payment.PaymentId;
+                            worksheet.Cell(currentRow, 2).Value = payment.PaymentDate.ToString("MM/dd/yyyy HH:mm");
+                            worksheet.Cell(currentRow, 3).Value = payment.StaffName;
+                            worksheet.Cell(currentRow, 4).Value = payment.Amount;
+
+                            worksheet.Cell(currentRow, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                            worksheet.Cell(currentRow, 2).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                            worksheet.Cell(currentRow, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                            worksheet.Cell(currentRow, 4).Style.NumberFormat.Format = "#,##0\" đ\"";
+
+                            var rowRange = worksheet.Range(currentRow, 1, currentRow, 4);
+                            rowRange.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                            rowRange.Style.Border.BottomBorderColor = XLColor.LightGray;
+
+                            currentRow++;
+                        }
+
+                        workbook.SaveAs(filePath);
+                    }
+
+                    MessageBox.Show($"Payment history exported successfully to:\n{filePath}", "Export Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error exporting payment history: {ex.Message}", "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return false;
                 }
             });
