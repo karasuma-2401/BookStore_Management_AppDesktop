@@ -42,10 +42,17 @@ namespace BookStoreManagement.API.Services
 
         public async Task<bool> Delete(int id)
         {
-            var a = await _context.Authors.FindAsync(id);
-            if (a == null) return false;
+            var author = await _context.Authors.FindAsync(id);
+            if (author == null) return false;
 
-            _context.Authors.Remove(a);
+            bool hasBooksLinked = await _context.BookAuthors.AnyAsync(ba => ba.AuthorId == id);
+
+            if (hasBooksLinked)
+            {
+                throw new InvalidOperationException("Cannot delete this author because they are linked to existing books.");
+            }
+
+            _context.Authors.Remove(author);
             await _context.SaveChangesAsync();
             return true;
         }

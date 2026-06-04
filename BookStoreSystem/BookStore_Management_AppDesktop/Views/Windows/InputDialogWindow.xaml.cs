@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using System.Windows.Controls; 
 
 namespace BookStore_Management_AppDesktop.Views.Windows
 {
@@ -25,6 +16,14 @@ namespace BookStore_Management_AppDesktop.Views.Windows
             InputTxt.Focus();
         }
 
+        private void InputTxt_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                textBox.SelectAll();
+            }
+        }
+
         private void Ok_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(InputTxt.Text))
@@ -37,5 +36,4 @@ namespace BookStore_Management_AppDesktop.Views.Windows
 
         private void Cancel_Click(object sender, RoutedEventArgs e) => DialogResult = false;
     }
-
 }

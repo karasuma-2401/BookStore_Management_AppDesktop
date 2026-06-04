@@ -13,6 +13,7 @@ using BookStore_Management_AppDesktop.Services.Export;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.Services.Realtime;
 using BookStore_Management_AppDesktop.ViewModels;
+using BookStore_Management_AppDesktop.ViewModels.BooksViewModel;
 using BookStore_Management_AppDesktop.Views.Pages;
 using BookStore_Management_AppDesktop.Views.Pages.BookViews; 
 using BookStore_Management_AppDesktop.Views.Pages.InvoiceViews;
@@ -104,6 +105,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<PayrollViewModel>();
             services.AddTransient<AbsenceManagementViewModel>();
             services.AddTransient<KioskCheckInViewModel>();
+            services.AddTransient<AuthorManagementViewModel>();
 
 
             // // Get View 
@@ -127,6 +129,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<PayrollPage>();
             services.AddTransient<AbsenceManagementPage>();
             services.AddTransient<KioskCheckInPage>();
+            services.AddTransient<AuthorManagementWindow>();
         }
     }
 
