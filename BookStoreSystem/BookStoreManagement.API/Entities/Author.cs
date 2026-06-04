@@ -18,5 +18,8 @@ namespace BookStoreManagement.API.Models.Entities
         public string Name {get; set; } = string.Empty;
 
         public ICollection<BookAuthor> BookAuthors { get; set; }
+
+        [NotMapped] // không lưu vào DB, chỉ dùng để gửi qua API
+        public bool HasBooks { get; set; }
     }
 }

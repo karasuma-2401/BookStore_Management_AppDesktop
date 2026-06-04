@@ -68,7 +68,13 @@
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                     <Setter Property="FontWeight" Value="Bold"/>
-                                    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasBooks}" Value="False">
+                                            <Setter Property="Foreground" Value="#94A3B8"/>
+                                            <Setter Property="FontStyle" Value="Italic"/>
+                                            <Setter Property="ToolTip" Value="No books associated with this author."/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -76,9 +82,9 @@
                         <DataGridTemplateColumn Header="Actions" Width="100">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border Background="#F1F5F9" CornerRadius="6" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True">
+                                    <Border Background="#F1F5F9" CornerRadius="6" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <Menu Background="Transparent" BorderThickness="0">
-                                            <MenuItem Padding="10,6" Background="Transparent" BorderThickness="0" Cursor="Hand">
+                                            <MenuItem Padding="10,6" Background="Transparent" BorderThickness="0">
                                                 <MenuItem.Header>
                                                     <ui:SymbolIcon Symbol="MoreVertical24" FontSize="18" Foreground="#475569"/>
                                                 </MenuItem.Header>
@@ -95,7 +101,18 @@
                                                           Icon="{ui:SymbolIcon Delete24}" 
                                                           Foreground="{DynamicResource ErrorPrimaryBrush}"
                                                           Command="{Binding DataContext.DeleteAuthorCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                          CommandParameter="{Binding}"/>
+                                                          CommandParameter="{Binding}">
+                                                    <MenuItem.Style>
+                                                        <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding HasBooks}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </MenuItem.Style>
+                                                </MenuItem>
                                             </MenuItem>
                                         </Menu>
                                     </Border>

@@ -25,7 +25,7 @@ namespace BookStoreManagement.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<AuthorResponseDto>>> GetAll()
         {
             var authors = await _service.GetAll();
             return Ok(authors);
@@ -57,7 +57,7 @@ namespace BookStoreManagement.API.Controllers
                 return BadRequest("Update failed. Author ID mismatch or not found.");
             }
 
-            await _hubContext.Clients.All.AuthorUpdated(id, dto.Name);
+            await _hubContext.Clients.All.BookUpdated(0, new { message = "Author name changed" });
 
             return Ok(new { message = "Author updated successfully." });
         }
