@@ -113,6 +113,8 @@ builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IInventoryReportService, InventoryReportService>();
+builder.Services.AddScoped<IDebtReportService, DebtReportService>();
 // Import
 builder.Services.AddScoped<IImportService, ImportService>();
 var app = builder.Build();

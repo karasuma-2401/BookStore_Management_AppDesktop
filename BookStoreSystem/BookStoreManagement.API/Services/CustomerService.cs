@@ -67,7 +67,34 @@ public class CustomerService : ICustomerService
             Debt = customer.Debt
         };
     }
+    public async Task<IEnumerable<CustomerResponseDto>> SearchCustomers(string? keyword)
+    {
+        var query = _context.Customers
+            .Where(c => !c.IsDeleted);
 
+        if (!string.IsNullOrWhiteSpace(keyword))
+        {
+            keyword = keyword.Trim().ToLower();
+
+            query = query.Where(c =>
+                EF.Functions.ILike(c.Name, $"%{keyword}%") ||
+                (c.Phone != null && EF.Functions.ILike(c.Phone, $"%{keyword}%")) ||
+                (c.Email != null && EF.Functions.ILike(c.Email, $"%{keyword}%"))
+            );
+        }
+
+        return await query
+            .Select(c => new CustomerResponseDto
+            {
+                CustomerId = c.CustomerId,
+                Name = c.Name,
+                Phone = c.Phone,
+                Email = c.Email,
+                Address = c.Address,
+                Debt = c.Debt
+            })
+            .ToListAsync();
+    }
     public async Task<bool> UpdateCustomer(int id, CustomerUpdateDto dto)
     {
         var customer = await _context.Customers
