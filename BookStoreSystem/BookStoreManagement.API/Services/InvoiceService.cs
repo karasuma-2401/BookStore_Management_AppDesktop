@@ -114,23 +114,18 @@ namespace BookStoreManagement.API.Services
                     voucher.UsedCount += 1;
                 }
 
-                invoice.Total = finalTotal;
-                invoice.InvoiceDetails = invoiceDetails;
+                invoice.Status = InvoiceStatus.Unpaid;
+                invoice.AmountPaid = 0;
 
-
-                var payment = new Payment
+                if (dto.CustomerId.HasValue)
                 {
-                    CustomerId = dto.CustomerId,
-                    UserId = userId,
-                    Amount = finalTotal,
-                    PaymentDate = DateTime.UtcNow,
-                    Invoice = invoice
-                };
-
-
-
+                    var customer = await _context.Customers.FindAsync(dto.CustomerId.Value);
+                    if (customer != null)
+                    {
+                        customer.Debt += finalTotal;
+                    }
+                }
                 _context.Invoices.Add(invoice);
-                _context.Payments.Add(payment);
 
                 var result = await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -194,13 +189,15 @@ namespace BookStoreManagement.API.Services
 
         public async Task<bool> CancelInvoiceAsync(int id)
         {
-
+ 
             var invoice = await _context.Invoices
                 .Include(i => i.InvoiceDetails)
+                .Include(i => i.Customer)
                 .FirstOrDefaultAsync(i => i.InvoiceId == id);
 
             if (invoice == null || invoice.Status == InvoiceStatus.Canceled)
                 return false;
+
 
             invoice.Status = InvoiceStatus.Canceled;
 
@@ -214,6 +211,21 @@ namespace BookStoreManagement.API.Services
                 else
                 {
                     Console.WriteLine($"Warning: Book with ID {detail.BookId} no longer exists. Inventory not restored.");
+                }
+            }
+
+            if (invoice.Customer != null)
+            {
+                decimal remainingDebt = invoice.Total - invoice.AmountPaid;
+
+                if (remainingDebt > 0)
+                {
+                    invoice.Customer.Debt -= remainingDebt;
+
+                    if (invoice.Customer.Debt < 0)
+                    {
+                        invoice.Customer.Debt = 0;
+                    }
                 }
             }
 
