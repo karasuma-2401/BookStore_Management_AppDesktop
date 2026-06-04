@@ -39,8 +39,8 @@ namespace BookStoreManagement.API.Services
             // Đảm bảo kiểu múi giờ là UTC và chỉ lấy phần Ngày (Date) cho PostgreSQL timestamptz
             var workDateUtc = DateTime.SpecifyKind(dto.WorkDate.Date, DateTimeKind.Utc);
 
-            if (await _context.EmployeeShifts.AnyAsync(es => es.EmployeeId == dto.EmployeeId && es.WorkDate == workDateUtc))
-                return "Employee already has a shift assigned for this date.";
+            if (await _context.EmployeeShifts.AnyAsync(es => es.EmployeeId == dto.EmployeeId && es.WorkDate == workDateUtc && es.ShiftId == dto.ShiftId))
+                return "Employee already has this shift assigned for this date.";
 
             var employeeshift = new EmployeeShift
             {
