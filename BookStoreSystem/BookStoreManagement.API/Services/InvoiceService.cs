@@ -148,6 +148,7 @@ namespace BookStoreManagement.API.Services
             return await _context.Invoices
                 .Include(i => i.Customer)
                 .Include(i => i.User)
+                    .ThenInclude(u => u.Employee)
                 .Include(i => i.InvoiceDetails)
                 .OrderByDescending(i => i.InvoiceDate)
                 .Select(i => new InvoiceListDto
@@ -156,7 +157,7 @@ namespace BookStoreManagement.API.Services
                     InvoiceDate = i.InvoiceDate,
                     Total = i.Total,
                     CustomerName = i.Customer != null ? i.Customer.Name : "Guest",
-                    StaffName = i.User.FullName,
+                    StaffName = i.User.Employee != null ? i.User.Employee.FullName : i.User.Username,
                     TotalItems = i.InvoiceDetails.Sum(d => d.Quantity),
                     Status = i.Status.ToString()
                 })
@@ -168,6 +169,7 @@ namespace BookStoreManagement.API.Services
             return await _context.Invoices
                 .Include(i => i.Customer)
                 .Include(i => i.User)
+                    .ThenInclude(u => u.Employee)
                 .Include(i => i.Voucher)
                 .Include(i => i.InvoiceDetails).ThenInclude(d => d.Book)
                 .Where(i => i.InvoiceId == id)
@@ -177,7 +179,7 @@ namespace BookStoreManagement.API.Services
                     InvoiceDate = i.InvoiceDate,
                     Total = i.Total,
                     CustomerName = i.Customer != null ? i.Customer.Name : "Guest",
-                    StaffName = i.User.FullName,
+                    StaffName = i.User.Employee != null ? i.User.Employee.FullName : i.User.Username,
                     VoucherCode = i.Voucher != null ? i.Voucher.Code : null,
                     TotalItems = i.InvoiceDetails.Sum(d => d.Quantity),
                     Items = i.InvoiceDetails.Select(d => new InvoiceItemDto
