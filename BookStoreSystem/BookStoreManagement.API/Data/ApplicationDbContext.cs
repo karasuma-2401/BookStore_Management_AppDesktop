@@ -27,13 +27,31 @@ namespace BookStoreManagement.API.Data
         public DbSet<Shift> Shifts { get; set;  }
         public DbSet<EmployeeShift> EmployeeShifts { get; set; }
         public DbSet<Voucher> Vouchers { get; set; }
-
+        public DbSet<InventoryReport> InventoryReports { get; set; }
+        public DbSet<DebtReport> DebtReports { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<BookAuthor>()
             .HasKey(ba => new { ba.BookId, ba.AuthorId });
 
+            modelBuilder.Entity<InventoryReport>()
+            .HasOne(i => i.Book)
+            .WithMany()
+            .HasForeignKey(i => i.BookId);
+
+            modelBuilder.Entity<DebtReport>()
+                .HasOne(d => d.Customer)
+                .WithMany()
+                .HasForeignKey(d => d.CustomerId);
+
+            modelBuilder.Entity<InventoryReport>()
+                .HasIndex(i => new { i.Month, i.Year, i.BookId })
+                .IsUnique();
+
+            modelBuilder.Entity<DebtReport>()
+                .HasIndex(d => new { d.Month, d.Year, d.CustomerId })
+                .IsUnique();
             modelBuilder.Entity<BookAuthor>()
                 .HasOne(ba => ba.Book)
                 .WithMany(b => b.BookAuthors)

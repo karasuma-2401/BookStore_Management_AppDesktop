@@ -71,7 +71,7 @@ namespace BookStoreManagement.API.Services
                 {
                     BookId = b.BookId,
                     Title = b.Title,
-                    PublishYear = b.PublishYear,
+                    PublishYear = b.PublishYear ?? 0,
                     AuthorNames = b.BookAuthors
                         .Select(ba => ba.Author.Name)
                         .ToList(),
@@ -116,7 +116,7 @@ namespace BookStoreManagement.API.Services
                 {
                     BookId = b.BookId,
                     Title = b.Title,
-                    PublishYear = b.PublishYear,
+                    PublishYear = b.PublishYear ?? 0,
 
                     AuthorNames = b.BookAuthors
                         .Select(ba => ba.Author.Name)

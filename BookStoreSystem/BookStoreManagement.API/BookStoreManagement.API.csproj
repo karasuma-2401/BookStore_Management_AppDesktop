@@ -35,6 +35,8 @@
     <Folder Include="Models\BookCategory\" />
     <Folder Include="Models\Import\" />
     <Folder Include="Models\Customer\" />
+    <Folder Include="Models\InventoryReport\" />
+    <Folder Include="Models\DebtReport\" />
     <Folder Include="Models\Report\" />
   </ItemGroup>
 
