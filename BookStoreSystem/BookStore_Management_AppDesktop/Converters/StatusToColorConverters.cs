@@ -159,4 +159,46 @@ namespace BookStore_Management_AppDesktop.Converters
             throw new NotImplementedException();
         }
     }
+
+    public class RoleToColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string role)
+            {
+                return role.Trim().ToLower() switch
+                {
+                    "admin" => new SolidColorBrush(Color.FromArgb(255, 217, 119, 6)), // Amber/Orange
+                    _ => new SolidColorBrush(Color.FromArgb(255, 14, 165, 233))       // Blue
+                };
+            }
+            return new SolidColorBrush(Color.FromArgb(255, 14, 165, 233));
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class RoleToSoftBackgroundConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string role)
+            {
+                return role.Trim().ToLower() switch
+                {
+                    "admin" => new SolidColorBrush(Color.FromArgb(40, 217, 119, 6)), // Soft Amber
+                    _ => new SolidColorBrush(Color.FromArgb(40, 14, 165, 233))       // Soft Blue
+                };
+            }
+            return new SolidColorBrush(Color.FromArgb(40, 14, 165, 233));
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

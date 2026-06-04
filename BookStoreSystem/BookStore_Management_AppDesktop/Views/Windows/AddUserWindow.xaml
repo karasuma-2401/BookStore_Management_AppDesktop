@@ -4,15 +4,66 @@
             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
             Background="Transparent" WindowStartupLocation="CenterScreen"
             WindowStyle="None" AllowsTransparency="True"
-            Title="Add User" Height="360" Width="400">
+            Title="Add User" Height="380" Width="400">
+    <Window.Resources>
+        <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="BorderBrush" Value="#64748B"/>
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="CaretBrush" Value="#1E293B"/>
+            <Style.Resources>
+                <SolidColorBrush x:Key="TextControlForeground" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlBackground" Color="#F8FAFC" />
+                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#F1F5F9" />
+                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="White" />
+                <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#E2E8F0" />
+                <SolidColorBrush x:Key="TextControlBorderBrush" Color="#64748B" />
+                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#CBD5E1" />
+                <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#64748B" />
+            </Style.Resources>
+        </Style>
+        <Style TargetType="ui:PasswordBox" BasedOn="{StaticResource {x:Type ui:PasswordBox}}">
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="BorderBrush" Value="#64748B"/>
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="CaretBrush" Value="#1E293B"/>
+            <Style.Resources>
+                <SolidColorBrush x:Key="TextControlForeground" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlBackground" Color="#F8FAFC" />
+                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#F1F5F9" />
+                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="White" />
+                <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#E2E8F0" />
+                <SolidColorBrush x:Key="TextControlBorderBrush" Color="#64748B" />
+                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#CBD5E1" />
+                <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#64748B" />
+            </Style.Resources>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#1E293B"/>
+        </Style>
+    </Window.Resources>
     <Grid Margin="15">
         <Border CornerRadius="15" Background="Black">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="15" ShadowDepth="2" Opacity="0.5" Color="Black"/>
+                <DropShadowEffect BlurRadius="15" ShadowDepth="2" Opacity="0.15" Color="Black"/>
             </Border.Effect>
         </Border>
 
-        <Border CornerRadius="15" BorderBrush="{DynamicResource NavyLightBrush}" BorderThickness="1" Background="{DynamicResource NavyPrimaryBrush}">
+        <Border CornerRadius="15" BorderBrush="#CBD5E1" BorderThickness="1.5" Background="White">
             <Grid Margin="30">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -22,17 +73,17 @@
 
                 <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,25" 
                                 MouseLeftButtonDown="Header_MouseLeftButtonDown" Cursor="SizeAll" Background="Transparent">
-                    <TextBlock Text="CREATE USER" FontSize="28" FontWeight="Black" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Book Store Management System" FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBlock Text="CREATE USER" FontSize="28" FontWeight="Black" Foreground="#1E293B" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Book Store Management System" FontSize="14" Foreground="#64748B" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1">
-                    <TextBlock Text="Username" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Username" Foreground="#1E293B" FontWeight="SemiBold" Margin="0,0,0,5"/>
                     <ui:TextBox Text="{Binding NewUser.Username, UpdateSourceTrigger=PropertyChanged}" 
                                     PlaceholderText="Enter username..." Margin="0,0,0,12" 
                                     Icon="{ui:SymbolIcon Person24}"/>
 
-                    <TextBlock Text="Password" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Password" Foreground="#1E293B" FontWeight="SemiBold" Margin="0,0,0,5"/>
                     <ui:PasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                         PlaceholderText="Enter password..." Margin="0,0,0,12" 
                                         Icon="{ui:SymbolIcon Password24}"/>
@@ -40,11 +91,11 @@
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0,15,0,0">
                     <ui:Button Content="Cancel" Click="Cancel_Click"
-                                   Appearance="Transparent" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,15,0"/>
+                                   Style="{StaticResource CancelButtonStyle}" Margin="0,0,15,0"/>
 
                     <ui:Button Content="Create Account" Command="{Binding CreateUserCommand}" 
                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                                   Appearance="Primary" Background="{DynamicResource NavyAccentBrush}" Width="130"/>
+                                   Style="{StaticResource PremiumSolidButtonStyle}" Width="130" Height="38"/>
                 </StackPanel>
             </Grid>
         </Border>

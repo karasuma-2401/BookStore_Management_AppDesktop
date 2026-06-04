@@ -66,10 +66,44 @@
 							   Padding="10,6" FontSize="12" Margin="0,0,20,0" VerticalAlignment="Center"/>
 
 					<!-- Nút Export -->
-					<ui:Button Content="Export" Icon="{ui:SymbolIcon ArrowDownload24}"
-							   Command="{Binding ExportScheduleCommand}"
-							   Background="{DynamicResource StatusPresentBrush}" Foreground="White" BorderThickness="0"
-							   Padding="10,6" FontSize="12" Margin="0,0,15,0" VerticalAlignment="Center"/>
+					<Button Command="{Binding ExportScheduleCommand}"
+							Foreground="White" BorderThickness="0"
+							Padding="10,6" FontSize="12" Margin="0,0,15,0" VerticalAlignment="Center" Height="32">
+						<Button.Style>
+							<Style TargetType="Button">
+								<Setter Property="Background" Value="#10B981"/>
+								<Setter Property="Template">
+									<Setter.Value>
+										<ControlTemplate TargetType="Button">
+											<Border x:Name="Border" 
+													Background="{TemplateBinding Background}" 
+													BorderBrush="{TemplateBinding BorderBrush}" 
+													BorderThickness="{TemplateBinding BorderThickness}" 
+													CornerRadius="6" 
+													SnapsToDevicePixels="True"
+													Padding="{TemplateBinding Padding}">
+												<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+													<ui:SymbolIcon Symbol="ArrowDownload24" Foreground="White" Margin="0,0,6,0" VerticalAlignment="Center"/>
+													<ContentPresenter Content="Export" VerticalAlignment="Center"/>
+												</StackPanel>
+											</Border>
+											<ControlTemplate.Triggers>
+												<Trigger Property="IsMouseOver" Value="True">
+													<Setter TargetName="Border" Property="Background" Value="#34D399"/>
+												</Trigger>
+												<Trigger Property="IsPressed" Value="True">
+													<Setter TargetName="Border" Property="Background" Value="#059669"/>
+												</Trigger>
+												<Trigger Property="IsEnabled" Value="False">
+													<Setter TargetName="Border" Property="Opacity" Value="0.5"/>
+												</Trigger>
+											</ControlTemplate.Triggers>
+										</ControlTemplate>
+									</Setter.Value>
+								</Setter>
+							</Style>
+						</Button.Style>
+					</Button>
 
 					<!-- Điều hướng tháng -->
 					<TextBlock Text="{Binding CurrentMonthStart, StringFormat='MMMM yyyy'}"
@@ -115,13 +149,27 @@
 								<ColumnDefinition Width="*"/>
 							</Grid.ColumnDefinitions>
 
-							<TextBlock Grid.Column="0" Text="Monday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
-							<TextBlock Grid.Column="1" Text="Tuesday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
-							<TextBlock Grid.Column="2" Text="Wednesday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
-							<TextBlock Grid.Column="3" Text="Thursday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
-							<TextBlock Grid.Column="4" Text="Friday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
-							<TextBlock Grid.Column="5" Text="Saturday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
-							<TextBlock Grid.Column="6" Text="Sunday" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource TextOnCardBrush}" Padding="5"/>
+							<Border Grid.Column="0" Background="#200EA5E9" BorderBrush="#0EA5E9" BorderThickness="1.5" CornerRadius="6" Margin="2,0">
+								<TextBlock Text="Monday" FontWeight="Bold" TextAlignment="Center" Foreground="#0EA5E9" Padding="6" HorizontalAlignment="Center"/>
+							</Border>
+							<Border Grid.Column="1" Background="#2010B981" BorderBrush="#10B981" BorderThickness="1.5" CornerRadius="6" Margin="2,0">
+								<TextBlock Text="Tuesday" FontWeight="Bold" TextAlignment="Center" Foreground="#10B981" Padding="6" HorizontalAlignment="Center"/>
+							</Border>
+							<Border Grid.Column="2" Background="#208B5CF6" BorderBrush="#8B5CF6" BorderThickness="1.5" CornerRadius="6" Margin="2,0">
+								<TextBlock Text="Wednesday" FontWeight="Bold" TextAlignment="Center" Foreground="#8B5CF6" Padding="6" HorizontalAlignment="Center"/>
+							</Border>
+							<Border Grid.Column="3" Background="#20F59E0B" BorderBrush="#F59E0B" BorderThickness="1.5" CornerRadius="6" Margin="2,0">
+								<TextBlock Text="Thursday" FontWeight="Bold" TextAlignment="Center" Foreground="#F59E0B" Padding="6" HorizontalAlignment="Center"/>
+							</Border>
+							<Border Grid.Column="4" Background="#2014B8A6" BorderBrush="#14B8A6" BorderThickness="1.5" CornerRadius="6" Margin="2,0">
+								<TextBlock Text="Friday" FontWeight="Bold" TextAlignment="Center" Foreground="#14B8A6" Padding="6" HorizontalAlignment="Center"/>
+							</Border>
+							<Border Grid.Column="5" Background="#20F43F5E" BorderBrush="#F43F5E" BorderThickness="1.5" CornerRadius="6" Margin="2,0">
+								<TextBlock Text="Saturday" FontWeight="Bold" TextAlignment="Center" Foreground="#F43F5E" Padding="6" HorizontalAlignment="Center"/>
+							</Border>
+							<Border Grid.Column="6" Background="#20EC4899" BorderBrush="#EC4899" BorderThickness="1.5" CornerRadius="6" Margin="2,0">
+								<TextBlock Text="Sunday" FontWeight="Bold" TextAlignment="Center" Foreground="#EC4899" Padding="6" HorizontalAlignment="Center"/>
+							</Border>
 						</Grid>
 
 						<ItemsControl Grid.Row="1" ItemsSource="{Binding ScheduleCells}">

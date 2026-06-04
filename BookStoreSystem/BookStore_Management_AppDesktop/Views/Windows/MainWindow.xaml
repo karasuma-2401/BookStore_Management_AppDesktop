@@ -204,8 +204,12 @@
             <ui:NavigationView.FooterMenuItems>
                 <ui:NavigationViewItem
                     Command="{Binding LogoutCommand}"
-                    Icon="{ui:SymbolIcon ArrowLeft24}"
+                    Icon="{ui:SymbolIcon SignOut24}"
                     Tag="Logout">
+                    <ui:NavigationViewItem.Resources>
+                        <SolidColorBrush x:Key="NavigationViewItemForegroundPointerOver" Color="#FF4C4C"/>
+                        <SolidColorBrush x:Key="NavigationViewItemBackgroundPointerOver" Color="#1AFF4C4C"/>
+                    </ui:NavigationViewItem.Resources>
                     <TextBlock
                         FontSize="{StaticResource FontSizeSubTitle}"
                         FontWeight="SemiBold"

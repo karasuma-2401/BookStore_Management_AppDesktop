@@ -17,6 +17,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly IDialogService _dialogService;
 
         [ObservableProperty] private ObservableCollection<VoucherDto> vouchers = new();
+        [ObservableProperty] private ObservableCollection<VoucherDto> activeVouchers = new();
+        [ObservableProperty] private ObservableCollection<VoucherDto> expiredVouchers = new();
 
         [ObservableProperty] private string? newVoucherCode;
 
@@ -59,9 +61,30 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 var voucherList = await _voucherApiService.GetAllVouchersAsync();
 
                 Vouchers.Clear();
+                ActiveVouchers.Clear();
+                ExpiredVouchers.Clear();
                 foreach (var voucher in voucherList)
                 {
                     Vouchers.Add(voucher);
+                    
+                    bool isActive = true;
+                    if (voucher.ExpiryDate.HasValue && voucher.ExpiryDate.Value.ToLocalTime() < DateTime.Now)
+                    {
+                        isActive = false;
+                    }
+                    else if (voucher.UsageLimit.HasValue && voucher.UsedCount >= voucher.UsageLimit.Value)
+                    {
+                        isActive = false;
+                    }
+
+                    if (isActive)
+                    {
+                        ActiveVouchers.Add(voucher);
+                    }
+                    else
+                    {
+                        ExpiredVouchers.Add(voucher);
+                    }
                 }
             }
             catch (Exception ex)

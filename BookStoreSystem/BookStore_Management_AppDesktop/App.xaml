@@ -15,6 +15,8 @@
             <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
             <converters:StatusToSoftBackgroundConverter x:Key="StatusToSoftBackgroundConverter" />
             <converters:StatusToForegroundConverter x:Key="StatusToForegroundConverter" />
+            <converters:RoleToColorConverter x:Key="RoleToColorConverter" />
+            <converters:RoleToSoftBackgroundConverter x:Key="RoleToSoftBackgroundConverter" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Dark" />

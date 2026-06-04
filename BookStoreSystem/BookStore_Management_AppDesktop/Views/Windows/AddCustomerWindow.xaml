@@ -5,9 +5,38 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="Add New Customer"
     Width="450"
-    Height="600"
-    Background="{DynamicResource SidebarBackgroundBrush}"
+    Height="580"
+    Background="White"
     WindowStartupLocation="CenterOwner">
+
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#1E293B"/>
+        </Style>
+        <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="BorderBrush" Value="#64748B"/>
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="CaretBrush" Value="#1E293B"/>
+            <Style.Resources>
+                <SolidColorBrush x:Key="TextControlForeground" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlBackground" Color="#F8FAFC" />
+                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#F1F5F9" />
+                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="White" />
+                <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#E2E8F0" />
+                <SolidColorBrush x:Key="TextControlBorderBrush" Color="#64748B" />
+                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#CBD5E1" />
+                <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#64748B" />
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -17,7 +46,7 @@
         <ScrollViewer
             Grid.Row="0"
             Padding="30,20"
-            Background="{DynamicResource ContentBackgroundBrush}">
+            Background="#F8FAFC">
 
             <StackPanel>
 
@@ -26,7 +55,7 @@
                     HorizontalAlignment="Center"
                     FontSize="28"
                     FontWeight="Bold"
-                    Foreground="{DynamicResource TextPrimaryBrush}"
+                    Foreground="#1E293B"
                     Text="Add New Customer" />
                 <StackPanel Margin="0,0,0,15">
 
@@ -34,7 +63,7 @@
                         Margin="0,0,0,8"
                         FontSize="14"
                         FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Foreground="#1E293B"
                         Text="Full Name *" />
 
                     <ui:TextBox
@@ -49,7 +78,7 @@
                         Margin="0,0,0,8"
                         FontSize="14"
                         FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Foreground="#1E293B"
                         Text="Phone" />
 
                     <ui:TextBox
@@ -64,7 +93,7 @@
                         Margin="0,0,0,8"
                         FontSize="14"
                         FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Foreground="#1E293B"
                         Text="Email" />
 
                     <ui:TextBox
@@ -79,7 +108,7 @@
                         Margin="0,0,0,8"
                         FontSize="14"
                         FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Foreground="#1E293B"
                         Text="Address" />
 
                     <ui:TextBox
@@ -98,30 +127,26 @@
         <Border
             Grid.Row="1"
             Padding="30,20"
-            Background="{DynamicResource SidebarBackgroundBrush}"
-            BorderBrush="{DynamicResource DividerBrush}"
+            Background="White"
+            BorderBrush="#E2E8F0"
             BorderThickness="0,1,0,0">
 
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                 <ui:Button
                     x:Name="CancelButton"
                     Width="110"
-                    Height="42"
+                    Height="38"
                     Margin="0,0,12,0"
-                    BorderBrush="{StaticResource ErrorPrimaryBrush}"
                     Click="CancelButton_Click"
                     Content="Cancel"
-                    Foreground="{StaticResource ErrorPrimaryBrush}"
-                    Style="{StaticResource OutlineButtonStyle}" />
+                    Style="{StaticResource CancelButtonStyle}" />
                 <ui:Button
                     x:Name="SaveButton"
                     Width="110"
-                    Height="42"
-                    BorderBrush="{StaticResource NavyAccentBrush}"
+                    Height="38"
                     Click="SaveButton_Click"
                     Content="Save"
-                    Foreground="{StaticResource NavyAccentBrush}"
-                    Style="{StaticResource OutlineButtonStyle}" />
+                    Style="{StaticResource PremiumSolidButtonStyle}" />
 
             </StackPanel>
 

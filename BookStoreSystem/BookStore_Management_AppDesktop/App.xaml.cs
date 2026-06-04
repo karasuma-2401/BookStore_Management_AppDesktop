@@ -125,7 +125,6 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<ShiftSchedulePage>();
             services.AddTransient<PayrollPage>();
             services.AddTransient<AbsenceManagementPage>();
-            services.AddTransient<KioskCheckInPage>();
         }
     }
 

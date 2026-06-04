@@ -175,6 +175,7 @@ namespace BookStoreManagement.API.Services
                     CustomerName = i.Customer != null ? i.Customer.Name : "Guest",
                     CustomerId = i.CustomerId,
                     StaffName = i.User.Employee != null ? i.User.Employee.FullName : i.User.Username,
+                    StaffRole = i.User.RoleId,
                     TotalItems = i.InvoiceDetails.Sum(d => d.Quantity),
                     Status = i.Status.ToString()
                 })
@@ -198,6 +199,7 @@ namespace BookStoreManagement.API.Services
                     CustomerName = i.Customer != null ? i.Customer.Name : "Guest",
                     CustomerId = i.CustomerId,
                     StaffName = i.User.Employee != null ? i.User.Employee.FullName : i.User.Username,
+                    StaffRole = i.User.RoleId,
                     VoucherCode = i.Voucher != null ? i.Voucher.Code : null,
                     TotalItems = i.InvoiceDetails.Sum(d => d.Quantity),
                     PaidAmount = i.AmountPaid,

@@ -6,8 +6,37 @@
     Title="Edit Customer"
     Width="450"
     Height="600"
-    Background="{DynamicResource SidebarBackgroundBrush}"
+    Background="White"
     WindowStartupLocation="CenterOwner">
+
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#1E293B"/>
+        </Style>
+        <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="BorderBrush" Value="#64748B"/>
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="CaretBrush" Value="#1E293B"/>
+            <Style.Resources>
+                <SolidColorBrush x:Key="TextControlForeground" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlBackground" Color="#F8FAFC" />
+                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#F1F5F9" />
+                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="White" />
+                <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#E2E8F0" />
+                <SolidColorBrush x:Key="TextControlBorderBrush" Color="#64748B" />
+                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#CBD5E1" />
+                <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#64748B" />
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -18,70 +47,65 @@
         <ScrollViewer
             Grid.Row="0"
             Padding="30,20"
-            Background="{StaticResource SidebarBackgroundBrush}">
+            Background="#F8FAFC">
             <StackPanel>
                 <TextBlock
                     Margin="0,0,0,20"
                     HorizontalAlignment="Center"
                     FontSize="18"
                     FontWeight="Bold"
-                    Foreground="{DynamicResource TextPrimaryBrush}"
+                    Foreground="#1E293B"
                     Text="Edit Customer" />
                 <StackPanel Margin="0,0,0,15">
                     <TextBlock
                         Margin="0,0,0,5"
                         FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Foreground="#1E293B"
                         Text="Customer ID" />
                     <ui:TextBox
                         x:Name="IdTextBox"
-                        Background="{DynamicResource SidebarBackgroundBrush}"
                         IsEnabled="False" />
                 </StackPanel>
                 <StackPanel Margin="0,0,0,15">
                     <TextBlock
                         Margin="0,0,0,5"
                         FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Foreground="#1E293B"
                         Text="Full Name *" />
                     <ui:TextBox
                         x:Name="NameTextBox"
-                        Background="{DynamicResource SidebarBackgroundBrush}"
                         PlaceholderText="Enter customer name" />
                 </StackPanel>
                 <StackPanel Margin="0,0,0,15">
                     <TextBlock
                         Margin="0,0,0,5"
                         FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Foreground="#1E293B"
                         Text="Phone" />
                     <ui:TextBox
                         x:Name="PhoneTextBox"
-                        Background="{DynamicResource SidebarBackgroundBrush}"
                         PlaceholderText="Enter phone number" />
                 </StackPanel>
                 <StackPanel Margin="0,0,0,15">
                     <TextBlock
                         Margin="0,0,0,5"
                         FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Foreground="#1E293B"
                         Text="Email" />
                     <ui:TextBox
                         x:Name="EmailTextBox"
-                        Background="{DynamicResource SidebarBackgroundBrush}"
                         PlaceholderText="Enter email address" />
                 </StackPanel>
                 <StackPanel Margin="0,0,0,15">
                     <TextBlock
                         Margin="0,0,0,5"
                         FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Foreground="#1E293B"
                         Text="Address" />
                     <ui:TextBox
                         x:Name="AddressTextBox"
                         Height="80"
                         AcceptsReturn="True"
-                        Background="{DynamicResource SidebarBackgroundBrush}"
                         PlaceholderText="Enter address" />
                 </StackPanel>
 
@@ -89,11 +113,10 @@
                     <TextBlock
                         Margin="0,0,0,5"
                         FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Foreground="#1E293B"
                         Text="Total Debt" />
                     <ui:TextBox
                         x:Name="DebtTextBox"
-                        Background="{DynamicResource SidebarBackgroundBrush}"
                         IsEnabled="False" />
                 </StackPanel>
             </StackPanel>
@@ -101,31 +124,26 @@
         <Border
             Grid.Row="1"
             Padding="30,15"
-            Background="{DynamicResource SidebarBackgroundBrush}"
-            BorderBrush="{DynamicResource DividerBrush}"
+            Background="White"
+            BorderBrush="#E2E8F0"
             BorderThickness="0,1,0,0">
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                 <ui:Button
                     x:Name="CancelButton"
                     Width="100"
-                    Height="42"
+                    Height="38"
                     Margin="0,0,10,0"
-                    Appearance="Secondary"
-                    BorderBrush="{StaticResource ErrorPrimaryBrush}"
                     Click="CancelButton_Click"
                     Content="Cancel"
-                    Foreground="{StaticResource ErrorPrimaryBrush}"
-                    Style="{DynamicResource OutlineButtonStyle}" />
+                    Style="{StaticResource CancelButtonStyle}" />
 
                 <ui:Button
                     x:Name="SaveButton"
                     Width="100"
-                    Appearance="Primary"
-                    BorderBrush="{StaticResource NavyAccentBrush}"
+                    Height="38"
                     Click="SaveButton_Click"
                     Content="Update"
-                    Foreground="{StaticResource NavyAccentBrush}"
-                    Style="{DynamicResource OutlineButtonStyle}" />
+                    Style="{StaticResource PremiumSolidButtonStyle}" />
             </StackPanel>
         </Border>
     </Grid>

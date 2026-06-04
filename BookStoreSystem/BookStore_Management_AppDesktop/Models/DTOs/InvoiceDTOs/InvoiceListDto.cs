@@ -12,5 +12,6 @@ namespace BookStore_Management_AppDesktop.Models.DTOs.InvoiceDTOs
         public string? StaffName { get; set; }    // Backend lấy từ bảng Users
         public int TotalItems { get; set; }       // Backend đếm từ bảng invoice_details
         public string Status { get; set; } = null!; // Khớp string (đã convert từ int ở DB)
+        public string StaffRole { get; set; } = "staff";
     }
 }

@@ -115,9 +115,8 @@
                 <!-- Nút Add New Employee được đưa vào đây, không còn bị chia border nên mất hẳn vạch trắng -->
                 <ui:Button Grid.Row="1" Grid.Column="0" Content="Add New Employee"
                            Icon="{ui:SymbolIcon Add24}" Height="40"
-                           Background="{DynamicResource NavyAccentBrush}" Foreground="White" 
-                           BorderBrush="#008A72" BorderThickness="1.5" 
-                           Appearance="Primary" Cursor="Hand" FontWeight="Bold" Margin="15,15,0,0"
+                           Style="{StaticResource PremiumSolidButtonStyle}"
+                           HorizontalAlignment="Left" Margin="0,15,0,0"
                            Command="{Binding OpenAddEmployeeWindowCommand}"/>
             </Grid>
         </Border>
@@ -131,7 +130,10 @@
             </Grid.ColumnDefinitions>
 
             <!-- Card 1: Total Employees -->
-            <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="0,0,10,0">
+            <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="0,0,10,5">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.08" Color="Black"/>
+                </Border.Effect>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="6"/>
@@ -153,7 +155,10 @@
             </Border>
 
             <!-- Card 2: Active Employees -->
-            <Border Grid.Column="1" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="10,0,10,0">
+            <Border Grid.Column="1" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="10,0,10,5">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.08" Color="Black"/>
+                </Border.Effect>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="6"/>
@@ -175,7 +180,10 @@
             </Border>
 
             <!-- Card 3: Resigned Employees -->
-            <Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="10,0,0,0">
+            <Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="10,0,0,5">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.08" Color="Black"/>
+                </Border.Effect>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="6"/>
@@ -234,9 +242,13 @@
                             <Setter Property="Padding" Value="12,0"/>
                             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                             <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="#1E293B"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
                                 <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
-                                    <Setter Property="Foreground" Value="{DynamicResource ErrorPrimaryBrush}"/>
                                     <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Foreground" Value="#1E293B"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -269,17 +281,42 @@
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="{DynamicResource ContentBackgroundBrush}"/>
                                 </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="BorderBrush" Value="{DynamicResource SidebarAccentBrush}"/>
+                                    <Setter Property="BorderThickness" Value="1.5"/>
+                                    <Setter Property="Background" Value="{DynamicResource ContentBackgroundBrush}"/>
+                                    <Setter Property="Foreground" Value="#1E293B"/>
+                                </Trigger>
                             </Style.Triggers>
                         </Style>
                     </DataGrid.RowStyle>
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="User ID" Binding="{Binding UserId}" Width="1.2*" MinWidth="90"/>
+                        <DataGridTextColumn Header="User ID" Binding="{Binding UserId}" Width="1.2*" MinWidth="90">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <DataGridTextColumn Header="Emp ID" Binding="{Binding EmployeeId}" Width="1.2*" MinWidth="90">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                                     <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="0"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -292,7 +329,19 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="Age" Binding="{Binding Age}" Width="0.8*"/>
+                        <DataGridTextColumn Header="Age" Binding="{Binding Age}" Width="0.8*">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="1.5*"/>
 
@@ -314,19 +363,25 @@
                         </DataGridTextColumn>
 
                         <DataGridTemplateColumn Header="Status" Width="1.2*">
+                            <DataGridTemplateColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTemplateColumn.HeaderStyle>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border Background="{Binding Status, Converter={StaticResource StatusToSoftBackgroundConverter}}"
                                             CornerRadius="12"
                                             Padding="10,4"
-                                            HorizontalAlignment="Left"
+                                            HorizontalAlignment="Center"
                                             VerticalAlignment="Center">
                                         <TextBlock Text="{Binding Status, Converter={StaticResource EmployeeStatusConverter}}"
                                                    Foreground="{Binding Status, Converter={StaticResource StatusToForegroundConverter}}"
                                                    FontWeight="Bold"
                                                    FontSize="13"
                                                    VerticalAlignment="Center"
-                                                   HorizontalAlignment="Center"/>
+                                                   HorizontalAlignment="Center"
+                                                   Margin="0"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

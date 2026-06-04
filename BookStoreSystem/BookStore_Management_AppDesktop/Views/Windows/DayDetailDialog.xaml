@@ -5,14 +5,31 @@
         Background="Transparent" WindowStartupLocation="CenterScreen"
         WindowStyle="None" AllowsTransparency="True"
         Title="Day Shift Details" Height="480" Width="620">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#1E293B"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="White"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#1E293B"/>
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="15">
         <Border CornerRadius="15" Background="Black">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="15" ShadowDepth="2" Opacity="0.5" Color="Black"/>
+                <DropShadowEffect BlurRadius="15" ShadowDepth="2" Opacity="0.15" Color="Black"/>
             </Border.Effect>
         </Border>
 
-        <Border CornerRadius="15" BorderBrush="{DynamicResource NavyLightBrush}" BorderThickness="1" Background="{DynamicResource NavyPrimaryBrush}">
+        <Border CornerRadius="15" BorderBrush="#CBD5E1" BorderThickness="1.5" Background="White">
             <Grid Margin="25">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -27,11 +44,11 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" MouseLeftButtonDown="Header_MouseLeftButtonDown" Cursor="SizeAll" Background="Transparent">
-                        <TextBlock Text="SHIFT DETAIL" FontSize="24" FontWeight="Black" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                        <TextBlock x:Name="DateTextBlock" Text="Monday, 01 June 2026" FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,3,0,0"/>
+                        <TextBlock Text="SHIFT DETAIL" FontSize="24" FontWeight="Black" Foreground="#1E293B"/>
+                        <TextBlock x:Name="DateTextBlock" Text="Monday, 01 June 2026" FontSize="14" Foreground="#64748B" Margin="0,3,0,0"/>
                     </StackPanel>
                     <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Dismiss24}" Click="Close_Click" 
-                               Appearance="Transparent" Foreground="{DynamicResource TextSecondaryBrush}" 
+                               Appearance="Transparent" Foreground="#64748B" 
                                Padding="6" VerticalAlignment="Top"/>
                 </Grid>
 
@@ -39,7 +56,7 @@
                 <ItemsControl x:Name="ShiftsItemsControl" Grid.Row="1">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="{DynamicResource SlateMediumBrush}" BorderThickness="0,0,0,1" Padding="0,12" VerticalAlignment="Center">
+                            <Border BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="0,12" VerticalAlignment="Center">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="150"/>
@@ -49,28 +66,26 @@
 
                                     <!-- Shift Info -->
                                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding ShiftName}" FontSize="15" FontWeight="Bold" Foreground="White"/>
-                                        <TextBlock Text="{Binding WorkTime}" FontSize="12" Foreground="{DynamicResource SlateBorderBrush}" Margin="0,3,0,0"/>
+                                        <TextBlock Text="{Binding ShiftName}" FontSize="15" FontWeight="Bold" Foreground="#1E293B"/>
+                                        <TextBlock Text="{Binding WorkTime}" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
                                     </StackPanel>
 
                                     <!-- Assigned Info or ComboBox Selector -->
                                     <Grid Grid.Column="1" VerticalAlignment="Center" Margin="10,0">
                                         <!-- If Ca Trống: ComboBox to select employee (Default: Collapsed) -->
                                         <ComboBox x:Name="EmployeeComboBox" 
-                                                  ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=EmployeesList}"
-                                                  DisplayMemberPath="FullName"
-                                                  SelectedValuePath="EmployeeId"
-                                                  Height="35" 
-                                                  Background="{DynamicResource SidebarBackgroundBrush}"
-                                                  Foreground="White"
-                                                  Visibility="Collapsed">
+                                                   ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=EmployeesList}"
+                                                   DisplayMemberPath="FullName"
+                                                   SelectedValuePath="EmployeeId"
+                                                   Height="35" 
+                                                   Visibility="Collapsed">
                                         </ComboBox>
 
                                         <!-- If Ca Đã Gán: Employee info and Status tag (Default: Visible) -->
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
                                                     x:Name="AssignedInfoPanel" Visibility="Visible">
-                                            <TextBlock Text="{Binding FullName}" FontSize="14" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
-                                            <Border CornerRadius="4" Padding="6,2" Margin="10,0,0,0" VerticalAlignment="Center" x:Name="StatusBadge" Background="{DynamicResource SlateLightBrush}">
+                                            <TextBlock Text="{Binding FullName}" FontSize="14" FontWeight="SemiBold" Foreground="#1E293B" VerticalAlignment="Center"/>
+                                            <Border CornerRadius="4" Padding="6,2" Margin="10,0,0,0" VerticalAlignment="Center" x:Name="StatusBadge" Background="#E2E8F0">
                                                 <TextBlock Text="{Binding Status}" FontSize="10" FontWeight="Bold" Foreground="White"/>
                                             </Border>
                                         </StackPanel>
@@ -80,7 +95,7 @@
                                                    Text="No schedule assigned" 
                                                    FontSize="14" 
                                                    FontStyle="Italic"
-                                                   Foreground="{DynamicResource SlateBorderBrush}" 
+                                                   Foreground="#94A3B8" 
                                                    VerticalAlignment="Center"
                                                    Visibility="Collapsed"/>
                                     </Grid>
@@ -90,8 +105,7 @@
                                         <!-- Assign Button (Default: Collapsed) -->
                                         <ui:Button Content="Assign" 
                                                    Click="Assign_Click"
-                                                   Appearance="Primary" 
-                                                   Background="{DynamicResource NavyAccentBrush}" 
+                                                   Style="{StaticResource PremiumSolidButtonStyle}"
                                                    Padding="12,6" FontSize="12"
                                                    x:Name="AssignBtn"
                                                    Visibility="Collapsed"/>
@@ -100,7 +114,7 @@
                                         <ui:Button Icon="{ui:SymbolIcon Delete24}" 
                                                    Click="Delete_Click"
                                                    Appearance="Transparent" 
-                                                   Foreground="{DynamicResource RoseAccentBrush}"
+                                                   Foreground="#EF4444"
                                                    Padding="6"
                                                    ToolTip="Cancel shift assignment"
                                                    x:Name="DeleteBtn"
@@ -156,7 +170,7 @@
 
                 <!-- Footer / Close -->
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-                    <ui:Button Content="Close" Click="Close_Click" Appearance="Secondary" Width="100"/>
+                    <ui:Button Content="Close" Click="Close_Click" Style="{StaticResource CancelButtonStyle}" Width="100"/>
                 </StackPanel>
             </Grid>
         </Border>

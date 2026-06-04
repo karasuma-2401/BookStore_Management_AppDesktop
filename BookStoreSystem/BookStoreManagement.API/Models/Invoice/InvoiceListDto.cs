@@ -10,5 +10,6 @@ namespace BookStoreManagement.API.Models.Invoice
         public string? StaffName { get; set; }
         public int TotalItems { get; set; }
         public string Status { get; set; } = null!;
+        public string StaffRole { get; set; } = "staff";
     }
 }

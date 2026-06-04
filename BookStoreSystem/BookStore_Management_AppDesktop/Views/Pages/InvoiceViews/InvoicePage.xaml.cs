@@ -30,13 +30,20 @@ namespace BookStore_Management_AppDesktop.Views.Pages.InvoiceViews
 
         private void InvoiceDataGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DependencyObject originalSource = (DependencyObject)e.OriginalSource;
-            if (originalSource == null) return;
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+            if (dep == null) return;
 
-            if (IsVisualAncestorOfButton(originalSource)) return;
+            DependencyObject temp = dep;
+            while (temp != null)
+            {
+                if (temp is Button || temp.GetType().Name.Contains("Button") || temp is CheckBox)
+                {
+                    return;
+                }
+                temp = VisualTreeHelper.GetParent(temp);
+            }
 
-            DependencyObject dep = originalSource;
-            while (dep != null && !(dep is DataGridRow) && !(dep is DataGrid))
+            while (dep != null && !(dep is DataGridRow))
             {
                 dep = VisualTreeHelper.GetParent(dep);
             }
@@ -49,19 +56,6 @@ namespace BookStore_Management_AppDesktop.Views.Pages.InvoiceViews
                     e.Handled = true;
                 }
             }
-        }
-
-        private bool IsVisualAncestorOfButton(DependencyObject? node)
-        {
-            while (node != null)
-            {
-                if (node is Button || node.GetType().Name.Contains("Button"))
-                {
-                    return true;
-                }
-                node = VisualTreeHelper.GetParent(node);
-            }
-            return false;
         }
 
         private void OpenContextMenu_Click(object sender, RoutedEventArgs e)
