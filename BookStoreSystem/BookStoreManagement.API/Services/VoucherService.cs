@@ -45,7 +45,7 @@ namespace BookStoreManagement.API.Services
                 Code = normalizedCode,
                 DiscountPercent = dto.DiscountPercent,
                 DiscountAmount = dto.DiscountAmount,
-                ExpiryDate = dto.ExpiryDate,
+                ExpiryDate = dto.ExpiryDate.HasValue ? DateTime.SpecifyKind(dto.ExpiryDate.Value.Date, DateTimeKind.Utc) : null,
                 UsageLimit = dto.UsageLimit,
                 UsedCount = 0
             };

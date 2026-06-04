@@ -1,4 +1,4 @@
-﻿using BookStoreManagement.API.Data;
+using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Models.Enums;
@@ -114,22 +114,43 @@ namespace BookStoreManagement.API.Services
                     voucher.UsedCount += 1;
                 }
 
-                invoice.Status = InvoiceStatus.Unpaid;
-                invoice.AmountPaid = 0;
-
                 if (dto.CustomerId.HasValue)
                 {
+                    invoice.Status = InvoiceStatus.Unpaid;
+                    invoice.AmountPaid = 0;
                     var customer = await _context.Customers.FindAsync(dto.CustomerId.Value);
                     if (customer != null)
                     {
                         customer.Debt += finalTotal;
                     }
                 }
-                _context.Invoices.Add(invoice);
+                else
+                {
+                    invoice.Status = InvoiceStatus.Completed;
+                    invoice.AmountPaid = finalTotal;
+                }
+                invoice.Total = finalTotal;
+                invoice.InvoiceDetails = invoiceDetails;
 
+                _context.Invoices.Add(invoice);
                 var result = await _context.SaveChangesAsync();
+
+                if (!dto.CustomerId.HasValue)
+                {
+                    var payment = new Payment
+                    {
+                        CustomerId = null,
+                        InvoiceId = invoice.InvoiceId,
+                        UserId = userId,
+                        Amount = finalTotal,
+                        PaymentDate = DateTime.UtcNow
+                    };
+                    _context.Payments.Add(payment);
+                    await _context.SaveChangesAsync();
+                }
+
                 await transaction.CommitAsync();
-                return result > 0 ? invoice.InvoiceId : null;
+                return result > 0 ? (int?)invoice.InvoiceId : null;
             }
             catch (Exception ex)
             {
@@ -152,6 +173,7 @@ namespace BookStoreManagement.API.Services
                     InvoiceDate = i.InvoiceDate,
                     Total = i.Total,
                     CustomerName = i.Customer != null ? i.Customer.Name : "Guest",
+                    CustomerId = i.CustomerId,
                     StaffName = i.User.Employee != null ? i.User.Employee.FullName : i.User.Username,
                     TotalItems = i.InvoiceDetails.Sum(d => d.Quantity),
                     Status = i.Status.ToString()
@@ -174,9 +196,12 @@ namespace BookStoreManagement.API.Services
                     InvoiceDate = i.InvoiceDate,
                     Total = i.Total,
                     CustomerName = i.Customer != null ? i.Customer.Name : "Guest",
+                    CustomerId = i.CustomerId,
                     StaffName = i.User.Employee != null ? i.User.Employee.FullName : i.User.Username,
                     VoucherCode = i.Voucher != null ? i.Voucher.Code : null,
                     TotalItems = i.InvoiceDetails.Sum(d => d.Quantity),
+                    PaidAmount = i.AmountPaid,
+                    RemainingAmount = i.Total - i.AmountPaid,
                     Items = i.InvoiceDetails.Select(d => new InvoiceItemDto
                     {
                         BookTitle = d.Book != null ? d.Book.Title : "Unknown Book",

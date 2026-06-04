@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace BookStore_Management_AppDesktop.Models
 {
@@ -11,5 +11,6 @@ namespace BookStore_Management_AppDesktop.Models
         public string Phone { get; set; } = string.Empty;   
         public string Address { get; set; } = string.Empty; 
         public decimal Salary { get; set; }
+        public int Status { get; set; } = 1;
     }
 }

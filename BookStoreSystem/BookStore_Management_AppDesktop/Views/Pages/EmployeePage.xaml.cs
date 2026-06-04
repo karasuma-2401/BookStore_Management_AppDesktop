@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -36,16 +36,6 @@ namespace BookStore_Management_AppDesktop.Views.Pages
         }
 
         private void FilterButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is FrameworkElement element && element.ContextMenu != null)
-            {
-                element.ContextMenu.PlacementTarget = element;
-                element.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
-                element.ContextMenu.IsOpen = true;
-            }
-        }
-
-        private void MoreButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is FrameworkElement element && element.ContextMenu != null)
             {

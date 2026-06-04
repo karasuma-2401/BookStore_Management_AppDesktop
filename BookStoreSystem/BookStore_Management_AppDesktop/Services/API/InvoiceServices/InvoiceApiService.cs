@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models.DTOs.InvoiceDTOs;
+using BookStore_Management_AppDesktop.Models.DTOs.InvoiceDTOs;
 using BookStore_Management_AppDesktop.Services.API.InvoiceServices;
 using System.Diagnostics;
 using System.Net.Http;
@@ -142,6 +142,43 @@ namespace BookStore_Management_AppDesktop.Services.API
             {
                 Debug.WriteLine($"CreateInvoice Error: {ex.Message}");
                 return null;
+            }
+        }
+
+        public async Task<bool> RecordPaymentAsync(int invoiceId, decimal amount)
+        {
+            try
+            {
+                AddAuthorizationHeader();
+                var response = await _httpClient.PostAsJsonAsync("payment", new { InvoiceId = invoiceId, Amount = amount });
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"RecordPayment Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<List<PaymentResponseDto>> GetPaymentsByInvoiceIdAsync(int invoiceId)
+        {
+            try
+            {
+                AddAuthorizationHeader();
+                var response = await _httpClient.GetAsync($"payment/invoice/{invoiceId}");
+
+                if (!response.IsSuccessStatusCode)
+                    return new List<PaymentResponseDto>();
+
+                var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var json = await response.Content.ReadAsStringAsync();
+                return System.Text.Json.JsonSerializer.Deserialize<List<PaymentResponseDto>>(json, options) 
+                       ?? new List<PaymentResponseDto>();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"GetPayments Error: {ex.Message}");
+                return new List<PaymentResponseDto>();
             }
         }
 

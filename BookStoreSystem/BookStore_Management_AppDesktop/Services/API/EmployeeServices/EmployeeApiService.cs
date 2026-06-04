@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models; 
+using BookStore_Management_AppDesktop.Models; 
 using BookStore_Management_AppDesktop.Models.DTOs.EmployeeDTOs;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -52,7 +52,8 @@ namespace BookStore_Management_AppDesktop.Services.API.EmployeeServices
                     Phone = dto.Phone,
                     Address = dto.Address,
                     Salary = dto.Salary,
-                    UserId = dto.UserId
+                    UserId = dto.UserId,
+                    Status = dto.Status
                 }).ToList();
             }
             catch (Exception ex)

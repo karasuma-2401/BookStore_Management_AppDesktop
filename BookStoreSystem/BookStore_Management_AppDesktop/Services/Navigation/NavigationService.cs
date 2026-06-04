@@ -122,5 +122,10 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
         }
+        public void NavigateToLoginWindow()
+        {
+            var loginWindow = _serviceProvider.GetRequiredService<LoginWindow>();
+            loginWindow.Show();
+        }
     }
 }

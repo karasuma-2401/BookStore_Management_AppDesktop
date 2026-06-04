@@ -10,6 +10,7 @@ using BookStore_Management_AppDesktop.Services;
 using System.Windows.Threading;
 using System.IdentityModel.Tokens.Jwt;
 using BookStore_Management_AppDesktop.Helpers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -103,6 +104,53 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
             // RememberMe Logic
             HandleRememberMe();
+
+            // Auto check-in logic for employee (staff)
+            var subClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub || c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            int userId = 0;
+            if (subClaim != null)
+            {
+                int.TryParse(subClaim.Value, out userId);
+            }
+
+            if (AppSession.CurrentRole.ToLower() == "staff" && userId > 0)
+            {
+                try
+                {
+                    var employeeApi = App.ServiceProvider!.GetRequiredService<BookStore_Management_AppDesktop.Services.API.EmployeeServices.IEmployeeApiService>();
+                    var shiftApi = App.ServiceProvider!.GetRequiredService<BookStore_Management_AppDesktop.Services.API.IEmployeeShiftApiService>();
+
+                    var employees = await employeeApi.GetAllEmployeesAsync();
+                    var employee = employees.FirstOrDefault(e => e.UserId == userId);
+                    if (employee != null)
+                    {
+                        var checkinResult = await shiftApi.KioskCheckInAsync(employee.EmployeeId);
+                        if (checkinResult != null)
+                        {
+                            if (checkinResult.Success)
+                            {
+                                System.Windows.MessageBox.Show(checkinResult.Message, "Check-in Kiosk", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                            }
+                            else if (checkinResult.Message.Contains("already checked in"))
+                            {
+                                System.Diagnostics.Debug.WriteLine("[AutoCheckIn] Already checked in.");
+                            }
+                            else if (checkinResult.Message.Contains("No shift scheduled") || checkinResult.Message.Contains("too early"))
+                            {
+                                System.Diagnostics.Debug.WriteLine($"[AutoCheckIn] {checkinResult.Message}");
+                            }
+                            else
+                            {
+                                System.Windows.MessageBox.Show(checkinResult.Message, "Check-in Kiosk", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[AutoCheckIn Exception] {ex.Message}");
+                }
+            }
 
             _navigationService.NavigateToMainWindow();
             CloseAction?.Invoke();

@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models.DTOs;
+using BookStore_Management_AppDesktop.Models.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,5 +8,6 @@ namespace BookStore_Management_AppDesktop.Services.API
     {
         Task<List<UserResponseModel>> GetAllUsersAsync();
         Task<(bool IsSuccess, string Message)> CreateUserAsync(UserCreateDto dto);
+        Task<(bool IsSuccess, string Message)> AdminChangeStaffPasswordAsync(int employeeId, string newPassword);
     }
 }
