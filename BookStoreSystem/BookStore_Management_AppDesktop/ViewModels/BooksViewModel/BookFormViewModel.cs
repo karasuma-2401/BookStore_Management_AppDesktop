@@ -18,18 +18,16 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly CloudinaryService _cloudinaryService;
 
         public AuthorSelectionViewModel AuthorVM { get; }
-
         public CategorySelectionViewModel CategoryVM { get; }
 
         private bool _isEditMode;
         private int _bookId;
         private int? _initialAuthorId;
-        private List<int>? _initialCategoryIds; 
+        private List<int>? _initialCategoryIds;
         private int _originalQuantity = 0;
 
         [ObservableProperty] private string _title = string.Empty;
         [ObservableProperty] private string _localImagePath = string.Empty;
-
         [ObservableProperty] private string _description = string.Empty;
 
         [ObservableProperty]
@@ -43,7 +41,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             IBookApiService bookApiService,
             CloudinaryService cloudinaryService,
             AuthorSelectionViewModel authorVM,
-            CategorySelectionViewModel categoryVM) 
+            CategorySelectionViewModel categoryVM)
         {
             _bookApiService = bookApiService;
             _cloudinaryService = cloudinaryService;
@@ -61,17 +59,19 @@ namespace BookStore_Management_AppDesktop.ViewModels
             _bookId = bookToEdit.BookId;
             Title = bookToEdit.Title ?? string.Empty;
             LocalImagePath = bookToEdit.ImagePath ?? string.Empty;
-            _initialAuthorId = bookToEdit.AuthorId;
             _originalQuantity = bookToEdit.Quantity;
-
             Description = bookToEdit.Description ?? string.Empty;
             _initialCategoryIds = bookToEdit.CategoryIds;
+
+            _initialAuthorId = bookToEdit.AuthorIds != null && bookToEdit.AuthorIds.Any()
+                               ? bookToEdit.AuthorIds.First()
+                               : (int?)null;
         }
 
         public async Task InitializeAsync()
         {
             await AuthorVM.InitializeAsync(_initialAuthorId);
-           await CategoryVM.InitializeAsync(_initialCategoryIds);
+            await CategoryVM.InitializeAsync(_initialCategoryIds);
         }
 
         private bool CanExecuteAction() => !IsLoading;
@@ -129,10 +129,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 {
                     BookId = _isEditMode ? _bookId : 0,
                     Title = Title.Trim(),
-                    AuthorId = selectedAuthorId.Value,
+                    AuthorIds = new List<int> { selectedAuthorId.Value },
                     Quantity = _isEditMode ? _originalQuantity : 0,
                     ImagePath = finalImageUrl,
-
                     Description = Description.Trim(),
                     CategoryIds = selectedCategoryIds
                 };

@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,6 +34,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private int _totalPages = 1;
 
         [ObservableProperty] private string? _selectedSort = "price_desc";
+
+        [ObservableProperty] private string _totalBooksCount = "0";
+        [ObservableProperty] private string _lowStockBooksCount = "0";
 
         public InventoryViewModel(
             IBookApiService apiService,
@@ -108,6 +112,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         TotalItems = response.TotalItems;
                         TotalPages = response.TotalPages > 0 ? response.TotalPages : 1;
 
+                        TotalBooksCount = TotalItems.ToString("N0");
+
+                        int lowStockCount = Books.Count(b => b.Quantity <= 2);
+                        LowStockBooksCount = lowStockCount.ToString("N0");
+
                         if (CurrentPage > TotalPages)
                         {
                             CurrentPage = TotalPages;
@@ -130,7 +139,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             _ = _searchDebouncer.RunAsync(997, async (token) =>
             {
                 CurrentPage = 1;
-                // 🎯 ĐÃ VÁ LỖI: Truyền token vào để hủy luồng chạy cũ
                 await ExecuteSearchAsync(token);
             });
         }

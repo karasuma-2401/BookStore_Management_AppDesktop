@@ -62,7 +62,7 @@
 
             <uc:StatCardControl 
                 Width="240" Height="95"
-                Title="Low Stock " 
+                Title="Low Stock" 
                 Value="{Binding LowStockBooksCount}" 
                 CardBackground="#FFF4E6"
                 IconColor="#F39C12"
@@ -74,7 +74,7 @@
                       CanUserAddRows="False" 
                       IsReadOnly="True" 
                       CanUserSortColumns="False" 
-                      RowHeight="65" HeadersVisibility="Column" 
+                      RowHeight="65" HeadersVisibility="Column"
                       Foreground="{DynamicResource TextOnLightBackgroudBrush}" 
                       Background="Transparent" 
                       CanUserResizeColumns="False" 
@@ -117,23 +117,35 @@
                             <DataTemplate>
                                 <StackPanel VerticalAlignment="Center" Margin="5,0">
                                     <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextOnLightBackgroudBrush}" TextTrimming="CharacterEllipsis"/>
-                                    <TextBlock Text="{Binding AuthorName}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/>
+
+                                    <TextBlock Text="{Binding DisplayAuthorNames}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTextColumn Header="Category" Binding="{Binding CategoryNames}" Width="2*">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
-                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Category" Width="2*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ItemsControl ItemsSource="{Binding CategoryNames}" VerticalAlignment="Center">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#F1F5F9" CornerRadius="4" Padding="8,3" Margin="0,2,6,2">
+                                                <TextBlock Text="{Binding}" FontSize="11" Foreground="#475569" FontWeight="Medium"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
-                    <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat='{}{0:#,0} vnđ'}" Width="120">
+                    <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat='{}{0:#,0} đ'}" Width="120">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
