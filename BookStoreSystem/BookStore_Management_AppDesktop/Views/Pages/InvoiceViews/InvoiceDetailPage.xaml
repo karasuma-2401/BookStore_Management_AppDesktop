@@ -27,6 +27,9 @@
                 <ui:Button Grid.Column="0" 
                            Icon="{ui:SymbolIcon ChevronLeft24}" 
                            Appearance="Transparent" 
+                           Background="Transparent" 
+                           BorderBrush="#CBD5E1"
+                           BorderThickness="1.5"
                            Foreground="{DynamicResource TextPrimaryBrush}"
                            Command="{Binding BackToListCommand}"
                            Margin="0,0,15,0" 
@@ -65,75 +68,143 @@
                     </Border>
                 </StackPanel>
 
-                <ui:Button Grid.Column="4"
-                   Icon="{ui:SymbolIcon Print24}"
-                   Content="Export Invoice"
-                   Appearance="Primary"
-                   Command="{Binding ExportInvoiceCommand}"
-                   VerticalAlignment="Center"
-                   Margin="30,0,0,0"
-                   FontWeight="SemiBold"
-                   Foreground="{DynamicResource TextThirdBrush}"
-                   Cursor="Hand"/>
+                <!-- Thâu nhỏ nút export và căn lề phải trong Column 3 -->
+                <Button Grid.Column="3"
+                        Style="{StaticResource PremiumColoredButtonStyle}"
+                        Background="{DynamicResource NavyAccentBrush}"
+                        BorderBrush="#008A72"
+                        BorderThickness="1.5"
+                        Command="{Binding ExportInvoiceCommand}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Padding="15,8"
+                        Width="160"
+                        Cursor="Hand">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <ui:SymbolIcon Symbol="Print24" Foreground="{DynamicResource TextThirdBrush}" Margin="0,0,8,0"/>
+                        <TextBlock Text="Export Invoice" VerticalAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource TextThirdBrush}"/>
+                    </StackPanel>
+                </Button>
             </Grid>
         </Border>
 
         <Grid Grid.Row="1" Margin="25,20">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel>
-                    <!-- Invoice Summary Card -->
-                    <ui:Card Margin="10,0,10,20" Padding="20">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1.5*"/>
-                            </Grid.ColumnDefinitions>
+                    <!-- Invoice Summary Cards -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.6*"/>
+                        </Grid.ColumnDefinitions>
 
-                            <!-- Column 1: Basic Information -->
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                                    <TextBlock Text="Customer: " FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="14"/>
-                                    <TextBlock Text="{Binding Invoice.CustomerName}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14"/>
+                        <!-- Card 1: Basic Information -->
+                        <Border Grid.Column="0" 
+                                Background="{DynamicResource CardBackgroundBrush}" 
+                                BorderBrush="#2064748B" 
+                                BorderThickness="1.5" 
+                                CornerRadius="8" 
+                                Margin="10,0" 
+                                Padding="15,20" 
+                                VerticalAlignment="Stretch">
+                            <StackPanel VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <ui:SymbolIcon Symbol="Person24" Foreground="{DynamicResource NavyPrimaryBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Customer: " FontWeight="SemiBold" Foreground="{DynamicResource TextBodyBrush}" FontSize="13" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Invoice.CustomerName}" FontWeight="Bold" Foreground="{DynamicResource TextOnCardBrush}" FontSize="14" VerticalAlignment="Center"/>
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                                    <TextBlock Text="Staff: " FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="14"/>
-                                    <TextBlock Text="{Binding Invoice.StaffName}" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <ui:SymbolIcon Symbol="People24" Foreground="{DynamicResource NavyPrimaryBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Staff: " FontWeight="SemiBold" Foreground="{DynamicResource TextBodyBrush}" FontSize="13" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Invoice.StaffName}" Foreground="{DynamicResource TextOnCardBrush}" FontSize="14" VerticalAlignment="Center"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Date: " FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="14"/>
-                                    <TextBlock Text="{Binding Invoice.InvoiceDate, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14"/>
+                                    <ui:SymbolIcon Symbol="Calendar24" Foreground="{DynamicResource NavyPrimaryBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Date: " FontWeight="SemiBold" Foreground="{DynamicResource TextBodyBrush}" FontSize="13" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Invoice.InvoiceDate, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" Foreground="{DynamicResource TextOnCardBrush}" FontSize="14" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </StackPanel>
+                        </Border>
 
-                            <!-- Column 2: Total -->
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <TextBlock Text="Total Invoice" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,4"/>
-                                <TextBlock Text="{Binding Invoice.Total, StringFormat='{}{0:N0} VNĐ'}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="18"/>
+                        <!-- Card 2: Total Invoice -->
+                        <Border Grid.Column="1" 
+                                Background="#0D3B82F6" 
+                                BorderBrush="#403B82F6" 
+                                BorderThickness="1.5" 
+                                CornerRadius="8" 
+                                Margin="10,0" 
+                                Padding="15,20" 
+                                VerticalAlignment="Stretch">
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Money24" Foreground="#3B82F6" FontSize="28" Margin="0,0,0,8" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Total Invoice" Foreground="{DynamicResource TextBodyBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,4" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding Invoice.Total, StringFormat='{}{0:N0} VNĐ'}" FontWeight="Bold" Foreground="{DynamicResource TextOnCardBrush}" FontSize="16" HorizontalAlignment="Center"/>
                             </StackPanel>
+                        </Border>
 
-                            <!-- Column 3: Paid Amount -->
-                            <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <TextBlock Text="Paid Amount" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,4"/>
-                                <TextBlock Text="{Binding Invoice.PaidAmount, StringFormat='{}{0:N0} VNĐ'}" FontWeight="Bold" Foreground="{DynamicResource SuccessPrimaryBrush}" FontSize="18"/>
+                        <!-- Card 3: Paid Amount -->
+                        <Border Grid.Column="2" 
+                                Background="#0D10B981" 
+                                BorderBrush="#4010B981" 
+                                BorderThickness="1.5" 
+                                CornerRadius="8" 
+                                Margin="10,0" 
+                                Padding="15,20" 
+                                VerticalAlignment="Stretch">
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <ui:SymbolIcon Symbol="CheckmarkCircle24" Foreground="{DynamicResource SuccessPrimaryBrush}" FontSize="28" Margin="0,0,0,8" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Paid Amount" Foreground="{DynamicResource TextBodyBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,4" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding Invoice.PaidAmount, StringFormat='{}{0:N0} VNĐ'}" FontWeight="Bold" Foreground="{DynamicResource SuccessPrimaryBrush}" FontSize="16" HorizontalAlignment="Center"/>
                             </StackPanel>
+                        </Border>
 
-                            <!-- Column 4: Remaining Due & Pay button -->
-                            <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right">
-                                <TextBlock Text="Balance Due" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,4" HorizontalAlignment="Right"/>
-                                <TextBlock Text="{Binding Invoice.RemainingAmount, StringFormat='{}{0:N0} VNĐ'}" FontWeight="Black" Foreground="{DynamicResource ErrorPrimaryBrush}" FontSize="20" HorizontalAlignment="Right" Margin="0,0,0,8"/>
+                        <!-- Card 4: Balance Due -->
+                        <Border Grid.Column="3" 
+                                BorderThickness="1.5" 
+                                CornerRadius="8" 
+                                Margin="10,0" 
+                                Padding="15,12" 
+                                VerticalAlignment="Stretch">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Background" Value="#0D10B981" />
+                                    <Setter Property="BorderBrush" Value="#4010B981" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsPaymentButtonVisible}" Value="True">
+                                            <Setter Property="Background" Value="#0DEF4444" />
+                                            <Setter Property="BorderBrush" Value="#40EF4444" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
                                 
-                                <ui:Button Content="Record Payment" 
+                                <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,6">
+                                    <TextBlock Text="Balance Due" Foreground="{DynamicResource TextBodyBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,2" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Invoice.RemainingAmount, StringFormat='{}{0:N0} VNĐ'}" FontWeight="Black" Foreground="{DynamicResource ErrorPrimaryBrush}" FontSize="18" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                
+                                <ui:Button Grid.Row="1" 
+                                           Content="Record Payment" 
                                            Icon="{ui:SymbolIcon Symbol=Add24}" 
                                            Appearance="Primary" 
                                            Background="{DynamicResource NavyAccentBrush}"
+                                           BorderBrush="#008A72"
+                                           BorderThickness="1.5"
                                            Command="{Binding RecordPaymentCommand}"
                                            Visibility="{Binding IsPaymentButtonVisible, Converter={StaticResource BoolToVis}}"
-                                           Cursor="Hand"/>
-                            </StackPanel>
-                        </Grid>
-                    </ui:Card>
+                                           Cursor="Hand"
+                                           HorizontalAlignment="Stretch"
+                                           HorizontalContentAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
 
                     <TextBlock Text="Purchased Items" 
                                FontSize="18" 
@@ -141,13 +212,23 @@
                                Foreground="{DynamicResource NavyPrimaryBrush}" 
                                Margin="10,0,0,15"/>
 
+                    <!-- Purchased Items Cards Container (Visible only when history is hidden) -->
                     <ItemsControl ItemsSource="{Binding Invoice.Items}">
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsHistoryExpanded}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel Orientation="Horizontal"/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
-
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Width="336" 
@@ -169,14 +250,13 @@
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
                                         <ui:TextBlock Grid.Row="0" 
                                                       Text="Book Information" 
                                                       FontSize="16" 
                                                       FontWeight="Bold" 
-                                                      Foreground="{DynamicResource NavyPrimaryBrush}" 
+                                                      Foreground="{DynamicResource TextOnCardBrush}" 
                                                       Margin="0,0,0,15"/>
 
                                         <StackPanel Grid.Row="1" Margin="0,0,0,10">
@@ -198,7 +278,7 @@
                                         <StackPanel Grid.Row="3" Margin="0,0,0,10">
                                             <ui:TextBlock Text="Quantity" Style="{DynamicResource FormLabelStyle}" Margin="0,0,0,6"/>
                                             <ui:TextBox Style="{DynamicResource RoundedTextBoxInnerStyle}"
-                                                        Text="{Binding Quantity, Mode=TwoWay}"
+                                                        Text="{Binding Quantity, Mode=OneWay}"
                                                         Background="{DynamicResource CardBackgroundBrush}"
                                                         BorderThickness="1"
                                                         IsReadOnly="True"
@@ -228,15 +308,96 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
+                    <!-- Purchased Items Grid Container (Visible only when history is expanded to save space) -->
+                    <Border Background="{DynamicResource CardBackgroundBrush}" 
+                            Margin="10,0,10,20" 
+                            Padding="15" 
+                            CornerRadius="8" 
+                            BorderThickness="1" 
+                            BorderBrush="{DynamicResource BorderLightBrush}">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsHistoryExpanded}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <DataGrid ItemsSource="{Binding Invoice.Items}"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  IsReadOnly="True"
+                                  HeadersVisibility="Column"
+                                  Background="Transparent" 
+                                  RowBackground="{DynamicResource CardBackgroundBrush}"
+                                  AlternatingRowBackground="{DynamicResource ContentBackgroundBrush}"
+                                  HorizontalGridLinesBrush="#E2E8F0" 
+                                  VerticalGridLinesBrush="Transparent"
+                                  FontSize="14"
+                                  Foreground="#1E293B"
+                                  CanUserResizeColumns="False"
+                                  CanUserReorderColumns="False"
+                                  RowHeight="50">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Padding" Value="12,0"/>
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                    <Setter Property="Foreground" Value="#1E293B"/>
+                                </Style>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="#64748B"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="FontSize" Value="14"/>
+                                    <Setter Property="Padding" Value="12,10"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="BorderBrush" Value="#E2E8F0"/>
+                                </Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                    <Setter Property="Margin" Value="12,0"/>
+                                    <Setter Property="Foreground" Value="#1E293B"/>
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Book Title" Binding="{Binding BookTitle}" Width="3*"/>
+                                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="1*"/>
+                                <DataGridTextColumn Header="Unit Price" Binding="{Binding SalePrice, StringFormat='{}{0:N0} VNĐ'}" Width="1.8*"/>
+                                <DataGridTextColumn Header="Subtotal" Binding="{Binding SubTotal, StringFormat='{}{0:N0} VNĐ'}" Width="2*">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource NavyPrimaryBrush}"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+
                     <!-- Toggle Payment History Button -->
-                    <ui:Button Content="{Binding ToggleHistoryButtonText, Mode=OneWay}" 
-                               Icon="{ui:SymbolIcon Symbol=History24}" 
-                               Appearance="Secondary"
-                               Command="{Binding ToggleHistoryCommand}"
-                               Visibility="{Binding IsPaymentHistoryVisible, Converter={StaticResource BoolToVis}}"
-                               Margin="10,0,10,15"
-                               HorizontalAlignment="Left"
-                               Cursor="Hand"/>
+                    <Button Style="{StaticResource PremiumColoredButtonStyle}"
+                            Background="{DynamicResource AccentBlueBrush}"
+                            BorderBrush="#0284C7"
+                            BorderThickness="1.5"
+                            Command="{Binding ToggleHistoryCommand}"
+                            Visibility="{Binding IsPaymentHistoryVisible, Converter={StaticResource BoolToVis}}"
+                            Margin="10,0,10,15"
+                            Padding="15,8"
+                            HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="History24" Foreground="White" Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding ToggleHistoryButtonText, Mode=OneWay}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="White"/>
+                        </StackPanel>
+                    </Button>
 
                     <!-- Payment History Section -->
                     <StackPanel Visibility="{Binding IsHistoryExpanded, Converter={StaticResource BoolToVis}}" Margin="0,15,0,0">
@@ -252,12 +413,19 @@
                                        Foreground="{DynamicResource NavyPrimaryBrush}" 
                                        VerticalAlignment="Center"/>
 
-                            <ui:Button Grid.Column="1" Content="Export Payment History" 
-                                       Icon="{ui:SymbolIcon Symbol=ArrowDownload24}" 
-                                       Appearance="Secondary" 
-                                       Command="{Binding ExportPaymentHistoryCommand}"
-                                       Cursor="Hand"
-                                       Margin="0,0,10,0"/>
+                            <Button Grid.Column="1" 
+                                    Style="{StaticResource PremiumColoredButtonStyle}"
+                                    Background="{DynamicResource AccentBlueBrush}"
+                                    BorderBrush="#0284C7"
+                                    BorderThickness="1.5"
+                                    Command="{Binding ExportPaymentHistoryCommand}"
+                                    Margin="0,0,10,0"
+                                    Padding="15,8">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="ArrowDownload24" Foreground="White" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Export Payment History" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="White"/>
+                                </StackPanel>
+                            </Button>
                         </Grid>
 
                         <Border Background="{DynamicResource CardBackgroundBrush}" 
@@ -277,12 +445,49 @@
                                       HorizontalGridLinesBrush="#E2E8F0" 
                                       VerticalGridLinesBrush="Transparent"
                                       FontSize="14"
-                                      Foreground="#1E293B">
+                                      Foreground="#1E293B"
+                                      CanUserResizeColumns="False"
+                                      CanUserReorderColumns="False"
+                                      RowHeight="50">
+                                <DataGrid.Resources>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Padding" Value="12,0"/>
+                                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                        <Setter Property="Foreground" Value="#1E293B"/>
+                                    </Style>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="#64748B"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="FontSize" Value="14"/>
+                                        <Setter Property="Padding" Value="12,10"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                        <Setter Property="BorderBrush" Value="#E2E8F0"/>
+                                    </Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                                        <Setter Property="Margin" Value="12,0"/>
+                                        <Setter Property="Foreground" Value="#1E293B"/>
+                                    </Style>
+                                </DataGrid.Resources>
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Payment ID" Binding="{Binding PaymentId}" Width="100"/>
-                                    <DataGridTextColumn Header="Date" Binding="{Binding PaymentDate, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" Width="180"/>
-                                    <DataGridTextColumn Header="Staff" Binding="{Binding StaffName}" Width="180"/>
-                                    <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat='{}{0:N0} VNĐ'}" Width="*"/>
+                                    <DataGridTextColumn Header="Payment ID" Binding="{Binding PaymentId}" Width="1.2*" MinWidth="100"/>
+                                    <DataGridTextColumn Header="Date" Binding="{Binding PaymentDate, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" Width="2.5*"/>
+                                    <DataGridTextColumn Header="Staff" Binding="{Binding StaffName}" Width="2*"/>
+                                    <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat='{}{0:N0} VNĐ'}" Width="2*">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource SuccessPrimaryBrush}"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Border>

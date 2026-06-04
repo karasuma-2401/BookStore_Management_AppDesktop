@@ -60,14 +60,23 @@ namespace BookStore_Management_AppDesktop.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value is int intVal)
+            {
+                return intVal switch
+                {
+                    1 => new SolidColorBrush(Color.FromArgb(40, 16, 185, 129)),       // Soft Green (Active)
+                    _ => new SolidColorBrush(Color.FromArgb(40, 239, 68, 68))         // Soft Red (Resigned)
+                };
+            }
+
             if (value is string status)
             {
-                return status?.ToLower() switch
+                return status.Trim().ToLower() switch
                 {
-                    "scheduled" => new SolidColorBrush(Color.FromArgb(40, 56, 189, 248)),      // Soft Blue
-                    "present" => new SolidColorBrush(Color.FromArgb(40, 16, 185, 129)),        // Soft Green
-                    "absent" => new SolidColorBrush(Color.FromArgb(40, 239, 68, 68)),          // Soft Red
-                    "compensated" => new SolidColorBrush(Color.FromArgb(40, 245, 158, 11)),   // Soft Amber
+                    "scheduled" or "pending" => new SolidColorBrush(Color.FromArgb(40, 56, 189, 248)),  // Soft Blue
+                    "present" or "paid" or "đang làm" or "active" or "completed" => new SolidColorBrush(Color.FromArgb(40, 16, 185, 129)), // Soft Green (Completed is Green)
+                    "absent" or "canceled" or "cancelled" or "nghỉ làm" or "resigned" or "inactive" or "unpaid" => new SolidColorBrush(Color.FromArgb(40, 239, 68, 68)), // Soft Red (Unpaid is Red)
+                    "compensated" or "partial" => new SolidColorBrush(Color.FromArgb(40, 245, 158, 11)),   // Soft Amber (Partial is Amber)
                     "late" => new SolidColorBrush(Color.FromArgb(40, 249, 115, 22)),          // Soft Orange
                     _ => new SolidColorBrush(Color.FromArgb(40, 100, 116, 139))                // Soft Gray
                 };
@@ -85,14 +94,23 @@ namespace BookStore_Management_AppDesktop.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value is int intVal)
+            {
+                return intVal switch
+                {
+                    1 => new SolidColorBrush(Color.FromArgb(255, 5, 150, 105)),       // High Contrast Green
+                    _ => new SolidColorBrush(Color.FromArgb(255, 220, 38, 38))         // High Contrast Red
+                };
+            }
+
             if (value is string status)
             {
-                return status?.ToLower() switch
+                return status.Trim().ToLower() switch
                 {
-                    "scheduled" => new SolidColorBrush(Color.FromArgb(255, 14, 165, 233)),     // High Contrast Blue
-                    "present" => new SolidColorBrush(Color.FromArgb(255, 5, 150, 105)),        // High Contrast Green
-                    "absent" => new SolidColorBrush(Color.FromArgb(255, 220, 38, 38)),          // High Contrast Red
-                    "compensated" => new SolidColorBrush(Color.FromArgb(255, 217, 119, 6)),    // High Contrast Amber
+                    "scheduled" or "pending" => new SolidColorBrush(Color.FromArgb(255, 14, 165, 233)), // High Contrast Blue
+                    "present" or "paid" or "đang làm" or "active" or "completed" => new SolidColorBrush(Color.FromArgb(255, 5, 150, 105)), // High Contrast Green (Completed is Green)
+                    "absent" or "canceled" or "cancelled" or "nghỉ làm" or "resigned" or "inactive" or "unpaid" => new SolidColorBrush(Color.FromArgb(255, 220, 38, 38)), // High Contrast Red (Unpaid is Red)
+                    "compensated" or "partial" => new SolidColorBrush(Color.FromArgb(255, 217, 119, 6)),    // High Contrast Amber (Partial is Amber)
                     "late" => new SolidColorBrush(Color.FromArgb(255, 234, 88, 12)),          // High Contrast Orange
                     _ => new SolidColorBrush(Color.FromArgb(255, 71, 85, 105))                 // Slate Gray
                 };
@@ -112,9 +130,9 @@ namespace BookStore_Management_AppDesktop.Converters
         {
             if (value is int status)
             {
-                return status == 1 ? "Đang làm" : "Nghỉ làm";
+                return status == 1 ? "Active" : "Resigned";
             }
-            return "Nghỉ làm";
+            return "Resigned";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

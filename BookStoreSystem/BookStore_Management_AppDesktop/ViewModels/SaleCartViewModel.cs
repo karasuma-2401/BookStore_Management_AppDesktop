@@ -48,6 +48,21 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private int? selectedCustomerId;
 
         [ObservableProperty]
+        private string? customerPhoneInput;
+
+        [ObservableProperty]
+        private CustomerResponseDto? matchedCustomer;
+
+        [ObservableProperty]
+        private CustomerResponseDto? selectedCustomer;
+
+        [ObservableProperty]
+        private bool hasMatchedCustomer;
+
+        [ObservableProperty]
+        private bool hasSelectedCustomer;
+
+        [ObservableProperty]
         private string? voucherCodeInput;
 
         [ObservableProperty]
@@ -83,6 +98,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
             _ = LoadVouchers();
         }
 
+        public override async Task LoadDataAsync()
+        {
+            await LoadCustomers();
+            await LoadVouchers();
+        }
+
         private async Task LoadCustomers()
         {
             if (_customerApiService == null) return;
@@ -93,12 +114,126 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 if (list != null)
                 {
                     Customers = new ObservableCollection<CustomerResponseDto>(list);
+                    if (SelectedCustomerId.HasValue)
+                    {
+                        SelectedCustomer = Customers.FirstOrDefault(c => c.CustomerId == SelectedCustomerId.Value);
+                        if (SelectedCustomer != null)
+                        {
+                            CustomerPhoneInput = SelectedCustomer.Phone;
+                            HasSelectedCustomer = true;
+                        }
+                        else
+                        {
+                            HasSelectedCustomer = false;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error loading customers: {ex.Message}");
             }
+        }
+
+        partial void OnCustomerPhoneInputChanged(string? value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                MatchedCustomer = null;
+                HasMatchedCustomer = false;
+                return;
+            }
+
+            var trimmed = value.Trim();
+            
+            // Match any customer using robust phone matching logic
+            var matched = Customers.FirstOrDefault(c => IsPhoneMatch(c.Phone, trimmed));
+
+            // Only show suggestion if the matched customer is NOT already the selected customer
+            if (matched != null && (SelectedCustomer == null || SelectedCustomer.CustomerId != matched.CustomerId))
+            {
+                MatchedCustomer = matched;
+                HasMatchedCustomer = true;
+            }
+            else
+            {
+                MatchedCustomer = null;
+                HasMatchedCustomer = false;
+            }
+        }
+
+        private bool IsPhoneMatch(string? phone1, string? phone2)
+        {
+            if (phone1 == null || phone2 == null) return false;
+
+            // Extract only digits
+            string d1 = new string(phone1.Where(char.IsDigit).ToArray());
+            string d2 = new string(phone2.Where(char.IsDigit).ToArray());
+
+            // Convert country code prefix if any (e.g. 84 to 0)
+            if (d1.StartsWith("84") && d1.Length > 9) d1 = "0" + d1.Substring(2);
+            if (d2.StartsWith("84") && d2.Length > 9) d2 = "0" + d2.Substring(2);
+
+            if (d1 == d2) return true;
+
+            // Compare without leading zero
+            string s1 = d1.StartsWith("0") ? d1.Substring(1) : d1;
+            string s2 = d2.StartsWith("0") ? d2.Substring(1) : d2;
+
+            return s1 == s2;
+        }
+
+        partial void OnSelectedCustomerIdChanged(int? value)
+        {
+            if (value.HasValue)
+            {
+                SelectedCustomer = Customers.FirstOrDefault(c => c.CustomerId == value.Value);
+                if (SelectedCustomer != null)
+                {
+                    if (CustomerPhoneInput != SelectedCustomer.Phone)
+                    {
+                        CustomerPhoneInput = SelectedCustomer.Phone;
+                    }
+                    HasSelectedCustomer = true;
+                }
+                else
+                {
+                    HasSelectedCustomer = false;
+                }
+            }
+            else
+            {
+                SelectedCustomer = null;
+                CustomerPhoneInput = null;
+                MatchedCustomer = null;
+                HasSelectedCustomer = false;
+                HasMatchedCustomer = false;
+            }
+        }
+
+        [RelayCommand]
+        private void SelectMatchedCustomer()
+        {
+            if (MatchedCustomer != null)
+            {
+                SelectedCustomer = MatchedCustomer;
+                SelectedCustomerId = SelectedCustomer.CustomerId;
+                CustomerPhoneInput = SelectedCustomer.Phone;
+                MatchedCustomer = null;
+                HasMatchedCustomer = false;
+                HasSelectedCustomer = true;
+            }
+        }
+
+        [RelayCommand]
+        private void ClearSelectedCustomer()
+        {
+            SelectedCustomer = null;
+            SelectedCustomerId = null;
+            CustomerPhoneInput = null;
+            MatchedCustomer = null;
+            HasSelectedCustomer = false;
+            HasMatchedCustomer = false;
         }
 
         private async Task LoadVouchers()

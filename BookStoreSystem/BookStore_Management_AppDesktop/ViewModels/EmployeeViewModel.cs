@@ -135,8 +135,15 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 OnPropertyChanged(nameof(TotalPages));
                 OnPropertyChanged(nameof(CurrentPageStart));
                 OnPropertyChanged(nameof(CurrentPageEnd));
+                OnPropertyChanged(nameof(TotalActiveEmployees));
+                OnPropertyChanged(nameof(TotalResignedEmployees));
+                OnPropertyChanged(nameof(TotalAllEmployees));
             });
         }
+
+        public int TotalActiveEmployees => _allEmployees.Count(e => e.Status == 1);
+        public int TotalResignedEmployees => _allEmployees.Count(e => e.Status == 0);
+        public int TotalAllEmployees => _allEmployees.Count;
 
         public int TotalEmployees => _allEmployees.Count(e => {
             if (string.IsNullOrWhiteSpace(SearchText)) return true;

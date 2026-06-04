@@ -40,14 +40,14 @@
                     <!-- Điều hướng tháng -->
                     <Button Style="{StaticResource PremiumColoredButtonStyle}" 
                             Command="{Binding PreviousMonthCommand}"
-                            Background="#0F172A" Foreground="White" BorderBrush="#38BDF8" BorderThickness="1"
+                            Background="#0F172A" Foreground="White" BorderBrush="#38BDF8" BorderThickness="1.5"
                             Padding="8" Margin="10,0,0,0" VerticalAlignment="Center">
                         <ui:SymbolIcon Symbol="ChevronLeft24" Foreground="White"/>
                     </Button>
                     
                     <Button Style="{StaticResource PremiumColoredButtonStyle}" 
                             Command="{Binding NextMonthCommand}"
-                            Background="#0F172A" Foreground="White" BorderBrush="#38BDF8" BorderThickness="1"
+                            Background="#0F172A" Foreground="White" BorderBrush="#38BDF8" BorderThickness="1.5"
                             Padding="8" Margin="5,0,0,0" VerticalAlignment="Center">
                         <ui:SymbolIcon Symbol="ChevronRight24" Foreground="White"/>
                     </Button>
@@ -56,7 +56,7 @@
                     
                     <Button Style="{StaticResource PremiumColoredButtonStyle}" 
                             Command="{Binding RefreshDataCommand}"
-                            Background="#0F172A" Foreground="White" BorderBrush="#38BDF8" BorderThickness="1"
+                            Background="#0F172A" Foreground="White" BorderBrush="#38BDF8" BorderThickness="1.5"
                             Padding="8" VerticalAlignment="Center">
                         <ui:SymbolIcon Symbol="ArrowSync24" Foreground="White"/>
                     </Button>
@@ -85,7 +85,7 @@
                             <TextBlock Text="From Date" Foreground="#64748B" FontSize="11" Margin="0,0,0,3"/>
                             <DatePicker SelectedDate="{Binding FilterStartDate}" 
                                        Background="White" Foreground="#1E293B" 
-                                       BorderBrush="#E2E8F0" BorderThickness="1" 
+                                       BorderBrush="#38BDF8" BorderThickness="1.5" 
                                        Padding="8,6" FontSize="12" Width="180"/>
                         </StackPanel>
 
@@ -93,13 +93,14 @@
                             <TextBlock Text="To Date" Foreground="#64748B" FontSize="11" Margin="0,0,0,3"/>
                             <DatePicker SelectedDate="{Binding FilterEndDate}" 
                                        Background="White" Foreground="#1E293B" 
-                                       BorderBrush="#E2E8F0" BorderThickness="1" 
+                                       BorderBrush="#38BDF8" BorderThickness="1.5" 
                                        Padding="8,6" FontSize="12" Width="180"/>
                         </StackPanel>
 
                         <Button Grid.Column="2" Style="{StaticResource PremiumColoredButtonStyle}"
                                    Command="{Binding ApplyDateFilterCommand}"
                                    Background="{DynamicResource SidebarAccentBrush}" Foreground="White"
+                                   BorderBrush="#0284C7" BorderThickness="1.5"
                                    Padding="12,6" FontSize="12" Margin="10,18,0,0">
                             <StackPanel Orientation="Horizontal">
                                 <ui:SymbolIcon Symbol="Search24" Foreground="White" Margin="0,0,6,0"/>
@@ -115,7 +116,7 @@
                         <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Bottom">
                             <Button Style="{StaticResource PremiumColoredButtonStyle}"
                                     Command="{Binding SelectAllCommand}"
-                                    Background="Transparent" BorderBrush="{DynamicResource SidebarAccentBrush}" BorderThickness="1"
+                                    Background="Transparent" BorderBrush="{DynamicResource SidebarAccentBrush}" BorderThickness="1.5"
                                     Foreground="{DynamicResource SidebarAccentBrush}"
                                     Padding="10,5" FontSize="11" Margin="0,0,5,0">
                                 <StackPanel Orientation="Horizontal">
@@ -125,7 +126,7 @@
                             </Button>
                             <Button Style="{StaticResource PremiumColoredButtonStyle}"
                                     Command="{Binding ClearSelectionCommand}"
-                                    Background="Transparent" BorderBrush="#E2E8F0" BorderThickness="1"
+                                    Background="Transparent" BorderBrush="#94A3B8" BorderThickness="1.5"
                                     Foreground="#64748B"
                                     Padding="10,5" FontSize="11" Margin="0,0,5,0">
                                 <StackPanel Orientation="Horizontal">
@@ -136,6 +137,7 @@
                             <Button Style="{StaticResource PremiumColoredButtonStyle}"
                                     Command="{Binding ApproveBulkCompensationCommand}"
                                     Background="{DynamicResource SuccessPrimaryBrush}" Foreground="White"
+                                    BorderBrush="#059669" BorderThickness="1.5"
                                     Padding="14,5" FontSize="11" FontWeight="SemiBold">
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="CheckmarkCircle24" Foreground="White" Margin="0,0,6,0"/>
@@ -165,27 +167,29 @@
                               EnableRowVirtualization="True">
                         
                         <DataGrid.Resources>
-                            <!-- Tự động căn giữa toàn bộ textblock trong các ô của DataGrid -->
+                            <!-- Tự động căn trái toàn bộ textblock trong các ô của DataGrid để thẳng cột với tiêu đề, đồng thời sửa màu chữ sang tối để dễ đọc -->
                             <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
                                 <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Margin" Value="12,0"/>
+                                <Setter Property="Foreground" Value="#1E293B"/>
                             </Style>
                         </DataGrid.Resources>
 
                         <DataGrid.ColumnHeaderStyle>
-                            <!-- Căn giữa tiêu đề của các cột -->
+                            <!-- Căn trái tiêu đề của các cột khớp với nội dung -->
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="HorizontalContentAlignment" Value="Left"/>
                                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                                 <Setter Property="FontWeight" Value="Bold"/>
                                 <Setter Property="Background" Value="Transparent"/>
                                 <Setter Property="Foreground" Value="#1E293B"/>
-                                <Setter Property="Padding" Value="10,8"/>
+                                <Setter Property="Padding" Value="12,8"/>
                             </Style>
                         </DataGrid.ColumnHeaderStyle>
                         
                         <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Select" Width="80" CanUserSort="False">
+                            <DataGridTemplateColumn Header="Select" Width="0.8*" CanUserSort="False">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
@@ -194,29 +198,30 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Header="Employee Name" Binding="{Binding FullName}" Width="180"/>
-                            <DataGridTextColumn Header="Work Date" Binding="{Binding WorkDate}" Width="150"/>
-                            <DataGridTextColumn Header="Shift" Binding="{Binding ShiftName}" Width="100"/>
-                            <DataGridTextColumn Header="Time" Binding="{Binding WorkTime}" Width="150"/>
+                            <DataGridTextColumn Header="Employee Name" Binding="{Binding FullName}" Width="2*"/>
+                            <DataGridTextColumn Header="Work Date" Binding="{Binding WorkDate}" Width="1.5*"/>
+                            <DataGridTextColumn Header="Shift" Binding="{Binding ShiftName}" Width="1.2*"/>
+                            <DataGridTextColumn Header="Time" Binding="{Binding WorkTime}" Width="1.8*"/>
 
-                            <DataGridTemplateColumn Header="Status" Width="100">
+                            <DataGridTemplateColumn Header="Status" Width="1.2*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Border Background="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
                                                 CornerRadius="3" Padding="6,3" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding Status}" Foreground="White" FontWeight="Bold" FontSize="11"/>
+                                            <TextBlock Text="{Binding Status}" Foreground="White" FontWeight="Bold" FontSize="11" Margin="0"/>
                                         </Border>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Action" Width="120" CanUserSort="False">
+                            <DataGridTemplateColumn Header="Action" Width="1.2*" CanUserSort="False">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="12,0">
                                             <Button Style="{StaticResource PremiumColoredButtonStyle}"
                                                     Background="{DynamicResource SuccessPrimaryBrush}" 
                                                     Foreground="White"
+                                                    BorderBrush="#059669" BorderThickness="1.5"
                                                     Padding="12,6"
                                                     ToolTip="Approve Individual Compensation"
                                                     Command="{Binding DataContext.ApproveCompensationCommand, RelativeSource={RelativeSource AncestorType=Page}}"

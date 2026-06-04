@@ -9,7 +9,8 @@
     d:DesignHeight="700"
     d:DesignWidth="1000"
     Background="#111625"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="NativeBoolToVis" />
@@ -97,7 +98,7 @@
                 BorderThickness="1"
                 CornerRadius="12">
                 <Grid>
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel Panel.ZIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -151,12 +152,24 @@
                         </Button>
                     </StackPanel>
 
-                    <ListView
-                        x:Name="CartListView"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        ItemsSource="{Binding CartItems}"
-                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=CartListView, Path=HasItems}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+
+                        <ListView
+                            x:Name="CartListView"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            ItemsSource="{Binding CartItems}"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Border
@@ -360,6 +373,7 @@
                         </ListView.ItemContainerStyle>
                     </ListView>
                 </Grid>
+                </Grid>
             </Border>
 
             <StackPanel Grid.Column="1">
@@ -501,30 +515,19 @@
                             FontWeight="Bold"
                             Foreground="#FFFFFF"
                             Text="Customer" />
-                        <Grid Margin="0,0,0,20">
+                        <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Border
+                            <ui:TextBox
                                 Grid.Column="0"
+                                Text="{Binding CustomerPhoneInput, UpdateSourceTrigger=PropertyChanged}"
+                                PlaceholderText="Enter phone number..."
                                 Height="38"
-                                Background="#1E293B"
-                                BorderBrush="#232D42"
-                                BorderThickness="1"
-                                CornerRadius="6">
-                                <ComboBox
-                                    Margin="5,0"
-                                    VerticalContentAlignment="Center"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    DisplayMemberPath="Name"
-                                    Foreground="#FFFFFF"
-                                    ItemsSource="{Binding Customers}"
-                                    SelectedValue="{Binding SelectedCustomerId, Mode=TwoWay}"
-                                    SelectedValuePath="CustomerId" />
-                            </Border>
+                                Foreground="White"
+                                Icon="{ui:SymbolIcon Phone24}"/>
 
                             <Button
                                 Grid.Column="1"
@@ -536,12 +539,13 @@
                                         <Setter Property="Height" Value="38" />
                                         <Setter Property="Background" Value="#252B37" />
                                         <Setter Property="Foreground" Value="#FFFFFF" />
-                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="BorderThickness" Value="1" />
+                                        <Setter Property="BorderBrush" Value="#38BDF8"/>
                                         <Setter Property="Cursor" Value="Hand" />
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="Button">
-                                                    <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
                                                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                     </Border>
                                                 </ControlTemplate>
@@ -561,6 +565,53 @@
                                     FontSize="14"
                                     FontWeight="Bold"
                                     Symbol="Add24" />
+                            </Button>
+                        </Grid>
+
+                        <!-- Match Suggestion Banner -->
+                        <Button 
+                            Style="{StaticResource PremiumColoredButtonStyle}"
+                            Command="{Binding SelectMatchedCustomerCommand}"
+                            Background="#1A2E3B"
+                            BorderBrush="#38BDF8"
+                            BorderThickness="1.5"
+                            Margin="0,0,0,10"
+                            Padding="10,8"
+                            HorizontalAlignment="Stretch"
+                            Visibility="{Binding HasMatchedCustomer, Converter={StaticResource BoolToVis}}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <ui:SymbolIcon Symbol="CheckmarkCircle24" Foreground="#38BDF8" Margin="0,0,8,0"/>
+                                <TextBlock Text="{Binding MatchedCustomer.Name, StringFormat='Select: {0} (Click to confirm)'}" 
+                                           Foreground="#38BDF8" FontWeight="Bold" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Selected Customer Badge/Info -->
+                        <Grid Margin="0,0,0,15" Visibility="{Binding HasSelectedCustomer, Converter={StaticResource BoolToVis}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Background="#1A2E26" CornerRadius="6" Padding="10,6" BorderBrush="#00DC82" BorderThickness="1.5">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Person24" Foreground="#00DC82" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding SelectedCustomer.Name}" Foreground="White" FontWeight="Bold" FontSize="13"/>
+                                        <TextBlock Text="{Binding SelectedCustomer.Phone, StringFormat='Selected • Phone: {0}'}" Foreground="#94A3B8" FontSize="11"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            <Button Grid.Column="1" 
+                                    Style="{StaticResource PremiumColoredButtonStyle}" 
+                                    Background="#2D1D24" 
+                                    BorderBrush="#FF4D4F" 
+                                    BorderThickness="1.5"
+                                    Padding="10,0"
+                                    Margin="10,0,0,0"
+                                    Height="38"
+                                    Command="{Binding ClearSelectedCustomerCommand}"
+                                    ToolTip="Clear Selection">
+                                <ui:SymbolIcon Symbol="Dismiss24" Foreground="#FF4D4F"/>
                             </Button>
                         </Grid>
 

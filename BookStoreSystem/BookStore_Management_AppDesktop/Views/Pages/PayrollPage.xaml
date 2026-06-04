@@ -15,6 +15,7 @@
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
@@ -35,7 +36,7 @@
 						<TextBlock Text="Month:" Foreground="#94A3B8" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
 						<ComboBox ItemsSource="{Binding AvailableMonths}" SelectedItem="{Binding SelectedMonth}"
 								  Width="90" Height="32" Background="#0F172A"
-								  Foreground="White" BorderBrush="#38BDF8" BorderThickness="1" Padding="8,4"
+								  Foreground="White" BorderBrush="#38BDF8" BorderThickness="1.5" Padding="8,4"
 								  VerticalAlignment="Center"/>
 					</StackPanel>
 
@@ -44,7 +45,7 @@
 						<TextBlock Text="Year:" Foreground="#94A3B8" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
 						<ComboBox ItemsSource="{Binding AvailableYears}" SelectedItem="{Binding SelectedYear}"
 								  Width="90" Height="32" Background="#0F172A"
-								  Foreground="White" BorderBrush="#38BDF8" BorderThickness="1" Padding="8,4"
+								  Foreground="White" BorderBrush="#38BDF8" BorderThickness="1.5" Padding="8,4"
 								  VerticalAlignment="Center"/>
 					</StackPanel>
 
@@ -52,7 +53,7 @@
                                Command="{Binding ExportPayrollCommand}"
                                Background="{DynamicResource SidebarAccentBrush}"
                                Foreground="White"
-                               BorderThickness="0"
+                               BorderBrush="#0284C7" BorderThickness="1.5"
                                Appearance="Primary"
                                Cursor="Hand"
                                FontWeight="SemiBold"
@@ -62,48 +63,113 @@
 			</Grid>
 		</Border>
 
-		<Border Grid.Row="1" Background="{DynamicResource CardBackgroundBrush}" Margin="20" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1">
+		<!-- Overview statistics cards section -->
+		<Grid Grid.Row="1" Margin="20,15,20,5">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<!-- Card 1: Total Employees -->
+			<Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="0,0,10,0">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="6"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Border Grid.Column="0" Background="{DynamicResource AccentBlueBrush}" CornerRadius="8,0,0,8"/>
+					<Grid Grid.Column="1" Margin="15,12">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+						<StackPanel Grid.Column="0" VerticalAlignment="Center">
+							<TextBlock Text="Total Employees" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+							<TextBlock Text="{Binding TotalEmployees}" Foreground="#1E293B" FontSize="22" FontWeight="Bold"/>
+						</StackPanel>
+						<ui:SymbolIcon Grid.Column="1" Symbol="People24" FontSize="24" Foreground="{DynamicResource AccentBlueBrush}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+					</Grid>
+				</Grid>
+			</Border>
+
+			<!-- Card 2: Total Payroll -->
+			<Border Grid.Column="1" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="10,0,10,0">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="6"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Border Grid.Column="0" Background="{DynamicResource SuccessPrimaryBrush}" CornerRadius="8,0,0,8"/>
+					<Grid Grid.Column="1" Margin="15,12">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+						<StackPanel Grid.Column="0" VerticalAlignment="Center">
+							<TextBlock Text="Total Payroll" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+							<TextBlock Text="{Binding TotalPayroll, StringFormat='{}{0:N0} VNĐ'}" Foreground="{DynamicResource SuccessPrimaryBrush}" FontSize="18" FontWeight="Bold"/>
+						</StackPanel>
+						<ui:SymbolIcon Grid.Column="1" Symbol="Money24" FontSize="24" Foreground="{DynamicResource SuccessPrimaryBrush}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+					</Grid>
+				</Grid>
+			</Border>
+
+			<!-- Card 3: Processed Records -->
+			<Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="10,0,10,0">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="6"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Border Grid.Column="0" Background="{DynamicResource AccentBlueBrush}" CornerRadius="8,0,0,8"/>
+					<Grid Grid.Column="1" Margin="15,12">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+						<StackPanel Grid.Column="0" VerticalAlignment="Center">
+							<TextBlock Text="Processed Records" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+							<TextBlock Text="{Binding PayrollData.Count}" Foreground="#1E293B" FontSize="22" FontWeight="Bold"/>
+						</StackPanel>
+						<ui:SymbolIcon Grid.Column="1" Symbol="DocumentBulletList24" FontSize="24" Foreground="{DynamicResource AccentBlueBrush}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+					</Grid>
+				</Grid>
+			</Border>
+
+			<!-- Card 4: Period -->
+			<Border Grid.Column="3" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="10,0,0,0">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="6"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Border Grid.Column="0" Background="{DynamicResource WarningBrush}" CornerRadius="8,0,0,8"/>
+					<Grid Grid.Column="1" Margin="15,12">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+						<StackPanel Grid.Column="0" VerticalAlignment="Center">
+							<TextBlock Text="Period" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+							<TextBlock Text="{Binding SelectedMonth, StringFormat='Month {0}'}" Foreground="#1E293B" FontSize="16" FontWeight="SemiBold"/>
+						</StackPanel>
+						<ui:SymbolIcon Grid.Column="1" Symbol="Calendar24" FontSize="24" Foreground="{DynamicResource WarningBrush}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+					</Grid>
+				</Grid>
+			</Border>
+		</Grid>
+
+		<!-- Phần DataGrid chuyển xuống Grid.Row="2" -->
+		<Border Grid.Row="2" Background="{DynamicResource CardBackgroundBrush}" Margin="20" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1">
 			<Grid>
 				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="*"/>
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
 
-				<Border Grid.Row="0" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="20,15">
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="*"/>
-							<ColumnDefinition Width="*"/>
-							<ColumnDefinition Width="*"/>
-							<ColumnDefinition Width="*"/>
-						</Grid.ColumnDefinitions>
-
-						<StackPanel Grid.Column="0">
-							<TextBlock Text="Total Employees" Foreground="#64748B" FontSize="13" Margin="0,0,0,5"/>
-							<TextBlock Text="{Binding TotalEmployees}" Foreground="#1E293B" FontSize="28" FontWeight="Bold"/>
-						</StackPanel>
-
-						<StackPanel Grid.Column="1">
-							<TextBlock Text="Total Payroll" Foreground="#64748B" FontSize="13" Margin="0,0,0,5"/>
-							<TextBlock Text="{Binding TotalPayroll, StringFormat='{}{0:N0} VNĐ'}"
-                                       Foreground="#00DC82" FontSize="24" FontWeight="Bold"/>
-						</StackPanel>
-
-						<StackPanel Grid.Column="2">
-							<TextBlock Text="Processed Records" Foreground="#64748B" FontSize="13" Margin="0,0,0,5"/>
-							<TextBlock Text="{Binding PayrollData.Count}" Foreground="#1E293B" FontSize="24" FontWeight="Bold"/>
-						</StackPanel>
-
-						<StackPanel Grid.Column="3" HorizontalAlignment="Right">
-							<TextBlock Text="Period" Foreground="#64748B" FontSize="13" Margin="0,0,0,5"/>
-							<TextBlock Text="{Binding SelectedMonth, StringFormat='Month {0}'}"
-                                       Foreground="#1E293B" FontSize="16" FontWeight="SemiBold"/>
-						</StackPanel>
-					</Grid>
-				</Border>
-
-				<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+				<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
 					<DataGrid ItemsSource="{Binding PayrollData}"
 							  AutoGenerateColumns="False"
 							  CanUserAddRows="False"
@@ -113,6 +179,7 @@
 							  Foreground="#1E293B"
 							  Background="Transparent"
 							  CanUserResizeColumns="False"
+							  CanUserReorderColumns="False"
 							  RowBackground="{DynamicResource CardBackgroundBrush}"
 							  AlternatingRowBackground="{DynamicResource ContentBackgroundBrush}"
 							  HorizontalGridLinesBrush="#E2E8F0"
@@ -120,18 +187,63 @@
 							  FontSize="13"
 							  Cursor="Hand"
 							  EnableRowVirtualization="True">
+						<DataGrid.Resources>
+							<Style TargetType="DataGridCell">
+								<Setter Property="Background" Value="Transparent"/>
+								<Setter Property="BorderThickness" Value="0"/>
+								<Setter Property="VerticalAlignment" Value="Center"/>
+								<Setter Property="Padding" Value="12,0"/>
+								<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+							</Style>
+							<Style TargetType="DataGridColumnHeader">
+								<Setter Property="Background" Value="Transparent"/>
+								<Setter Property="Foreground" Value="#64748B"/>
+								<Setter Property="FontWeight" Value="Bold"/>
+								<Setter Property="FontSize" Value="14"/>
+								<Setter Property="Padding" Value="12,12"/>
+								<Setter Property="HorizontalContentAlignment" Value="Left"/>
+								<Setter Property="VerticalContentAlignment" Value="Center"/>
+								<Setter Property="BorderThickness" Value="0,0,0,1"/>
+								<Setter Property="BorderBrush" Value="#E2E8F0"/>
+							</Style>
+							<Style TargetType="TextBlock">
+								<Setter Property="VerticalAlignment" Value="Center"/>
+								<Setter Property="HorizontalAlignment" Value="Left"/>
+								<Setter Property="Margin" Value="12,0"/>
+								<Setter Property="Foreground" Value="#1E293B"/>
+							</Style>
+						</DataGrid.Resources>
+						<DataGrid.RowStyle>
+							<Style TargetType="DataGridRow">
+								<Setter Property="Background" Value="Transparent"/>
+								<Setter Property="BorderThickness" Value="0,0,0,1"/>
+								<Setter Property="BorderBrush" Value="{DynamicResource ContentBackgroundBrush}"/>
+								<Setter Property="Height" Value="60"/>
+								<Style.Triggers>
+									<Trigger Property="IsMouseOver" Value="True">
+										<Setter Property="Background" Value="{DynamicResource ContentBackgroundBrush}"/>
+									</Trigger>
+								</Style.Triggers>
+							</Style>
+						</DataGrid.RowStyle>
 						<DataGrid.Columns>
-							<DataGridTextColumn Header="Employee ID" Binding="{Binding EmployeeId}" Width="100"/>
-							<DataGridTextColumn Header="Employee Name" Binding="{Binding FullName}" Width="150"/>
-							<DataGridTextColumn Header="Total Assigned" Binding="{Binding TotalAssignedShifts}" Width="120"/>
-							<DataGridTextColumn Header="Worked" Binding="{Binding WorkedShifts}" Width="100"/>
-							<DataGridTextColumn Header="Absent" Binding="{Binding AbsentShifts}" Width="100"/>
-							<DataGridTextColumn Header="Rate Per Shift" Binding="{Binding BaseSalary, StringFormat='{}{0:N0} VNĐ'}" Width="130"/>
-							<DataGridTemplateColumn Header="Actual Salary" Width="150">
+							<DataGridTextColumn Header="Employee ID" Binding="{Binding EmployeeId}" Width="1.2*" MinWidth="100"/>
+							<DataGridTextColumn Header="Employee Name" Binding="{Binding FullName}" Width="2*">
+								<DataGridTextColumn.ElementStyle>
+									<Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+										<Setter Property="FontWeight" Value="SemiBold"/>
+									</Style>
+								</DataGridTextColumn.ElementStyle>
+							</DataGridTextColumn>
+							<DataGridTextColumn Header="Total Assigned" Binding="{Binding TotalAssignedShifts}" Width="1.2*"/>
+							<DataGridTextColumn Header="Worked" Binding="{Binding WorkedShifts}" Width="1*"/>
+							<DataGridTextColumn Header="Absent" Binding="{Binding AbsentShifts}" Width="1*"/>
+							<DataGridTextColumn Header="Rate Per Shift" Binding="{Binding BaseSalary, StringFormat='{}{0:N0} VNĐ'}" Width="1.3*"/>
+							<DataGridTemplateColumn Header="Actual Salary" Width="1.5*">
 								<DataGridTemplateColumn.CellTemplate>
 									<DataTemplate>
 										<TextBlock Text="{Binding ActualSalary, StringFormat='{}{0:N0} VNĐ'}" 
-												   Foreground="#00DC82" FontWeight="Bold" TextAlignment="Right" Padding="10,0"/>
+												   Foreground="#00DC82" FontWeight="Bold" VerticalAlignment="Center" Margin="12,0"/>
 									</DataTemplate>
 								</DataGridTemplateColumn.CellTemplate>
 							</DataGridTemplateColumn>
@@ -139,7 +251,7 @@
 					</DataGrid>
 				</ScrollViewer>
 
-				<Border Grid.Row="2" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="20,15">
+				<Border Grid.Row="1" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="20,15">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*"/>
