@@ -71,6 +71,7 @@ namespace BookStoreManagement.API.Services
                 {
                     BookId = b.BookId,
                     Title = b.Title,
+                    PublishYear = b.PublishYear,
                     AuthorNames = b.BookAuthors
                         .Select(ba => ba.Author.Name)
                         .ToList(),
@@ -115,6 +116,7 @@ namespace BookStoreManagement.API.Services
                 {
                     BookId = b.BookId,
                     Title = b.Title,
+                    PublishYear = b.PublishYear,
 
                     AuthorNames = b.BookAuthors
                         .Select(ba => ba.Author.Name)
@@ -200,6 +202,7 @@ namespace BookStoreManagement.API.Services
             book.Description = dto.Description;
             book.ImagePath = dto.ImagePath;
             book.Quantity = dto.Quantity;
+            book.PublishYear = dto.PublishYear;
 
             // ?? UPDATE AUTHORS
             var newAuthorIds = dto.AuthorIds.Distinct().ToList();
