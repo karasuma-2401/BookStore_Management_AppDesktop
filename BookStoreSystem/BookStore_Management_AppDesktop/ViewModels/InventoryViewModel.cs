@@ -200,6 +200,13 @@ namespace BookStore_Management_AppDesktop.ViewModels
         }
 
         [RelayCommand]
+        private void OpenCategoryManagement()
+        {
+            _dialogService.ShowCategoryManagementWindow();
+        }
+
+
+        [RelayCommand]
         private void EditBook(Book selectedBook)
         {
             if (selectedBook == null) return;

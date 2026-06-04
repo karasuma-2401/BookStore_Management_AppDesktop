@@ -74,6 +74,13 @@ namespace BookStore_Management_AppDesktop.Services
             window.ShowDialog();
         }
 
+        public void ShowCategoryManagementWindow()
+        {
+            var categoryWindow = _serviceProvider.GetRequiredService<CategoryManagementWindow>();
+            categoryWindow.Owner = System.Windows.Application.Current.MainWindow;
+            categoryWindow.ShowDialog();
+        }
+
         public async Task ShowErrorAsync(string title, string message)
         {
             System.Windows.MessageBox.Show(message, title, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);

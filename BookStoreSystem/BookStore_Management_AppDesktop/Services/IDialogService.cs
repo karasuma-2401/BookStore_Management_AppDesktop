@@ -14,6 +14,7 @@ namespace BookStore_Management_AppDesktop.Services
 
         string? ShowInputDialog(string title, string message, string defaultText = "");
         void ShowAuthorManagementWindow();
+        void ShowCategoryManagementWindow();
 
         Task ShowErrorAsync(string title, string message);
         Task ShowSuccessAsync(string title, string message);

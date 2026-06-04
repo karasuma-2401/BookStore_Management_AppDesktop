@@ -92,6 +92,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<AuthorSelectionViewModel>();
             services.AddTransient<BookViewModel>();
+            services.AddTransient<CategoryManagementViewModel>();
             services.AddTransient<EmployeeViewModel>();
             services.AddTransient<CustomerViewModel>();
             services.AddTransient<ImportCreateViewModel>(); 
@@ -119,6 +120,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<InventoryPage>();
             services.AddTransient<SettingsPage>();
             services.AddTransient<EmployeePage>();
+            services.AddTransient<CategoryManagementWindow>();
             services.AddTransient<CustomerPage>();
             services.AddTransient<ImportHistoryPage>(); 
             services.AddTransient<CreateImportPage>(); 
