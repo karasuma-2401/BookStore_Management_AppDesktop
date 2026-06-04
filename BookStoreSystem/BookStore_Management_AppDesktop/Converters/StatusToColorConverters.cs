@@ -105,4 +105,40 @@ namespace BookStore_Management_AppDesktop.Converters
             throw new NotImplementedException();
         }
     }
+
+    public class EmployeeStatusConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is int status)
+            {
+                return status == 1 ? "Đang làm" : "Nghỉ làm";
+            }
+            return "Nghỉ làm";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class EmployeeStatusColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is int status)
+            {
+                return status == 1 
+                    ? new SolidColorBrush(Color.FromArgb(255, 16, 185, 129)) // Green
+                    : new SolidColorBrush(Color.FromArgb(255, 239, 68, 68));  // Red
+            }
+            return new SolidColorBrush(Colors.Gray);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

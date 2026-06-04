@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Helpers.Enums;
+using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.CustomerDTOs;
 using BookStore_Management_AppDesktop.Models.DTOs.InvoiceDTOs;
@@ -59,6 +59,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty]
         private ObservableCollection<CustomerResponseDto> customers = new();
 
+        [ObservableProperty]
+        private ObservableCollection<VoucherDto> vouchers = new();
+
         public SaleCartViewModel(INavigationService navigationService, ICartService cartService, 
                                IInvoiceApiService invoiceApiService, IDialogService dialogService, IVoucherApiService voucherApiService
                                , ICustomerApiService customerApiService)
@@ -77,6 +80,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
             CartItems.CollectionChanged += CartItems_CollectionChanged;
             _ = LoadCustomers();
+            _ = LoadVouchers();
         }
 
         private async Task LoadCustomers()
@@ -94,6 +98,24 @@ namespace BookStore_Management_AppDesktop.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error loading customers: {ex.Message}");
+            }
+        }
+
+        private async Task LoadVouchers()
+        {
+            if (_voucherApiService == null) return;
+
+            try
+            {
+                var list = await _voucherApiService.GetAllVouchersAsync();
+                if (list != null)
+                {
+                    Vouchers = new ObservableCollection<VoucherDto>(list);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading vouchers: {ex.Message}");
             }
         }
 

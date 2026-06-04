@@ -109,6 +109,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<LoginWindow>();
             services.AddTransient<AddBookWindow>(); 
             services.AddTransient<EditBookWindow>();
+            services.AddTransient<AddCustomerWindow>();
             services.AddTransient<BookPage>();
             services.AddTransient<SaleCartPage>();
             services.AddTransient<InventoryPage>();

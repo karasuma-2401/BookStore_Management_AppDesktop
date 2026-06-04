@@ -1,13 +1,19 @@
-﻿<Page x:Class="BookStore_Management_AppDesktop.Views.Pages.EmployeePage"
+<Page x:Class="BookStore_Management_AppDesktop.Views.Pages.EmployeePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:converters="clr-namespace:BookStore_Management_AppDesktop.Converters"
       mc:Ignorable="d" 
       Background="{DynamicResource ContentBackgroundBrush}" 
       d:DesignHeight="700" d:DesignWidth="1000"
       Title="EmployeePage">
+
+    <Page.Resources>
+        <converters:EmployeeStatusConverter x:Key="EmployeeStatusConverter"/>
+        <converters:EmployeeStatusColorConverter x:Key="EmployeeStatusColorConverter"/>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -238,6 +244,18 @@
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                     <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                                     <Setter Property="ToolTip" Value="{Binding Address}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status, Converter={StaticResource EmployeeStatusConverter}}" Width="120">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Foreground" Value="{Binding Status, Converter={StaticResource EmployeeStatusColorConverter}}"/>
+                                    <Setter Property="Margin" Value="5,0"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>

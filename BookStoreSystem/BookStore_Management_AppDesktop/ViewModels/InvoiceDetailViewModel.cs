@@ -129,15 +129,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     var amount = dialog.PaymentAmount;
                     if (amount > Invoice.RemainingAmount)
                     {
-                        var confirm = MessageBox.Show($"The payment amount ({amount:N0}đ) exceeds the remaining due ({Invoice.RemainingAmount:N0}đ). Do you want to pay {Invoice.RemainingAmount:N0}đ instead?", "Confirm Amount", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                        if (confirm == MessageBoxResult.Yes)
-                        {
-                            amount = Invoice.RemainingAmount;
-                        }
-                        else
-                        {
-                            return;
-                        }
+                        MessageBox.Show($"The payment amount ({amount:N0}đ) cannot exceed the remaining due ({Invoice.RemainingAmount:N0}đ).", "Invalid Amount", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
                     }
 
                     try

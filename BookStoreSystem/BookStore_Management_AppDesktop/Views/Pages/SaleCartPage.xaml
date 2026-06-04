@@ -577,13 +577,16 @@
                             BorderBrush="#232D42"
                             BorderThickness="1"
                             CornerRadius="6">
-                            <ui:TextBox
-                                Padding="10,0"
-                                VerticalAlignment="Center"
+                            <ComboBox
+                                Margin="5,0"
                                 VerticalContentAlignment="Center"
                                 Background="Transparent"
                                 BorderThickness="0"
-                                Text="{Binding VoucherCodeInput, Mode=TwoWay}" />
+                                DisplayMemberPath="Code"
+                                Foreground="#FFFFFF"
+                                ItemsSource="{Binding Vouchers}"
+                                SelectedValue="{Binding VoucherCodeInput, Mode=TwoWay}"
+                                SelectedValuePath="Code" />
                         </Border>
 
                         <Button

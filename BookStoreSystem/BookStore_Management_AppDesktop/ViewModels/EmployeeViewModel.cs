@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -178,8 +178,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
             if (employee == null) return;
 
             bool isConfirmed = _dialogService.ShowConfirmation(
-                message: $"Are you sure you want to delete employee '{employee.FullName}'?\nThis action cannot be undone.",
-                confirmText: "Delete",
+                message: $"Are you sure you want to change status of '{employee.FullName}' to Resigned (Nghỉ làm)?",
+                confirmText: "Change",
                 isDanger: true);
 
             if (isConfirmed)
@@ -190,23 +190,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
                     if (isEmployeeDeleted)
                     {
-                        bool isUserDeleted = await DeleteUserAccountAsync(employee.UserId);
-
-                        _allEmployees.Remove(employee);
+                        // Soft delete: update status to 0 locally
+                        employee.Status = 0;
                         UpdateDisplayList();
-
-                        if (isUserDeleted)
-                        {
-                            _dialogService.ShowMessage("Employee and associated User account deleted successfully!");
-                        }
-                        else
-                        {
-                            _dialogService.ShowMessage("Employee deleted, but the User account could not be removed. It might be in use elsewhere.");
-                        }
+                        _dialogService.ShowMessage("Employee status updated to Resigned (Nghỉ làm) successfully!");
                     }
                     else
                     {
-                        _dialogService.ShowMessage("Failed to delete the Employee record.");
+                        _dialogService.ShowMessage("Failed to update employee status.");
                     }
                 }
                 catch (Exception ex)
