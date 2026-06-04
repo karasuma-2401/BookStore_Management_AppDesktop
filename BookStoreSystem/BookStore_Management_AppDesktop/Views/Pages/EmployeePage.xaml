@@ -298,6 +298,19 @@
                                                     </MenuItem.Icon>
                                                 </MenuItem>
 
+                                                <Separator Background="#333333" Margin="5,2" Height="1"/>
+
+                                                <MenuItem Header="Change Password" 
+                                                          Height="30"
+                                                          Padding="5,0,10,0"
+                                                          Command="{Binding PlacementTarget.Tag.ChangePasswordCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                          CommandParameter="{Binding}"
+                                                          Foreground="{DynamicResource TextPrimaryBrush}">
+                                                    <MenuItem.Icon>
+                                                        <ui:SymbolIcon Symbol="Password24" FontSize="16" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+
                                             </ContextMenu>
                                         </ui:Button.ContextMenu>
                                     </ui:Button>

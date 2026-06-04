@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Http;
 using BookStore_Management_AppDesktop.Services;
+using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.Services.API.EmployeeServices;
 
 namespace BookStore_Management_AppDesktop.ViewModels
@@ -18,6 +19,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly IEmployeeApiService _apiService;
         private readonly IDialogService _dialogService;
+        private readonly IUserApiService _userApiService;
         private List<Employee> _allEmployees = new();
         private CancellationTokenSource? _searchCts;
 
@@ -45,10 +47,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         public List<int> PageSizeOptions { get; set; } = new List<int> { 5, 8, 10, 12, 15 };
 
-        public EmployeeViewModel(IEmployeeApiService apiService, IDialogService dialogService)
+        public EmployeeViewModel(IEmployeeApiService apiService, IDialogService dialogService, IUserApiService userApiService)
         {
             _apiService = apiService;
             _dialogService = dialogService;
+            _userApiService = userApiService;
             _ = InitializeDataAsync();
         }
 
@@ -254,6 +257,38 @@ namespace BookStore_Management_AppDesktop.ViewModels
             var addWin = new BookStore_Management_AppDesktop.Views.Windows.AddEmployeeWindow();
             if (Application.Current.MainWindow != null) addWin.Owner = Application.Current.MainWindow;
             if (addWin.ShowDialog() == true) await InitializeDataAsync();
+        }
+
+        [RelayCommand]
+        private async Task ChangePassword(Employee employee)
+        {
+            if (employee == null) return;
+
+            var dialog = new BookStore_Management_AppDesktop.Views.Windows.ChangeEmployeePasswordDialog(employee.FullName);
+            if (Application.Current.MainWindow != null)
+            {
+                dialog.Owner = Application.Current.MainWindow;
+            }
+
+            if (dialog.ShowDialog() == true)
+            {
+                try
+                {
+                    var result = await _userApiService.AdminChangeStaffPasswordAsync(employee.UserId, dialog.NewPassword);
+                    if (result.IsSuccess)
+                    {
+                        _dialogService.ShowMessage("Employee password updated successfully!");
+                    }
+                    else
+                    {
+                        _dialogService.ShowMessage($"Failed to update password: {result.Message}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _dialogService.ShowMessage($"Error: {ex.Message}");
+                }
+            }
         }
 
         [RelayCommand]
