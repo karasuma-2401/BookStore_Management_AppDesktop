@@ -10,6 +10,8 @@ namespace BookStoreManagement.API.Hubs
         Task BookDeleted(int bookId);
         Task InventoryStockChanged(int bookId, int newQuantity);
         Task ImportCreated();
+
+        Task AuthorUpdated(int authorId, string newName);
     }
 
     public class BookHub : Hub<IBookHubClient>

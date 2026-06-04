@@ -53,6 +53,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             _hubService.BookDeleted += (id) => RefreshInventoryGrid();
             _hubService.BookUpdated += (id) => RefreshInventoryGrid();
             _hubService.InventoryStockChanged += (id, qty) => RefreshInventoryGrid();
+            _hubService.AuthorUpdated += (id, name) => RefreshInventoryGrid();
         }
 
         private void RefreshInventoryGrid()

@@ -1,10 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
-using BookStoreManagement.API.Services.Interfaces;
 using BookStoreManagement.API.DTOs.Authors;
+using BookStoreManagement.API.Hubs;
 using BookStoreManagement.API.Models.Entities;
+using BookStoreManagement.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookStoreManagement.API.Controllers
 {
@@ -14,10 +16,12 @@ namespace BookStoreManagement.API.Controllers
     public class AuthorsController : ControllerBase
     {
         private readonly IAuthorService _service;
+        private readonly IHubContext<BookHub, IBookHubClient> _hubContext;
 
-        public AuthorsController(IAuthorService service)
+        public AuthorsController(IAuthorService service, IHubContext<BookHub, IBookHubClient> hubContext)
         {
             _service = service;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -45,17 +49,15 @@ namespace BookStoreManagement.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] AuthorUpdateDto dto)
         {
-            var author = new Author
-            {
-                AuthorId = id,
-                Name = dto.Name
-            };
-
+            var author = new Author { AuthorId = id, Name = dto.Name };
+            
             var isSuccess = await _service.Update(id, author);
             if (!isSuccess)
             {
                 return BadRequest("Update failed. Author ID mismatch or not found.");
             }
+
+            await _hubContext.Clients.All.AuthorUpdated(id, dto.Name);
 
             return Ok(new { message = "Author updated successfully." });
         }
