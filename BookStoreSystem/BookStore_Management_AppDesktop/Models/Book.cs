@@ -23,5 +23,8 @@ namespace BookStore_Management_AppDesktop.Models
         // Category: 
         public List<string> CategoryNames { get; set; } = new();
         public List<int> CategoryIds { get; set; } = new();
+        public string DisplayCategoryNames => CategoryNames != null && CategoryNames.Any()
+            ? string.Join(", ", CategoryNames)
+            : "Uncategorized";
     }
 }
