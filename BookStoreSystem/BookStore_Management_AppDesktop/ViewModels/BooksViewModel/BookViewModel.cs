@@ -40,6 +40,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private Book? _currentDetailBook;
         [ObservableProperty] private int _selectedQuantity = 1;
         [ObservableProperty] private bool _isDetailLoading;
+        public decimal TotalPrice => (CurrentDetailBook?.Price ?? 0) * SelectedQuantity;
 
 
         public BookViewModel(
@@ -187,6 +188,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             IsDetailPanelOpen = true;
 
             await RefreshPanelDetailAsync(selectedBook.BookId);
+            OnPropertyChanged(nameof(TotalPrice));
         }
 
         private async Task RefreshPanelDetailAsync(int bookId)
@@ -198,6 +200,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 if (bookDetail != null)
                 {
                     CurrentDetailBook = bookDetail;
+                    OnPropertyChanged(nameof(TotalPrice));
                 }
             }
             catch (Exception ex)
@@ -218,12 +221,20 @@ namespace BookStore_Management_AppDesktop.ViewModels
         }
 
         [RelayCommand]
-        private void IncreaseQuantity() => SelectedQuantity++;
+        private void IncreaseQuantity()
+        {
+            SelectedQuantity++;
+            OnPropertyChanged(nameof(TotalPrice));
+        }
 
         [RelayCommand]
         private void DecreaseQuantity()
         {
-            if (SelectedQuantity > 1) SelectedQuantity--;
+            if (SelectedQuantity > 1)
+            {
+                SelectedQuantity--;
+                OnPropertyChanged(nameof(TotalPrice));
+            }
         }
 
         [RelayCommand]
@@ -272,5 +283,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 await ExecuteSearchAsync();
             }
         }
+
     }
 }
