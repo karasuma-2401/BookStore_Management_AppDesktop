@@ -7,6 +7,7 @@ using BookStore_Management_AppDesktop.Services.Navigation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,12 +23,17 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty]
         private InvoiceDetailResponseDto? invoice;
 
+        [ObservableProperty]
+        private ObservableCollection<PaymentResponseDto> paymentHistory = new();
+
         partial void OnInvoiceChanged(InvoiceDetailResponseDto? value)
         {
             OnPropertyChanged(nameof(IsPaymentButtonVisible));
+            OnPropertyChanged(nameof(IsPaymentHistoryVisible));
         }
 
-        public bool IsPaymentButtonVisible => Invoice != null && Invoice.CustomerName != null && Invoice.CustomerName != "Guest" && Invoice.RemainingAmount > 0;
+        public bool IsPaymentButtonVisible => Invoice != null && Invoice.CustomerId != null && Invoice.CustomerId > 0 && Invoice.RemainingAmount > 0;
+        public bool IsPaymentHistoryVisible => Invoice != null && Invoice.CustomerId != null && Invoice.CustomerId > 0;
 
         [ObservableProperty]
         private bool isLoading;
@@ -70,6 +76,36 @@ namespace BookStore_Management_AppDesktop.ViewModels
             {
                 Debug.WriteLine($"ExportInvoice Error: {ex.Message}");
                 MessageBox.Show($"An error occurred while exporting the invoice: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        [RelayCommand]
+        private async Task ExportPaymentHistory()
+        {
+            if (Invoice == null)
+            {
+                MessageBox.Show("Invoice data is still loading or not found.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                IsLoading = true;
+                var paymentList = new System.Collections.Generic.List<PaymentResponseDto>(PaymentHistory);
+                bool isExported = await _invoiceExportService.ExportPaymentHistoryToExcelAsync(Invoice, paymentList);
+                if (isExported)
+                {
+                    Debug.WriteLine($"Payment History for Invoice #{Invoice.InvoiceId} successfully generated.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"ExportPaymentHistory Error: {ex.Message}");
+                MessageBox.Show($"An error occurred while exporting payment history: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -176,6 +212,25 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 if (result != null)
                 {
                     Invoice = result;
+                    if (result.CustomerId != null && result.CustomerId > 0)
+                    {
+                        var payments = await _invoiceApiService.GetPaymentsByInvoiceIdAsync(invoiceId);
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            PaymentHistory = new ObservableCollection<PaymentResponseDto>(payments);
+                            OnPropertyChanged(nameof(IsPaymentButtonVisible));
+                            OnPropertyChanged(nameof(IsPaymentHistoryVisible));
+                        });
+                    }
+                    else
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            PaymentHistory = new ObservableCollection<PaymentResponseDto>();
+                            OnPropertyChanged(nameof(IsPaymentButtonVisible));
+                            OnPropertyChanged(nameof(IsPaymentHistoryVisible));
+                        });
+                    }
                 }
                 else
                 {

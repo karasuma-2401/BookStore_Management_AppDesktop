@@ -160,6 +160,28 @@ namespace BookStore_Management_AppDesktop.Services.API
             }
         }
 
+        public async Task<List<PaymentResponseDto>> GetPaymentsByInvoiceIdAsync(int invoiceId)
+        {
+            try
+            {
+                AddAuthorizationHeader();
+                var response = await _httpClient.GetAsync($"payment/invoice/{invoiceId}");
+
+                if (!response.IsSuccessStatusCode)
+                    return new List<PaymentResponseDto>();
+
+                var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var json = await response.Content.ReadAsStringAsync();
+                return System.Text.Json.JsonSerializer.Deserialize<List<PaymentResponseDto>>(json, options) 
+                       ?? new List<PaymentResponseDto>();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"GetPayments Error: {ex.Message}");
+                return new List<PaymentResponseDto>();
+            }
+        }
+
         private class CreateInvoiceResponse
         {
             public bool Success { get; set; }

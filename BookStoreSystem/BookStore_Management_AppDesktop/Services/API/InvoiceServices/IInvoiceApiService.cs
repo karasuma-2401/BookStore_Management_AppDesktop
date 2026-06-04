@@ -11,5 +11,6 @@ namespace BookStore_Management_AppDesktop.Services.API.InvoiceServices
         Task<bool> CancelInvoiceAsync(int id);
         Task<int?> CreateInvoiceAsync(InvoiceCreateDto invoiceCreateDto);
         Task<bool> RecordPaymentAsync(int invoiceId, decimal amount);
+        Task<List<PaymentResponseDto>> GetPaymentsByInvoiceIdAsync(int invoiceId);
     }
 }

@@ -227,6 +227,56 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+
+                    <!-- Payment History Section -->
+                    <StackPanel Visibility="{Binding IsPaymentHistoryVisible, Converter={StaticResource BoolToVis}}" Margin="0,30,0,0">
+                        <Grid Margin="10,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBlock Grid.Column="0" Text="Payment History" 
+                                       FontSize="18" 
+                                       FontWeight="Bold" 
+                                       Foreground="{DynamicResource NavyPrimaryBrush}" 
+                                       VerticalAlignment="Center"/>
+
+                            <ui:Button Grid.Column="1" Content="Export Payment History" 
+                                       Icon="{ui:SymbolIcon Symbol=DocumentTextLink24}" 
+                                       Appearance="Secondary" 
+                                       Command="{Binding ExportPaymentHistoryCommand}"
+                                       Cursor="Hand"
+                                       Margin="0,0,10,0"/>
+                        </Grid>
+
+                        <Border Background="{DynamicResource CardBackgroundBrush}" 
+                                Margin="10" 
+                                Padding="15" 
+                                CornerRadius="8" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource BorderLightBrush}">
+                            <DataGrid ItemsSource="{Binding PaymentHistory}" 
+                                      AutoGenerateColumns="False" 
+                                      CanUserAddRows="False" 
+                                      IsReadOnly="True" 
+                                      HeadersVisibility="Column"
+                                      Background="Transparent" 
+                                      RowBackground="{DynamicResource CardBackgroundBrush}"
+                                      AlternatingRowBackground="{DynamicResource ContentBackgroundBrush}"
+                                      HorizontalGridLinesBrush="#E2E8F0" 
+                                      VerticalGridLinesBrush="Transparent"
+                                      FontSize="14"
+                                      Foreground="#1E293B">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Payment ID" Binding="{Binding PaymentId}" Width="100"/>
+                                    <DataGridTextColumn Header="Date" Binding="{Binding PaymentDate, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" Width="180"/>
+                                    <DataGridTextColumn Header="Staff" Binding="{Binding StaffName}" Width="180"/>
+                                    <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat='{}{0:N0} VNĐ'}" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+                    </StackPanel>
                 </StackPanel>
             </ScrollViewer>
         </Grid>
