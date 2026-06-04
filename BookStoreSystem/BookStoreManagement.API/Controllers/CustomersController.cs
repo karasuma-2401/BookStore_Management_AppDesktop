@@ -33,6 +33,14 @@ public class CustomersController : ControllerBase
         return Ok(customer);
     }
 
+    // GET /customer/search?keyword=abc
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchCustomers([FromQuery] string? keyword)
+    {
+        var result = await _customerService.SearchCustomers(keyword);
+        return Ok(result);
+    }
+
     // POST /customer
     [HttpPost]
     public async Task<IActionResult> CreateCustomer(CustomerCreateDto dto)
