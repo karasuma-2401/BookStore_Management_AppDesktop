@@ -86,7 +86,7 @@
 
 						<StackPanel Grid.Column="1">
 							<TextBlock Text="Total Payroll" Foreground="#64748B" FontSize="13" Margin="0,0,0,5"/>
-							<TextBlock Text="{Binding TotalPayroll, StringFormat='${0:N0}'}"
+							<TextBlock Text="{Binding TotalPayroll, StringFormat='{}{0:N0} VNĐ'}"
                                        Foreground="#00DC82" FontSize="24" FontWeight="Bold"/>
 						</StackPanel>
 
@@ -126,11 +126,11 @@
 							<DataGridTextColumn Header="Total Assigned" Binding="{Binding TotalAssignedShifts}" Width="120"/>
 							<DataGridTextColumn Header="Worked" Binding="{Binding WorkedShifts}" Width="100"/>
 							<DataGridTextColumn Header="Absent" Binding="{Binding AbsentShifts}" Width="100"/>
-							<DataGridTextColumn Header="Rate Per Shift" Binding="{Binding BaseSalary, StringFormat='${0:N0}'}" Width="130"/>
+							<DataGridTextColumn Header="Rate Per Shift" Binding="{Binding BaseSalary, StringFormat='{}{0:N0} VNĐ'}" Width="130"/>
 							<DataGridTemplateColumn Header="Actual Salary" Width="150">
 								<DataGridTemplateColumn.CellTemplate>
 									<DataTemplate>
-										<TextBlock Text="{Binding ActualSalary, StringFormat='${0:N0}'}" 
+										<TextBlock Text="{Binding ActualSalary, StringFormat='{}{0:N0} VNĐ'}" 
 												   Foreground="#00DC82" FontWeight="Bold" TextAlignment="Right" Padding="10,0"/>
 									</DataTemplate>
 								</DataGridTemplateColumn.CellTemplate>
@@ -156,7 +156,7 @@
 						<StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
 							<StackPanel Margin="0,0,20,0">
 								<TextBlock Text="Total Payroll" Foreground="#64748B" FontSize="13" Margin="0,0,0,3" TextAlignment="Right"/>
-								<TextBlock Text="{Binding TotalPayroll, StringFormat='${0:N0}'}"
+								<TextBlock Text="{Binding TotalPayroll, StringFormat='{}{0:N0} VNĐ'}"
 										   Foreground="{DynamicResource SidebarAccentBrush}" FontSize="20" FontWeight="Bold" TextAlignment="Right"/>
 							</StackPanel>
 						</StackPanel>

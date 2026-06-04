@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Helpers;
+using BookStore_Management_AppDesktop.Helpers;
 using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -24,6 +24,29 @@ namespace BookStore_Management_AppDesktop.ViewModels
             if (Enum.TryParse(pageName, out PageType pageType))
             {
                 _navigationService.NavigateTo(pageType);
+            }
+        }
+
+        [RelayCommand]
+        private void Logout()
+        {
+            // Clear settings or session
+            BookStore_Management_AppDesktop.Settings.Default.AccessToken = string.Empty;
+            BookStore_Management_AppDesktop.Settings.Default.Save();
+            
+            AppSession.CurrentRole = "staff";
+
+            // Navigate to Login
+            _navigationService.NavigateToLoginWindow();
+
+            // Close main window
+            foreach (System.Windows.Window window in System.Windows.Application.Current.Windows)
+            {
+                if (window is BookStore_Management_AppDesktop.Views.Windows.MainWindow)
+                {
+                    window.Close();
+                    break;
+                }
             }
         }
     }

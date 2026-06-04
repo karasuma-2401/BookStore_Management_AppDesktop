@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models.DTOs.InvoiceDTOs;
+using BookStore_Management_AppDesktop.Models.DTOs.InvoiceDTOs;
 using BookStore_Management_AppDesktop.Services.API.InvoiceServices;
 using System.Diagnostics;
 using System.Net.Http;
@@ -142,6 +142,21 @@ namespace BookStore_Management_AppDesktop.Services.API
             {
                 Debug.WriteLine($"CreateInvoice Error: {ex.Message}");
                 return null;
+            }
+        }
+
+        public async Task<bool> RecordPaymentAsync(int invoiceId, decimal amount)
+        {
+            try
+            {
+                AddAuthorizationHeader();
+                var response = await _httpClient.PostAsJsonAsync("payment", new { InvoiceId = invoiceId, Amount = amount });
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"RecordPayment Error: {ex.Message}");
+                return false;
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Helpers.Enums;
+using BookStore_Management_AppDesktop.Helpers.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,5 +15,6 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
 
         void NavigateTo(PageType pageType, object? parameter = null);
         void NavigateToMainWindow();
+        void NavigateToLoginWindow();
     }
 }

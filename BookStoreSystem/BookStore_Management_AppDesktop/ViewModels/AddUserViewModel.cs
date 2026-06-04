@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models.DTOs;
+using BookStore_Management_AppDesktop.Models.DTOs;
 using BookStore_Management_AppDesktop.Services.API;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -35,8 +35,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             // Initial Client-side validation
             if (string.IsNullOrWhiteSpace(NewUser.Username) ||
-                string.IsNullOrWhiteSpace(Password) ||
-                string.IsNullOrWhiteSpace(NewUser.Email))
+                string.IsNullOrWhiteSpace(Password))
             {
                 MessageBox.Show("Please fill in all required fields.", "Notification");
                 return;

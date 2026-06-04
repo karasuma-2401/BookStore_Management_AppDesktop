@@ -1,4 +1,4 @@
-﻿using BookStoreManagement.API.Data;
+using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Models.Enums;
@@ -118,19 +118,29 @@ namespace BookStoreManagement.API.Services
                 invoice.InvoiceDetails = invoiceDetails;
 
 
-                var payment = new Payment
-                {
-                    CustomerId = dto.CustomerId,
-                    UserId = userId,
-                    Amount = finalTotal,
-                    PaymentDate = DateTime.UtcNow,
-                    Invoice = invoice
-                };
-
-
-
                 _context.Invoices.Add(invoice);
-                _context.Payments.Add(payment);
+
+                if (dto.CustomerId.HasValue)
+                {
+                    var customer = await _context.Customers.FindAsync(dto.CustomerId.Value);
+                    if (customer != null)
+                    {
+                        customer.Debt += finalTotal;
+                        _context.Customers.Update(customer);
+                    }
+                }
+                else
+                {
+                    var payment = new Payment
+                    {
+                        CustomerId = dto.CustomerId,
+                        UserId = userId,
+                        Amount = finalTotal,
+                        PaymentDate = DateTime.UtcNow,
+                        Invoice = invoice
+                    };
+                    _context.Payments.Add(payment);
+                }
 
                 var result = await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -165,29 +175,38 @@ namespace BookStoreManagement.API.Services
 
         public async Task<InvoiceDetailResponseDto?> GetInvoiceByIdAsync(int id)
         {
-            return await _context.Invoices
+            var invoice = await _context.Invoices
                 .Include(i => i.Customer)
                 .Include(i => i.User)
                 .Include(i => i.Voucher)
                 .Include(i => i.InvoiceDetails).ThenInclude(d => d.Book)
-                .Where(i => i.InvoiceId == id)
-                .Select(i => new InvoiceDetailResponseDto
+                .FirstOrDefaultAsync(i => i.InvoiceId == id);
+
+            if (invoice == null) return null;
+
+            var paidAmount = await _context.Payments
+                .Where(p => p.InvoiceId == id)
+                .SumAsync(p => p.Amount);
+
+            return new InvoiceDetailResponseDto
+            {
+                InvoiceId = invoice.InvoiceId,
+                InvoiceDate = invoice.InvoiceDate,
+                Total = invoice.Total,
+                CustomerName = invoice.Customer != null ? invoice.Customer.Name : "Guest",
+                StaffName = invoice.User.FullName,
+                VoucherCode = invoice.Voucher != null ? invoice.Voucher.Code : null,
+                TotalItems = invoice.InvoiceDetails.Sum(d => d.Quantity),
+                Status = invoice.Status.ToString(),
+                PaidAmount = paidAmount,
+                RemainingAmount = invoice.Total - paidAmount,
+                Items = invoice.InvoiceDetails.Select(d => new InvoiceItemDto
                 {
-                    InvoiceId = i.InvoiceId,
-                    InvoiceDate = i.InvoiceDate,
-                    Total = i.Total,
-                    CustomerName = i.Customer != null ? i.Customer.Name : "Guest",
-                    StaffName = i.User.FullName,
-                    VoucherCode = i.Voucher != null ? i.Voucher.Code : null,
-                    TotalItems = i.InvoiceDetails.Sum(d => d.Quantity),
-                    Items = i.InvoiceDetails.Select(d => new InvoiceItemDto
-                    {
-                        BookTitle = d.Book != null ? d.Book.Title : "Unknown Book",
-                        Quantity = d.Quantity,
-                        SalePrice = d.SalePrice
-                    }).ToList()
-                })
-                .FirstOrDefaultAsync();
+                    BookTitle = d.Book != null ? d.Book.Title : "Unknown Book",
+                    Quantity = d.Quantity,
+                    SalePrice = d.SalePrice
+                }).ToList()
+            };
         }
 
         public async Task<bool> CancelInvoiceAsync(int id)

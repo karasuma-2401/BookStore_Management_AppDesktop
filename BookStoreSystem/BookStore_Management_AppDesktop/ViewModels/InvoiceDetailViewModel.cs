@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Helpers.Enums;
+using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Models.DTOs.InvoiceDTOs;
 using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.Services.API.InvoiceServices;
@@ -21,6 +21,13 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         [ObservableProperty]
         private InvoiceDetailResponseDto? invoice;
+
+        partial void OnInvoiceChanged(InvoiceDetailResponseDto? value)
+        {
+            OnPropertyChanged(nameof(IsPaymentButtonVisible));
+        }
+
+        public bool IsPaymentButtonVisible => Invoice != null && Invoice.CustomerName != null && Invoice.CustomerName != "Guest" && Invoice.RemainingAmount > 0;
 
         [ObservableProperty]
         private bool isLoading;
@@ -105,6 +112,60 @@ namespace BookStore_Management_AppDesktop.ViewModels
             {
                 IsLoading = false;
             }
+        }
+
+        [RelayCommand]
+        private async Task RecordPayment()
+        {
+            if (Invoice == null) return;
+
+            // Run on UI thread because it shows a Window dialog
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                var dialog = new BookStore_Management_AppDesktop.Views.Windows.PaymentDialog(Invoice.RemainingAmount);
+                dialog.Owner = Application.Current.MainWindow;
+                if (dialog.ShowDialog() == true)
+                {
+                    var amount = dialog.PaymentAmount;
+                    if (amount > Invoice.RemainingAmount)
+                    {
+                        var confirm = MessageBox.Show($"The payment amount ({amount:N0}đ) exceeds the remaining due ({Invoice.RemainingAmount:N0}đ). Do you want to pay {Invoice.RemainingAmount:N0}đ instead?", "Confirm Amount", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (confirm == MessageBoxResult.Yes)
+                        {
+                            amount = Invoice.RemainingAmount;
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+
+                    try
+                    {
+                        IsLoading = true;
+                        bool success = await _invoiceApiService.RecordPaymentAsync(Invoice.InvoiceId, amount);
+                        if (success)
+                        {
+                            MessageBox.Show("Payment recorded successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                            // Reload invoice data
+                            await LoadInvoiceAsync(Invoice.InvoiceId);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to record payment.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"RecordPayment Error: {ex.Message}");
+                        MessageBox.Show("An error occurred while saving payment: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    finally
+                    {
+                        IsLoading = false;
+                    }
+                }
+            });
         }
 
         /// <summary>
