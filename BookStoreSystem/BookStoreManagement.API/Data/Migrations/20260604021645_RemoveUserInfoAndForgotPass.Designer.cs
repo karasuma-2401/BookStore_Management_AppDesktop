@@ -9,11 +9,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BookStoreManagement.API.Migrations
+namespace BookStoreManagement.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20260308121017_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260604021645_RemoveUserInfoAndForgotPass")]
+    partial class RemoveUserInfoAndForgotPass
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace BookStoreManagement.API.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Author", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Author", b =>
                 {
                     b.Property<int>("AuthorId")
                         .ValueGeneratedOnAdd()
@@ -45,7 +45,7 @@ namespace BookStoreManagement.API.Migrations
                     b.ToTable("authors");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Book", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Book", b =>
                 {
                     b.Property<int>("BookId")
                         .ValueGeneratedOnAdd()
@@ -57,6 +57,19 @@ namespace BookStoreManagement.API.Migrations
                     b.Property<int?>("AuthorId")
                         .HasColumnType("integer")
                         .HasColumnName("author_id");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("image_path");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(12,2)")
+                        .HasColumnName("price");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer")
@@ -75,7 +88,7 @@ namespace BookStoreManagement.API.Migrations
                     b.ToTable("books");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.BookCategory", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.BookCategory", b =>
                 {
                     b.Property<int>("BookId")
                         .HasColumnType("integer")
@@ -92,7 +105,7 @@ namespace BookStoreManagement.API.Migrations
                     b.ToTable("book_categories");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Category", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Category", b =>
                 {
                     b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
@@ -112,7 +125,7 @@ namespace BookStoreManagement.API.Migrations
                     b.ToTable("categories");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Customer", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Customer", b =>
                 {
                     b.Property<int>("CustomerId")
                         .ValueGeneratedOnAdd()
@@ -129,10 +142,18 @@ namespace BookStoreManagement.API.Migrations
                         .HasColumnType("decimal(12,2)")
                         .HasColumnName("debt");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
                     b.Property<string>("Email")
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)")
                         .HasColumnName("email");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -150,7 +171,102 @@ namespace BookStoreManagement.API.Migrations
                     b.ToTable("customers");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Import", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Employee", b =>
+                {
+                    b.Property<int>("EmployeeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("employee_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("EmployeeId"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("address");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("integer")
+                        .HasColumnName("age");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("full_name");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("phone");
+
+                    b.Property<decimal>("Salary")
+                        .HasColumnType("decimal(12,2)")
+                        .HasColumnName("salary");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("EmployeeId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("Employees_UserId");
+
+                    b.ToTable("employees");
+                });
+
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.EmployeeShift", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CheckInTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("check_in_time");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("employee_id");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_paid");
+
+                    b.Property<int>("ShiftId")
+                        .HasColumnType("integer")
+                        .HasColumnName("shift_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("status");
+
+                    b.Property<DateTime>("WorkDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("work_date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ShiftId");
+
+                    b.ToTable("employee_shifts");
+                });
+
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Import", b =>
                 {
                     b.Property<int>("ImportId")
                         .ValueGeneratedOnAdd()
@@ -158,6 +274,10 @@ namespace BookStoreManagement.API.Migrations
                         .HasColumnName("import_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ImportId"));
+
+                    b.Property<DateTime>("ImportDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("import_date");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer")
@@ -170,7 +290,7 @@ namespace BookStoreManagement.API.Migrations
                     b.ToTable("imports");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.ImportDetail", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.ImportDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,7 +324,7 @@ namespace BookStoreManagement.API.Migrations
                     b.ToTable("import_details");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Invoice", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Invoice", b =>
                 {
                     b.Property<int>("InvoiceId")
                         .ValueGeneratedOnAdd()
@@ -221,13 +341,21 @@ namespace BookStoreManagement.API.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("invoice_date");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(12,2)")
                         .HasColumnName("total");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer")
                         .HasColumnName("user_id");
+
+                    b.Property<int?>("VoucherId")
+                        .HasColumnType("integer")
+                        .HasColumnName("voucher_id");
 
                     b.HasKey("InvoiceId");
 
@@ -235,10 +363,12 @@ namespace BookStoreManagement.API.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("VoucherId");
+
                     b.ToTable("invoices");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.InvoiceDetail", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.InvoiceDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -272,7 +402,7 @@ namespace BookStoreManagement.API.Migrations
                     b.ToTable("invoice_details");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Payment", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Payment", b =>
                 {
                     b.Property<int>("PaymentId")
                         .ValueGeneratedOnAdd()
@@ -285,9 +415,13 @@ namespace BookStoreManagement.API.Migrations
                         .HasColumnType("decimal(12,2)")
                         .HasColumnName("amount");
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("integer")
                         .HasColumnName("customer_id");
+
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("integer")
+                        .HasColumnName("invoice_id");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("timestamp with time zone")
@@ -301,12 +435,42 @@ namespace BookStoreManagement.API.Migrations
 
                     b.HasIndex("CustomerId");
 
+                    b.HasIndex("InvoiceId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("payments");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.User", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Shift", b =>
+                {
+                    b.Property<int>("ShiftId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("shift_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ShiftId"));
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("interval")
+                        .HasColumnName("end_time");
+
+                    b.Property<string>("ShiftName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("shift_name");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("interval")
+                        .HasColumnName("start_time");
+
+                    b.HasKey("ShiftId");
+
+                    b.ToTable("shifts");
+                });
+
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
@@ -319,11 +483,6 @@ namespace BookStoreManagement.API.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("FullName")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("full_name");
-
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text")
@@ -334,6 +493,10 @@ namespace BookStoreManagement.API.Migrations
                         .HasColumnType("text")
                         .HasColumnName("role_id");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -342,6 +505,9 @@ namespace BookStoreManagement.API.Migrations
 
                     b.HasKey("UserId");
 
+                    b.HasIndex("Username")
+                        .IsUnique();
+
                     b.ToTable("users");
 
                     b.HasData(
@@ -349,23 +515,71 @@ namespace BookStoreManagement.API.Migrations
                         {
                             UserId = 1,
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            FullName = "Adminstrator",
-                            PasswordHash = "123",
+                            PasswordHash = "$2a$12$D1vG.G0.iA22bZ3hU.Z8/e2xK.6kX4A1X.N/H.8H.J.K.U.V.Q.C.q",
                             RoleId = "admin",
+                            Status = 1,
                             Username = "admin"
                         });
                 });
 
-
-            modelBuilder.Entity("BookStoreManagement.API.Models.BookCategory", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Voucher", b =>
                 {
-                    b.HasOne("BookStoreManagement.API.Models.Book", "Book")
+                    b.Property<int>("VoucherId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("voucher_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("VoucherId"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("code");
+
+                    b.Property<decimal?>("DiscountAmount")
+                        .HasColumnType("decimal(10,2)")
+                        .HasColumnName("discount_amount");
+
+                    b.Property<int?>("DiscountPercent")
+                        .HasColumnType("integer")
+                        .HasColumnName("discount_percent");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expiry_date");
+
+                    b.Property<int?>("UsageLimit")
+                        .HasColumnType("integer")
+                        .HasColumnName("usage_limit");
+
+                    b.Property<int>("UsedCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("used_count");
+
+                    b.HasKey("VoucherId");
+
+                    b.ToTable("vouchers");
+                });
+
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Book", b =>
+                {
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Author", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorId");
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.BookCategory", b =>
+                {
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Book", "Book")
                         .WithMany("BookCategories")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookStoreManagement.API.Models.Category", "Category")
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Category", "Category")
                         .WithMany("BookCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -376,9 +590,39 @@ namespace BookStoreManagement.API.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Import", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Employee", b =>
                 {
-                    b.HasOne("BookStoreManagement.API.Models.User", "User")
+                    b.HasOne("BookStoreManagement.API.Models.Entities.User", "User")
+                        .WithOne("Employee")
+                        .HasForeignKey("BookStoreManagement.API.Models.Entities.Employee", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.EmployeeShift", b =>
+                {
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Shift", "Shift")
+                        .WithMany()
+                        .HasForeignKey("ShiftId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Shift");
+                });
+
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Import", b =>
+                {
+                    b.HasOne("BookStoreManagement.API.Models.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -387,15 +631,15 @@ namespace BookStoreManagement.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.ImportDetail", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.ImportDetail", b =>
                 {
-                    b.HasOne("BookStoreManagement.API.Models.Book", "Book")
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookStoreManagement.API.Models.Import", "Import")
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Import", "Import")
                         .WithMany("ImportDetails")
                         .HasForeignKey("ImportId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -406,31 +650,39 @@ namespace BookStoreManagement.API.Migrations
                     b.Navigation("Import");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Invoice", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Invoice", b =>
                 {
-                    b.HasOne("BookStoreManagement.API.Models.Customer", "Customer")
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Customer", "Customer")
                         .WithMany("Invoices")
                         .HasForeignKey("CustomerId");
 
-                    b.HasOne("BookStoreManagement.API.Models.User", "User")
+                    b.HasOne("BookStoreManagement.API.Models.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Voucher", "Voucher")
+                        .WithMany()
+                        .HasForeignKey("VoucherId");
 
                     b.Navigation("Customer");
 
                     b.Navigation("User");
+
+                    b.Navigation("Voucher");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.InvoiceDetail", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.InvoiceDetail", b =>
                 {
-                    b.HasOne("BookStoreManagement.API.Models.Book", "Book")
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookStoreManagement.API.Models.Invoice", "Invoice")
-                        .WithMany()
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Invoice", "Invoice")
+                        .WithMany("InvoiceDetails")
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -440,48 +692,64 @@ namespace BookStoreManagement.API.Migrations
                     b.Navigation("Invoice");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Payment", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Payment", b =>
                 {
-                    b.HasOne("BookStoreManagement.API.Models.Customer", "Customer")
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Customer", "Customer")
                         .WithMany("Payments")
-                        .HasForeignKey("CustomerId")
+                        .HasForeignKey("CustomerId");
+
+                    b.HasOne("BookStoreManagement.API.Models.Entities.Invoice", "Invoice")
+                        .WithMany()
+                        .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookStoreManagement.API.Models.User", "User")
+                    b.HasOne("BookStoreManagement.API.Models.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Customer");
 
+                    b.Navigation("Invoice");
+
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Author", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Author", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Book", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Book", b =>
                 {
                     b.Navigation("BookCategories");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Category", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Category", b =>
                 {
                     b.Navigation("BookCategories");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Customer", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Customer", b =>
                 {
                     b.Navigation("Invoices");
 
                     b.Navigation("Payments");
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Import", b =>
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Import", b =>
                 {
                     b.Navigation("ImportDetails");
+                });
+
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.Invoice", b =>
+                {
+                    b.Navigation("InvoiceDetails");
+                });
+
+            modelBuilder.Entity("BookStoreManagement.API.Models.Entities.User", b =>
+                {
+                    b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,6 +12,8 @@ namespace BookStoreManagement.API.Data
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Author> Authors { get; set; }
+
+        public DbSet<BookAuthor> BookAuthors { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<BookCategory> BookCategories { get; set; }
@@ -25,10 +27,40 @@ namespace BookStoreManagement.API.Data
         public DbSet<Shift> Shifts { get; set;  }
         public DbSet<EmployeeShift> EmployeeShifts { get; set; }
         public DbSet<Voucher> Vouchers { get; set; }
-
+        public DbSet<InventoryReport> InventoryReports { get; set; }
+        public DbSet<DebtReport> DebtReports { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<BookAuthor>()
+            .HasKey(ba => new { ba.BookId, ba.AuthorId });
+
+            modelBuilder.Entity<InventoryReport>()
+            .HasOne(i => i.Book)
+            .WithMany()
+            .HasForeignKey(i => i.BookId);
+
+            modelBuilder.Entity<DebtReport>()
+                .HasOne(d => d.Customer)
+                .WithMany()
+                .HasForeignKey(d => d.CustomerId);
+
+            modelBuilder.Entity<InventoryReport>()
+                .HasIndex(i => new { i.Month, i.Year, i.BookId })
+                .IsUnique();
+
+            modelBuilder.Entity<DebtReport>()
+                .HasIndex(d => new { d.Month, d.Year, d.CustomerId })
+                .IsUnique();
+            modelBuilder.Entity<BookAuthor>()
+                .HasOne(ba => ba.Book)
+                .WithMany(b => b.BookAuthors)
+                .HasForeignKey(ba => ba.BookId);
+
+            modelBuilder.Entity<BookAuthor>()
+                .HasOne(ba => ba.Author)
+                .WithMany(a => a.BookAuthors)
+                .HasForeignKey(ba => ba.AuthorId);
             modelBuilder.Entity<BookCategory>()
                 .HasKey(bc => new {bc.BookId, bc.CategoryId});
 
@@ -44,8 +76,6 @@ namespace BookStoreManagement.API.Data
                     Username = "admin",
                     // remember hash password by brcypt
                     PasswordHash = "$2a$12$D1vG.G0.iA22bZ3hU.Z8/e2xK.6kX4A1X.N/H.8H.J.K.U.V.Q.C.q",
-                    FullName = "Adminstrator",
-                    Email = "truongnhattien222@gmail.com",
                     RoleId = "admin",
                     CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
                 }

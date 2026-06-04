@@ -15,13 +15,26 @@ namespace BookStoreManagement.API.Services
             _context = context;
         }
 
-        public async Task<object> GetBooks(int? categoryId, int? authorId, string? keyword, string? sortBy, string? sortOrder, int page,  int pageSize)
+        public async Task<object> GetBooks(
+            int? categoryId,
+            int? authorId,
+            string? keyword,
+            string? sortBy,
+            string? sortOrder,
+            int page,
+            int pageSize)
         {
-            var query = _context.Books.AsQueryable();
+            var query = _context.Books
+                .Include(b => b.BookAuthors)
+                    .ThenInclude(ba => ba.Author)
+                .Include(b => b.BookCategories)
+                    .ThenInclude(bc => bc.Category)
+                .AsQueryable();
 
             if (authorId.HasValue)
             {
-                query = query.Where(b => b.AuthorId == authorId.Value);
+                query = query.Where(b =>
+                    b.BookAuthors.Any(ba => ba.AuthorId == authorId.Value));
             }
 
             if (categoryId.HasValue)
@@ -32,30 +45,23 @@ namespace BookStoreManagement.API.Services
 
             if (!string.IsNullOrEmpty(keyword))
             {
-                query = query.Where(b => b.Title.Contains(keyword));
+                query = query.Where(b =>
+                    EF.Functions.ILike(b.Title, $"%{keyword}%"));
             }
 
-            if (!string.IsNullOrEmpty(sortBy))
+            query = sortBy?.ToLower() switch
             {
-                switch (sortBy.ToLower())
-                {
-                    case "price":
-                        query = sortOrder == "desc"
-                            ? query.OrderByDescending(b => b.Price)
-                            : query.OrderBy(b => b.Price);
-                        break;
+                "price" => sortOrder == "desc"
+                    ? query.OrderByDescending(b => b.Price)
+                    : query.OrderBy(b => b.Price),
 
-                    case "title":
-                        query = sortOrder == "desc"
-                            ? query.OrderByDescending(b => b.Title)
-                            : query.OrderBy(b => b.Title);
-                        break;
+                "title" => sortOrder == "desc"
+                    ? query.OrderByDescending(b => b.Title)
+                    : query.OrderBy(b => b.Title),
 
-                    default:
-                        query = query.OrderBy(b => b.BookId);
-                        break;
-                }
-            }
+                _ => query.OrderBy(b => b.BookId)
+            };
+
             var totalItems = await query.CountAsync();
 
             var books = await query
@@ -65,16 +71,27 @@ namespace BookStoreManagement.API.Services
                 {
                     BookId = b.BookId,
                     Title = b.Title,
-                    AuthorId = b.AuthorId,
-                    AuthorName = b.Author != null ? b.Author.Name : null,
+                    PublishYear = b.PublishYear ?? 0,
+                    AuthorNames = b.BookAuthors
+                        .Select(ba => ba.Author.Name)
+                        .ToList(),
+
+                    AuthorIds = b.BookAuthors
+                        .Select(ba => ba.AuthorId)
+                        .ToList(),
+
                     Quantity = b.Quantity,
                     Price = b.Price,
                     Description = b.Description,
                     ImagePath = b.ImagePath,
+
                     CategoryNames = b.BookCategories
-                    .Select(bc => bc.Category.Name)
-                    .ToList(),
-                    CategoryIds = b.BookCategories.Select(bc => bc.CategoryId).ToList()
+                        .Select(bc => bc.Category.Name)
+                        .ToList(),
+
+                    CategoryIds = b.BookCategories
+                        .Select(bc => bc.CategoryId)
+                        .ToList()
                 })
                 .ToListAsync();
 
@@ -87,57 +104,85 @@ namespace BookStoreManagement.API.Services
                 Data = books
             };
         }
-
         public async Task<BookResponseDto?> GetBookById(int id)
         {
             return await _context.Books
-                .Include(b => b.Author) 
+                .Include(b => b.BookAuthors)
+                    .ThenInclude(ba => ba.Author)
                 .Include(b => b.BookCategories)
-                    .ThenInclude(bc => bc.Category) 
+                    .ThenInclude(bc => bc.Category)
                 .Where(b => b.BookId == id)
                 .Select(b => new BookResponseDto
                 {
                     BookId = b.BookId,
                     Title = b.Title,
+                    PublishYear = b.PublishYear ?? 0,
 
-                    AuthorId = b.AuthorId,
-                    AuthorName = b.Author != null ? b.Author.Name : null,
+                    AuthorNames = b.BookAuthors
+                        .Select(ba => ba.Author.Name)
+                        .ToList(),
+
+                    AuthorIds = b.BookAuthors
+                        .Select(ba => ba.AuthorId)
+                        .ToList(),
 
                     Quantity = b.Quantity,
                     Price = b.Price,
                     Description = b.Description,
                     ImagePath = b.ImagePath,
+
                     CategoryNames = b.BookCategories
-                    .Select(bc => bc.Category.Name)
-                    .ToList(),
-                    CategoryIds = b.BookCategories.Select(bc => bc.CategoryId).ToList()
+                        .Select(bc => bc.Category.Name)
+                        .ToList(),
+
+                    CategoryIds = b.BookCategories
+                        .Select(bc => bc.CategoryId)
+                        .ToList()
                 })
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<BookResponseDto?> CreateBook(Book book, List<int> categoryIds)
+        public async Task<BookResponseDto?> CreateBook(Book book, List<int> authorIds, List<int> categoryIds)
         {
-            var authorExists = await _context.Authors.AnyAsync(a => a.AuthorId == book.AuthorId);
-            if (!authorExists)
-                throw new KeyNotFoundException($"AuthorId {book.AuthorId} does not exist.");
+            var validAuthors = await _context.Authors
+                .Where(a => authorIds.Contains(a.AuthorId))
+                .Select(a => a.AuthorId)
+                .ToListAsync();
 
-            var distinctCategoryIds = categoryIds.Distinct().ToList();
-            var validCategoryCount = await _context.Categories.CountAsync(c => distinctCategoryIds.Contains(c.CategoryId));
+            if (validAuthors.Count != authorIds.Distinct().Count())
+                throw new KeyNotFoundException("Invalid AuthorIds");
 
-            if (validCategoryCount != distinctCategoryIds.Count)
-                throw new KeyNotFoundException("One or more CategoryIds are invalid.");
+            var validCategories = await _context.Categories
+                .Where(c => categoryIds.Contains(c.CategoryId))
+                .Select(c => c.CategoryId)
+                .ToListAsync();
+
+            if (validCategories.Count != categoryIds.Distinct().Count())
+                throw new KeyNotFoundException("Invalid CategoryIds");
 
             book.Quantity = 0;
+
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
 
-            var bookCategories = distinctCategoryIds.Select(cid => new BookCategory
-            {
-                BookId = book.BookId,
-                CategoryId = cid
-            }).ToList();
+            var bookAuthors = authorIds.Distinct()
+                .Select(aid => new BookAuthor
+                {
+                    BookId = book.BookId,
+                    AuthorId = aid
+                });
 
-            _context.BookCategories.AddRange(bookCategories);
+            await _context.BookAuthors.AddRangeAsync(bookAuthors);
+
+            var bookCategories = categoryIds.Distinct()
+                .Select(cid => new BookCategory
+                {
+                    BookId = book.BookId,
+                    CategoryId = cid
+                });
+
+            await _context.BookCategories.AddRangeAsync(bookCategories);
+
             await _context.SaveChangesAsync();
 
             return await GetBookById(book.BookId);
@@ -146,47 +191,57 @@ namespace BookStoreManagement.API.Services
         public async Task<bool> UpdateBook(int id, BookUpdateDto dto)
         {
             var book = await _context.Books
+                .Include(b => b.BookAuthors)
                 .Include(b => b.BookCategories)
                 .FirstOrDefaultAsync(b => b.BookId == id);
 
             if (book == null)
                 return false;
 
-            var authorExists = await _context.Authors.AnyAsync(a => a.AuthorId == dto.AuthorId);
-            if (!authorExists)
-                throw new KeyNotFoundException($"AuthorId {dto.AuthorId} does not exist.");
-
-            var categoryIds = dto.CategoryIds.Distinct().ToList();
-            var validCategoryIds = await _context.Categories
-                .Where(c => categoryIds.Contains(c.CategoryId))
-                .Select(c => c.CategoryId)
-                .ToListAsync();
-
-            if (validCategoryIds.Count != categoryIds.Count)
-                throw new KeyNotFoundException("One or more CategoryId is invalid.");
-
             book.Title = dto.Title;
-            book.AuthorId = dto.AuthorId;
-            book.Quantity = dto.Quantity;
             book.Description = dto.Description;
             book.ImagePath = dto.ImagePath;
+            book.Quantity = dto.Quantity;
+            book.PublishYear = dto.PublishYear;
 
-            var existingCategoryIds = book.BookCategories.Select(bc => bc.CategoryId).ToList();
-            var toRemove = book.BookCategories.Where(bc => !categoryIds.Contains(bc.CategoryId)).ToList();
+            // ?? UPDATE AUTHORS
+            var newAuthorIds = dto.AuthorIds.Distinct().ToList();
+            var oldAuthorIds = book.BookAuthors.Select(ba => ba.AuthorId).ToList();
 
-            _context.BookCategories.RemoveRange(toRemove);
+            var removeAuthors = book.BookAuthors
+                .Where(ba => !newAuthorIds.Contains(ba.AuthorId));
 
-            var toAdd = categoryIds
-                .Where(cid => !existingCategoryIds.Contains(cid))
+            _context.BookAuthors.RemoveRange(removeAuthors);
+
+            var addAuthors = newAuthorIds
+                .Where(id => !oldAuthorIds.Contains(id))
+                .Select(id => new BookAuthor
+                {
+                    BookId = book.BookId,
+                    AuthorId = id
+                });
+
+            await _context.BookAuthors.AddRangeAsync(addAuthors);
+
+            var newCategoryIds = dto.CategoryIds.Distinct().ToList();
+            var oldCategoryIds = book.BookCategories.Select(bc => bc.CategoryId).ToList();
+
+            var removeCategories = book.BookCategories
+                .Where(bc => !newCategoryIds.Contains(bc.CategoryId));
+
+            _context.BookCategories.RemoveRange(removeCategories);
+
+            var addCategories = newCategoryIds
+                .Where(cid => !oldCategoryIds.Contains(cid))
                 .Select(cid => new BookCategory
                 {
                     BookId = id,
                     CategoryId = cid
                 });
 
-            await _context.BookCategories.AddRangeAsync(toAdd);
-            await _context.SaveChangesAsync();
+            await _context.BookCategories.AddRangeAsync(addCategories);
 
+            await _context.SaveChangesAsync();
             return true;
         }
 
@@ -197,9 +252,10 @@ namespace BookStoreManagement.API.Services
             if (book == null)
                 return false;
 
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
+            book.IsDeleted = true;
+            book.DeletedAt = DateTime.UtcNow;
 
+            await _context.SaveChangesAsync();
             return true;
         }
     }

@@ -6,17 +6,16 @@ namespace BookStoreManagement.API.Models.Book
 
         public string Title { get; set; } = string.Empty;
 
-        public int? AuthorId { get; set; }
-
-        public string? AuthorName { get; set; }
+        public List<int> AuthorIds { get; set; } = new List<int>();
+        public List<string> AuthorNames { get; set; } = new List<string>();
 
         public int Quantity { get; set; }
 
         public decimal Price { get; set; }
         public string? Description { get; set; }
-
+        public int PublishYear { get; set; }
         public string ImagePath { get; set; } = string.Empty;
         public List<int> CategoryIds { get; set; } = new List<int>();
-        public List<string> CategoryNames { get; set; }
+        public List<string> CategoryNames { get; set; } = new List<string>();
     }
 }

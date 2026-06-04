@@ -20,9 +20,9 @@ namespace BookStoreManagement.API.Services
 
         public async Task<IEnumerable<EmployeeResponseDto>> GetAllEmployeesAsync()
         {
-            return await _context.Employees.
-                Where(e => e.Status == 1).
-                Select(e => new EmployeeResponseDto
+            return await _context.Employees
+                .OrderByDescending(e => e.Status)
+                .Select(e => new EmployeeResponseDto
                 {
                     EmployeeId = e.EmployeeId,
                     UserId = e.UserId,
@@ -30,7 +30,8 @@ namespace BookStoreManagement.API.Services
                     Age = e.Age,
                     Phone = e.Phone,
                     Address = e.Address,
-                    Salary = e.Salary
+                    Salary = e.Salary,
+                    Status = e.Status
                 })
                 .ToListAsync();
         }
@@ -102,23 +103,27 @@ namespace BookStoreManagement.API.Services
             var employee = await _context.Employees.FindAsync(id);
             if (employee == null) return false;
 
-            employee.Status = 0;
-            _context.Employees.Update(employee);
-
-            if (employee.UserId != null)
+            if (employee.UserId > 0)
             {
                 var user = await _context.Users.FindAsync(employee.UserId);
                 if (user != null)
                 {
+
+                    if (user.RoleId == "admin")
+                    {
+                        throw new Exception("Cannot delete an employee with the Admin role!");
+                    }
+
                     user.Status = 0;
                     _context.Users.Update(user);
                 }
             }
 
+            employee.Status = 0;
+            _context.Employees.Update(employee);
+
             return await _context.SaveChangesAsync() > 0;
         }
-
-
 
     }
 }

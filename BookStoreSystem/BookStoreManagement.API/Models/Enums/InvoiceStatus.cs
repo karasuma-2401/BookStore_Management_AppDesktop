@@ -2,8 +2,9 @@
 {
     public enum InvoiceStatus
     {
-        Pending = 0,
+        Unpaid = 0,
         Completed = 1,
-        Canceled = 2
+        Canceled = 2,
+        Partial = 3
     }
 }

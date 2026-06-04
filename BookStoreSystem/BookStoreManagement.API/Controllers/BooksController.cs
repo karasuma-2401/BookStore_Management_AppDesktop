@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Book;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.SignalR; 
-using BookStoreManagement.API.Hubs;  
+using Microsoft.AspNetCore.SignalR;
+using BookStoreManagement.API.Hubs;
 
 namespace BookStoreManagement.API.Controllers
 {
@@ -16,13 +15,14 @@ namespace BookStoreManagement.API.Controllers
         private readonly IBookService _bookService;
         private readonly IHubContext<BookHub, IBookHubClient> _hubContext;
 
-        public BooksController(IBookService bookService, IHubContext<BookHub, IBookHubClient> hubContext)
+        public BooksController(
+            IBookService bookService,
+            IHubContext<BookHub, IBookHubClient> hubContext)
         {
             _bookService = bookService;
             _hubContext = hubContext;
         }
 
-        // GET: api/books
         [HttpGet]
         public async Task<IActionResult> GetBooks(
             [FromQuery] int? categoryId,
@@ -41,7 +41,6 @@ namespace BookStoreManagement.API.Controllers
             return Ok(result);
         }
 
-        // GET: api/books/id
         [HttpGet("{id}")]
         public async Task<ActionResult<BookResponseDto>> GetBook(int id)
         {
@@ -53,24 +52,25 @@ namespace BookStoreManagement.API.Controllers
             return Ok(book);
         }
 
-        // POST: api/books
         [HttpPost]
-        public async Task<ActionResult<BookResponseDto>> PostBook(BookCreateDto dto)
+        public async Task<ActionResult<BookResponseDto>> PostBook([FromBody] BookCreateDto dto)
         {
             try
             {
-                var book = new Book
-                {
-                    Title = dto.Title,
-                    AuthorId = dto.AuthorId,
-                    ImagePath = dto.ImagePath,
-                    Description = dto.Description
-                };
-
-                var result = await _bookService.CreateBook(book, dto.CategoryIds);
+                var result = await _bookService.CreateBook(
+                    new Models.Entities.Book
+                    {
+                        Title = dto.Title,
+                        Description = dto.Description,
+                        ImagePath = dto.ImagePath,
+                        PublishYear = dto.PublishYear
+                    },
+                    dto.AuthorIds,
+                    dto.CategoryIds
+                );
 
                 if (result == null)
-                    return BadRequest("Could not create book with provided information.");
+                    return BadRequest("Could not create book.");
 
                 await _hubContext.Clients.All.BookCreated(result);
 
@@ -80,15 +80,18 @@ namespace BookStoreManagement.API.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                return StatusCode(500, new { message = "An internal server error occurred.", details = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "Internal server error",
+                    detail = ex.Message
+                });
             }
         }
 
-        // PUT: api/books/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBook(int id, BookUpdateDto dto)
+        public async Task<IActionResult> PutBook(int id, [FromBody] BookUpdateDto dto)
         {
             try
             {
@@ -97,11 +100,11 @@ namespace BookStoreManagement.API.Controllers
                 if (!updated)
                     return NotFound();
 
-                var freshBookData = await _bookService.GetBookById(id);
+                var fresh = await _bookService.GetBookById(id);
 
-                if (freshBookData != null)
+                if (fresh != null)
                 {
-                    await _hubContext.Clients.All.BookUpdated(id, freshBookData);
+                    await _hubContext.Clients.All.BookUpdated(id, fresh);
                 }
 
                 return Ok(new { message = "Update successful" });
@@ -110,13 +113,16 @@ namespace BookStoreManagement.API.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                return StatusCode(500, new { message = "An error occurred during update.", details = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "Update failed",
+                    detail = ex.Message
+                });
             }
         }
 
-        // DELETE: api/books/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {

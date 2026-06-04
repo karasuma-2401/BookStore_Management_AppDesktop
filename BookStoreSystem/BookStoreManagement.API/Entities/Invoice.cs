@@ -30,6 +30,9 @@ namespace BookStoreManagement.API.Models.Entities
         [Column("voucher_id")]
         public int? VoucherId { get; set; }
 
+        [Column("amount_paid", TypeName = "decimal(12,2)")]
+        public decimal AmountPaid { get; set; } = 0;
+
         [Column("status")]
         public InvoiceStatus Status { get; set; } = InvoiceStatus.Completed;
 

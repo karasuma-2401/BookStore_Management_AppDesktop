@@ -114,11 +114,10 @@ namespace BookStoreManagement.API.Services
                     voucher.UsedCount += 1;
                 }
 
+                invoice.Status = InvoiceStatus.Unpaid;
+                invoice.AmountPaid = 0;
                 invoice.Total = finalTotal;
                 invoice.InvoiceDetails = invoiceDetails;
-
-
-                _context.Invoices.Add(invoice);
 
                 if (dto.CustomerId.HasValue)
                 {
@@ -126,21 +125,9 @@ namespace BookStoreManagement.API.Services
                     if (customer != null)
                     {
                         customer.Debt += finalTotal;
-                        _context.Customers.Update(customer);
                     }
                 }
-                else
-                {
-                    var payment = new Payment
-                    {
-                        CustomerId = dto.CustomerId,
-                        UserId = userId,
-                        Amount = finalTotal,
-                        PaymentDate = DateTime.UtcNow,
-                        Invoice = invoice
-                    };
-                    _context.Payments.Add(payment);
-                }
+                _context.Invoices.Add(invoice);
 
                 var result = await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -158,6 +145,7 @@ namespace BookStoreManagement.API.Services
             return await _context.Invoices
                 .Include(i => i.Customer)
                 .Include(i => i.User)
+                    .ThenInclude(u => u.Employee)
                 .Include(i => i.InvoiceDetails)
                 .OrderByDescending(i => i.InvoiceDate)
                 .Select(i => new InvoiceListDto
@@ -166,7 +154,7 @@ namespace BookStoreManagement.API.Services
                     InvoiceDate = i.InvoiceDate,
                     Total = i.Total,
                     CustomerName = i.Customer != null ? i.Customer.Name : "Guest",
-                    StaffName = i.User.FullName,
+                    StaffName = i.User.Employee != null ? i.User.Employee.FullName : i.User.Username,
                     TotalItems = i.InvoiceDetails.Sum(d => d.Quantity),
                     Status = i.Status.ToString()
                 })
@@ -175,49 +163,45 @@ namespace BookStoreManagement.API.Services
 
         public async Task<InvoiceDetailResponseDto?> GetInvoiceByIdAsync(int id)
         {
-            var invoice = await _context.Invoices
+            return await _context.Invoices
                 .Include(i => i.Customer)
                 .Include(i => i.User)
+                    .ThenInclude(u => u.Employee)
                 .Include(i => i.Voucher)
                 .Include(i => i.InvoiceDetails).ThenInclude(d => d.Book)
-                .FirstOrDefaultAsync(i => i.InvoiceId == id);
-
-            if (invoice == null) return null;
-
-            var paidAmount = await _context.Payments
-                .Where(p => p.InvoiceId == id)
-                .SumAsync(p => p.Amount);
-
-            return new InvoiceDetailResponseDto
-            {
-                InvoiceId = invoice.InvoiceId,
-                InvoiceDate = invoice.InvoiceDate,
-                Total = invoice.Total,
-                CustomerName = invoice.Customer != null ? invoice.Customer.Name : "Guest",
-                StaffName = invoice.User.FullName,
-                VoucherCode = invoice.Voucher != null ? invoice.Voucher.Code : null,
-                TotalItems = invoice.InvoiceDetails.Sum(d => d.Quantity),
-                Status = invoice.Status.ToString(),
-                PaidAmount = paidAmount,
-                RemainingAmount = invoice.Total - paidAmount,
-                Items = invoice.InvoiceDetails.Select(d => new InvoiceItemDto
+                .Where(i => i.InvoiceId == id)
+                .Select(i => new InvoiceDetailResponseDto
                 {
-                    BookTitle = d.Book != null ? d.Book.Title : "Unknown Book",
-                    Quantity = d.Quantity,
-                    SalePrice = d.SalePrice
-                }).ToList()
-            };
+                    InvoiceId = i.InvoiceId,
+                    InvoiceDate = i.InvoiceDate,
+                    Total = i.Total,
+                    CustomerName = i.Customer != null ? i.Customer.Name : "Guest",
+                    StaffName = i.User.Employee != null ? i.User.Employee.FullName : i.User.Username,
+                    VoucherCode = i.Voucher != null ? i.Voucher.Code : null,
+                    TotalItems = i.InvoiceDetails.Sum(d => d.Quantity),
+                    PaidAmount = i.AmountPaid,
+                    RemainingAmount = i.Total - i.AmountPaid,
+                    Items = i.InvoiceDetails.Select(d => new InvoiceItemDto
+                    {
+                        BookTitle = d.Book != null ? d.Book.Title : "Unknown Book",
+                        Quantity = d.Quantity,
+                        SalePrice = d.SalePrice
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync();
         }
 
         public async Task<bool> CancelInvoiceAsync(int id)
         {
-
+ 
             var invoice = await _context.Invoices
                 .Include(i => i.InvoiceDetails)
+                .Include(i => i.Customer)
                 .FirstOrDefaultAsync(i => i.InvoiceId == id);
 
             if (invoice == null || invoice.Status == InvoiceStatus.Canceled)
                 return false;
+
 
             invoice.Status = InvoiceStatus.Canceled;
 
@@ -231,6 +215,21 @@ namespace BookStoreManagement.API.Services
                 else
                 {
                     Console.WriteLine($"Warning: Book with ID {detail.BookId} no longer exists. Inventory not restored.");
+                }
+            }
+
+            if (invoice.Customer != null)
+            {
+                decimal remainingDebt = invoice.Total - invoice.AmountPaid;
+
+                if (remainingDebt > 0)
+                {
+                    invoice.Customer.Debt -= remainingDebt;
+
+                    if (invoice.Customer.Debt < 0)
+                    {
+                        invoice.Customer.Debt = 0;
+                    }
                 }
             }
 

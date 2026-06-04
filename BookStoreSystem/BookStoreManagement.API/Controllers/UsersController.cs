@@ -1,12 +1,8 @@
-﻿using BookStoreManagement.API.Data;
-using BookStoreManagement.API.Interfaces.Services;
+﻿using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Auth;
-using BookStoreManagement.API.Models.Entities;
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-
 
 namespace BookStoreManagement.API.Controllers
 {
@@ -16,12 +12,10 @@ namespace BookStoreManagement.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IValidator<ResetPasswordRequestDto> _resetPasswordValidator;
 
-        public UsersController(IUserService userService, IValidator<ResetPasswordRequestDto> resetPasswordValidator)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
-            _resetPasswordValidator = resetPasswordValidator;
         }
 
         // GET: user
@@ -44,18 +38,6 @@ namespace BookStoreManagement.API.Controllers
             : Ok(user);
         }
 
-        // PUT: user/5
-        [HttpPut("{id}")]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> PutUser(int id, UserUpdateDto dto)
-        {
-            var success = await _userService.UpdateUserAsync(id, dto);
-
-            return success
-                ? NoContent()
-                : BadRequest(new { message = "Update failed or ID does not match." });
-        }
-
         // POST: user
         [HttpPost]
         [Authorize(Roles = "admin")]
@@ -71,7 +53,6 @@ namespace BookStoreManagement.API.Controllers
             }
             catch (Exception ex)
             {
-
                 return BadRequest(new { message = ex.Message });
             }
         }
@@ -104,35 +85,19 @@ namespace BookStoreManagement.API.Controllers
             return Ok(new { message = "Password updated successfully!" });
         }
 
-        // POST: user/forgot-password
-        [HttpPost("forgot-password")]
-        [AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequestDto dto)
+        // POST: user/{id}/admin-change-password
+        [HttpPost("{id}/admin-change-password")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> AdminChangeStaffPassword(int id, [FromBody] AdminResetPasswordDto dto)
         {
-            var success = await _userService.SendForgotPasswordEmailAsync(dto.Email);
+            var errorMessage = await _userService.AdminChangeStaffPasswordAsync(id, dto);
 
-            return success
-                ? Ok(new { message = "The verification code has been sent to your email." })
-                : NotFound(new { message = "This email is not registered in the system." });
-        }
-
-        // POST: user/reset-password
-        [HttpPost("reset-password")]
-        [AllowAnonymous]
-        public async Task<IActionResult> ResetPassword(ResetPasswordRequestDto dto)
-        {
-            var validatorResult = await _resetPasswordValidator.ValidateAsync(dto);
-
-            if (!validatorResult.IsValid) { 
-                var errors = validatorResult.Errors.Select(e => e.ErrorMessage);
-                return BadRequest(new { message = "Invalid data", errors = errors });
+            if (errorMessage != null)
+            {
+                return BadRequest(new { message = errorMessage });
             }
+            return Ok(new { message = "\"Employee password changed successfully." });
 
-            var success = await _userService.ResetPasswordAsync(dto.Token, dto.NewPassword, dto.ConfirmPassword);
-
-            return success
-                ? Ok(new { message = "Password changed successfully" })
-                : BadRequest(new { message = "The verification code is incorrect or has expired." });
         }
     }
 }

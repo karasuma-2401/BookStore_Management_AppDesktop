@@ -17,14 +17,6 @@ namespace BookStoreManagement.API.Validators
                 .NotEmpty().WithMessage("Password is required")
                 .MinimumLength(6).WithMessage("Password must be at least 6 characters long");
 
-            RuleFor(x => x.FullName)
-                .MaximumLength(200).WithMessage("Full name cannot exceed 200 characters")
-                .When(x => !string.IsNullOrEmpty(x.FullName));
-
-            RuleFor(x => x.Email)
-                .EmailAddress().WithMessage("Invalid email format")
-                .When(x => !string.IsNullOrEmpty(x.Email));
-
             RuleFor(x => x.RoleId)
                 .Must(role => role == "admin" || role == "staff")
                 .WithMessage("Role must be either 'admin' or 'staff'");

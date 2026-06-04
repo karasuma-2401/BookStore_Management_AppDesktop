@@ -4,7 +4,6 @@ using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Auth;
 using BookStoreManagement.API.Models.Entities;
 using FluentValidation;
-using Humanizer;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreManagement.API.Services
@@ -12,22 +11,16 @@ namespace BookStoreManagement.API.Services
     public class UserService : IUserService
     {
         private readonly ApplicationDBContext _context;
-
-        private readonly IEmailService _emailService;
-
         private readonly IValidator<UserCreateDto> _createValidator;
-        private readonly IValidator<UserUpdateDto> _updateValidator;
-
+        private readonly IValidator<AdminResetPasswordDto> _adminResetPassValidator;
         public UserService(
             ApplicationDBContext context,
-            IEmailService emailService,
             IValidator<UserCreateDto> createValidator,
-            IValidator<UserUpdateDto> updateValidator)
+            IValidator<AdminResetPasswordDto> adminResetPassValidator)
         {
             _context = context;
-            _emailService = emailService;
             _createValidator = createValidator;
-            _updateValidator = updateValidator;
+            _adminResetPassValidator = adminResetPassValidator;
         }
 
         public async Task<IEnumerable<UserResponseModel>> GetAllUsersAsync()
@@ -38,9 +31,7 @@ namespace BookStoreManagement.API.Services
                 {
                     UserId = u.UserId,
                     Username = u.Username,
-                    FullName = u.FullName,
                     RoleId = u.RoleId,
-                    Email = u.Email,
                 }).ToListAsync();
         }
 
@@ -52,9 +43,7 @@ namespace BookStoreManagement.API.Services
             {
                 UserId = user.UserId,
                 Username = user.Username,
-                FullName = user.FullName,
                 RoleId = user.RoleId,
-                Email = user.Email,
                 Status = user.Status
             };
         }
@@ -76,9 +65,29 @@ namespace BookStoreManagement.API.Services
             return null;
         }
 
-        public async Task<bool> CreateUserAsync(UserCreateDto dto)
+        public async Task<string?> AdminChangeStaffPasswordAsync(int employeeId, AdminResetPasswordDto dto)
         {
 
+            var validationResult = await _adminResetPassValidator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+            {
+                return validationResult.Errors.First().ErrorMessage;
+            }
+
+            var user = await _context.Users
+                .Include(u => u.Employee)
+                .FirstOrDefaultAsync(u => u.Employee != null && u.Employee.EmployeeId == employeeId);
+
+            if (user == null) return "Employee account not found.";
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            await _context.SaveChangesAsync();
+
+            return null;
+        }
+
+        public async Task<bool> CreateUserAsync(UserCreateDto dto)
+        {
             var validationResult = await _createValidator.ValidateAsync(dto);
             if (!validationResult.IsValid)
             {
@@ -94,9 +103,7 @@ namespace BookStoreManagement.API.Services
             var user = new User
             {
                 Username = dto.Username,
-                FullName = dto.FullName,
                 RoleId = dto.RoleId.ToString(),
-                Email = dto.Email,
                 PasswordHash = PasswordHashHandler.HashPassword(dto.Password),
                 CreatedAt = DateTime.UtcNow,
                 Status = 1
@@ -104,34 +111,6 @@ namespace BookStoreManagement.API.Services
 
             _context.Users.Add(user);
             return await _context.SaveChangesAsync() > 0;
-        }
-
-        public async Task<bool> UpdateUserAsync(int id, UserUpdateDto dto)
-        {
-            var validationResult = await _updateValidator.ValidateAsync(dto);
-            if (!validationResult.IsValid)
-            {
-                return false;
-            }
-
-
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
-            if (existingUser == null)
-            {
-                return false;
-            }
-
-            existingUser.FullName = dto.FullName;
-            existingUser.Email = dto.Email;
-
-            try
-            {
-                return await _context.SaveChangesAsync() > 0;
-            }
-            catch (DbUpdateException ex)
-            {
-                return false;
-            }
         }
 
         public async Task<bool> DeleteUserAsync(int id)
@@ -143,48 +122,5 @@ namespace BookStoreManagement.API.Services
             _context.Users.Update(user);
             return await _context.SaveChangesAsync() > 0;
         }
-
-        public async Task<bool> SendForgotPasswordEmailAsync(string email) 
-        {
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-
-            if (user == null) return false;
-
-            user.ResetToken = new Random().Next(100000, 999999).ToString();
-
-            user.ResetTokenExpires = DateTime.UtcNow.AddMinutes(5);
-
-            await _context.SaveChangesAsync();
-
-            string subject = "Yêu cầu đặt lại mật khẩu - App Bán Sách";
-            string body = $@"
-            <h3>Xin chào,</h3>
-            <p>Mã xác thực (OTP) để khôi phục mật khẩu của bạn là: <b style='font-size: 24px; color: red;'>{user.ResetToken}</b></p>
-            <p>Mã này sẽ hết hạn sau 5 phút. Vui lòng không chia sẻ cho bất kỳ ai.</p>
-            <p>Trân trọng,<br>Hệ thống Admin</p>";
-
-            await _emailService.SendEmailAsync(email, subject, body);
-
-            return true;
-
-        }
-        public async Task<bool> ResetPasswordAsync(string token, string newPassword, string confirmPassword) 
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(u =>
-            u.ResetToken == token && u.ResetTokenExpires > DateTime.UtcNow);
-
-            if (user == null) return false;
-
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            user.ResetToken = null;
-            user.ResetTokenExpires = null;
-
-            await _context.SaveChangesAsync();
-
-            return true;
-
-        }
-
     }
 }
