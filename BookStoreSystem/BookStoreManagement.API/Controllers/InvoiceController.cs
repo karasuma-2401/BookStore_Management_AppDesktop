@@ -54,7 +54,6 @@ namespace BookStoreManagement.API.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllInvoices()
         {
@@ -62,7 +61,6 @@ namespace BookStoreManagement.API.Controllers
             return Ok(invoices);
         }
 
-        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetInvoiceById(int id)
         {
