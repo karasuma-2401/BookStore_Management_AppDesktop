@@ -228,8 +228,18 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
+                    <!-- Toggle Payment History Button -->
+                    <ui:Button Content="{Binding ToggleHistoryButtonText, Mode=OneWay}" 
+                               Icon="{ui:SymbolIcon Symbol=History24}" 
+                               Appearance="Secondary"
+                               Command="{Binding ToggleHistoryCommand}"
+                               Visibility="{Binding IsPaymentHistoryVisible, Converter={StaticResource BoolToVis}}"
+                               Margin="10,0,10,15"
+                               HorizontalAlignment="Left"
+                               Cursor="Hand"/>
+
                     <!-- Payment History Section -->
-                    <StackPanel Visibility="{Binding IsPaymentHistoryVisible, Converter={StaticResource BoolToVis}}" Margin="0,30,0,0">
+                    <StackPanel Visibility="{Binding IsHistoryExpanded, Converter={StaticResource BoolToVis}}" Margin="0,15,0,0">
                         <Grid Margin="10,0,0,15">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -243,7 +253,7 @@
                                        VerticalAlignment="Center"/>
 
                             <ui:Button Grid.Column="1" Content="Export Payment History" 
-                                       Icon="{ui:SymbolIcon Symbol=DocumentTextLink24}" 
+                                       Icon="{ui:SymbolIcon Symbol=ArrowDownload24}" 
                                        Appearance="Secondary" 
                                        Command="{Binding ExportPaymentHistoryCommand}"
                                        Cursor="Hand"

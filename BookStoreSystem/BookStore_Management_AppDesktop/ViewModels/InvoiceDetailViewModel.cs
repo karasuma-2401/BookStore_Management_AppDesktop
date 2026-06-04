@@ -26,8 +26,25 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty]
         private ObservableCollection<PaymentResponseDto> paymentHistory = new();
 
+        [ObservableProperty]
+        private bool isHistoryExpanded = false;
+
+        public string ToggleHistoryButtonText => IsHistoryExpanded ? "Hide Payment History" : "Show Payment History";
+
+        partial void OnIsHistoryExpandedChanged(bool value)
+        {
+            OnPropertyChanged(nameof(ToggleHistoryButtonText));
+        }
+
+        [RelayCommand]
+        private void ToggleHistory()
+        {
+            IsHistoryExpanded = !IsHistoryExpanded;
+        }
+
         partial void OnInvoiceChanged(InvoiceDetailResponseDto? value)
         {
+            IsHistoryExpanded = false;
             OnPropertyChanged(nameof(IsPaymentButtonVisible));
             OnPropertyChanged(nameof(IsPaymentHistoryVisible));
         }
