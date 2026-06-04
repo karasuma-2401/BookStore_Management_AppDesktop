@@ -51,23 +51,56 @@
             </Grid>
         </Border>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20,15,20,0" HorizontalAlignment="Left">
-            <uc:StatCardControl 
-                Width="240" Height="95" Margin="0,0,20,0"
-                Title="Total Books" 
-                Value="{Binding TotalBooksCount}" 
-                CardBackground="#EBF5FF"
-                IconColor="#3498DB"
-                IconData="M18,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V4A2,2 0 0,0 18,2M18,20H6V4H8V12L10.5,9.5L13,12V4H18V20Z" />
+        <Grid Grid.Row="1" Margin="20,15,20,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <uc:StatCardControl 
+                    Width="240" Height="95" Margin="0,0,20,0"
+                    Title="Total Books" 
+                    Value="{Binding TotalBooksCount}" 
+                    CardBackground="#EBF5FF"
+                    IconColor="#3498DB"
+                    IconData="M18,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V4A2,2 0 0,0 18,2M18,20H6V4H8V12L10.5,9.5L13,12V4H18V20Z" />
 
-            <uc:StatCardControl 
-                Width="240" Height="95"
-                Title="Low Stock" 
-                Value="{Binding LowStockBooksCount}" 
-                CardBackground="#FFF4E6"
-                IconColor="#F39C12"
-                IconData="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z" />
-        </StackPanel>
+                <uc:StatCardControl 
+                    Width="240" Height="95"
+                    Title="Low Stock" 
+                    Value="{Binding LowStockBooksCount}" 
+                    CardBackground="#FFF4E6"
+                    IconColor="#F39C12"
+                    IconData="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                <ui:Button Command="{Binding OpenAuthorManagementCommand}"
+                           Appearance="Secondary"
+                           Height="50"
+                           Padding="18,0"
+                           Margin="0,0,12,0"
+                           Background="{DynamicResource CardBackgroundBrush}"
+                           BorderBrush="#E2E8F0"
+                           BorderThickness="1"
+                           Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="People24" FontSize="20" Margin="0,0,10,0" Foreground="{DynamicResource SystemAccentColorBrush}"/>
+                        <TextBlock Text="Authors" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
+                    </StackPanel>
+                </ui:Button>
+
+                <ui:Button Command="{Binding OpenCategoryManagementCommand}"
+                           Appearance="Secondary"
+                           Height="50"
+                           Padding="18,0"
+                           Background="{DynamicResource CardBackgroundBrush}"
+                           BorderBrush="#E2E8F0"
+                           BorderThickness="1"
+                           Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Grid24" FontSize="20" Margin="0,0,10,0" Foreground="{DynamicResource SystemAccentColorBrush}"/>
+                        <TextBlock Text="Categories" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
+                    </StackPanel>
+                </ui:Button>
+            </StackPanel>
+        </Grid>
 
         <Border Grid.Row="2" Background="{DynamicResource CardBackgroundBrush}" Margin="20,15,20,10" CornerRadius="8">
             <DataGrid ItemsSource="{Binding Books}" AutoGenerateColumns="False" 
@@ -117,7 +150,6 @@
                             <DataTemplate>
                                 <StackPanel VerticalAlignment="Center" Margin="5,0">
                                     <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextOnLightBackgroudBrush}" TextTrimming="CharacterEllipsis"/>
-
                                     <TextBlock Text="{Binding DisplayAuthorNames}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
                             </DataTemplate>

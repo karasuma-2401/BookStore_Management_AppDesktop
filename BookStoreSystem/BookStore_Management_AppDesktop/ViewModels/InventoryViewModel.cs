@@ -192,6 +192,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 }
             }
         }
+        [RelayCommand]
+        private void OpenAuthorManagement()
+        {
+            _dialogService.ShowAuthorManagementWindow();
+        }
 
         [RelayCommand]
         private void EditBook(Book selectedBook)

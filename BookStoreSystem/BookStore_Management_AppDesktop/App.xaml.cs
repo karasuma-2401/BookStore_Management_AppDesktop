@@ -1,5 +1,6 @@
 using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API;
+using BookStore_Management_AppDesktop.Services.API.AuthorServices;
 using BookStore_Management_AppDesktop.Services.API.BookServices; 
 using BookStore_Management_AppDesktop.Services.API.CartServices;
 using BookStore_Management_AppDesktop.Services.API.CategoryServices;
