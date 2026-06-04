@@ -97,7 +97,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 // Validation: Discount
                 if (!NewVoucherDiscountPercent.HasValue && !NewVoucherDiscountAmount.HasValue)
                 {
-                    OnShowMessage?.Invoke("❌ Please specify either a discount percent or amount.");
+                    OnShowMessage?.Invoke("❌ Please specify either a discount percent or minimum spend.");
                     return;
                 }
 
@@ -115,10 +115,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     return;
                 }
 
-                // Validation: Discount Amount
+                // Validation: Minimum Spend
                 if (NewVoucherDiscountAmount.HasValue && NewVoucherDiscountAmount < 0)
                 {
-                    OnShowMessage?.Invoke("❌ Discount amount cannot be negative.");
+                    OnShowMessage?.Invoke("❌ Minimum spend cannot be negative.");
                     return;
                 }
 
