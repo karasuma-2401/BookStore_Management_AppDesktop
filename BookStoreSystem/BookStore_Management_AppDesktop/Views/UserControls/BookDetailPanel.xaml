@@ -9,44 +9,70 @@
     d:DesignWidth="420"
     mc:Ignorable="d">
 
+    <!-- #region UserControl Resources -->
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="NativeBoolToVis" />
-    </UserControl.Resources>
 
-    <Border
-        Width="420"
-        Background="{DynamicResource SidebarBackgroundBrush}"
-        BorderBrush="{DynamicResource BorderBrush}"
-        BorderThickness="1,0,0,0">
+        <Style x:Key="MobileTabItemStyle" TargetType="TabItem">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#94A3B8" />
+            <Setter Property="BorderThickness" Value="0,0,0,3" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Padding" Value="15,10" />
+            <Setter Property="Margin" Value="0,0,15,0" />
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" ContentSource="Header" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#475569" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Foreground" Value="#0F172A" />
+                    <Setter Property="BorderBrush" Value="#0F172A" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    
+    <!--#endregion-->
+
+    
+    <Border Width="420" Background="#FFFFFF" BorderBrush="#E2E8F0" BorderThickness="1,0,0,0">
         <Border.Effect>
-            <DropShadowEffect
-                BlurRadius="15"
-                Opacity="0.2"
-                ShadowDepth="-3"
-                Color="Black" />
+            <DropShadowEffect BlurRadius="15" Opacity="0.04" ShadowDepth="4" Color="#000000" />
         </Border.Effect>
 
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Border
-                Grid.Row="0"
-                Padding="20,15"
-                BorderBrush="{DynamicResource BorderBrush}"
-                BorderThickness="0,0,0,1">
+            <!--#region Header -->
+            <Border Grid.Row="0" Padding="25,20" Background="#FFFFFF" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
                 <Grid>
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="16"
-                        Style="{StaticResource HeaderTextStyle}"
-                        Text="BOOK DETAILS" />
-                    <Button
-                        HorizontalAlignment="Right"
-                        Command="{Binding CloseDetailPanelCommand}"
-                        ToolTip="Close Panel">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Border Width="40" Height="40" Margin="0,0,15,0" Background="#F3E8FF" CornerRadius="8">
+                            <ui:SymbolIcon FontSize="20" Foreground="#9333EA" Symbol="BookOpen24" />
+                        </Border>
+                        <TextBlock VerticalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#0F172A" Text="Book Details" />
+                    </StackPanel>
+
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding CloseDetailPanelCommand}" ToolTip="Close Panel">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Width" Value="32" />
@@ -54,316 +80,263 @@
                                 <Setter Property="Background" Value="Transparent" />
                                 <Setter Property="BorderThickness" Value="0" />
                                 <Setter Property="Cursor" Value="Hand" />
-                                <Setter Property="Foreground" Value="#A0AABF" />
+                                <Setter Property="Foreground" Value="#94A3B8" />
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="Button">
-                                            <Border
-                                                Background="{TemplateBinding Background}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                CornerRadius="4">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="16">
+                                                <ui:SymbolIcon FontSize="14" Symbol="Dismiss24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#E81123" />
-                                        <Setter Property="Foreground" Value="#FFFFFF" />
-                                    </Trigger>
-                                    <Trigger Property="IsPressed" Value="True">
-                                        <Setter Property="Background" Value="#F1707A" />
-                                        <Setter Property="Foreground" Value="#FFFFFF" />
+                                        <Setter Property="Background" Value="#F1F5F9" />
+                                        <Setter Property="Foreground" Value="#0F172A" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
-                        <ui:SymbolIcon
-                            FontSize="14"
-                            FontWeight="SemiBold"
-                            Symbol="Dismiss24" />
                     </Button>
                 </Grid>
             </Border>
+            
+            <!--#endregion -->
 
-            <ScrollViewer
-                Grid.Row="1"
-                Padding="20"
-                VerticalScrollBarVisibility="Auto">
-                <StackPanel>
-                    <Border
-                        Width="220"
-                        Height="300"
-                        Margin="0,0,0,20"
-                        HorizontalAlignment="Center"
-                        Background="{DynamicResource ContentBackgroundBrush}"
-                        BorderBrush="{DynamicResource BorderBrush}"
-                        BorderThickness="1"
-                        ClipToBounds="True"
-                        CornerRadius="8">
-                        <Image
-                            RenderOptions.BitmapScalingMode="HighQuality"
-                            Source="{Binding CurrentDetailBook.ImagePath, TargetNullValue='https://via.placeholder.com/220x300?text=No+Image', FallbackValue='https://via.placeholder.com/220x300?text=No+Image'}"
-                            Stretch="UniformToFill" />
-                    </Border>
+            <!--#region Book Detail Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="25,20">
 
-                    <TextBlock
-                        Grid.Row="1"
-                        Margin="0,0,0,12"
-                        FontSize="22"
-                        FontWeight="Black"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
-                        Style="{StaticResource BookTitleTextStyle}"
-                        Text="{Binding CurrentDetailBook.Title}"
-                        TextWrapping="Wrap" />
-
-                    <TextBlock
-                        Margin="0,0,0,12"
-                        FontSize="16"
-                        FontWeight="SemiBold"
-                        Style="{StaticResource BodyTextStyle}">
-                        <Run Foreground="{DynamicResource TextSecondBrush}" Text="Author: " />
-                        <Run
-                            FontWeight="SemiBold"
-                            Foreground="{DynamicResource SidebarAccentBrush}"
-                            Text="{Binding CurrentDetailBook.AuthorName, TargetNullValue='Updating Author'}" />
-                    </TextBlock>
-
-                    <TextBlock
-                        Margin="0,0,0,20"
-                        FontSize="16"
-                        FontWeight="SemiBold"
-                        Style="{StaticResource BodyTextStyle}">
-                        <Run Foreground="{DynamicResource TextSecondBrush}" Text="Categories: " />
-                        <Run
-                            FontStyle="Italic"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource TextSecondBrush}"
-                            Text="{Binding CurrentDetailBook.CategoryNames}" />
-                    </TextBlock>
-
-                    <Border
-                        Margin="0,0,0,25"
-                        Padding="15,12"
-                        Background="#1E293B"
-                        BorderBrush="White"
-                        BorderThickness="1"
-                        CornerRadius="8">
-                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="28"
-                                FontWeight="Black"
-                                Foreground="White"
-                                Style="{StaticResource PriceTextStyle}"
-                                Text="{Binding CurrentDetailBook.Price, StringFormat='{}{0:#,0}', TargetNullValue='0'}" />
-                            <TextBlock
-                                Margin="4,0,0,3"
-                                VerticalAlignment="Bottom"
-                                FontSize="18"
-                                FontWeight="Black"
-                                Foreground="#FF4D4F"
-                                Text="đ" />
-                        </StackPanel>
-                    </Border>
-
-                    <Grid Margin="0,0,0,25">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock
-                                Margin="0,0,0,3"
-                                FontSize="16"
-                                FontWeight="SemiBold"
-                                Foreground="{DynamicResource TextPrimaryBrush}"
-                                Text="Purchase Quantity" />
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock
-                                    FontSize="14"
-                                    Foreground="{DynamicResource TextSecondBrush}"
-                                    Text="In Stock: " />
-                                <TextBlock
-                                    FontSize="14"
-                                    FontWeight="Bold"
-                                    Foreground="#0078D4"
-                                    Text="{Binding CurrentDetailBook.Quantity}" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel
-                            Grid.Column="1"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
-
-                            <Button Command="{Binding DecreaseQuantityCommand}" ToolTip="Decrease Quantity">
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Setter Property="Width" Value="32" />
-                                        <Setter Property="Height" Value="32" />
-                                        <Setter Property="Background" Value="#334155" />
-                                        <Setter Property="Foreground" Value="#F8FAFC" />
-                                        <Setter Property="BorderThickness" Value="0" />
-                                        <Setter Property="Cursor" Value="Hand" />
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Border Background="{TemplateBinding Background}" CornerRadius="16">
-                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#475569" />
-                                                <Setter Property="Foreground" Value="#FFFFFF" />
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter Property="Background" Value="#1E293B" />
-                                                <Setter Property="Foreground" Value="#94A3B8" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                                <ui:SymbolIcon
-                                    FontSize="12"
-                                    FontWeight="Bold"
-                                    Symbol="Subtract24" />
-                            </Button>
-
-                            <TextBlock
-                                Width="40"
-                                Margin="6,0"
-                                VerticalAlignment="Center"
-                                FontSize="15"
-                                FontWeight="Bold"
-                                Foreground="#FFFFFF"
-                                Text="{Binding SelectedQuantity}"
-                                TextAlignment="Center" />
-
-                            <Button Command="{Binding IncreaseQuantityCommand}" ToolTip="Increase Quantity">
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Setter Property="Width" Value="32" />
-                                        <Setter Property="Height" Value="32" />
-                                        <Setter Property="Background" Value="#334155" />
-                                        <Setter Property="Foreground" Value="#F8FAFC" />
-                                        <Setter Property="BorderThickness" Value="0" />
-                                        <Setter Property="Cursor" Value="Hand" />
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Border Background="{TemplateBinding Background}" CornerRadius="16">
-                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#475569" />
-                                                <Setter Property="Foreground" Value="#FFFFFF" />
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter Property="Background" Value="#1E293B" />
-                                                <Setter Property="Foreground" Value="#F8FAFC" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                                <ui:SymbolIcon
-                                    FontSize="12"
-                                    FontWeight="Bold"
-                                    Symbol="Add24" />
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-                    <Button
-                        Height="42"
-                        Margin="0,0,0,25"
-                        HorizontalAlignment="Stretch"
-                        Command="{Binding AddToCartCommand}">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Background" Value="#0078D4" />
-                                <Setter Property="Foreground" Value="#FFFFFF" />
-                                <Setter Property="BorderThickness" Value="0" />
-                                <Setter Property="Cursor" Value="Hand" />
-                                <Setter Property="Template">
+                    <!--#region Book Cover with Hover Effect -->
+                    <Border Width="190" Height="270" Margin="0,10,0,25" HorizontalAlignment="Center">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Setter Property="Effect">
                                     <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border
-                                                Background="{TemplateBinding Background}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                CornerRadius="6">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                            </Border>
-                                        </ControlTemplate>
+                                        <DropShadowEffect BlurRadius="25" Opacity="0.12" ShadowDepth="6" Color="#8B6F57" Direction="270"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TranslateTransform X="0" Y="0"/>
                                     </Setter.Value>
                                 </Setter>
 
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#106EBE" />
-                                    </Trigger>
-                                    <Trigger Property="IsPressed" Value="True">
-                                        <Setter Property="Background" Value="#005A9E" />
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <TranslateTransform X="0" Y="-6"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Effect">
+                                            <Setter.Value>
+                                                <DropShadowEffect BlurRadius="35" Opacity="0.18" ShadowDepth="12" Color="#8B6F57" Direction="270"/>
+                                            </Setter.Value>
+                                        </Setter>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
-                        </Button.Style>
+                        </Border.Style>
 
-                        <StackPanel Orientation="Horizontal">
-                            <ui:SymbolIcon
-                                Margin="0,0,8,0"
-                                VerticalAlignment="Center"
-                                FontSize="16"
-                                Symbol="Cart24" />
-                            <TextBlock
-                                VerticalAlignment="Center"
-                                FontSize="13"
-                                FontWeight="Bold"
-                                Text="ADD TO BASKET" />
-                        </StackPanel>
-                    </Button>
+                        <Border Background="White" 
+                                BorderBrush="#0F172A" 
+                                BorderThickness="1" 
+                                CornerRadius="10" 
+                                Padding="1"
+                                ClipToBounds="True">
 
-                    <Separator
-                        Margin="0,0,0,15"
-                        Background="{DynamicResource BorderBrush}"
-                        Opacity="0.4" />
+                            <Image RenderOptions.BitmapScalingMode="HighQuality" 
+                                   Stretch="Uniform"
+                                   Source="{Binding CurrentDetailBook.ImagePath, TargetNullValue='https://via.placeholder.com/190x270?text=No+Image', FallbackValue='https://via.placeholder.com/190x270?text=No+Image'}" />
+                        </Border>
+                    </Border>
+                    
+                    <!--#endregion-->
 
-                    <TextBlock
-                        Margin="0,0,0,10"
-                        FontSize="16"
-                        FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
-                        Style="{StaticResource BookTitleTextStyle}"
-                        Text="BOOK SUMMARY" />
-                    <TextBlock
-                        FontSize="14"
-                        Style="{StaticResource BodyTextStyle}"
-                        Text="{Binding CurrentDetailBook.Description, TargetNullValue='There are no descriptions or reviews for this book yet.'}"
-                        TextWrapping="Wrap" />
+
+                    <Separator Background="#E2E8F0" Height="1" Margin="0,5,0,20"/>
+
+                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,10"
+                               FontSize="22" FontWeight="Black" Foreground="#0F172A"
+                               Text="{Binding CurrentDetailBook.Title}" TextWrapping="Wrap" />
+
+                    <TextBlock HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="14" FontWeight="SemiBold" Foreground="#0078D4">
+                        <Run Text="{Binding CurrentDetailBook.DisplayAuthorNames, TargetNullValue='Unknown Author'}"/>
+                    </TextBlock>
+
+                    <TextBlock HorizontalAlignment="Center" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" Margin="0,0,0,5"
+                               Text="{Binding CurrentDetailBook.PublishYear, StringFormat='Published {0}', TargetNullValue='N/A'}" />
+
+                    <Separator Background="#E2E8F0" Height="1" Margin="0,20,0,20"/>
+
+                    <TabControl Background="Transparent" BorderThickness="0" Margin="0,5,0,0">
+                        <TabControl.Template>
+                            <ControlTemplate TargetType="TabControl">
+                                <Grid KeyboardNavigation.TabNavigation="Local">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <TabPanel x:Name="HeaderPanel" Grid.Row="0" IsItemsHost="True" HorizontalAlignment="Center" KeyboardNavigation.TabIndex="1" />
+                                    <ContentPresenter x:Name="PART_SelectedContentHost" Grid.Row="1" ContentSource="SelectedContent" KeyboardNavigation.TabIndex="2" />
+                                </Grid>
+                            </ControlTemplate>
+                        </TabControl.Template>
+
+                        <TabItem Style="{StaticResource MobileTabItemStyle}" Header="About Book">
+                            <StackPanel Margin="0,20,0,0" Width="330" HorizontalAlignment="Center">
+                                <TextBlock Text="Genres &amp; Categories" FontSize="15" FontWeight="Black" Foreground="#0F172A" Margin="0,0,0,10"/>
+                                <TextBlock Text="{Binding CurrentDetailBook.DisplayCategoryNames, TargetNullValue='Uncategorized'}" 
+                                           FontSize="14" LineHeight="22" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,18"/>
+
+                                <TextBlock Text="Book Identity" FontSize="15" FontWeight="Black" Foreground="#0F172A" Margin="0,0,0,10"/>
+                                <TextBlock Text="{Binding CurrentDetailBook.BookId, StringFormat='ID: #{0}'}" 
+                                           FontSize="14" Foreground="#475569"/>
+                                <Separator Background="#E2E8F0" Height="1" Margin="0,15,0,0"/>
+                            </StackPanel>
+                        </TabItem>
+
+                        <TabItem Style="{StaticResource MobileTabItemStyle}" Header="Summary">
+                            <StackPanel Margin="0,20,0,0" Width="330" HorizontalAlignment="Center">
+                                <TextBlock Text="About Book this eBook" FontSize="15" FontWeight="Black" Foreground="#0F172A" Margin="0,0,0,10"/>
+                                <TextBlock FontSize="13" LineHeight="22" Foreground="#475569" TextWrapping="Wrap"
+                                           Text="{Binding CurrentDetailBook.Description, TargetNullValue='There are no descriptions or reviews for this book yet.'}" />
+                                <Separator Background="#E2E8F0" Height="1" Margin="0,15,0,0"/>
+                            </StackPanel>
+                        </TabItem>
+                    </TabControl>
                 </StackPanel>
             </ScrollViewer>
 
-            <Grid
-                Grid.Row="1"
-                Background="{DynamicResource SidebarBackgroundBrush}"
-                Opacity="0.8"
-                Visibility="{Binding IsDetailLoading, Converter={StaticResource NativeBoolToVis}}">
+            <!--#region Footer with Price and Add to Cart -->
+            <Border Grid.Row="2" Background="#FFFFFF" Padding="25,20" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" Margin="0,0,0,2" Text="Total Price"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="22" FontWeight="Black" Foreground="#0F172A" 
+                                       Text="{Binding TotalPrice, StringFormat='{}{0:#,0}', TargetNullValue='0'}" />
+                            <TextBlock Margin="2,0,0,3" VerticalAlignment="Bottom" FontSize="14" FontWeight="Black" Foreground="#0078D4" Text="đ" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+
+                        <Border Background="#F0F9FF" CornerRadius="28" Padding="6" Margin="0,0,15,0" Height="56">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Width="40" Height="40" Command="{Binding DecreaseQuantityCommand}" Background="Transparent" BorderThickness="0" Cursor="Hand">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="20">
+                                                <ui:SymbolIcon FontSize="14" Foreground="#0284C7" Symbol="Subtract24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+
+                                <TextBlock Width="36" VerticalAlignment="Center" FontSize="18" FontWeight="Black" Foreground="#0F172A" 
+                                           Text="{Binding SelectedQuantity}" TextAlignment="Center" />
+
+                                <Button Width="40" Height="40" Command="{Binding IncreaseQuantityCommand}" Background="Transparent" BorderThickness="0" Cursor="Hand">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="20">
+                                                <ui:SymbolIcon FontSize="14" Foreground="#0284C7" Symbol="Add24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+
+                        <Button Width="56" Height="56" Command="{Binding AddToCartCommand}" ToolTip="Add to Cart">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#0078D4" />
+                                    <Setter Property="Foreground" Value="#FFFFFF" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <TranslateTransform X="0" Y="0"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="BgBorder" Background="{TemplateBinding Background}" CornerRadius="28">
+                                                    <Border.Effect>
+                                                        <DropShadowEffect BlurRadius="12" Opacity="0.2" ShadowDepth="4" Direction="270" Color="#0078D4"/>
+                                                    </Border.Effect>
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="BgBorder" Property="Background" Value="#005A9E" />
+                                                        <Setter TargetName="BgBorder" Property="Effect">
+                                                            <Setter.Value>
+                                                                <DropShadowEffect BlurRadius="20" Opacity="0.3" ShadowDepth="6" Direction="270" Color="#0078D4"/>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="BgBorder" Property="Background" Value="#004578" />
+                                                        <Setter TargetName="BgBorder" Property="Effect">
+                                                            <Setter.Value>
+                                                                <DropShadowEffect BlurRadius="4" Opacity="0.2" ShadowDepth="2" Direction="270" Color="#0078D4"/>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="RenderTransform">
+                                                <Setter.Value>
+                                                    <TranslateTransform X="0" Y="-4"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter Property="RenderTransform">
+                                                <Setter.Value>
+                                                    <TranslateTransform X="0" Y="0"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+
+                            <Grid Width="28" Height="28" Margin="0,0,2,0">
+                                <ui:SymbolIcon Symbol="Cart24" FontSize="26" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+                                <ui:SymbolIcon Symbol="Add24" FontSize="14" FontWeight="Black" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-4,-4,0" />
+                            </Grid>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            
+            <!--#endregion-->
+
+            <Grid Grid.Row="1" Grid.RowSpan="2" Background="White" Opacity="0.95"
+                  Visibility="{Binding IsDetailLoading, Converter={StaticResource NativeBoolToVis}}">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <ui:ProgressRing
-                        Width="40"
-                        Height="40"
-                        Margin="0,0,0,10"
-                        IsIndeterminate="True" />
-                    <TextBlock
-                        FontSize="12"
-                        Foreground="{DynamicResource TextSecondBrush}"
-                        Text="Fetching book details..." />
+                    <ui:ProgressRing Width="36" Height="36" Margin="0,0,0,12" IsIndeterminate="True" />
+                    <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" Text="Fetching book details..." />
                 </StackPanel>
             </Grid>
         </Grid>
