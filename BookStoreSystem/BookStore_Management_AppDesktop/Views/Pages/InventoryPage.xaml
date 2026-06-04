@@ -16,6 +16,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -50,7 +51,25 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" Background="{DynamicResource CardBackgroundBrush}" Margin="20,20,20,10" CornerRadius="8">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20,15,20,0" HorizontalAlignment="Left">
+            <uc:StatCardControl 
+                Width="240" Height="95" Margin="0,0,20,0"
+                Title="Total Books" 
+                Value="{Binding TotalBooksCount}" 
+                CardBackground="#EBF5FF"
+                IconColor="#3498DB"
+                IconData="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z" />
+
+            <uc:StatCardControl 
+                Width="240" Height="95"
+                Title="Low Stock Alert" 
+                Value="{Binding LowStockBooksCount}" 
+                CardBackground="#FFF4E6"
+                IconColor="#F39C12"
+                IconData="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z" />
+        </StackPanel>
+
+        <Border Grid.Row="2" Background="{DynamicResource CardBackgroundBrush}" Margin="20,15,20,10" CornerRadius="8">
             <DataGrid ItemsSource="{Binding Books}" AutoGenerateColumns="False" 
                       CanUserAddRows="False" 
                       IsReadOnly="True" 
@@ -161,7 +180,7 @@
             </DataGrid>
         </Border>
 
-        <uc:PaginationControl Grid.Row="2" Margin="20,0,20,20"
+        <uc:PaginationControl Grid.Row="3" Margin="20,0,20,20"
                                CurrentPage="{Binding CurrentPage}"
                                TotalPages="{Binding TotalPages}"
                                TotalItems="{Binding TotalItems}"
