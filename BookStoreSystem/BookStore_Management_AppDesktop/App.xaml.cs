@@ -76,6 +76,7 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<IInvoiceExportService, InvoiceExportService>(); 
             services.AddSingleton<IVoucherApiService, VoucherApiService>();
             services.AddSingleton<ICategoryApiService, CategoryApiService>();
+            services.AddSingleton<IUserApiService, UserApiService>();
 
             services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
             services.AddSingleton<IEmployeeShiftApiService, EmployeeShiftApiService>();
