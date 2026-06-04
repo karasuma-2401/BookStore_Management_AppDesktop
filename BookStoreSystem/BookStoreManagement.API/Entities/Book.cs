@@ -33,6 +33,9 @@ namespace BookStoreManagement.API.Models.Entities
 
         [Column("deleted_at")]
         public DateTime? DeletedAt { get; set; }
+
+        [Column("publish_year")]
+        public int PublishYear { get; set; }
         public ICollection<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
 
         public ICollection<BookCategory> BookCategories {get; set;} = new List <BookCategory>();

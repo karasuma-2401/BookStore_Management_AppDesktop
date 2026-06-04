@@ -62,7 +62,8 @@ namespace BookStoreManagement.API.Controllers
                     {
                         Title = dto.Title,
                         Description = dto.Description,
-                        ImagePath = dto.ImagePath
+                        ImagePath = dto.ImagePath,
+                        PublishYear = dto.PublishYear
                     },
                     dto.AuthorIds,
                     dto.CategoryIds
