@@ -1,5 +1,6 @@
 using BookStore_Management_AppDesktop.Models.DTOs.ReportDTOs;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -43,8 +44,50 @@ namespace BookStore_Management_AppDesktop.Services.API.ReportServices
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Get Report Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Get Monthly Report Error: {ex.Message}");
                 return null;
+            }
+        }
+
+        public async Task<IEnumerable<InventoryReportResponseDTO>> GetInventoryReportsAsync(int month, int year)
+        {
+            try
+            {
+                AddAuthorizationHeader();
+                var response = await _httpClient.GetAsync($"inventory-report?month={month}&year={year}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<IEnumerable<InventoryReportResponseDTO>>(json, _options) ?? new List<InventoryReportResponseDTO>();
+                }
+                return new List<InventoryReportResponseDTO>();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Get Inventory Report Error: {ex.Message}");
+                return new List<InventoryReportResponseDTO>();
+            }
+        }
+
+        public async Task<IEnumerable<DebtReportResponseDTO>> GetDebtReportsAsync(int month, int year)
+        {
+            try
+            {
+                AddAuthorizationHeader();
+                var response = await _httpClient.GetAsync($"debt-report?month={month}&year={year}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<IEnumerable<DebtReportResponseDTO>>(json, _options) ?? new List<DebtReportResponseDTO>();
+                }
+                return new List<DebtReportResponseDTO>();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Get Debt Report Error: {ex.Message}");
+                return new List<DebtReportResponseDTO>();
             }
         }
     }

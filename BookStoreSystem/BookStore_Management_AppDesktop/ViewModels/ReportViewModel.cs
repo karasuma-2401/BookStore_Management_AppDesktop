@@ -37,14 +37,20 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         [ObservableProperty] private ISeries[] _revenueSeries = Array.Empty<ISeries>();
         [ObservableProperty] private Axis[] _xAxes = Array.Empty<Axis>();
+        [ObservableProperty] private Axis[] _yAxes = Array.Empty<Axis>();
         [ObservableProperty] private ObservableCollection<TopBookDto> _topBooks = new ObservableCollection<TopBookDto>();
+
+        [ObservableProperty] private ObservableCollection<InventoryReportResponseDTO> _inventoryReports = new ObservableCollection<InventoryReportResponseDTO>();
+
+        [ObservableProperty] private ObservableCollection<DebtReportResponseDTO> _debtReports = new ObservableCollection<DebtReportResponseDTO>();
 
         public ReportViewModel(IReportApiService reportApi, IDialogService dialogService, IExportService exportService)
         {
             _reportApi = reportApi;
             _dialogService = dialogService;
             _exportService = exportService;
-            XAxes = new Axis[] { new Axis { Name = "Days of Month" } };
+            XAxes = new Axis[] { new Axis { Name = "Days in Month" } };
+            YAxes = new Axis[] { new Axis() };
         }
 
         public override async Task LoadDataAsync()
@@ -66,11 +72,13 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     TotalImportCost = data.TotalImportCost;
                     Profit = data.Profit;
                     TotalBooksSold = data.TotalBooksSold;
+
                     TopBooks.Clear();
                     foreach (var book in data.TopSellingBooks)
                     {
                         TopBooks.Add(book);
                     }
+
                     var revenueValues = data.DailyData.Select(x => x.Revenue).ToArray();
                     var dayLabels = data.DailyData.Select(x => x.Day.ToString()).ToArray();
 
@@ -80,10 +88,16 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         {
                             Values = revenueValues,
                             Name = "Revenue",
-                            Stroke = new SolidColorPaint(SKColors.SpringGreen) { StrokeThickness = 3 },
-                            Fill = null, 
-                            GeometrySize = 8,
-                            GeometryStroke = new SolidColorPaint(SKColors.SpringGreen) { StrokeThickness = 2 }
+                            Stroke = new SolidColorPaint(SKColor.Parse("#0078D4")) { StrokeThickness = 4 },
+                            Fill = new LinearGradientPaint(
+                                new[] { SKColor.Parse("#330078D4"), SKColor.Parse("#000078D4") },
+                                new SKPoint(0.5f, 0),
+                                new SKPoint(0.5f, 1)
+                            ),
+                            GeometrySize = 10,
+                            GeometryStroke = new SolidColorPaint(SKColor.Parse("#0078D4")) { StrokeThickness = 2 },
+                            GeometryFill = new SolidColorPaint(SKColors.White),
+                            LineSmoothness = 0.5
                         }
                     };
 
@@ -93,13 +107,46 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         {
                             Labels = dayLabels,
                             Name = "Days in Month",
-                            LabelsPaint = new SolidColorPaint(SKColors.LightGray)
+                            LabelsPaint = new SolidColorPaint(SKColor.Parse("#64748B")),
+                            NamePaint = new SolidColorPaint(SKColor.Parse("#0F172A")),
+                            TextSize = 13
+                        }
+                    };
+
+                    YAxes = new Axis[]
+                    {
+                        new Axis
+                        {
+                            LabelsPaint = new SolidColorPaint(SKColor.Parse("#64748B")),
+                            TextSize = 13,
+                            Labeler = value => (value / 1000).ToString("N0") + "k",
+                            MinStep = 1000
                         }
                     };
                 }
                 else
                 {
-                    _dialogService.ShowMessage("Could not retrieve report data from the server.");
+                    _dialogService.ShowMessage("Could not retrieve monthly report data from the server.");
+                }
+
+                var inventoryData = await _reportApi.GetInventoryReportsAsync(SelectedMonth, SelectedYear);
+                InventoryReports.Clear();
+                if (inventoryData != null)
+                {
+                    foreach (var item in inventoryData)
+                    {
+                        InventoryReports.Add(item);
+                    }
+                }
+
+                var debtData = await _reportApi.GetDebtReportsAsync(SelectedMonth, SelectedYear);
+                DebtReports.Clear();
+                if (debtData != null)
+                {
+                    foreach (var item in debtData)
+                    {
+                        DebtReports.Add(item);
+                    }
                 }
             }
             catch (Exception ex)
