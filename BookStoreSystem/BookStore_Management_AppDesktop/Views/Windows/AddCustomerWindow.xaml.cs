@@ -3,6 +3,7 @@ using BookStore_Management_AppDesktop.Models.DTOs.CustomerDTOs;
 using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API.CustomerServices;
 using Microsoft.Extensions.DependencyInjection;
+using System.Windows.Input;
 
 namespace BookStore_Management_AppDesktop.Views.Windows
 {
@@ -11,6 +12,13 @@ namespace BookStore_Management_AppDesktop.Views.Windows
         private readonly ICustomerApiService _customerApiService;
         private readonly IDialogService _dialogService;
         public CustomerResponseDto? CustomerResult { get; private set; }
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
+        }
 
         public AddCustomerWindow()
         {
