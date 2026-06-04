@@ -106,9 +106,12 @@
                                 BorderBrush="#2064748B" 
                                 BorderThickness="1.5" 
                                 CornerRadius="8" 
-                                Margin="10,0" 
+                                Margin="10,0,10,5" 
                                 Padding="15,20" 
                                 VerticalAlignment="Stretch">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.16" Color="Black"/>
+                            </Border.Effect>
                             <StackPanel VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                     <ui:SymbolIcon Symbol="Person24" Foreground="{DynamicResource NavyPrimaryBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
@@ -134,9 +137,12 @@
                                 BorderBrush="#403B82F6" 
                                 BorderThickness="1.5" 
                                 CornerRadius="8" 
-                                Margin="10,0" 
+                                Margin="10,0,10,5" 
                                 Padding="15,20" 
                                 VerticalAlignment="Stretch">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.16" Color="Black"/>
+                            </Border.Effect>
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <ui:SymbolIcon Symbol="Money24" Foreground="#3B82F6" FontSize="28" Margin="0,0,0,8" HorizontalAlignment="Center"/>
                                 <TextBlock Text="Total Invoice" Foreground="{DynamicResource TextBodyBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,4" HorizontalAlignment="Center"/>
@@ -150,9 +156,12 @@
                                 BorderBrush="#4010B981" 
                                 BorderThickness="1.5" 
                                 CornerRadius="8" 
-                                Margin="10,0" 
+                                Margin="10,0,10,5" 
                                 Padding="15,20" 
                                 VerticalAlignment="Stretch">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.16" Color="Black"/>
+                            </Border.Effect>
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <ui:SymbolIcon Symbol="CheckmarkCircle24" Foreground="{DynamicResource SuccessPrimaryBrush}" FontSize="28" Margin="0,0,0,8" HorizontalAlignment="Center"/>
                                 <TextBlock Text="Paid Amount" Foreground="{DynamicResource TextBodyBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,4" HorizontalAlignment="Center"/>
@@ -164,9 +173,12 @@
                         <Border Grid.Column="3" 
                                 BorderThickness="1.5" 
                                 CornerRadius="8" 
-                                Margin="10,0" 
+                                Margin="10,0,10,5" 
                                 Padding="15,12" 
                                 VerticalAlignment="Stretch">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.16" Color="Black"/>
+                            </Border.Effect>
                             <Border.Style>
                                 <Style TargetType="Border">
                                     <Setter Property="Background" Value="#0D10B981" />
@@ -239,7 +251,7 @@
                                         BorderThickness="1" 
                                         BorderBrush="{DynamicResource BorderLightBrush}">
                                     <Border.Effect>
-                                        <DropShadowEffect BlurRadius="12" ShadowDepth="1" Opacity="0.06" Color="#000000"/>
+                                        <DropShadowEffect BlurRadius="14" ShadowDepth="3" Opacity="0.14" Color="#000000"/>
                                     </Border.Effect>
 
                                     <Grid>
@@ -367,9 +379,38 @@
                                     <Setter Property="Foreground" Value="#1E293B"/>
                                 </Style>
                             </DataGrid.Resources>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource ContentBackgroundBrush}"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource ContentBackgroundBrush}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="BorderBrush" Value="{DynamicResource SidebarAccentBrush}"/>
+                                            <Setter Property="BorderThickness" Value="1.5"/>
+                                            <Setter Property="Background" Value="{DynamicResource ContentBackgroundBrush}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Book Title" Binding="{Binding BookTitle}" Width="3*"/>
-                                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="1*"/>
+                                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="1*">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            <Setter Property="Margin" Value="0"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Header="Unit Price" Binding="{Binding SalePrice, StringFormat='{}{0:N0} VNĐ'}" Width="1.8*"/>
                                 <DataGridTextColumn Header="Subtotal" Binding="{Binding SubTotal, StringFormat='{}{0:N0} VNĐ'}" Width="2*">
                                     <DataGridTextColumn.ElementStyle>
@@ -385,8 +426,8 @@
 
                     <!-- Toggle Payment History Button -->
                     <Button Style="{StaticResource PremiumColoredButtonStyle}"
-                            Background="{DynamicResource AccentBlueBrush}"
-                            BorderBrush="#0284C7"
+                            Background="{DynamicResource NavyLightBrush}"
+                            BorderBrush="{DynamicResource NavyPrimaryBrush}"
                             BorderThickness="1.5"
                             Command="{Binding ToggleHistoryCommand}"
                             Visibility="{Binding IsPaymentHistoryVisible, Converter={StaticResource BoolToVis}}"
@@ -415,8 +456,8 @@
 
                             <Button Grid.Column="1" 
                                     Style="{StaticResource PremiumColoredButtonStyle}"
-                                    Background="{DynamicResource AccentBlueBrush}"
-                                    BorderBrush="#0284C7"
+                                    Background="{DynamicResource NavyLightBrush}"
+                                    BorderBrush="{DynamicResource NavyPrimaryBrush}"
                                     BorderThickness="1.5"
                                     Command="{Binding ExportPaymentHistoryCommand}"
                                     Margin="0,0,10,0"
@@ -476,9 +517,50 @@
                                         <Setter Property="Foreground" Value="#1E293B"/>
                                     </Style>
                                 </DataGrid.Resources>
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                        <Setter Property="BorderBrush" Value="{DynamicResource ContentBackgroundBrush}"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource ContentBackgroundBrush}"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="BorderBrush" Value="{DynamicResource SidebarAccentBrush}"/>
+                                                <Setter Property="BorderThickness" Value="1.5"/>
+                                                <Setter Property="Background" Value="{DynamicResource ContentBackgroundBrush}"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Payment ID" Binding="{Binding PaymentId}" Width="1.2*" MinWidth="100"/>
-                                    <DataGridTextColumn Header="Date" Binding="{Binding PaymentDate, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" Width="2.5*"/>
+                                    <DataGridTextColumn Header="Payment ID" Binding="{Binding PaymentId}" Width="1.2*" MinWidth="100">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                <Setter Property="Margin" Value="0"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Date" Binding="{Binding PaymentDate, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" Width="2.5*">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                <Setter Property="Margin" Value="0"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
                                     <DataGridTextColumn Header="Staff" Binding="{Binding StaffName}" Width="2*"/>
                                     <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat='{}{0:N0} VNĐ'}" Width="2*">
                                         <DataGridTextColumn.ElementStyle>

@@ -5,221 +5,146 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="Edit Customer"
     Width="450"
-    AllowsTransparency="True"
-    Background="Transparent"
-    MouseLeftButtonDown="Window_MouseLeftButtonDown"
-    ResizeMode="NoResize"
-    SizeToContent="Height"
-    WindowStartupLocation="CenterScreen"
-    WindowStyle="None">
+    Height="600"
+    Background="White"
+    WindowStartupLocation="CenterOwner">
 
     <Window.Resources>
-        <Style x:Key="FormLabelStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#1E293B" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Margin" Value="0,0,0,8" />
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#1E293B"/>
         </Style>
-
-        <Style x:Key="FormTextBoxStyle" TargetType="TextBox">
-            <Setter Property="Height" Value="42" />
-            <Setter Property="Padding" Value="12,0" />
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="BorderBrush" Value="#CBD5E1" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Foreground" Value="#0F172A" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="CaretBrush" Value="#0078D4" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TextBox">
-                        <Border
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="6">
-                            <ScrollViewer
-                                x:Name="PART_ContentHost"
-                                Margin="0"
-                                Padding="{TemplateBinding Padding}"
-                                VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter Property="BorderBrush" Value="#0078D4" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="PrimaryActionBtnStyle" TargetType="Button">
-            <Setter Property="Height" Value="40" />
-            <Setter Property="Background" Value="#0078D4" />
-            <Setter Property="Foreground" Value="#FFFFFF" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="6">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#106EBE" />
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#005A9E" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="SecondaryActionBtnStyle" TargetType="Button">
-            <Setter Property="Height" Value="40" />
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="Foreground" Value="#0F172A" />
-            <Setter Property="BorderBrush" Value="#CBD5E1" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="6">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#F8FAFC" />
-                    <Setter Property="BorderBrush" Value="#94A3B8" />
-                </Trigger>
-            </Style.Triggers>
+        <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="BorderBrush" Value="#64748B"/>
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="CaretBrush" Value="#1E293B"/>
+            <Style.Resources>
+                <SolidColorBrush x:Key="TextControlForeground" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlBackground" Color="#F8FAFC" />
+                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#F1F5F9" />
+                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="White" />
+                <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#E2E8F0" />
+                <SolidColorBrush x:Key="TextControlBorderBrush" Color="#64748B" />
+                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#CBD5E1" />
+                <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#64748B" />
+            </Style.Resources>
         </Style>
     </Window.Resources>
 
-    <Grid Margin="20,20,20,30">
-        <Border
-            Padding="25"
-            Background="#FFFFFF"
-            BorderBrush="#E2E8F0"
-            BorderThickness="1"
-            CornerRadius="12">
-            <Border.Effect>
-                <DropShadowEffect
-                    BlurRadius="15"
-                    Opacity="0.04"
-                    ShadowDepth="4"
-                    Color="#000000" />
-            </Border.Effect>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
+        <ScrollViewer
+            Grid.Row="0"
+            Padding="30,20"
+            Background="#F8FAFC">
             <StackPanel>
-                <StackPanel Margin="0,0,0,25" Orientation="Horizontal">
-                    <Border
-                        Width="40"
-                        Height="40"
-                        Margin="0,0,15,0"
-                        Background="#F3E8FF"
-                        CornerRadius="8">
-                        <ui:SymbolIcon
-                            FontSize="20"
-                            Foreground="#9333EA"
-                            Symbol="Edit24" />
-                    </Border>
+                <TextBlock
+                    Margin="0,0,0,20"
+                    HorizontalAlignment="Center"
+                    FontSize="18"
+                    FontWeight="Bold"
+                    Foreground="#1E293B"
+                    Text="Edit Customer" />
+                <StackPanel Margin="0,0,0,15">
                     <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="22"
-                        FontWeight="Bold"
-                        Foreground="#0F172A"
-                        Text="Edit Customer" />
+                        Margin="0,0,0,5"
+                        FontWeight="SemiBold"
+                        Foreground="#1E293B"
+                        Text="Customer ID" />
+                    <ui:TextBox
+                        x:Name="IdTextBox"
+                        IsEnabled="False" />
                 </StackPanel>
-
-                <Grid Margin="0,0,0,15">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="15" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Style="{StaticResource FormLabelStyle}" Text="Customer ID" />
-                        <TextBox
-                            x:Name="IdTextBox"
-                            Background="#F8FAFC"
-                            FocusVisualStyle="{x:Null}"
-                            Foreground="#64748B"
-                            IsReadOnly="True"
-                            Style="{StaticResource FormTextBoxStyle}" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="2">
-                        <TextBlock Style="{StaticResource FormLabelStyle}" Text="Debt Balance" />
-                        <TextBox
-                            x:Name="DebtTextBox"
-                            Background="#F8FAFC"
-                            FocusVisualStyle="{x:Null}"
-                            FontWeight="Bold"
-                            Foreground="#EF4444"
-                            IsReadOnly="True"
-                            Style="{StaticResource FormTextBoxStyle}" />
-                    </StackPanel>
-                </Grid>
-
                 <StackPanel Margin="0,0,0,15">
-                    <TextBlock Style="{StaticResource FormLabelStyle}">
-                        <Run Text="Customer Name " />
-                        <Run Foreground="#EF4444" Text="*" />
-                    </TextBlock>
-                    <TextBox x:Name="NameTextBox" Style="{StaticResource FormTextBoxStyle}" />
+                    <TextBlock
+                        Margin="0,0,0,5"
+                        FontWeight="SemiBold"
+                        Foreground="#1E293B"
+                        Text="Full Name *" />
+                    <ui:TextBox
+                        x:Name="NameTextBox"
+                        PlaceholderText="Enter customer name" />
+                </StackPanel>
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock
+                        Margin="0,0,0,5"
+                        FontWeight="SemiBold"
+                        Foreground="#1E293B"
+                        Text="Phone" />
+                    <ui:TextBox
+                        x:Name="PhoneTextBox"
+                        PlaceholderText="Enter phone number" />
+                </StackPanel>
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock
+                        Margin="0,0,0,5"
+                        FontWeight="SemiBold"
+                        Foreground="#1E293B"
+                        Text="Email" />
+                    <ui:TextBox
+                        x:Name="EmailTextBox"
+                        PlaceholderText="Enter email address" />
                 </StackPanel>
 
                 <StackPanel Margin="0,0,0,15">
-                    <TextBlock Style="{StaticResource FormLabelStyle}" Text="Phone Number" />
-                    <TextBox x:Name="PhoneTextBox" Style="{StaticResource FormTextBoxStyle}" />
+                    <TextBlock
+                        Margin="0,0,0,5"
+                        FontWeight="SemiBold"
+                        Foreground="#1E293B"
+                        Text="Address" />
+                    <ui:TextBox
+                        x:Name="AddressTextBox"
+                        Height="80"
+                        AcceptsReturn="True"
+                        PlaceholderText="Enter address" />
                 </StackPanel>
 
                 <StackPanel Margin="0,0,0,15">
-                    <TextBlock Style="{StaticResource FormLabelStyle}" Text="Email Address" />
-                    <TextBox x:Name="EmailTextBox" Style="{StaticResource FormTextBoxStyle}" />
+                    <TextBlock
+                        Margin="0,0,0,5"
+                        FontWeight="SemiBold"
+                        Foreground="#1E293B"
+                        Text="Total Debt" />
+                    <ui:TextBox
+                        x:Name="DebtTextBox"
+                        IsEnabled="False" />
                 </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+        <Border
+            Grid.Row="1"
+            Padding="30,15"
+            Background="White"
+            BorderBrush="#E2E8F0"
+            BorderThickness="0,1,0,0">
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <ui:Button
+                    x:Name="CancelButton"
+                    Width="100"
+                    Height="38"
+                    Margin="0,0,10,0"
+                    Click="CancelButton_Click"
+                    Content="Cancel"
+                    Style="{StaticResource CancelButtonStyle}" />
 
-                <StackPanel Margin="0,0,0,30">
-                    <TextBlock Style="{StaticResource FormLabelStyle}" Text="Home Address" />
-                    <TextBox x:Name="AddressTextBox" Style="{StaticResource FormTextBoxStyle}" />
-                </StackPanel>
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="15" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Button
-                        Grid.Column="0"
-                        Click="CancelButton_Click"
-                        Content="Cancel"
-                        Style="{StaticResource SecondaryActionBtnStyle}" />
-
-                    <Button
-                        Grid.Column="2"
-                        Click="SaveButton_Click"
-                        Content="Update Info"
-                        Style="{StaticResource PrimaryActionBtnStyle}" />
-                </Grid>
+                <ui:Button
+                    x:Name="SaveButton"
+                    Width="100"
+                    Height="38"
+                    Click="SaveButton_Click"
+                    Content="Update"
+                    Style="{StaticResource PremiumSolidButtonStyle}" />
             </StackPanel>
         </Border>
     </Grid>

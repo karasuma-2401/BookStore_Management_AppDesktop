@@ -1,18 +1,46 @@
-﻿<Window x:Class="BookStore_Management_AppDesktop.Views.Windows.EditEmployeeWindow"
+<Window x:Class="BookStore_Management_AppDesktop.Views.Windows.EditEmployeeWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Background="Transparent" WindowStartupLocation="CenterScreen"
         WindowStyle="None" AllowsTransparency="True"
-        Title="Edit Employee" Height="650" Width="400">
+        Title="Edit Employee" Height="700" Width="400">
+    <Window.Resources>
+        <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="BorderBrush" Value="#64748B"/>
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="CaretBrush" Value="#1E293B"/>
+            <Style.Resources>
+                <SolidColorBrush x:Key="TextControlForeground" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlBackground" Color="#F8FAFC" />
+                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#F1F5F9" />
+                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="White" />
+                <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#E2E8F0" />
+                <SolidColorBrush x:Key="TextControlBorderBrush" Color="#64748B" />
+                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#CBD5E1" />
+                <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#64748B" />
+            </Style.Resources>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#1E293B"/>
+        </Style>
+    </Window.Resources>
     <Grid Margin="15">
         <Border CornerRadius="15" Background="Black">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="15" ShadowDepth="2" Opacity="0.5" Color="Black"/>
+                <DropShadowEffect BlurRadius="15" ShadowDepth="2" Opacity="0.15" Color="Black"/>
             </Border.Effect>
         </Border>
 
-        <Border CornerRadius="15" BorderBrush="{DynamicResource NavyLightBrush}" BorderThickness="1" Background="{DynamicResource NavyPrimaryBrush}">
+        <Border CornerRadius="15" BorderBrush="#CBD5E1" BorderThickness="1.5" Background="White">
             <Grid Margin="30">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -22,36 +50,36 @@
 
                 <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,25" 
                             MouseLeftButtonDown="Header_MouseLeftButtonDown" Cursor="SizeAll" Background="Transparent">
-                    <TextBlock Text="EDIT EMPLOYEE" FontSize="28" FontWeight="Black" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Modify staff details" FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBlock Text="EDIT EMPLOYEE" FontSize="28" FontWeight="Black" Foreground="#1E293B" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Modify staff details" FontSize="14" Foreground="#64748B" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1">
-                    <TextBlock Text="Employee ID" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,5,0,5"/>
+                    <TextBlock Text="Employee ID" Foreground="#1E293B" FontWeight="SemiBold" Margin="0,5,0,5"/>
                     <ui:TextBox Text="{Binding DisplayEmployeeId, Mode=OneWay}" IsReadOnly="True" IsEnabled="False" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="Full Name" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Full Name" Foreground="#1E293B" FontWeight="SemiBold" Margin="0,0,0,5"/>
                     <ui:TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter full name..." Margin="0,0,0,10"/>
 
-                    <TextBlock Text="Age" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Age" Foreground="#1E293B" FontWeight="SemiBold" Margin="0,0,0,5"/>
                     <ui:TextBox Text="{Binding Age, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}" PlaceholderText="Enter age..." Margin="0,0,0,10"/>
 
-                    <TextBlock Text="Phone" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Phone" Foreground="#1E293B" FontWeight="SemiBold" Margin="0,0,0,5"/>
                     <ui:TextBox Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter phone number..." Margin="0,0,0,10"/>
 
-                    <TextBlock Text="Address" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Address" Foreground="#1E293B" FontWeight="SemiBold" Margin="0,0,0,5"/>
                     <ui:TextBox Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter address..." Margin="0,0,0,10"/>
 
-                    <TextBlock Text="Salary" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Salary" Foreground="#1E293B" FontWeight="SemiBold" Margin="0,0,0,5"/>
                     <ui:TextBox Text="{Binding Salary, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}" PlaceholderText="Enter salary..." Margin="0,0,0,10"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
                     <ui:Button Content="Cancel" Command="{Binding CancelCommand}" 
-                               Appearance="Transparent" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,15,0"/>
+                               Style="{StaticResource CancelButtonStyle}" Margin="0,0,15,0"/>
 
                     <ui:Button Content="Update" Command="{Binding SaveCommand}" 
-                               Appearance="Primary" Background="{DynamicResource NavyAccentBrush}" Width="120"/>
+                               Style="{StaticResource PremiumSolidButtonStyle}" Width="120" Height="38"/>
                 </StackPanel>
             </Grid>
         </Border>

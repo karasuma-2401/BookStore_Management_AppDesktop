@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.ViewModels;
@@ -26,8 +26,7 @@ namespace BookStore_Management_AppDesktop.Views.Windows
 
             _viewModel.OnShowMessage = (message) =>
             {
-                var msgBox = new CustomMessageBox(message);
-                msgBox.ShowDialog();
+                CustomMessageBox.Show(message);
             };
 
             _viewModel.OnRequestClose = () => this.Close();

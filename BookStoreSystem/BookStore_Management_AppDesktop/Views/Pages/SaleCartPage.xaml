@@ -8,22 +8,35 @@
     Title="Shopping Cart"
     d:DesignHeight="700"
     d:DesignWidth="1000"
-    Background="#111625"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
+
+    <Page.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#F8FAFC" Offset="0.0"/>
+            <GradientStop Color="#EFF6FF" Offset="0.5"/>
+            <GradientStop Color="#F1F5F9" Offset="1.0"/>
+        </LinearGradientBrush>
+    </Page.Background>
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="NativeBoolToVis" />
         <Style BasedOn="{StaticResource {x:Type ui:TextBox}}" TargetType="ui:TextBox">
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="BorderBrush" Value="#64748B"/>
+            <Setter Property="Background" Value="#F8FAFC"/>
             <Style.Resources>
-                <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF" />
-                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF" />
-                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF" />
-                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#64748B" />
-                <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#64748B" />
-                <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
-                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
-                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
+                <SolidColorBrush x:Key="TextControlForeground" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlBackground" Color="#F8FAFC" />
+                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#F1F5F9" />
+                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="White" />
+                <SolidColorBrush x:Key="TextControlBorderBrush" Color="#64748B" />
+                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#00D4B2" />
             </Style.Resources>
         </Style>
     </Page.Resources>
@@ -41,10 +54,10 @@
                         <Style TargetType="Button">
                             <Setter Property="Width" Value="38" />
                             <Setter Property="Height" Value="38" />
-                            <Setter Property="Background" Value="#161B26" />
-                            <Setter Property="Foreground" Value="#FFFFFF" />
-                            <Setter Property="BorderBrush" Value="#232D42" />
-                            <Setter Property="BorderThickness" Value="1" />
+                            <Setter Property="Background" Value="#F8FAFC" />
+                            <Setter Property="Foreground" Value="#1E293B" />
+                            <Setter Property="BorderBrush" Value="#CBD5E1" />
+                            <Setter Property="BorderThickness" Value="1.5" />
                             <Setter Property="Cursor" Value="Hand" />
                             <Setter Property="Template">
                                 <Setter.Value>
@@ -61,23 +74,22 @@
                             </Setter>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#232D42" />
+                                    <Setter Property="Background" Value="#E2E8F0" />
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
-                                    <Setter Property="Background" Value="#111625" />
+                                    <Setter Property="Background" Value="#CBD5E1" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
                     <ui:SymbolIcon
                         FontSize="16"
-                        FontWeight="Bold"
                         Symbol="ArrowLeft24" />
                 </Button>
                 <TextBlock
                     FontSize="24"
                     FontWeight="Bold"
-                    Foreground="#FFFFFF"
+                    Foreground="#1E293B"
                     Style="{StaticResource HeaderTextStyle}"
                     Text="Bookstore Cart" />
             </StackPanel>
@@ -92,11 +104,14 @@
             <Border
                 Grid.Column="0"
                 Margin="0,0,25,0"
-                Padding="20"
-                Background="#161B26"
-                BorderBrush="#232D42"
+                Padding="25"
+                Background="White"
+                BorderBrush="#E2E8F0"
                 BorderThickness="1"
-                CornerRadius="12">
+                CornerRadius="16">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="25" ShadowDepth="4" Opacity="0.06" Color="#0F172A"/>
+                </Border.Effect>
                 <Grid>
                     <StackPanel Panel.ZIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <StackPanel.Style>
@@ -109,44 +124,80 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-                        <ui:SymbolIcon
-                            Margin="0,0,0,15"
-                            Filled="True"
-                            FontSize="64"
-                            Foreground="#334155"
-                            Symbol="Cart24" />
+                        
+                        <!-- Premium Glowing Circle Cart Icon -->
+                        <Border Width="110" Height="110" CornerRadius="55" Margin="0,0,0,22" BorderBrush="#E2E8F0" BorderThickness="1.5">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#F0FDFA" Offset="0.0"/>
+                                    <GradientStop Color="#EFF6FF" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <ui:SymbolIcon
+                                Filled="True"
+                                FontSize="46"
+                                Foreground="#00D4B2"
+                                Symbol="Cart24"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        
                         <TextBlock
-                            Margin="0,0,0,20"
+                            Margin="0,0,0,25"
                             HorizontalAlignment="Center"
-                            FontSize="15"
-                            Foreground="#94A3B8"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            Foreground="#475569"
                             Text="Your shopping cart is empty" />
-                        <Button Command="{Binding ContinueShoppingCommand}" Content="Shop Now">
+                        <Button Command="{Binding ContinueShoppingCommand}" Content="Shop Now" FontSize="16">
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="Padding" Value="24,10" />
-                                    <Setter Property="Background" Value="#0078D4" />
+                                    <Setter Property="Padding" Value="52,16" />
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#00D4B2" Offset="0.0"/>
+                                                <GradientStop Color="#0EA5E9" Offset="1.0"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
                                     <Setter Property="Foreground" Value="#FFFFFF" />
-                                    <Setter Property="FontWeight" Value="SemiBold" />
+                                    <Setter Property="FontWeight" Value="Bold" />
                                     <Setter Property="BorderThickness" Value="0" />
                                     <Setter Property="Cursor" Value="Hand" />
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                                <Border x:Name="BtnBorder" Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}">
+                                                    <Border.Effect>
+                                                        <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.2" Color="#00D4B2"/>
+                                                    </Border.Effect>
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                 </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="BtnBorder" Property="Background">
+                                                            <Setter.Value>
+                                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                                    <GradientStop Color="#00E6C3" Offset="0.0"/>
+                                                                    <GradientStop Color="#38BDF8" Offset="1.0"/>
+                                                                </LinearGradientBrush>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="BtnBorder" Property="Background">
+                                                            <Setter.Value>
+                                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                                    <GradientStop Color="#00BFA0" Offset="0.0"/>
+                                                                    <GradientStop Color="#0284C7" Offset="1.0"/>
+                                                                </LinearGradientBrush>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#106EBE" />
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="True">
-                                            <Setter Property="Background" Value="#005A9E" />
-                                        </Trigger>
-                                    </Style.Triggers>
                                 </Style>
                             </Button.Style>
                         </Button>
@@ -174,7 +225,7 @@
                             <DataTemplate>
                                 <Border
                                     Padding="0,16"
-                                    BorderBrush="#232D42"
+                                    BorderBrush="#E2E8F0"
                                     BorderThickness="0,0,0,1">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -189,7 +240,7 @@
                                             Grid.Column="0"
                                             Width="65"
                                             Height="90"
-                                            Background="#1E293B"
+                                            Background="#E2E8F0"
                                             ClipToBounds="True"
                                             CornerRadius="6">
                                             <Image Source="{Binding ImagePath, TargetNullValue='https://via.placeholder.com/65x90?text=No+Image'}" Stretch="UniformToFill" />
@@ -204,18 +255,18 @@
                                                 Margin="0,0,0,6"
                                                 FontSize="15"
                                                 FontWeight="Bold"
-                                                Foreground="#FFFFFF"
+                                                Foreground="#1E293B"
                                                 Text="{Binding Title}"
                                                 TextTrimming="CharacterEllipsis" />
                                             <TextBlock
                                                 Margin="0,0,0,6"
                                                 FontSize="13"
-                                                Foreground="#94A3B8"
+                                                Foreground="#64748B"
                                                 Text="{Binding AuthorName}" />
                                             <TextBlock
                                                 FontSize="13"
                                                 FontWeight="SemiBold"
-                                                Foreground="#94A3B8"
+                                                Foreground="#475569"
                                                 Text="{Binding Price, StringFormat='{}{0:#,0} đ'}" />
                                         </StackPanel>
 
@@ -229,14 +280,15 @@
                                                     <Style TargetType="Button">
                                                         <Setter Property="Width" Value="30" />
                                                         <Setter Property="Height" Value="30" />
-                                                        <Setter Property="Background" Value="#334155" />
-                                                        <Setter Property="Foreground" Value="#F8FAFC" />
-                                                        <Setter Property="BorderThickness" Value="0" />
+                                                        <Setter Property="Background" Value="#F1F5F9" />
+                                                        <Setter Property="Foreground" Value="#1E293B" />
+                                                        <Setter Property="BorderThickness" Value="1.5" />
+                                                        <Setter Property="BorderBrush" Value="#CBD5E1" />
                                                         <Setter Property="Cursor" Value="Hand" />
                                                         <Setter Property="Template">
                                                             <Setter.Value>
                                                                 <ControlTemplate TargetType="Button">
-                                                                    <Border Background="{TemplateBinding Background}" CornerRadius="15">
+                                                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="15">
                                                                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                     </Border>
                                                                 </ControlTemplate>
@@ -244,18 +296,16 @@
                                                         </Setter>
                                                         <Style.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Background" Value="#475569" />
-                                                                <Setter Property="Foreground" Value="#FFFFFF" />
+                                                                <Setter Property="Background" Value="#E2E8F0" />
                                                             </Trigger>
                                                             <Trigger Property="IsPressed" Value="True">
-                                                                <Setter Property="Background" Value="#1E293B" />
+                                                                <Setter Property="Background" Value="#CBD5E1" />
                                                             </Trigger>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Button.Style>
                                                 <ui:SymbolIcon
                                                     FontSize="11"
-                                                    FontWeight="Bold"
                                                     Symbol="Subtract24" />
                                             </Button>
 
@@ -264,7 +314,7 @@
                                                 VerticalAlignment="Center"
                                                 FontSize="14"
                                                 FontWeight="Bold"
-                                                Foreground="#FFFFFF"
+                                                Foreground="#1E293B"
                                                 Text="{Binding Quantity, Mode=OneWay}"
                                                 TextAlignment="Center" />
 
@@ -273,14 +323,15 @@
                                                     <Style TargetType="Button">
                                                         <Setter Property="Width" Value="30" />
                                                         <Setter Property="Height" Value="30" />
-                                                        <Setter Property="Background" Value="#334155" />
-                                                        <Setter Property="Foreground" Value="#F8FAFC" />
-                                                        <Setter Property="BorderThickness" Value="0" />
+                                                        <Setter Property="Background" Value="#F1F5F9" />
+                                                        <Setter Property="Foreground" Value="#1E293B" />
+                                                        <Setter Property="BorderThickness" Value="1.5" />
+                                                        <Setter Property="BorderBrush" Value="#CBD5E1" />
                                                         <Setter Property="Cursor" Value="Hand" />
                                                         <Setter Property="Template">
                                                             <Setter.Value>
                                                                 <ControlTemplate TargetType="Button">
-                                                                    <Border Background="{TemplateBinding Background}" CornerRadius="15">
+                                                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="15">
                                                                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                     </Border>
                                                                 </ControlTemplate>
@@ -288,18 +339,16 @@
                                                         </Setter>
                                                         <Style.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Background" Value="#475569" />
-                                                                <Setter Property="Foreground" Value="#FFFFFF" />
+                                                                <Setter Property="Background" Value="#E2E8F0" />
                                                             </Trigger>
                                                             <Trigger Property="IsPressed" Value="True">
-                                                                <Setter Property="Background" Value="#1E293B" />
+                                                                <Setter Property="Background" Value="#CBD5E1" />
                                                             </Trigger>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Button.Style>
                                                 <ui:SymbolIcon
                                                     FontSize="11"
-                                                    FontWeight="Bold"
                                                     Symbol="Add24" />
                                             </Button>
                                         </StackPanel>
@@ -310,12 +359,12 @@
                                             VerticalAlignment="Center"
                                             FontSize="15"
                                             FontWeight="Bold"
-                                            Foreground="#FFFFFF">
+                                            Foreground="#1E293B">
                                             <Run Text="{Binding TotalLinePrice, Mode=OneWay, StringFormat='{}{0:#,0}'}" />
                                             <Run
                                                 FontSize="12"
                                                 FontWeight="Normal"
-                                                Foreground="#94A3B8"
+                                                Foreground="#64748B"
                                                 Text=" đ" />
                                         </TextBlock>
 
@@ -344,11 +393,11 @@
                                                     </Setter>
                                                     <Style.Triggers>
                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="Background" Value="#2A1B24" />
+                                                            <Setter Property="Background" Value="#FEE2E2" />
                                                             <Setter Property="Foreground" Value="#FF4D4F" />
                                                         </Trigger>
                                                         <Trigger Property="IsPressed" Value="True">
-                                                            <Setter Property="Background" Value="#1F131A" />
+                                                            <Setter Property="Background" Value="#FCA5A5" />
                                                         </Trigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -378,41 +427,48 @@
 
             <StackPanel Grid.Column="1">
                 <Border
-                    Padding="20"
+                    Padding="22"
                     VerticalAlignment="Top"
-                    Background="#161B26"
-                    BorderBrush="#232D42"
+                    Background="White"
+                    BorderBrush="#E2E8F0"
                     BorderThickness="1"
-                    CornerRadius="12">
+                    CornerRadius="16">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="25" ShadowDepth="4" Opacity="0.06" Color="#0F172A"/>
+                    </Border.Effect>
                     <StackPanel>
-                        <TextBlock
-                            Margin="0,0,0,20"
-                            FontSize="16"
-                            FontWeight="Bold"
-                            Foreground="#FFFFFF"
-                            Text="Order Summary" />
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <Border Width="4" Height="18" Background="#00D4B2" CornerRadius="2" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Foreground="#1E293B"
+                                Text="Order Summary" 
+                                VerticalAlignment="Center"/>
+                        </StackPanel>
+                        
                         <Grid Margin="0,0,0,14">
                             <TextBlock
                                 FontSize="14"
-                                Foreground="#94A3B8"
+                                Foreground="#64748B"
                                 Text="Subtotal" />
                             <TextBlock
                                 HorizontalAlignment="Right"
                                 FontSize="14"
                                 FontWeight="SemiBold"
-                                Foreground="#FFFFFF">
+                                Foreground="#1E293B">
                                 <Run Text="{Binding TotalPrice, Mode=OneWay, StringFormat='{}{0:#,0}'}" />
                                 <Run
                                     FontSize="12"
                                     FontWeight="Normal"
-                                    Foreground="#94A3B8"
+                                    Foreground="#64748B"
                                     Text="đ" />
                             </TextBlock>
                         </Grid>
                         <Grid Margin="0,0,0,18">
                             <TextBlock
                                 FontSize="14"
-                                Foreground="#94A3B8"
+                                Foreground="#64748B"
                                 Text="Discount" />
                             <TextBlock
                                 HorizontalAlignment="Right"
@@ -424,17 +480,17 @@
                                 <Run
                                     FontSize="12"
                                     FontWeight="Normal"
-                                    Foreground="#94A3B8"
+                                    Foreground="#64748B"
                                     Text=" đ" />
                             </TextBlock>
                         </Grid>
-                        <Separator Margin="0,0,0,18" Background="#232D42" />
+                        <Separator Margin="0,0,0,18" Background="#E2E8F0" />
                         <Grid Margin="0,0,0,25">
                             <TextBlock
                                 VerticalAlignment="Center"
                                 FontSize="15"
                                 FontWeight="Bold"
-                                Foreground="#FFFFFF"
+                                Foreground="#1E293B"
                                 Text="Total Amount" />
                             <StackPanel
                                 HorizontalAlignment="Right"
@@ -462,27 +518,51 @@
                             Command="{Binding CheckoutCommand}">
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="Background" Value="#0078D4" />
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#00D4B2" Offset="0.0"/>
+                                                <GradientStop Color="#0EA5E9" Offset="1.0"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
                                     <Setter Property="Foreground" Value="#FFFFFF" />
                                     <Setter Property="BorderThickness" Value="0" />
                                     <Setter Property="Cursor" Value="Hand" />
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                                <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" CornerRadius="8">
+                                                    <Border.Effect>
+                                                        <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.2" Color="#00D4B2"/>
+                                                    </Border.Effect>
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                 </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="ButtonBorder" Property="Background">
+                                                            <Setter.Value>
+                                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                                    <GradientStop Color="#00E6C3" Offset="0.0"/>
+                                                                    <GradientStop Color="#38BDF8" Offset="1.0"/>
+                                                                </LinearGradientBrush>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="ButtonBorder" Property="Background">
+                                                            <Setter.Value>
+                                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                                    <GradientStop Color="#00BFA0" Offset="0.0"/>
+                                                                    <GradientStop Color="#0284C7" Offset="1.0"/>
+                                                                </LinearGradientBrush>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#106EBE" />
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="True">
-                                            <Setter Property="Background" Value="#005A9E" />
-                                        </Trigger>
-                                    </Style.Triggers>
                                 </Style>
                             </Button.Style>
                             <StackPanel Orientation="Horizontal">
@@ -503,18 +583,25 @@
 
                 <Border
                     Margin="0,16,0,0"
-                    Padding="20"
-                    Background="#161B26"
-                    BorderBrush="#232D42"
+                    Padding="22"
+                    Background="White"
+                    BorderBrush="#E2E8F0"
                     BorderThickness="1"
-                    CornerRadius="12">
+                    CornerRadius="16">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="25" ShadowDepth="4" Opacity="0.06" Color="#0F172A"/>
+                    </Border.Effect>
                     <StackPanel>
-                        <TextBlock
-                            Margin="0,0,0,8"
-                            FontSize="14"
-                            FontWeight="Bold"
-                            Foreground="#FFFFFF"
-                            Text="Customer" />
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                            <Border Width="4" Height="15" Background="#00D4B2" CornerRadius="2" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock
+                                FontSize="14"
+                                FontWeight="Bold"
+                                Foreground="#1E293B"
+                                Text="Customer" 
+                                VerticalAlignment="Center"/>
+                        </StackPanel>
+                        
                         <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -526,8 +613,9 @@
                                 Text="{Binding CustomerPhoneInput, UpdateSourceTrigger=PropertyChanged}"
                                 PlaceholderText="Enter phone number..."
                                 Height="38"
-                                Foreground="White"
-                                Icon="{ui:SymbolIcon Phone24}"/>
+                                Foreground="#1E293B"
+                                Icon="{ui:SymbolIcon Phone24}"
+                                IconPlacement="Left"/>
 
                             <Button
                                 Grid.Column="1"
@@ -537,28 +625,28 @@
                                     <Style TargetType="Button">
                                         <Setter Property="Width" Value="38" />
                                         <Setter Property="Height" Value="38" />
-                                        <Setter Property="Background" Value="#252B37" />
-                                        <Setter Property="Foreground" Value="#FFFFFF" />
-                                        <Setter Property="BorderThickness" Value="1" />
-                                        <Setter Property="BorderBrush" Value="#38BDF8"/>
+                                        <Setter Property="Background" Value="White" />
+                                        <Setter Property="Foreground" Value="#00BFA0" />
+                                        <Setter Property="BorderThickness" Value="1.5" />
+                                        <Setter Property="BorderBrush" Value="#00D4B2"/>
                                         <Setter Property="Cursor" Value="Hand" />
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="Button">
-                                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                                                    <Border x:Name="AddBtnBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
                                                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                     </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="AddBtnBorder" Property="Background" Value="#E0FDF9" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsPressed" Value="True">
+                                                            <Setter TargetName="AddBtnBorder" Property="Background" Value="#B2F5EA" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
                                                 </ControlTemplate>
                                             </Setter.Value>
                                         </Setter>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#334155" />
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter Property="Background" Value="#1E293B" />
-                                            </Trigger>
-                                        </Style.Triggers>
                                     </Style>
                                 </Button.Style>
                                 <ui:SymbolIcon
@@ -572,7 +660,7 @@
                         <Button 
                             Style="{StaticResource PremiumColoredButtonStyle}"
                             Command="{Binding SelectMatchedCustomerCommand}"
-                            Background="#1A2E3B"
+                            Background="#F0F9FF"
                             BorderBrush="#38BDF8"
                             BorderThickness="1.5"
                             Margin="0,0,0,10"
@@ -582,7 +670,7 @@
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                                 <ui:SymbolIcon Symbol="CheckmarkCircle24" Foreground="#38BDF8" Margin="0,0,8,0"/>
                                 <TextBlock Text="{Binding MatchedCustomer.Name, StringFormat='Select: {0} (Click to confirm)'}" 
-                                           Foreground="#38BDF8" FontWeight="Bold" VerticalAlignment="Center"/>
+                                           Foreground="#0284C7" FontWeight="Bold" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
@@ -592,18 +680,18 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Background="#1A2E26" CornerRadius="6" Padding="10,6" BorderBrush="#00DC82" BorderThickness="1.5">
+                            <Border Grid.Column="0" Background="#F0FDF4" CornerRadius="6" Padding="10,6" BorderBrush="#10B981" BorderThickness="1.5">
                                 <StackPanel Orientation="Horizontal">
-                                    <ui:SymbolIcon Symbol="Person24" Foreground="#00DC82" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <ui:SymbolIcon Symbol="Person24" Foreground="#10B981" Margin="0,0,8,0" VerticalAlignment="Center"/>
                                     <StackPanel>
-                                        <TextBlock Text="{Binding SelectedCustomer.Name}" Foreground="White" FontWeight="Bold" FontSize="13"/>
-                                        <TextBlock Text="{Binding SelectedCustomer.Phone, StringFormat='Selected • Phone: {0}'}" Foreground="#94A3B8" FontSize="11"/>
+                                        <TextBlock Text="{Binding SelectedCustomer.Name}" Foreground="#1E293B" FontWeight="Bold" FontSize="13"/>
+                                        <TextBlock Text="{Binding SelectedCustomer.Phone, StringFormat='Selected • Phone: {0}'}" Foreground="#475569" FontSize="11"/>
                                     </StackPanel>
                                 </StackPanel>
                             </Border>
                             <Button Grid.Column="1" 
                                     Style="{StaticResource PremiumColoredButtonStyle}" 
-                                    Background="#2D1D24" 
+                                    Background="#FEF2F2" 
                                     BorderBrush="#FF4D4F" 
                                     BorderThickness="1.5"
                                     Padding="10,0"
@@ -615,18 +703,22 @@
                             </Button>
                         </Grid>
 
-                        <TextBlock
-                            Margin="0,0,0,8"
-                            FontSize="14"
-                            FontWeight="Bold"
-                            Foreground="#FFFFFF"
-                            Text="Voucher Code" />
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
+                            <Border Width="4" Height="15" Background="#00D4B2" CornerRadius="2" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock
+                                FontSize="14"
+                                FontWeight="Bold"
+                                Foreground="#1E293B"
+                                Text="Voucher Code" 
+                                VerticalAlignment="Center"/>
+                        </StackPanel>
+                        
                         <Border
                             Height="38"
                             Margin="0,0,0,12"
-                            Background="#1E293B"
-                            BorderBrush="#232D42"
-                            BorderThickness="1"
+                            Background="White"
+                            BorderBrush="#CBD5E1"
+                            BorderThickness="1.5"
                             CornerRadius="6">
                             <ComboBox
                                 Margin="5,0"
@@ -634,10 +726,68 @@
                                 Background="Transparent"
                                 BorderThickness="0"
                                 DisplayMemberPath="Code"
-                                Foreground="#FFFFFF"
+                                Foreground="#1E293B"
                                 ItemsSource="{Binding Vouchers}"
                                 SelectedValue="{Binding VoucherCodeInput, Mode=TwoWay}"
-                                SelectedValuePath="Code" />
+                                SelectedValuePath="Code">
+                                <ComboBox.Resources>
+                                    <!-- Override system and theme brushes to force a light theme dropdown -->
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="White" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#1E293B" />
+                                    <SolidColorBrush x:Key="SolidBackgroundFillColorBaseBrush" Color="White" />
+                                    <SolidColorBrush x:Key="SolidBackgroundFillColorSecondaryBrush" Color="#F8FAFC" />
+                                    <SolidColorBrush x:Key="SolidBackgroundFillColorTertiaryBrush" Color="#E2E8F0" />
+                                    <SolidColorBrush x:Key="SystemControlPageBackgroundChromeLowBrush" Color="White" />
+                                    <SolidColorBrush x:Key="ComboBoxBackground" Color="White" />
+                                    <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="#F1F5F9" />
+                                    <SolidColorBrush x:Key="ComboBoxBackgroundPressed" Color="#E2E8F0" />
+                                    <SolidColorBrush x:Key="ComboBoxBackgroundDisabled" Color="#E2E8F0" />
+                                    <SolidColorBrush x:Key="ComboBoxForeground" Color="#1E293B" />
+                                    <SolidColorBrush x:Key="ComboBoxForegroundPointerOver" Color="#1E293B" />
+                                    <SolidColorBrush x:Key="ComboBoxForegroundPressed" Color="#1E293B" />
+                                    <SolidColorBrush x:Key="ComboBoxForegroundDisabled" Color="#94A3B8" />
+                                    <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="White" />
+                                    <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#CBD5E1" />
+                                    <SolidColorBrush x:Key="ComboBoxPopupBorderBrush" Color="#CBD5E1" />
+                                    <SolidColorBrush x:Key="ComboBoxPopupBackground" Color="White" />
+                                    <SolidColorBrush x:Key="ComboBoxPopupForeground" Color="#1E293B" />
+                                    <SolidColorBrush x:Key="ControlSolidFillColorDefaultBrush" Color="White" />
+                                    
+                                    <!-- Custom light ComboBoxItem style with elegant hover and select triggers -->
+                                    <Style TargetType="ComboBoxItem">
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="Foreground" Value="#1E293B" />
+                                        <Setter Property="Padding" Value="10,8" />
+                                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ComboBoxItem">
+                                                    <Border x:Name="ItemBorder" 
+                                                            Background="{TemplateBinding Background}" 
+                                                            BorderThickness="0" 
+                                                            CornerRadius="6" 
+                                                            Margin="3,2"
+                                                            Padding="{TemplateBinding Padding}">
+                                                        <ContentPresenter />
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="ItemBorder" Property="Background" Value="#F1F5F9" />
+                                                            <Setter Property="TextElement.Foreground" Value="#00D4B2" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter TargetName="ItemBorder" Property="Background" Value="#E0FDF9" />
+                                                            <Setter Property="TextElement.Foreground" Value="#00BFA0" />
+                                                            <Setter Property="TextElement.FontWeight" Value="SemiBold" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ComboBox.Resources>
+                            </ComboBox>
                         </Border>
 
                         <Button
@@ -646,29 +796,30 @@
                             Command="{Binding ApplyVoucherCommand}">
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="Background" Value="#252B37" />
-                                    <Setter Property="Foreground" Value="#FFFFFF" />
-                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Background" Value="White" />
+                                    <Setter Property="Foreground" Value="#00BFA0" />
+                                    <Setter Property="BorderThickness" Value="1.5" />
+                                    <Setter Property="BorderBrush" Value="#00D4B2" />
                                     <Setter Property="Cursor" Value="Hand" />
                                     <Setter Property="FontWeight" Value="Bold" />
                                     <Setter Property="FontSize" Value="12" />
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                                <Border x:Name="ApplyBtnBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                 </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="ApplyBtnBorder" Property="Background" Value="#E0FDF9" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="ApplyBtnBorder" Property="Background" Value="#B2F5EA" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#334155" />
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="True">
-                                            <Setter Property="Background" Value="#1E293B" />
-                                        </Trigger>
-                                    </Style.Triggers>
                                 </Style>
                             </Button.Style>
                             <StackPanel Orientation="Horizontal">

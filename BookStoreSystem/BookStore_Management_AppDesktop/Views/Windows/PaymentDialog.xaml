@@ -5,14 +5,36 @@
         Background="Transparent" WindowStartupLocation="CenterOwner"
         WindowStyle="None" AllowsTransparency="True"
         Title="Record Payment" Height="300" Width="400">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#1E293B"/>
+        </Style>
+        <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+            <Style.Resources>
+                <SolidColorBrush x:Key="TextControlForeground" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#1E293B" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#94A3B8" />
+                <SolidColorBrush x:Key="TextControlBackground" Color="White" />
+                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#F8FAFC" />
+                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="White" />
+                <SolidColorBrush x:Key="TextControlBorderBrush" Color="#CBD5E1" />
+                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#00D4B2" />
+                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#00D4B2" />
+            </Style.Resources>
+            <Setter Property="CaretBrush" Value="#1E293B"/>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="15">
         <Border CornerRadius="15" Background="Black">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="15" ShadowDepth="2" Opacity="0.5" Color="Black"/>
+                <DropShadowEffect BlurRadius="15" ShadowDepth="2" Opacity="0.1" Color="Black"/>
             </Border.Effect>
         </Border>
 
-        <Border CornerRadius="15" BorderBrush="{DynamicResource NavyLightBrush}" BorderThickness="1" Background="{DynamicResource NavyPrimaryBrush}">
+        <Border CornerRadius="15" BorderBrush="#E2E8F0" BorderThickness="1" Background="White">
             <Grid Margin="30">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -22,28 +44,23 @@
 
                 <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,20" 
                             MouseLeftButtonDown="Header_MouseLeftButtonDown" Cursor="SizeAll" Background="Transparent">
-                    <TextBlock Text="RECORD PAYMENT" FontSize="22" FontWeight="Black" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Enter the amount received" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                    <TextBlock Text="RECORD PAYMENT" FontSize="22" FontWeight="Black" Foreground="#1E293B" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Enter the amount received" FontSize="13" Foreground="#64748B" HorizontalAlignment="Center" Margin="0,4,0,0"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" VerticalAlignment="Center">
-                    <TextBlock Text="Payment Amount (VNĐ)" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <TextBlock Text="Payment Amount (VNĐ)" Foreground="#1E293B" FontWeight="SemiBold" Margin="0,0,0,8"/>
                     <ui:TextBox x:Name="AmountTextBox" 
                                 PlaceholderText="e.g. 50000" 
                                 Height="40"
                                 FontSize="16"
-                                FontWeight="Bold"
-                                Background="{DynamicResource SidebarBackgroundBrush}"
-                                Foreground="{DynamicResource TextPrimaryBrush}"
-                                BorderBrush="{DynamicResource NavyLightBrush}"/>
+                                FontWeight="Bold"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0,15,0,0">
-                    <ui:Button Content="Cancel" Click="Cancel_Click"
-                               Appearance="Transparent" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,15,0"/>
+                    <ui:Button Content="Cancel" Click="Cancel_Click" Style="{StaticResource CancelButtonStyle}" Margin="0,0,15,0"/>
 
-                    <ui:Button Content="Submit Payment" Click="Submit_Click"
-                               Appearance="Primary" Background="{DynamicResource NavyAccentBrush}" Width="145" Height="35" FontWeight="Bold"/>
+                    <ui:Button Content="Submit Payment" Click="Submit_Click" Style="{StaticResource PremiumSolidButtonStyle}" Width="145" Height="40"/>
                 </StackPanel>
             </Grid>
         </Border>

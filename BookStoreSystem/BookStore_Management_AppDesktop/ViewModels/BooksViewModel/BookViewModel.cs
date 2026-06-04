@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Helpers;
+using BookStore_Management_AppDesktop.Helpers;
 using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs;
@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using MessageBox = BookStore_Management_AppDesktop.Views.Windows.CustomMessageBox;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {

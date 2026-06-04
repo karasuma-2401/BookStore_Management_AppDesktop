@@ -98,6 +98,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
             }
         }
 
+        private bool _isGeneratingPayroll = false;
+
         [RelayCommand]
         private async Task GeneratePayroll()
         {
@@ -106,10 +108,19 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         private async Task GeneratePayrollAsync()
         {
+            if (_isGeneratingPayroll) return;
             try
             {
+                _isGeneratingPayroll = true;
                 IsLoading = true;
                 LoadingMessage = "Calculating payroll...";
+
+                if (_allEmployees == null || !_allEmployees.Any())
+                {
+                    var employees = await _employeeApiService.GetAllEmployeesAsync();
+                    _allEmployees = employees ?? new List<Employee>();
+                    TotalEmployees = _allEmployees.Count;
+                }
 
                 PayrollData.Clear();
                 TotalPayroll = 0;
@@ -145,6 +156,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             finally
             {
                 IsLoading = false;
+                _isGeneratingPayroll = false;
             }
         }
 

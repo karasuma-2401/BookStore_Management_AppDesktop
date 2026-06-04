@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs;
 using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.Services.API.EmployeeServices; 
@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using MessageBox = BookStore_Management_AppDesktop.Views.Windows.CustomMessageBox;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 { 

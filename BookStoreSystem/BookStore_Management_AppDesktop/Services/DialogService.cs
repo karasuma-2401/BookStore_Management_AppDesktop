@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.CustomerDTOs;
 using BookStore_Management_AppDesktop.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,15 +20,14 @@ namespace BookStore_Management_AppDesktop.Services
 
         public void ShowMessage(string message)
         {
-            var msgBox = new CustomMessageBox(message);
-            msgBox.ShowDialog();
+            CustomMessageBox.Show(message, "Notification", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
         }
 
         public bool ShowConfirmation(string message, string confirmText = "Confirm", bool isDanger = false)
         {
-            var window = new ConfirmWindow(message, confirmText, isDanger);
-            window.ShowDialog();
-            return window.DialogResult == true;
+            var icon = isDanger ? System.Windows.MessageBoxImage.Warning : System.Windows.MessageBoxImage.Question;
+            var result = CustomMessageBox.Show(message, "Confirmation", System.Windows.MessageBoxButton.YesNo, icon);
+            return result == System.Windows.MessageBoxResult.Yes;
         }
 
         public void ShowAddBookWindow()
@@ -83,19 +82,19 @@ namespace BookStore_Management_AppDesktop.Services
 
         public async Task ShowErrorAsync(string title, string message)
         {
-            System.Windows.MessageBox.Show(message, title, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            CustomMessageBox.Show(message, title, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             await Task.CompletedTask;
         }
 
         public async Task ShowSuccessAsync(string title, string message)
         {
-            System.Windows.MessageBox.Show(message, title, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+            CustomMessageBox.Show(message, title, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
             await Task.CompletedTask;
         }
 
         public async Task<bool> ShowConfirmationAsync(string title, string message)
         {
-            var result = System.Windows.MessageBox.Show(message, title, System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question);
+            var result = CustomMessageBox.Show(message, title, System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question);
             return await Task.FromResult(result == System.Windows.MessageBoxResult.Yes);
         }
     }

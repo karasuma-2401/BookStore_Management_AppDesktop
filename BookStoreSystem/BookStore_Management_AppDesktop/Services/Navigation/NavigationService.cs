@@ -85,9 +85,6 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
                     case PageType.PayrollManagement:
                         newPage = _serviceProvider.GetRequiredService<PayrollPage>();
                         break;
-                    case PageType.KioskCheckIn:
-                        newPage = _serviceProvider.GetRequiredService<KioskCheckInPage>();
-                        break;
                 }
 
 

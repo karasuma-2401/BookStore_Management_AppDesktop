@@ -1,4 +1,5 @@
-﻿using System.Windows;
+using System.Windows;
+using MessageBox = BookStore_Management_AppDesktop.Views.Windows.CustomMessageBox;
 using System.Windows.Controls; 
 
 namespace BookStore_Management_AppDesktop.Views.Windows
