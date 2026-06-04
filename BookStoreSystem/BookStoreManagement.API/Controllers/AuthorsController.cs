@@ -25,6 +25,13 @@ namespace BookStoreManagement.API.Controllers
             return Ok(authors);
         }
 
+        [HttpGet("string")]
+        public async Task<IActionResult> GetAsString()
+        {
+            var authors = await _service.GetAll();
+            return Ok(string.Join(", ", authors.Select(a => a.Name)));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(AuthorCreateDto dto)
         {
