@@ -95,7 +95,7 @@
 
                     <ui:Button Content="Create Account" Command="{Binding CreateUserCommand}" 
                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                                   Style="{StaticResource PremiumSolidButtonStyle}" Width="130" Height="38"/>
+                                   Style="{StaticResource PremiumSolidButtonStyle}" Width="150" Height="38"/>
                 </StackPanel>
             </Grid>
         </Border>

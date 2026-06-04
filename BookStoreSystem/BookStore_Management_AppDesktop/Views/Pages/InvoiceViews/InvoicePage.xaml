@@ -163,7 +163,7 @@
             <!-- Card 1: Total Invoices -->
             <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="0,0,10,5">
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.08" Color="Black"/>
+                    <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.16" Color="Black"/>
                 </Border.Effect>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -188,7 +188,7 @@
             <!-- Card 2: Total Revenue -->
             <Border Grid.Column="1" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="10,0,10,5">
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.08" Color="Black"/>
+                    <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.16" Color="Black"/>
                 </Border.Effect>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -213,7 +213,7 @@
             <!-- Card 3: Canceled Invoices -->
             <Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="10,0,0,5">
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.08" Color="Black"/>
+                    <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.16" Color="Black"/>
                 </Border.Effect>
                 <Grid>
                     <Grid.ColumnDefinitions>

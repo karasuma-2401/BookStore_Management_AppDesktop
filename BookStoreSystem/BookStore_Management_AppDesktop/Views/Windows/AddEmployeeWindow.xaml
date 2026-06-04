@@ -121,7 +121,7 @@
                             Text="{Binding SearchUserIDText, UpdateSourceTrigger=PropertyChanged}" />
                         <ui:Button
                             Grid.Column="2"
-                            Height="35"
+                            Height="40"
                             HorizontalAlignment="Center"
                             Style="{StaticResource PremiumSolidButtonStyle}"
                             Command="{Binding AddUserIDCommand}"
@@ -191,7 +191,7 @@
                         Content="Cancel" />
 
                     <ui:Button
-                        Width="140"
+                        Width="145"
                         Height="38"
                         Style="{StaticResource PremiumSolidButtonStyle}"
                         Command="{Binding AddEmployeeCommand}"
