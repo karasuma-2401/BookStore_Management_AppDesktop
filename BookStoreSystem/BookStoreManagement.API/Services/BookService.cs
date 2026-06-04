@@ -214,7 +214,7 @@ namespace BookStoreManagement.API.Services
                 .Where(id => !oldAuthorIds.Contains(id))
                 .Select(id => new BookAuthor
                 {
-                    BookId = id,
+                    BookId = book.BookId,
                     AuthorId = id
                 });
 

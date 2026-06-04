@@ -16,9 +16,6 @@ namespace BookStoreManagement.API.Models.Entities
         [Column("title")]
         public string Title {get; set;} = string.Empty;
 
-        [Column("author_id")]
-        public int? AuthorId {get; set;}
-
         [Column("quantity")]
         public int Quantity {get; set;} = 0;
 

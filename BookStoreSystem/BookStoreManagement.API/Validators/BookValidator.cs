@@ -26,11 +26,6 @@ namespace BookStoreManagement.API.Validators
                 .When(x => x.Description != null)
                 .WithMessage("Description too long");
 
-            RuleFor(x => x.AuthorId)
-                .GreaterThan(0)
-                .When(x => x.AuthorId.HasValue)
-                .WithMessage("AuthorId must be valid");
-
             RuleFor(x => x.DeletedAt)
                 .Must((book, deletedAt) =>
                 {
