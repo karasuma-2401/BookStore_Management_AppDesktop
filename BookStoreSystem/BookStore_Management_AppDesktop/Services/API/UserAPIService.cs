@@ -86,7 +86,7 @@ namespace BookStore_Management_AppDesktop.Services.API
             }
         }
 
-        public async Task<(bool IsSuccess, string Message)> AdminChangeStaffPasswordAsync(int userId, string newPassword)
+        public async Task<(bool IsSuccess, string Message)> AdminChangeStaffPasswordAsync(int employeeId, string newPassword)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace BookStore_Management_AppDesktop.Services.API
                 var json = JsonSerializer.Serialize(dto);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PostAsync($"user/{userId}/admin-change-password", content);
+                var response = await _httpClient.PostAsync($"user/{employeeId}/admin-change-password", content);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)

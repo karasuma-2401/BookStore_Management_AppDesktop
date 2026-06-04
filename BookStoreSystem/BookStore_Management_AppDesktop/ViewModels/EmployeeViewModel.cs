@@ -274,7 +274,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             {
                 try
                 {
-                    var result = await _userApiService.AdminChangeStaffPasswordAsync(employee.UserId, dialog.NewPassword);
+                    var result = await _userApiService.AdminChangeStaffPasswordAsync(employee.EmployeeId, dialog.NewPassword);
                     if (result.IsSuccess)
                     {
                         _dialogService.ShowMessage("Employee password updated successfully!");

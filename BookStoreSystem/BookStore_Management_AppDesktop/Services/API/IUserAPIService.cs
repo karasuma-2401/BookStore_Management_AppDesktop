@@ -8,6 +8,6 @@ namespace BookStore_Management_AppDesktop.Services.API
     {
         Task<List<UserResponseModel>> GetAllUsersAsync();
         Task<(bool IsSuccess, string Message)> CreateUserAsync(UserCreateDto dto);
-        Task<(bool IsSuccess, string Message)> AdminChangeStaffPasswordAsync(int userId, string newPassword);
+        Task<(bool IsSuccess, string Message)> AdminChangeStaffPasswordAsync(int employeeId, string newPassword);
     }
 }
