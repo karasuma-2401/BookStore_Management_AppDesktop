@@ -1,4 +1,4 @@
-﻿namespace BookStoreManagement.API.Models.Invoice
+namespace BookStoreManagement.API.Models.Invoice
 {
     public class InvoiceListDto
     {
@@ -6,6 +6,7 @@
         public DateTime InvoiceDate { get; set; }
         public decimal Total { get; set; }
         public string? CustomerName { get; set; }
+        public int? CustomerId { get; set; }
         public string? StaffName { get; set; }
         public int TotalItems { get; set; }
         public string Status { get; set; } = null!;
