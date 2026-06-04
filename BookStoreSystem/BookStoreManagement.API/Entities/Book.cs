@@ -16,9 +16,6 @@ namespace BookStoreManagement.API.Models.Entities
         [Column("title")]
         public string Title {get; set;} = string.Empty;
 
-        [Column("author_id")]
-        public int? AuthorId {get; set;}
-
         [Column("quantity")]
         public int Quantity {get; set;} = 0;
 
@@ -31,9 +28,13 @@ namespace BookStoreManagement.API.Models.Entities
         [Column("description", TypeName = "text")]
         public string? Description { get; set; }
 
-        [ForeignKey("AuthorId")]
-        public Author? Author {get; set;}
-        
+        [Column("is_deleted")]
+        public bool IsDeleted { get; set; }
+
+        [Column("deleted_at")]
+        public DateTime? DeletedAt { get; set; }
+        public ICollection<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
+
         public ICollection<BookCategory> BookCategories {get; set;} = new List <BookCategory>();
     }
 }

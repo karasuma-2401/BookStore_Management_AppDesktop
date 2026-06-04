@@ -356,14 +356,6 @@ namespace BookStoreManagement.API.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BookStoreManagement.API.Models.Book", b =>
-                {
-                    b.HasOne("BookStoreManagement.API.Models.Author", "Author")
-                        .WithMany("Books")
-                        .HasForeignKey("AuthorId");
-
-                    b.Navigation("Author");
-                });
 
             modelBuilder.Entity("BookStoreManagement.API.Models.BookCategory", b =>
                 {

@@ -12,6 +12,8 @@ namespace BookStoreManagement.API.Data
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Author> Authors { get; set; }
+
+        public DbSet<BookAuthor> BookAuthors { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<BookCategory> BookCategories { get; set; }
@@ -29,6 +31,18 @@ namespace BookStoreManagement.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<BookAuthor>()
+            .HasKey(ba => new { ba.BookId, ba.AuthorId });
+
+            modelBuilder.Entity<BookAuthor>()
+                .HasOne(ba => ba.Book)
+                .WithMany(b => b.BookAuthors)
+                .HasForeignKey(ba => ba.BookId);
+
+            modelBuilder.Entity<BookAuthor>()
+                .HasOne(ba => ba.Author)
+                .WithMany(a => a.BookAuthors)
+                .HasForeignKey(ba => ba.AuthorId);
             modelBuilder.Entity<BookCategory>()
                 .HasKey(bc => new {bc.BookId, bc.CategoryId});
 
