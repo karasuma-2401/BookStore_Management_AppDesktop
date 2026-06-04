@@ -1,5 +1,6 @@
 using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API;
+using BookStore_Management_AppDesktop.Services.API.AuthorServices;
 using BookStore_Management_AppDesktop.Services.API.BookServices; 
 using BookStore_Management_AppDesktop.Services.API.CartServices;
 using BookStore_Management_AppDesktop.Services.API.CategoryServices;
@@ -12,6 +13,7 @@ using BookStore_Management_AppDesktop.Services.Export;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.Services.Realtime;
 using BookStore_Management_AppDesktop.ViewModels;
+using BookStore_Management_AppDesktop.ViewModels.BooksViewModel;
 using BookStore_Management_AppDesktop.Views.Pages;
 using BookStore_Management_AppDesktop.Views.Pages.BookViews; 
 using BookStore_Management_AppDesktop.Views.Pages.InvoiceViews;
@@ -90,6 +92,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<AuthorSelectionViewModel>();
             services.AddTransient<BookViewModel>();
+            services.AddTransient<CategoryManagementViewModel>();
             services.AddTransient<EmployeeViewModel>();
             services.AddTransient<CustomerViewModel>();
             services.AddTransient<ImportCreateViewModel>(); 
@@ -103,6 +106,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<PayrollViewModel>();
             services.AddTransient<AbsenceManagementViewModel>();
             services.AddTransient<KioskCheckInViewModel>();
+            services.AddTransient<AuthorManagementViewModel>();
 
 
             // // Get View 
@@ -116,6 +120,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<InventoryPage>();
             services.AddTransient<SettingsPage>();
             services.AddTransient<EmployeePage>();
+            services.AddTransient<CategoryManagementWindow>();
             services.AddTransient<CustomerPage>();
             services.AddTransient<ImportHistoryPage>(); 
             services.AddTransient<CreateImportPage>(); 
@@ -125,6 +130,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<ShiftSchedulePage>();
             services.AddTransient<PayrollPage>();
             services.AddTransient<AbsenceManagementPage>();
+            services.AddTransient<AuthorManagementWindow>();
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Helpers;
+using BookStore_Management_AppDesktop.Helpers;
 using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs;
@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using MessageBox = BookStore_Management_AppDesktop.Views.Windows.CustomMessageBox;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -31,7 +32,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private ObservableCollection<Book> _books = new ObservableCollection<Book>();
 
         [ObservableProperty] private int _currentPage = 1;
-        [ObservableProperty] private int _pageSize = 15;
+        [ObservableProperty] private int _pageSize = 14;
         [ObservableProperty] private int _totalItems;
         [ObservableProperty] private int _totalPages = 1;
         [ObservableProperty] private int _cartItemCount = 0;

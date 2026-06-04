@@ -11,6 +11,8 @@ using System.Windows.Threading;
 using System.IdentityModel.Tokens.Jwt;
 using BookStore_Management_AppDesktop.Helpers;
 using Microsoft.Extensions.DependencyInjection;
+using System.Windows;
+using MessageBox = BookStore_Management_AppDesktop.Views.Windows.CustomMessageBox;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -129,7 +131,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         {
                             if (checkinResult.Success)
                             {
-                                System.Windows.MessageBox.Show(checkinResult.Message, "Check-in Kiosk", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                                MessageBox.Show(checkinResult.Message, "Check-in Kiosk", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
                             }
                             else if (checkinResult.Message.Contains("already checked in"))
                             {
@@ -141,7 +143,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                             }
                             else
                             {
-                                System.Windows.MessageBox.Show(checkinResult.Message, "Check-in Kiosk", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                                MessageBox.Show(checkinResult.Message, "Check-in Kiosk", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
                             }
                         }
                     }

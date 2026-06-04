@@ -1,4 +1,4 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 using BookStore_Management_AppDesktop.ViewModels;
 using BookStore_Management_AppDesktop.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +18,7 @@ namespace BookStore_Management_AppDesktop.Views.Pages
 
             viewModel.OnShowMessage = (message) =>
             {
-                var msgBox = new CustomMessageBox(message);
-                msgBox.ShowDialog();
+                CustomMessageBox.Show(message);
             };
 
             this.DataContext = viewModel;

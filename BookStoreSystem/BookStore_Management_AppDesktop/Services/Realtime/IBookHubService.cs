@@ -11,6 +11,7 @@ namespace BookStore_Management_AppDesktop.Services.Realtime
         event Action<int>? BookUpdated;
         event Action<int, int>? InventoryStockChanged;
         event Action? ImportCreated;
+        event Action<int, string>? AuthorUpdated;
 
         Task StartAsync();
         Task StopAsync();

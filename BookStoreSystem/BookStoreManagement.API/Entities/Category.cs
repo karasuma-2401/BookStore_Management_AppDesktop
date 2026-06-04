@@ -16,6 +16,8 @@ namespace BookStoreManagement.API.Models.Entities
         [Column("name")]
         public string Name {get; set;} = string.Empty;
 
+
+
         public ICollection<BookCategory> BookCategories {get; set;} = new List<BookCategory>();
     }
 }

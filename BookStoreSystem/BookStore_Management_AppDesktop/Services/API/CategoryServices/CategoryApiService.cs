@@ -1,9 +1,10 @@
 ﻿using BookStore_Management_AppDesktop.Models;
-using BookStore_Management_AppDesktop.Models.DTOs.CategoryDTOs; 
+using BookStore_Management_AppDesktop.Models.DTOs.CategoryDTOs;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -16,7 +17,11 @@ namespace BookStore_Management_AppDesktop.Services.API.CategoryServices
             BaseAddress = new Uri("https://localhost:7063/")
         };
 
-        private static readonly JsonSerializerOptions _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        private static readonly JsonSerializerOptions _options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
 
         private void AddAuthorizationHeader()
         {
@@ -36,22 +41,17 @@ namespace BookStore_Management_AppDesktop.Services.API.CategoryServices
             try
             {
                 AddAuthorizationHeader();
-
                 var response = await _httpClient.GetAsync("category");
-
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
-                    var categories = JsonSerializer.Deserialize<List<Category>>(json, _options);
-                    return categories ?? new List<Category>();
+                    return JsonSerializer.Deserialize<List<Category>>(json, _options) ?? new List<Category>();
                 }
-
-                System.Diagnostics.Debug.WriteLine($"[API Fail] GetAllCategories: {response.StatusCode}");
                 return new List<Category>();
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[CRASH] GetAllCategories Exception: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[CRASH] GetAllCategories: {ex.Message}");
                 return new List<Category>();
             }
         }
@@ -61,18 +61,11 @@ namespace BookStore_Management_AppDesktop.Services.API.CategoryServices
             try
             {
                 AddAuthorizationHeader();
-
                 var dto = new CategoryCreateDto { Name = name };
                 var json = JsonSerializer.Serialize(dto, _options);
-
-                var content = new StringContent(json);
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/json")
-                {
-                    CharSet = "utf-8"
-                };
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PostAsync("category", content);
-
                 if (response.IsSuccessStatusCode)
                 {
                     var responseJson = await response.Content.ReadAsStringAsync();
@@ -82,8 +75,42 @@ namespace BookStore_Management_AppDesktop.Services.API.CategoryServices
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[CRASH] CreateCategory Exception: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[CRASH] CreateCategory: {ex.Message}");
                 return null;
+            }
+        }
+
+        public async Task<bool> UpdateCategoryAsync(int id, string name)
+        {
+            try
+            {
+                AddAuthorizationHeader();
+                var dto = new { Name = name };
+                var json = JsonSerializer.Serialize(dto, _options);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PutAsync($"category/{id}", content);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[CRASH] UpdateCategory: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteCategoryAsync(int id)
+        {
+            try
+            {
+                AddAuthorizationHeader();
+                var response = await _httpClient.DeleteAsync($"category/{id}");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[CRASH] DeleteCategory: {ex.Message}");
+                return false;
             }
         }
     }

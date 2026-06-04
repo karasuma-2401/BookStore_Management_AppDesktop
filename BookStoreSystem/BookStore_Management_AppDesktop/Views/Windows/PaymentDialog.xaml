@@ -60,7 +60,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0,15,0,0">
                     <ui:Button Content="Cancel" Click="Cancel_Click" Style="{StaticResource CancelButtonStyle}" Margin="0,0,15,0"/>
 
-                    <ui:Button Content="Submit Payment" Click="Submit_Click" Style="{StaticResource PremiumSolidButtonStyle}" Width="145" Height="35"/>
+                    <ui:Button Content="Submit Payment" Click="Submit_Click" Style="{StaticResource PremiumSolidButtonStyle}" Width="145" Height="40"/>
                 </StackPanel>
             </Grid>
         </Border>

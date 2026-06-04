@@ -8,5 +8,7 @@ namespace BookStore_Management_AppDesktop.Services.API.CategoryServices
     {
         Task<List<Category>> GetAllCategoriesAsync();
         Task<Category?> CreateCategoryAsync(string name);
+        Task<bool> UpdateCategoryAsync(int id, string name); 
+        Task<bool> DeleteCategoryAsync(int id);
     }
 }
