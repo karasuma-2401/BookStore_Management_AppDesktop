@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Helpers.Enums;
+using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Models.DTOs.InvoiceDTOs;
 using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.Services.API.InvoiceServices;
@@ -53,6 +53,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
         public int TotalPages => Math.Max(1, (int)Math.Ceiling((double)TotalInvoices / PageSize));
         public int CurrentPageStart => TotalInvoices == 0 ? 0 : (CurrentPage - 1) * PageSize + 1;
         public int CurrentPageEnd => Math.Min(CurrentPage * PageSize, TotalInvoices);
+
+        public int TotalAllInvoices => _allInvoices.Count;
+        public decimal TotalRevenue => _allInvoices.Where(i => i.Status != "Canceled").Sum(i => i.Total);
+        public int CanceledInvoicesCount => _allInvoices.Count(i => i.Status == "Canceled");
 
         public InvoiceViewModel(IInvoiceApiService apiService, INavigationService navigationService)
         {
@@ -179,6 +183,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 OnPropertyChanged(nameof(TotalPages));
                 OnPropertyChanged(nameof(CurrentPageStart));
                 OnPropertyChanged(nameof(CurrentPageEnd));
+                OnPropertyChanged(nameof(TotalAllInvoices));
+                OnPropertyChanged(nameof(TotalRevenue));
+                OnPropertyChanged(nameof(CanceledInvoicesCount));
             });
         }
 
@@ -239,6 +246,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     {
                         // Cập nhật ngay trên UI mà không cần tải lại toàn bộ danh sách
                         invoice.Status = "Canceled";
+                        OnPropertyChanged(nameof(TotalRevenue));
+                        OnPropertyChanged(nameof(CanceledInvoicesCount));
 
                         MessageBox.Show("Invoice canceled successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     }

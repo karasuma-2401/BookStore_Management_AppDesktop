@@ -76,6 +76,7 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<IInvoiceExportService, InvoiceExportService>(); 
             services.AddSingleton<IVoucherApiService, VoucherApiService>();
             services.AddSingleton<ICategoryApiService, CategoryApiService>();
+            services.AddSingleton<IUserApiService, UserApiService>();
 
             services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
             services.AddSingleton<IEmployeeShiftApiService, EmployeeShiftApiService>();
@@ -109,6 +110,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<LoginWindow>();
             services.AddTransient<AddBookWindow>(); 
             services.AddTransient<EditBookWindow>();
+            services.AddTransient<AddCustomerWindow>();
             services.AddTransient<BookPage>();
             services.AddTransient<SaleCartPage>();
             services.AddTransient<InventoryPage>();

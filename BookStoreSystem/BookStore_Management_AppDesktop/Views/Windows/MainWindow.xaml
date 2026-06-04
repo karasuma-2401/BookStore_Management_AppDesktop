@@ -113,6 +113,18 @@
 
                 <ui:NavigationViewItem
                     Command="{Binding NavigateCommand}"
+                    CommandParameter="Settings"
+                    Icon="{ui:SymbolIcon TicketHorizontal24}"
+                    Tag="Settings"
+                    Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
+                    <TextBlock
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Vouchers" />
+                </ui:NavigationViewItem>
+
+                <ui:NavigationViewItem
+                    Command="{Binding NavigateCommand}"
                     CommandParameter="Inventory"
                     Icon="{ui:SymbolIcon Box24}"
                     Tag="Inventory">
@@ -143,62 +155,61 @@
                         FontWeight="SemiBold"
                         Text="Reports" />
                 </ui:NavigationViewItem>
+
                 <ui:NavigationViewItem
-                    Command="{Binding NavigateCommand}"
-                    CommandParameter="Payslip"
-                    Icon="{ui:SymbolIcon Money24}"
-                    Tag="Payslip"
+                    Icon="{ui:SymbolIcon People24}"
+                    Tag="StaffManagement"
                     Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
-                    <TextBlock
-                        FontSize="{StaticResource FontSizeSubTitle}"
-                        FontWeight="SemiBold"
-                        Text="Payroll" />
-                </ui:NavigationViewItem>
-                <ui:NavigationViewItem
-                    Command="{Binding NavigateCommand}"
-                    CommandParameter="ShiftAssign"
-                    Icon="{ui:SymbolIcon PersonClock24}"
-                    Tag="ShiftAssign"
-                    Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
-                    <TextBlock
-                        FontSize="{StaticResource FontSizeSubTitle}"
-                        FontWeight="SemiBold"
-                        Text="Shift Schedule" />
-                </ui:NavigationViewItem>
-                <ui:NavigationViewItem
-                    Command="{Binding NavigateCommand}"
-                    CommandParameter="AbsenceManagement"
-                    Icon="{ui:SymbolIcon Dismiss24}"
-                    Tag="AbsenceManagement"
-                    Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
-                    <TextBlock
-                        FontSize="{StaticResource FontSizeSubTitle}"
-                        FontWeight="SemiBold"
-                        Text="Absence Management" />
-                </ui:NavigationViewItem>
-                <ui:NavigationViewItem
-                    Command="{Binding NavigateCommand}"
-                    CommandParameter="KioskCheckIn"
-                    Icon="{ui:SymbolIcon Clock24}"
-                    Tag="KioskCheckIn">
-                    <TextBlock
-                        FontSize="{StaticResource FontSizeSubTitle}"
-                        FontWeight="SemiBold"
-                        Text="Check-in Kiosk" />
+                    <ui:NavigationViewItem.Content>
+                        <TextBlock
+                            FontSize="{StaticResource FontSizeSubTitle}"
+                            FontWeight="SemiBold"
+                            Text="Staff Management" />
+                    </ui:NavigationViewItem.Content>
+                    <ui:NavigationViewItem.MenuItems>
+                        <ui:NavigationViewItem
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="ShiftAssign"
+                            Icon="{ui:SymbolIcon PersonClock24}"
+                            Tag="ShiftAssign">
+                            <TextBlock
+                                FontSize="{StaticResource FontSizeSubTitle}"
+                                FontWeight="SemiBold"
+                                Text="Shift Schedule" />
+                        </ui:NavigationViewItem>
+                        <ui:NavigationViewItem
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="Payslip"
+                            Icon="{ui:SymbolIcon Money24}"
+                            Tag="Payslip">
+                            <TextBlock
+                                FontSize="{StaticResource FontSizeSubTitle}"
+                                FontWeight="SemiBold"
+                                Text="Payroll" />
+                        </ui:NavigationViewItem>
+                        <ui:NavigationViewItem
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="AbsenceManagement"
+                            Icon="{ui:SymbolIcon Dismiss24}"
+                            Tag="AbsenceManagement">
+                            <TextBlock
+                                FontSize="{StaticResource FontSizeSubTitle}"
+                                FontWeight="SemiBold"
+                                Text="Absence Management" />
+                        </ui:NavigationViewItem>
+                    </ui:NavigationViewItem.MenuItems>
                 </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>
 
             <ui:NavigationView.FooterMenuItems>
                 <ui:NavigationViewItem
-                    Command="{Binding NavigateCommand}"
-                    CommandParameter="Settings"
-                    Icon="{ui:SymbolIcon TicketHorizontal24}"
-                    Tag="Settings"
-                    Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
+                    Command="{Binding LogoutCommand}"
+                    Icon="{ui:SymbolIcon ArrowLeft24}"
+                    Tag="Logout">
                     <TextBlock
                         FontSize="{StaticResource FontSizeSubTitle}"
                         FontWeight="SemiBold"
-                        Text="Vouchers" />
+                        Text="Logout" />
                 </ui:NavigationViewItem>
             </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>

@@ -1,4 +1,4 @@
-﻿using FluentValidation; 
+using FluentValidation; 
 using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Models.Auth;
 

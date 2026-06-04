@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models.DTOs;
+using BookStore_Management_AppDesktop.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -82,6 +82,45 @@ namespace BookStore_Management_AppDesktop.Services.API
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"CreateUserApi Error: {ex.Message}");
+                return (false, $"System Error: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool IsSuccess, string Message)> AdminChangeStaffPasswordAsync(int employeeId, string newPassword)
+        {
+            try
+            {
+                AddAuthorizationHeader();
+                var dto = new { NewPassword = newPassword };
+                var json = JsonSerializer.Serialize(dto);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync($"user/{employeeId}/admin-change-password", content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Password updated successfully!");
+                }
+
+                try
+                {
+                    using var doc = JsonDocument.Parse(responseContent);
+                    if (doc.RootElement.TryGetProperty("message", out var messageElement))
+                    {
+                        return (false, messageElement.GetString() ?? "Change password failed.");
+                    }
+                }
+                catch
+                {
+                    return (false, $"Error: {response.StatusCode}");
+                }
+
+                return (false, "Change password failed.");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"AdminChangeStaffPassword Error: {ex.Message}");
                 return (false, $"System Error: {ex.Message}");
             }
         }

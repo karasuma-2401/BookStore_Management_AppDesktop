@@ -39,8 +39,8 @@ namespace BookStoreManagement.API.Services
             // Đảm bảo kiểu múi giờ là UTC và chỉ lấy phần Ngày (Date) cho PostgreSQL timestamptz
             var workDateUtc = DateTime.SpecifyKind(dto.WorkDate.Date, DateTimeKind.Utc);
 
-            if (await _context.EmployeeShifts.AnyAsync(es => es.EmployeeId == dto.EmployeeId && es.WorkDate == workDateUtc))
-                return "Employee already has a shift assigned for this date.";
+            if (await _context.EmployeeShifts.AnyAsync(es => es.EmployeeId == dto.EmployeeId && es.WorkDate == workDateUtc && es.ShiftId == dto.ShiftId))
+                return "Employee already has this shift assigned for this date.";
 
             var employeeshift = new EmployeeShift
             {
@@ -74,6 +74,28 @@ namespace BookStoreManagement.API.Services
             }
 
             var list = await query.ToListAsync();
+
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime nowVn = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
+
+            bool changed = false;
+            foreach (var es in list)
+            {
+                if (es.Status == "Scheduled" && es.Shift != null)
+                {
+                    var shiftEndTime = es.WorkDate.Date.Add(es.Shift.EndTime);
+                    if (nowVn > shiftEndTime)
+                    {
+                        es.Status = "Absent";
+                        es.IsPaid = false;
+                        changed = true;
+                    }
+                }
+            }
+            if (changed)
+            {
+                await _context.SaveChangesAsync();
+            }
 
             return list.Select(es => new EmployeeShiftResponseDto
             {
@@ -246,6 +268,28 @@ namespace BookStoreManagement.API.Services
                 .Include(es => es.Shift)
                 .Where(es => es.WorkDate >= dateUtc && es.WorkDate < nextDayUtc)
                 .ToListAsync();
+
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime nowVn = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
+
+            bool changed = false;
+            foreach (var es in assignments)
+            {
+                if (es.Status == "Scheduled" && es.Shift != null)
+                {
+                    var shiftEndTime = es.WorkDate.Date.Add(es.Shift.EndTime);
+                    if (nowVn > shiftEndTime)
+                    {
+                        es.Status = "Absent";
+                        es.IsPaid = false;
+                        changed = true;
+                    }
+                }
+            }
+            if (changed)
+            {
+                await _context.SaveChangesAsync();
+            }
 
             var response = new ShiftDayDetailResponseDto
             {

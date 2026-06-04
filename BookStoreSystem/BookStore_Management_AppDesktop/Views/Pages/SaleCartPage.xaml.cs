@@ -1,4 +1,5 @@
 using BookStore_Management_AppDesktop.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace BookStore_Management_AppDesktop.Views.Pages
@@ -12,6 +13,14 @@ namespace BookStore_Management_AppDesktop.Views.Pages
         {
             InitializeComponent();
             DataContext = viewModel;
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is SaleCartViewModel viewModel)
+            {
+                await viewModel.LoadDataAsync();
+            }
         }
     }
 }

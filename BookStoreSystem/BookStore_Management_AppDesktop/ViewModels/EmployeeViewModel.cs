@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Http;
 using BookStore_Management_AppDesktop.Services;
+using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.Services.API.EmployeeServices;
 
 namespace BookStore_Management_AppDesktop.ViewModels
@@ -18,6 +19,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly IEmployeeApiService _apiService;
         private readonly IDialogService _dialogService;
+        private readonly IUserApiService _userApiService;
         private List<Employee> _allEmployees = new();
         private CancellationTokenSource? _searchCts;
 
@@ -45,10 +47,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         public List<int> PageSizeOptions { get; set; } = new List<int> { 5, 8, 10, 12, 15 };
 
-        public EmployeeViewModel(IEmployeeApiService apiService, IDialogService dialogService)
+        public EmployeeViewModel(IEmployeeApiService apiService, IDialogService dialogService, IUserApiService userApiService)
         {
             _apiService = apiService;
             _dialogService = dialogService;
+            _userApiService = userApiService;
             _ = InitializeDataAsync();
         }
 
@@ -132,8 +135,15 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 OnPropertyChanged(nameof(TotalPages));
                 OnPropertyChanged(nameof(CurrentPageStart));
                 OnPropertyChanged(nameof(CurrentPageEnd));
+                OnPropertyChanged(nameof(TotalActiveEmployees));
+                OnPropertyChanged(nameof(TotalResignedEmployees));
+                OnPropertyChanged(nameof(TotalAllEmployees));
             });
         }
+
+        public int TotalActiveEmployees => _allEmployees.Count(e => e.Status == 1);
+        public int TotalResignedEmployees => _allEmployees.Count(e => e.Status == 0);
+        public int TotalAllEmployees => _allEmployees.Count;
 
         public int TotalEmployees => _allEmployees.Count(e => {
             if (string.IsNullOrWhiteSpace(SearchText)) return true;
@@ -178,8 +188,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
             if (employee == null) return;
 
             bool isConfirmed = _dialogService.ShowConfirmation(
-                message: $"Are you sure you want to delete employee '{employee.FullName}'?\nThis action cannot be undone.",
-                confirmText: "Delete",
+                message: $"Are you sure you want to change status of '{employee.FullName}' to Resigned (Nghỉ làm)?",
+                confirmText: "Change",
                 isDanger: true);
 
             if (isConfirmed)
@@ -190,23 +200,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
                     if (isEmployeeDeleted)
                     {
-                        bool isUserDeleted = await DeleteUserAccountAsync(employee.UserId);
-
-                        _allEmployees.Remove(employee);
+                        // Soft delete: update status to 0 locally
+                        employee.Status = 0;
                         UpdateDisplayList();
-
-                        if (isUserDeleted)
-                        {
-                            _dialogService.ShowMessage("Employee and associated User account deleted successfully!");
-                        }
-                        else
-                        {
-                            _dialogService.ShowMessage("Employee deleted, but the User account could not be removed. It might be in use elsewhere.");
-                        }
+                        _dialogService.ShowMessage("Employee status updated to Resigned (Nghỉ làm) successfully!");
                     }
                     else
                     {
-                        _dialogService.ShowMessage("Failed to delete the Employee record.");
+                        _dialogService.ShowMessage("Failed to update employee status.");
                     }
                 }
                 catch (Exception ex)
@@ -263,6 +264,38 @@ namespace BookStore_Management_AppDesktop.ViewModels
             var addWin = new BookStore_Management_AppDesktop.Views.Windows.AddEmployeeWindow();
             if (Application.Current.MainWindow != null) addWin.Owner = Application.Current.MainWindow;
             if (addWin.ShowDialog() == true) await InitializeDataAsync();
+        }
+
+        [RelayCommand]
+        private async Task ChangePassword(Employee employee)
+        {
+            if (employee == null) return;
+
+            var dialog = new BookStore_Management_AppDesktop.Views.Windows.ChangeEmployeePasswordDialog(employee.FullName);
+            if (Application.Current.MainWindow != null)
+            {
+                dialog.Owner = Application.Current.MainWindow;
+            }
+
+            if (dialog.ShowDialog() == true)
+            {
+                try
+                {
+                    var result = await _userApiService.AdminChangeStaffPasswordAsync(employee.EmployeeId, dialog.NewPassword);
+                    if (result.IsSuccess)
+                    {
+                        _dialogService.ShowMessage("Employee password updated successfully!");
+                    }
+                    else
+                    {
+                        _dialogService.ShowMessage($"Failed to update password: {result.Message}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _dialogService.ShowMessage($"Error: {ex.Message}");
+                }
+            }
         }
 
         [RelayCommand]

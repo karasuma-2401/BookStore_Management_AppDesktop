@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.ViewModels;
+using BookStore_Management_AppDesktop.ViewModels;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -75,7 +75,5 @@ namespace BookStore_Management_AppDesktop.Views.Pages.InvoiceViews
         }
 
         private void FilterButton_Click(object sender, RoutedEventArgs e) => OpenContextMenu_Click(sender, e);
-
-        private void MoreButton_Click(object sender, RoutedEventArgs e) => OpenContextMenu_Click(sender, e);
     }
 }

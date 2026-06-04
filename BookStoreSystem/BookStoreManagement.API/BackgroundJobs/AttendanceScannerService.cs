@@ -1,4 +1,4 @@
-﻿using BookStoreManagement.API.Data;
+using BookStoreManagement.API.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreManagement.API.BackgroundJobs
@@ -33,27 +33,36 @@ namespace BookStoreManagement.API.BackgroundJobs
 
                         DateTime startOfTodayVn = nowVn.Date;
 
-                        DateTime thresholdUtc = TimeZoneInfo.ConvertTimeToUtc(startOfTodayVn, vnTimeZone);
-                        int updatedCount = await context.EmployeeShifts
-                            .Where(es => es.WorkDate < thresholdUtc && es.Status == "Scheduled")
-                            .ExecuteUpdateAsync(setters => setters
-                                .SetProperty(e => e.Status, "Absent")
-                                .SetProperty(e => e.IsPaid, false),
-                                stoppingToken);
+                        var scheduledShifts = await context.EmployeeShifts
+                            .Include(es => es.Shift)
+                            .Where(es => es.Status == "Scheduled")
+                            .ToListAsync(stoppingToken);
 
-                        if (updatedCount > 0)
+                        bool changed = false;
+                        foreach (var es in scheduledShifts)
                         {
+                            var shiftEndTime = es.WorkDate.Date.Add(es.Shift?.EndTime ?? TimeSpan.Zero);
+                            if (nowVn > shiftEndTime)
+                            {
+                                es.Status = "Absent";
+                                es.IsPaid = false;
+                                changed = true;
+                            }
+                        }
+
+                        if (changed)
+                        {
+                            int updatedCount = await context.SaveChangesAsync(stoppingToken);
                             _logger.LogInformation($"[Auto-Scanner] Cap nhat thanh cong {updatedCount} ca vang mat.");
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-
                     _logger.LogError(ex, "[Auto-Scanner] Loi khi quet vang mat.");
                 }
 
-                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken);
             }
         }
     }
