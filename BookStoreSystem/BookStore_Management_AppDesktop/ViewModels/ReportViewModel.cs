@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace BookStore_Management_AppDesktop.ViewModels
@@ -38,10 +39,13 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private ISeries[] _revenueSeries = Array.Empty<ISeries>();
         [ObservableProperty] private Axis[] _xAxes = Array.Empty<Axis>();
         [ObservableProperty] private Axis[] _yAxes = Array.Empty<Axis>();
+
+        [ObservableProperty] private ISeries[] _inventorySeries = Array.Empty<ISeries>();
+        [ObservableProperty] private Axis[] _inventoryXAxes = Array.Empty<Axis>();
+        [ObservableProperty] private Axis[] _inventoryYAxes = Array.Empty<Axis>();
+
         [ObservableProperty] private ObservableCollection<TopBookDto> _topBooks = new ObservableCollection<TopBookDto>();
-
         [ObservableProperty] private ObservableCollection<InventoryReportResponseDTO> _inventoryReports = new ObservableCollection<InventoryReportResponseDTO>();
-
         [ObservableProperty] private ObservableCollection<DebtReportResponseDTO> _debtReports = new ObservableCollection<DebtReportResponseDTO>();
 
         public ReportViewModel(IReportApiService reportApi, IDialogService dialogService, IExportService exportService)
@@ -51,6 +55,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
             _exportService = exportService;
             XAxes = new Axis[] { new Axis { Name = "Days in Month" } };
             YAxes = new Axis[] { new Axis() };
+            InventoryXAxes = new Axis[] { new Axis { Name = "Books" } };
+            InventoryYAxes = new Axis[] { new Axis { Name = "Quantity" } };
         }
 
         public override async Task LoadDataAsync()
@@ -129,15 +135,75 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     _dialogService.ShowMessage("Could not retrieve monthly report data from the server.");
                 }
 
+                await _reportApi.GenerateInventoryReportAsync(SelectedMonth, SelectedYear);
+
                 var inventoryData = await _reportApi.GetInventoryReportsAsync(SelectedMonth, SelectedYear);
                 InventoryReports.Clear();
                 if (inventoryData != null)
                 {
+                    var bookNames = new List<string>();
+                    var finalStocks = new List<int>();
+
                     foreach (var item in inventoryData)
                     {
                         InventoryReports.Add(item);
+
+                        try
+                        {
+                            var type = item.GetType();
+                            var nameProp = type.GetProperty("BookName") ?? type.GetProperty("Title") ?? type.GetProperty("Name");
+                            var stockProp = type.GetProperty("FinalStock") ?? type.GetProperty("ClosingStock") ?? type.GetProperty("Stock") ?? type.GetProperty("Quantity");
+
+                            string bName = nameProp?.GetValue(item)?.ToString() ?? "Unknown";
+                            int bStock = Convert.ToInt32(stockProp?.GetValue(item) ?? 0);
+
+                            bookNames.Add(bName);
+                            finalStocks.Add(bStock);
+                        }
+                        catch
+                        {
+                            bookNames.Add("Unknown");
+                            finalStocks.Add(0);
+                        }
                     }
+
+                    InventorySeries = new ISeries[]
+                    {
+                        new ColumnSeries<int>
+                        {
+                            Values = finalStocks.ToArray(),
+                            Name = "Final Stock",
+                            Fill = new SolidColorPaint(SKColor.Parse("#10B981")),
+                            MaxBarWidth = 40,
+                            Rx = 4,
+                            Ry = 4
+                        }
+                    };
+
+                    InventoryXAxes = new Axis[]
+                    {
+                        new Axis
+                        {
+                            Labels = bookNames.ToArray(),
+                            LabelsPaint = new SolidColorPaint(SKColor.Parse("#64748B")),
+                            TextSize = 12,
+                            LabelsRotation = 15
+                        }
+                    };
+
+                    InventoryYAxes = new Axis[]
+                    {
+                        new Axis
+                        {
+                            Name = "Stock Quantity",
+                            LabelsPaint = new SolidColorPaint(SKColor.Parse("#64748B")),
+                            NamePaint = new SolidColorPaint(SKColor.Parse("#0F172A")),
+                            TextSize = 12
+                        }
+                    };
                 }
+
+                await _reportApi.GenerateDebtReportAsync(SelectedMonth, SelectedYear);
 
                 var debtData = await _reportApi.GetDebtReportsAsync(SelectedMonth, SelectedYear);
                 DebtReports.Clear();

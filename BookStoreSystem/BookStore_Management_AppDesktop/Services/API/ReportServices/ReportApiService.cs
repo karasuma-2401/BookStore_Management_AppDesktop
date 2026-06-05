@@ -90,5 +90,17 @@ namespace BookStore_Management_AppDesktop.Services.API.ReportServices
                 return new List<DebtReportResponseDTO>();
             }
         }
+
+        public async Task GenerateInventoryReportAsync(int month, int year)
+        {
+            var response = await _httpClient.PostAsync($"inventory-report/generate?month={month}&year={year}", null);
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task GenerateDebtReportAsync(int month, int year)
+        {
+            var response = await _httpClient.PostAsync($"debt-report/generate?month={month}&year={year}", null);
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

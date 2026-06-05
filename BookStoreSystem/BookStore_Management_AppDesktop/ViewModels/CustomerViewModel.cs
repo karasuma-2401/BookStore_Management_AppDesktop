@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,8 +21,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         private ObservableCollection<CustomerResponseDto> _customers = new();
         private string _searchText = string.Empty;
-        private string _selectedFilter = "Name";
-        private string _searchPlaceholder = "Search by Name...";
+        private string _searchPlaceholder = "Search customers...";
         private bool _isLoading = false;
         private int _currentPage = 1;
         private int _pageSize = 8;
@@ -44,18 +42,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 if (SetProperty(ref _searchText, value))
                 {
                     OnSearchTextChangedInternal();
-                }
-            }
-        }
-
-        public string SelectedFilter
-        {
-            get => _selectedFilter;
-            set
-            {
-                if (SetProperty(ref _selectedFilter, value))
-                {
-                    OnSelectedFilterChangedInternal();
                 }
             }
         }
@@ -110,12 +96,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         public List<int> PageSizeOptions { get; set; } = new List<int> { 5, 8, 10, 12, 15 };
 
-        public bool IsNameSelected => SelectedFilter == "Name";
-        public bool IsPhoneSelected => SelectedFilter == "Phone";
-        public bool IsEmailSelected => SelectedFilter == "Email";
-        public bool IsDebtSelected => SelectedFilter == "Debt";
-
-        public RelayCommand<string> ChangeFilterCommand { get; private set; }
         public RelayCommand AddCustomerCommand { get; private set; }
         public RelayCommand<CustomerResponseDto> EditCustomerCommand { get; private set; }
         public RelayCommand<CustomerResponseDto> DeleteCustomerCommand { get; private set; }
@@ -125,12 +105,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             _apiService = apiService;
             _dialogService = dialogService;
-
-            ChangeFilterCommand = new RelayCommand<string>(filter =>
-            {
-                if (filter != null)
-                    SelectedFilter = filter;
-            });
 
             AddCustomerCommand = new RelayCommand(async () => await AddCustomerAsync());
             EditCustomerCommand = new RelayCommand<CustomerResponseDto>(async customer => await EditCustomerAsync(customer));
@@ -171,18 +145,15 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             var filteredList = _allCustomers;
 
-            // Apply search filter
             if (!string.IsNullOrEmpty(SearchText))
             {
-                filteredList = ApplySearchFilter(filteredList, SearchText, SelectedFilter);
+                filteredList = ApplySearchFilter(filteredList, SearchText);
             }
 
-            // Calculate pagination
             TotalPages = (filteredList.Count + PageSize - 1) / PageSize;
             if (CurrentPage > TotalPages && TotalPages > 0)
                 CurrentPage = TotalPages;
 
-            // Apply pagination
             var displayList = filteredList
                 .Skip((CurrentPage - 1) * PageSize)
                 .Take(PageSize)
@@ -195,18 +166,17 @@ namespace BookStore_Management_AppDesktop.ViewModels
             }
         }
 
-        private List<CustomerResponseDto> ApplySearchFilter(List<CustomerResponseDto> customers, string searchText, string filterType)
+        private List<CustomerResponseDto> ApplySearchFilter(List<CustomerResponseDto> customers, string searchText)
         {
             var searchLower = searchText.ToLower();
 
-            return filterType switch
-            {
-                "Name" => customers.Where(c => c.Name.ToLower().Contains(searchLower)).ToList(),
-                "Phone" => customers.Where(c => (c.Phone ?? "").ToLower().Contains(searchLower)).ToList(),
-                "Email" => customers.Where(c => (c.Email ?? "").ToLower().Contains(searchLower)).ToList(),
-                "Debt" => customers.Where(c => c.Debt.ToString().Contains(searchText)).ToList(),
-                _ => customers
-            };
+            return customers.Where(c =>
+                (c.Name != null && c.Name.ToLower().Contains(searchLower)) ||
+                (c.Phone != null && c.Phone.ToLower().Contains(searchLower)) ||
+                (c.Email != null && c.Email.ToLower().Contains(searchLower)) ||
+                (c.Address != null && c.Address.ToLower().Contains(searchLower)) ||
+                c.CustomerId.ToString().Contains(searchLower)
+            ).ToList();
         }
 
         private void OnSearchTextChangedInternal()
@@ -227,24 +197,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     });
                 }
             }, token);
-        }
-
-        private void OnSelectedFilterChangedInternal()
-        {
-            SearchPlaceholder = SelectedFilter switch
-            {
-                "Name" => "Search by Name...",
-                "Phone" => "Search by Phone...",
-                "Email" => "Search by Email...",
-                "Debt" => "Search by Debt...",
-                _ => "Search..."
-            };
-            OnPropertyChanged(nameof(IsNameSelected));
-            OnPropertyChanged(nameof(IsPhoneSelected));
-            OnPropertyChanged(nameof(IsEmailSelected));
-            OnPropertyChanged(nameof(IsDebtSelected));
-            SearchText = string.Empty;
-            CurrentPage = 1;
         }
 
         private void OnCurrentPageChangedInternal()
@@ -308,7 +260,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private async Task RefreshAsync()
         {
             SearchText = string.Empty;
-            SelectedFilter = "Name";
             CurrentPage = 1;
             await LoadCustomersAsync();
         }
