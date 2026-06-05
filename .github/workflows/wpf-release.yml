@@ -32,9 +32,9 @@ jobs:
           cache-dependency-path: "**/*.csproj"
 
       - name: Restore dependencies
-        run: dotnet restore "${{ env.WPF_PROJECT }}"
+        run: dotnet restore "${{ env.WPF_PROJECT }}" --runtime win-x64
       - name: Build
-        run: dotnet build "${{ env.WPF_PROJECT }}" --configuration Release --no-restore
+        run: dotnet build "${{ env.WPF_PROJECT }}" --configuration Release --runtime win-x64 --no-restore
       - name: Publish WPF App
         run: dotnet publish "${{ env.WPF_PROJECT }}" --configuration Release --runtime win-x64 --self-contained false --no-build --output ./publish_output
 
