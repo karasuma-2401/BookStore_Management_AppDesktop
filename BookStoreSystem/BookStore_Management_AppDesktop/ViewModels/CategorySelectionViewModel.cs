@@ -22,7 +22,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         [ObservableProperty] private string _searchText = string.Empty;
         [ObservableProperty] private bool _isDropdownOpen;
-        [ObservableProperty] private bool _canAddNewCategory; 
+        [ObservableProperty] private bool _canAddNewCategory;
 
         public Action<string>? OnShowMessage { get; set; }
 
@@ -89,7 +89,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             if (category == null || SelectedCategories.Any(c => c.CategoryId == category.CategoryId)) return;
 
             SelectedCategories.Add(category);
-            SearchText = string.Empty; 
+            SearchText = string.Empty;
             IsDropdownOpen = false;
         }
 
@@ -105,7 +105,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
             string newCatName = SearchText.Trim();
             if (string.IsNullOrEmpty(newCatName)) return;
 
-            var newCategory = await _categoryApiService.CreateCategoryAsync(newCatName);
+            var categoryToCreate = new Category { Name = newCatName };
+            var newCategory = await _categoryApiService.CreateCategoryAsync(categoryToCreate);
+
             if (newCategory != null)
             {
                 _allCategories.Add(newCategory);

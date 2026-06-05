@@ -45,12 +45,13 @@ namespace BookStore_Management_AppDesktop.Services.API.AuthorServices
             }
         }
 
-        public async Task<Author?> CreateAuthorAsync(string name)
+        public async Task<Author?> CreateAuthorAsync(Author newAuthor)
         {
             try
             {
                 AddAuthorizationHeader();
-                var createDto = new { Name = name };
+
+                var createDto = new { Name = newAuthor.Name };
                 var json = JsonSerializer.Serialize(createDto, _options);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
