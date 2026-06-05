@@ -14,7 +14,17 @@ namespace BookStoreManagement.API.Services
         {
             _context = context;
         }
+        public async Task GenerateReport(int month, int year)
+        {
+            var customers = await _context.Customers
+                .Where(x => !x.IsDeleted)
+                .ToListAsync();
 
+            foreach (var customer in customers)
+            {
+                await CreateReport(month, year, customer.CustomerId);
+            }
+        }
         public async Task<DebtReport> CreateReport(int month, int year, int customerId)
         {
             var customer = await _context.Customers.FindAsync(customerId);
@@ -22,29 +32,43 @@ namespace BookStoreManagement.API.Services
                 throw new Exception("Customer not found");
 
             var openingDebt = customer.Debt;
+
             var totalInvoice = await _context.Invoices
-            .Where(x => x.CustomerId == customerId
-                && x.InvoiceDate.Month == month
-                && x.InvoiceDate.Year == year)
-            .SumAsync(x => (decimal?)x.Total) ?? 0;
+                .Where(x => x.CustomerId == customerId
+                    && x.InvoiceDate.Month == month
+                    && x.InvoiceDate.Year == year)
+                .SumAsync(x => (decimal?)x.Total) ?? 0;
+
             var totalPayment = await _context.Payments
-            .Where(x => x.CustomerId == customerId
-                && x.PaymentDate.Month == month
-                && x.PaymentDate.Year == year)
-            .SumAsync(x => (decimal?)x.Amount) ?? 0;
+                .Where(x => x.CustomerId == customerId
+                    && x.PaymentDate.Month == month
+                    && x.PaymentDate.Year == year)
+                .SumAsync(x => (decimal?)x.Amount) ?? 0;
+
             var change = totalInvoice - totalPayment;
 
-            var report = new DebtReport
-            {
-                Month = month,
-                Year = year,
-                CustomerId = customerId,
-                OpeningDebt = openingDebt,
-                ChangeAmount = change,
-                ClosingDebt = openingDebt + change
-            };
+            var report = await _context.DebtReports
+                .FirstOrDefaultAsync(x =>
+                    x.Month == month &&
+                    x.Year == year &&
+                    x.CustomerId == customerId);
 
-            _context.DebtReports.Add(report);
+            if (report == null)
+            {
+                report = new DebtReport
+                {
+                    Month = month,
+                    Year = year,
+                    CustomerId = customerId
+                };
+
+                _context.DebtReports.Add(report);
+            }
+
+            report.OpeningDebt = openingDebt;
+            report.ChangeAmount = change;
+            report.ClosingDebt = openingDebt + change;
+
             await _context.SaveChangesAsync();
 
             return report;

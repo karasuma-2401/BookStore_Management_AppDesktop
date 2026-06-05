@@ -9,5 +9,6 @@ namespace BookStoreManagement.API.Services.Interfaces
         Task<IEnumerable<InventoryReportResponseDTO>> GetReports(int month, int year);
         Task<InventoryReportResponseDTO?> GetById(int id);
         Task<IEnumerable<InventoryReportResponseDTO>> GetByBook(int bookId);
+        Task GenerateReport(int month, int year);
     }
 }

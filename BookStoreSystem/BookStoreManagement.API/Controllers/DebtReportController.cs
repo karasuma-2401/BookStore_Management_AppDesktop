@@ -2,6 +2,7 @@ using BookStoreManagement.API.Models.DTOs;
 using BookStoreManagement.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreManagement.API.Controllers
 {
@@ -16,7 +17,12 @@ namespace BookStoreManagement.API.Controllers
         {
             _service = service;
         }
-
+        [HttpPost("generate")]
+        public async Task<IActionResult> Generate(int month, int year)
+        {
+            await _service.GenerateReport(month, year);
+            return Ok("Generated successfully");
+        }
         [HttpPost]
         public async Task<IActionResult> Create(CreateDebtReportDTO dto)
         {

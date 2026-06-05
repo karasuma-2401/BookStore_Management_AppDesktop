@@ -15,6 +15,15 @@ namespace BookStoreManagement.API.Services
             _context = context;
         }
 
+        public async Task GenerateReport(int month, int year)
+        {
+            var books = await _context.Books.ToListAsync();
+
+            foreach (var book in books)
+            {
+                await CreateReport(month, year, book.BookId);
+            }
+        }
         public async Task<InventoryReport> CreateReport(int month, int year, int bookId)
         {
             var book = await _context.Books.FindAsync(bookId);
@@ -22,29 +31,43 @@ namespace BookStoreManagement.API.Services
                 throw new Exception("Book not found");
 
             var openingStock = book.Quantity;
+
             var totalImport = await _context.ImportDetails
-            .Where(x => x.BookId == bookId
-                && x.Import.ImportDate.Month == month
-                && x.Import.ImportDate.Year == year)
-            .SumAsync(x => (int?)x.Quantity) ?? 0;
-                    var totalSold = await _context.InvoiceDetails
-            .Where(x => x.BookId == bookId
-                && x.Invoice.InvoiceDate.Month == month
-                && x.Invoice.InvoiceDate.Year == year)
-            .SumAsync(x => (int?)x.Quantity) ?? 0;
+                .Where(x => x.BookId == bookId
+                    && x.Import.ImportDate.Month == month
+                    && x.Import.ImportDate.Year == year)
+                .SumAsync(x => (int?)x.Quantity) ?? 0;
+
+            var totalSold = await _context.InvoiceDetails
+                .Where(x => x.BookId == bookId
+                    && x.Invoice.InvoiceDate.Month == month
+                    && x.Invoice.InvoiceDate.Year == year)
+                .SumAsync(x => (int?)x.Quantity) ?? 0;
+
             var change = totalImport - totalSold;
 
-            var report = new InventoryReport
-            {
-                Month = month,
-                Year = year,
-                BookId = bookId,
-                OpeningStock = openingStock,
-                ChangeAmount = change,
-                ClosingStock = openingStock + change
-            };
+            var report = await _context.InventoryReports
+                .FirstOrDefaultAsync(x =>
+                    x.Month == month &&
+                    x.Year == year &&
+                    x.BookId == bookId);
 
-            _context.InventoryReports.Add(report);
+            if (report == null)
+            {
+                report = new InventoryReport
+                {
+                    Month = month,
+                    Year = year,
+                    BookId = bookId
+                };
+
+                _context.InventoryReports.Add(report);
+            }
+
+            report.OpeningStock = openingStock;
+            report.ChangeAmount = change;
+            report.ClosingStock = openingStock + change;
+
             await _context.SaveChangesAsync();
 
             return report;

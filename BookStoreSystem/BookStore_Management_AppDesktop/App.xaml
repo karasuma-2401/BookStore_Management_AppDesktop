@@ -9,7 +9,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <converters:BooleanToVisibilityConverter x:Key="BoolToVis" />
-            <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <converters:IntToBoolConverter x:Key="IntToBoolConverter" />
             <converters:CollectionEmptyToVisibilityConverter x:Key="CollectionEmptyToVisibilityConverter" />
             <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
