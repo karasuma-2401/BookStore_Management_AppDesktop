@@ -336,7 +336,7 @@ namespace BookStore_Management_AppDesktop.Services.Export
                     // Table headers
                     int tableRow = 10;
                     // Publisher column tam de default vi backend chua cung cap
-                    var headers = new[] { "ID", "Title", "Author(s)", "Publisher", "Quantity", "Price", "Total Value" };
+                    var headers = new[] { "ID", "Title", "Author(s)", "Publish Year", "Quantity", "Price", "Total Value" };
                     for (int col = 1; col <= headers.Length; col++)
                     {
                         var cell = worksheet.Cell(tableRow, col);
@@ -359,8 +359,7 @@ namespace BookStore_Management_AppDesktop.Services.Export
 
                         worksheet.Cell(tableRow, 3).Value = book.DisplayAuthorNames ?? "Unknown";
 
-                        // Backend chua tra Publisher, luon la "N/A"
-                        worksheet.Cell(tableRow, 4).Value = book.Publisher;
+                        worksheet.Cell(tableRow, 4).Value = book.PublishYear;
 
                         var quantityCell = worksheet.Cell(tableRow, 5);
                         quantityCell.Value = book.Quantity;

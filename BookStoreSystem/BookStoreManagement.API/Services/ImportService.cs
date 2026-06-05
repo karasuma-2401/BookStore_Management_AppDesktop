@@ -65,6 +65,10 @@ namespace BookStoreManagement.API.Services
                             .Where(b => b.BookId == d.BookId)
                             .Select(b => b.Title)
                             .FirstOrDefault() ?? "",
+                        PublishYear = _context.Books
+                            .Where(b => b.BookId == d.BookId)
+                            .Select(b => b.PublishYear)
+                            .FirstOrDefault() ?? 0,
                         Quantity = d.Quantity,
                         ImportPrice = d.ImportPrice
                     }).ToList()
@@ -94,6 +98,7 @@ namespace BookStoreManagement.API.Services
                     {
                         BookId = d.BookId,
                         BookTitle = d.Book.Title,
+                        PublishYear = d.Book.PublishYear ?? 0,
                         Quantity = d.Quantity,
                         ImportPrice = d.ImportPrice
                     }).ToList()
@@ -121,6 +126,7 @@ namespace BookStoreManagement.API.Services
                 {
                     BookId = d.BookId,
                     BookTitle = d.Book.Title,
+                    PublishYear = d.Book.PublishYear ?? 0,
                     Quantity = d.Quantity,
                     ImportPrice = d.ImportPrice
                 }).ToList()
