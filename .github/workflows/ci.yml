@@ -16,8 +16,8 @@ concurrency:
 
 env:
   DOTNET_VERSION: 10.0.x
-  SOLUTION_FILE: BookStoreManagement.API.sln
-  PROJECT_FILE: BookStoreManagement.API.csproj
+  SOLUTION_FILE: BookStoreSystem/BookStoreManagement.API/BookStoreManagement.API.sln
+  PROJECT_FILE: BookStoreSystem/BookStoreManagement.API/BookStoreManagement.API.csproj
   DOTNET_CLI_TELEMETRY_OPTOUT: "1"
   DOTNET_NOLOGO: "true"
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "1"
@@ -91,4 +91,4 @@ jobs:
           fetch-depth: 1
 
       - name: Build Docker image
-        run: docker build --file Dockerfile --tag bookstoremanagement-api:ci .
+        run: docker build --file BookStoreSystem/BookStoreManagement.API/Dockerfile --tag bookstoremanagement-api:ci ./BookStoreSystem/BookStoreManagement.API
