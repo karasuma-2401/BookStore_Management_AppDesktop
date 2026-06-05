@@ -34,6 +34,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private decimal _price = 0;
         [ObservableProperty] private int _quantity = 0;
         [ObservableProperty] private string _description = string.Empty;
+        // Backend chua co Publisher nen field nay chua duoc su dung
+        [ObservableProperty] private string _publisher = string.Empty;
         [ObservableProperty] private string _localImagePath = string.Empty;
 
         [ObservableProperty][NotifyCanExecuteChangedFor(nameof(SaveBookChangesCommand))] private bool _isLoading;
@@ -92,6 +94,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
             Price = bookToEdit.Price;
             Quantity = bookToEdit.Quantity;
             Description = bookToEdit.Description ?? string.Empty;
+            // Backend chua tra Publisher nen luon la "N/A"
+            Publisher = bookToEdit.Publisher ?? string.Empty;
             LocalImagePath = bookToEdit.ImagePath ?? string.Empty;
 
             await LoadLookupsAsync();
@@ -166,6 +170,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     BookId = _isEditMode ? _bookId : 0,
                     Title = Title.Trim(),
                     PublishYear = PublishYear,
+                    // Backend chua ho tro Publisher (comment lai de tranh loi)
+                    // Publisher = Publisher?.Trim(),
                     Quantity = Quantity,
                     Price = Price,
                     Description = Description.Trim(),

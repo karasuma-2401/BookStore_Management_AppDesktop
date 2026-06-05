@@ -1,3 +1,4 @@
+using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.ReportDTOs;
 using BookStore_Management_AppDesktop.Models.DTOs.ShiftDTOs;
 using System.Collections.Generic;
@@ -21,5 +22,8 @@ namespace BookStore_Management_AppDesktop.Services.Export
             int month,
             int year,
             IEnumerable<EmployeeShiftResponseDto> shifts);
+
+        Task<bool> ExportInventoryToExcelAsync(IEnumerable<Book> books);
     }
 }
+

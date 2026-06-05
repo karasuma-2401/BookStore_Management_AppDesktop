@@ -17,6 +17,18 @@ namespace BookStore_Management_AppDesktop.Converters
 
             try
             {
+                // If it's a URL (http or https), use it directly
+                if (imagePath.StartsWith("http://") || imagePath.StartsWith("https://"))
+                {
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri(imagePath);
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                    bitmap.Freeze();
+                    return bitmap;
+                }
+
                 // If it's a full path, use it directly
                 if (Path.IsPathRooted(imagePath) && File.Exists(imagePath))
                 {

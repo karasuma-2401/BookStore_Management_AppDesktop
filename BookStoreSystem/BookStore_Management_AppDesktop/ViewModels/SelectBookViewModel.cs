@@ -56,7 +56,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     return;
                 }
 
-                var query = new BookQueryParameters { Keyword = value, PageSize = 15 };
+                var query = new BookQueryParameters { Keyword = value, PageSize = 15, IncludeOutOfStock = true };
                 var results = await _apiService.GetAllBooksAsync(query, token);
 
                 Application.Current.Dispatcher.Invoke(() =>

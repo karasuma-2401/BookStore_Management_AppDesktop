@@ -78,6 +78,7 @@ namespace BookStoreManagement.API.Services
                     BookId = b.BookId,
                     Title = b.Title,
                     PublishYear = b.PublishYear ?? 0,
+              //      Publisher = b.Publisher,
                     AuthorNames = b.BookAuthors
                         .Select(ba => ba.Author.Name)
                         .ToList(),
@@ -123,6 +124,7 @@ namespace BookStoreManagement.API.Services
                     BookId = b.BookId,
                     Title = b.Title,
                     PublishYear = b.PublishYear ?? 0,
+            //        Publisher = b.Publisher,
 
                     AuthorNames = b.BookAuthors
                         .Select(ba => ba.Author.Name)

@@ -3,12 +3,14 @@ using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs;
 using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API.BookServices;
+using BookStore_Management_AppDesktop.Services.Export;
 using BookStore_Management_AppDesktop.Services.Realtime;
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -23,7 +25,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly CloudinaryService _cloudinaryService;
         private readonly IDialogService _dialogService;
         private readonly IBookHubService _hubService;
-        private readonly IServiceProvider _serviceProvider; 
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IExportService _exportService;
 
         private readonly DebounceHelper _searchDebouncer = new DebounceHelper();
 
@@ -36,19 +39,22 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private string? _selectedSort = "price_desc";
         [ObservableProperty] private string _totalBooksCount = "0";
         [ObservableProperty] private string _lowStockBooksCount = "0";
+        [ObservableProperty] private int _lowStockCount = 0;
 
         public InventoryViewModel(
             IBookApiService apiService,
             CloudinaryService cloudinaryService,
             IDialogService dialogService,
             IBookHubService hubService,
-            IServiceProvider serviceProvider) 
+            IServiceProvider serviceProvider,
+            IExportService exportService) 
         {
             _apiService = apiService;
             _cloudinaryService = cloudinaryService;
             _dialogService = dialogService;
             _hubService = hubService;
             _serviceProvider = serviceProvider;
+            _exportService = exportService;
 
             _hubService.BookCreated += (b) => RefreshInventoryGrid();
             _hubService.BookDeleted += (id) => RefreshInventoryGrid();
@@ -91,9 +97,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     if (response != null && response.Data != null)
                     {
                         foreach (var book in response.Data) Books.Add(book);
-                        TotalItems = response.TotalItems; TotalPages = response.TotalPages > 0 ? response.TotalPages : 1;
+                        TotalItems = response.TotalItems; 
+                        TotalPages = response.TotalPages > 0 ? response.TotalPages : 1;
                         TotalBooksCount = TotalItems.ToString("N0");
-                        LowStockBooksCount = Books.Count(b => b.Quantity <= 2).ToString("N0");
+
+                        // Get all books to calculate low stock count across entire dataset
+                        _ = UpdateLowStockCountAsync(query, token);
 
                         if (CurrentPage > TotalPages) { CurrentPage = TotalPages; _ = ExecuteSearchAsync(); }
                     }
@@ -101,6 +110,32 @@ namespace BookStore_Management_AppDesktop.ViewModels
             }
             catch (OperationCanceledException) { }
             catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[Inventory Search Error]: {ex.Message}"); }
+        }
+
+        private async Task UpdateLowStockCountAsync(BookQueryParameters query, CancellationToken token)
+        {
+            try
+            {
+                // Get all books without pagination to calculate total low stock
+                var allBooksQuery = new BookQueryParameters
+                {
+                    Keyword = query.Keyword,
+                    PageNumber = 1,
+                    PageSize = 10000, // Get all books
+                    IncludeOutOfStock = true
+                };
+
+                var response = await _apiService.GetAllBooksAsync(allBooksQuery, token);
+                if (response?.Data != null)
+                {
+                    LowStockCount = response.Data.Count(b => b.Quantity > 0 && b.Quantity <= 5);
+                    LowStockBooksCount = LowStockCount.ToString("N0");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Low Stock Update Error]: {ex.Message}");
+            }
         }
 
         partial void OnSearchTextChanged(string value)
@@ -115,7 +150,40 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [RelayCommand] private void OpenAuthorManagement() => _dialogService.ShowAuthorManagementWindow();
         [RelayCommand] private void OpenCategoryManagement() => _dialogService.ShowCategoryManagementWindow();
 
+        [RelayCommand]
+        private async Task ExportInventory()
+        {
+            try
+            {
+                if (Books.Count == 0)
+                {
+                    _dialogService.ShowMessage("No books to export.");
+                    return;
+                }
 
+                // Get all books for export
+                var query = new BookQueryParameters
+                {
+                    PageNumber = 1,
+                    PageSize = 10000,
+                    IncludeOutOfStock = true
+                };
+
+                var response = await _apiService.GetAllBooksAsync(query);
+                if (response?.Data != null && response.Data.Any())
+                {
+                    await _exportService.ExportInventoryToExcelAsync(response.Data);
+                }
+                else
+                {
+                    _dialogService.ShowMessage("Failed to retrieve books for export.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowMessage($"Error exporting inventory: {ex.Message}");
+            }
+        }
 
         [RelayCommand]
         private void EditBook(Book selectedBook)
