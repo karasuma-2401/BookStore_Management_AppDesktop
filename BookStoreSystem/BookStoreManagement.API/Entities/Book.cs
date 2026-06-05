@@ -36,6 +36,11 @@ namespace BookStoreManagement.API.Models.Entities
 
         [Column("publish_year")]
         public int? PublishYear { get; set; }
+
+        //[MaxLength(255)]
+        //[Column("publisher")]
+        //public string? Publisher { get; set; }
+
         public ICollection<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
 
         public ICollection<BookCategory> BookCategories {get; set;} = new List <BookCategory>();

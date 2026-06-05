@@ -22,7 +22,8 @@ namespace BookStoreManagement.API.Services
             string? sortBy,
             string? sortOrder,
             int page,
-            int pageSize)
+            int pageSize,
+            bool includeOutOfStock = false)
         {
             var query = _context.Books
                 .Include(b => b.BookAuthors)
@@ -30,6 +31,11 @@ namespace BookStoreManagement.API.Services
                 .Include(b => b.BookCategories)
                     .ThenInclude(bc => bc.Category)
                 .AsQueryable();
+
+            if (!includeOutOfStock)
+            {
+                query = query.Where(b => b.Quantity > 0);
+            }
 
             if (authorId.HasValue)
             {
@@ -72,6 +78,7 @@ namespace BookStoreManagement.API.Services
                     BookId = b.BookId,
                     Title = b.Title,
                     PublishYear = b.PublishYear ?? 0,
+              //      Publisher = b.Publisher,
                     AuthorNames = b.BookAuthors
                         .Select(ba => ba.Author.Name)
                         .ToList(),
@@ -117,6 +124,7 @@ namespace BookStoreManagement.API.Services
                     BookId = b.BookId,
                     Title = b.Title,
                     PublishYear = b.PublishYear ?? 0,
+            //        Publisher = b.Publisher,
 
                     AuthorNames = b.BookAuthors
                         .Select(ba => ba.Author.Name)

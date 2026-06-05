@@ -71,6 +71,21 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                <ui:Button Command="{Binding ExportInventoryCommand}"
+                           Appearance="Secondary"
+                           Height="50"
+                           Padding="18,0"
+                           Margin="0,0,12,0"
+                           Background="{DynamicResource CardBackgroundBrush}"
+                           BorderBrush="#E2E8F0"
+                           BorderThickness="1"
+                           Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="DocumentAdd24" FontSize="20" Margin="0,0,10,0" Foreground="{DynamicResource SystemAccentColorBrush}"/>
+                        <TextBlock Text="Export to Excel" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
+                    </StackPanel>
+                </ui:Button>
+
                 <ui:Button Command="{Binding OpenAuthorManagementCommand}"
                            Appearance="Secondary"
                            Height="50"

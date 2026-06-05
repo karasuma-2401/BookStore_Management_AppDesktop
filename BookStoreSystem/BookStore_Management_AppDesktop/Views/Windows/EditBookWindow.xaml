@@ -352,6 +352,11 @@
                         </Grid>
 
                         <StackPanel Margin="0,0,0,15">
+                            <ui:TextBlock Style="{StaticResource FormLabelStyle}" Text="Publisher" />
+                            <TextBox Text="{Binding Publisher, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FormTextBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,15">
                             <ui:TextBlock Style="{StaticResource FormLabelStyle}" Text="Image Cover Path (URL)" />
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -375,12 +380,7 @@
                             </Grid>
                         </StackPanel>
 
-                        <StackPanel Margin="0,0,0,5">
-                            <ui:TextBlock Style="{StaticResource FormLabelStyle}" Text="Book Description Summary" />
-                            <TextBox Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                     Height="80" VerticalContentAlignment="Top" Padding="12,8" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
-                                     Style="{StaticResource FormTextBoxStyle}" FontSize="13" />
-                        </StackPanel>
+                       
                     </StackPanel>
                 </Grid>
 

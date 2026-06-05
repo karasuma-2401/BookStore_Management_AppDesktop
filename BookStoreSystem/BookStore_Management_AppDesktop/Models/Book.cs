@@ -21,6 +21,8 @@ namespace BookStore_Management_AppDesktop.Models
         public string? Description { get; set; }
         public string? ImagePath { get; set; }
         public int PublishYear { get; set; }
+        // Backend chua co Publisher, tam de mac dinh
+        public string Publisher { get; set; } = "N/A";
 
         // Category: 
         public List<string> CategoryNames { get; set; } = new();
