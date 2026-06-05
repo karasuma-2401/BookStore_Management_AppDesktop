@@ -75,7 +75,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     var parts = SelectedSort.Split('_'); sortBy = parts[0]; sortOrder = parts[1];
                 }
 
-                var query = new BookQueryParameters { Keyword = SearchText?.Trim(), PageNumber = CurrentPage, PageSize = PageSize, SortBy = sortBy, SortOrder = sortOrder };
+                var query = new BookQueryParameters { 
+                    Keyword = SearchText?.Trim(), 
+                    PageNumber = CurrentPage, 
+                    PageSize = PageSize, 
+                    SortBy = sortBy, 
+                    SortOrder = sortOrder,
+                    IncludeOutOfStock = true
+                };
                 var response = await _apiService.GetAllBooksAsync(query, token);
 
                 Application.Current.Dispatcher.Invoke(() =>

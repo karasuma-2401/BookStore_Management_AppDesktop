@@ -111,7 +111,7 @@
 
                 <!-- Updated filter section matching AbsenceManagementPage pattern -->
                 <Border Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="0,24,0,0" Margin="0,24,0,0">
-                    <Grid>
+                    <Grid VerticalAlignment="Bottom">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
@@ -120,7 +120,7 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0" Orientation="Vertical">
-                            <TextBlock Text="From Date" Foreground="#64748B" FontSize="11" Margin="0,0,0,3"/>
+                            <TextBlock Text="From Date" Foreground="#64748B" FontSize="11" Margin="0,0,0,8"/>
                             <DatePicker SelectedDate="{Binding FilterStartDate}" 
                                        Background="White" Foreground="#1E293B" 
                                        BorderBrush="#38BDF8" BorderThickness="1.5" 
@@ -128,8 +128,8 @@
                                        SelectedDateFormat="Short" Language="vi-VN"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10,0,0,0">
-                            <TextBlock Text="To Date" Foreground="#64748B" FontSize="11" Margin="0,0,0,3"/>
+                        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="16,0,0,0">
+                            <TextBlock Text="To Date" Foreground="#64748B" FontSize="11" Margin="0,0,0,8"/>
                             <DatePicker SelectedDate="{Binding FilterEndDate}" 
                                        Background="White" Foreground="#1E293B" 
                                        BorderBrush="#38BDF8" BorderThickness="1.5" 
@@ -139,7 +139,7 @@
 
                         <Button Grid.Column="2" Command="{Binding ApplyDateFilterCommand}" 
                                 Background="Transparent" Foreground="White" 
-                                Padding="0" Margin="12,24,0,0" Height="40" VerticalAlignment="Bottom"
+                                Padding="0" Margin="16,0,0,0" Height="40" VerticalAlignment="Bottom"
                                 Cursor="Hand" BorderThickness="0">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
@@ -149,7 +149,7 @@
                                                 BorderBrush="#4F46E5"
                                                 BorderThickness="1.5"
                                                 CornerRadius="6"
-                                                Padding="12,6">
+                                                Padding="16,8">
                                             <Border.Effect>
                                                 <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.2" Direction="270" Color="#6366F1"/>
                                             </Border.Effect>

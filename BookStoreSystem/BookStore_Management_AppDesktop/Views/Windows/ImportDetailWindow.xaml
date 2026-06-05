@@ -109,7 +109,7 @@
                           FontSize="14" Cursor="Hand">
 
                     <DataGrid.Resources>
-                        <Style TargetType="DataGridColumnHeader">
+                        <Style x:Key="LeftAlignedHeaderStyle" TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="Transparent"/>
                             <Setter Property="Foreground" Value="#64748B"/>
                             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -118,9 +118,29 @@
                             <Setter Property="BorderThickness" Value="0"/>
                             <Setter Property="HorizontalContentAlignment" Value="Left"/>
                         </Style>
+
+                        <Style x:Key="CenterAlignedHeaderStyle" TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="#64748B"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="FontSize" Value="12"/>
+                            <Setter Property="Padding" Value="12,8"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        </Style>
+
+                        <Style x:Key="RightAlignedHeaderStyle" TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="#64748B"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="FontSize" Value="12"/>
+                            <Setter Property="Padding" Value="12,8"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+                        </Style>
+
                         <Style TargetType="TextBlock">
                             <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Margin" Value="12,0"/>
                             <Setter Property="Foreground" Value="#1E293B"/>
                         </Style>
                         <Style TargetType="DataGridCell">
@@ -156,34 +176,36 @@
                     </DataGrid.RowStyle>
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="BOOK ID" Binding="{Binding BookId}" Width="90">
+                        <DataGridTextColumn Header="BOOK ID" Binding="{Binding BookId}" Width="90" HeaderStyle="{StaticResource LeftAlignedHeaderStyle}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="12,0"/>
+                                    <Setter Property="Padding" Value="12,0"/>
                                     <Setter Property="FontWeight" Value="Bold"/>
                                     <Setter Property="Foreground" Value="#0F172A"/>
+                                    <Setter Property="TextAlignment" Value="Left"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="BOOK TITLE" Binding="{Binding BookTitle}" Width="2*">
+                        <DataGridTextColumn Header="BOOK TITLE" Binding="{Binding BookTitle}" Width="2*" HeaderStyle="{StaticResource LeftAlignedHeaderStyle}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="12,0"/>
+                                    <Setter Property="Padding" Value="12,0"/>
                                     <Setter Property="FontWeight" Value="SemiBold"/>
                                     <Setter Property="Foreground" Value="#0F172A"/>
                                     <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="TextAlignment" Value="Left"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="QUANTITY" Binding="{Binding Quantity}" Width="120">
+                        <DataGridTextColumn Header="QUANTITY" Binding="{Binding Quantity}" Width="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="12,0"/>
+                                    <Setter Property="Padding" Value="12,0"/>
                                     <Setter Property="FontWeight" Value="SemiBold"/>
                                     <Setter Property="Foreground" Value="#6366F1"/>
                                     <Setter Property="TextAlignment" Value="Center"/>
@@ -191,14 +213,14 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="IMPORT PRICE" Width="150">
+                        <DataGridTextColumn Header="IMPORT PRICE" Width="150" HeaderStyle="{StaticResource RightAlignedHeaderStyle}">
                             <DataGridTextColumn.Binding>
                                 <Binding Path="ImportPrice" StringFormat="{}{0:N0} VND"/>
                             </DataGridTextColumn.Binding>
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="12,0"/>
+                                    <Setter Property="Padding" Value="12,0"/>
                                     <Setter Property="FontWeight" Value="Bold"/>
                                     <Setter Property="Foreground" Value="#059669"/>
                                     <Setter Property="TextAlignment" Value="Right"/>
@@ -206,17 +228,14 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="TOTAL" Width="150">
+                        <DataGridTextColumn Header="TOTAL" Width="150" HeaderStyle="{StaticResource RightAlignedHeaderStyle}">
                             <DataGridTextColumn.Binding>
-                                <MultiBinding StringFormat="{}{0:N0}">
-                                    <Binding Path="Quantity"/>
-                                    <Binding Path="ImportPrice"/>
-                                </MultiBinding>
+                                <Binding Path="TotalPrice" StringFormat="{}{0:N0} VND"/>
                             </DataGridTextColumn.Binding>
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="12,0"/>
+                                    <Setter Property="Padding" Value="12,0"/>
                                     <Setter Property="FontWeight" Value="Bold"/>
                                     <Setter Property="Foreground" Value="#059669"/>
                                     <Setter Property="TextAlignment" Value="Right"/>

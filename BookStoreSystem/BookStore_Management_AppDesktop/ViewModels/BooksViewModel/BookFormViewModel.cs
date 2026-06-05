@@ -144,6 +144,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
             if (!SelectedBookAuthors.Any()) { OnShowMessage?.Invoke("Please select at least one author."); return; }
             if (!SelectedBookCategories.Any()) { OnShowMessage?.Invoke("Please select at least one category."); return; }
 
+            int currentYear = DateTime.Now.Year;
+            if (PublishYear <= 1445) { OnShowMessage?.Invoke($"Publish year must be greater than 1445."); return; }
+            if (PublishYear > currentYear) { OnShowMessage?.Invoke($"Publish year cannot be greater than {currentYear}."); return; }
+
             try
             {
                 IsLoading = true;

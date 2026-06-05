@@ -47,6 +47,7 @@ namespace BookStore_Management_AppDesktop.Services.API.BookServices
                 if (!string.IsNullOrWhiteSpace(queryParams.Keyword)) query.Add($"keyword={Uri.EscapeDataString(queryParams.Keyword)}");
                 if (!string.IsNullOrWhiteSpace(queryParams.SortBy)) query.Add($"sortBy={queryParams.SortBy}");
                 if (!string.IsNullOrWhiteSpace(queryParams.SortOrder)) query.Add($"sortOrder={queryParams.SortOrder}");
+                if (queryParams.IncludeOutOfStock) query.Add($"includeOutOfStock={queryParams.IncludeOutOfStock}");
 
                 query.Add($"page={queryParams.PageNumber}");
                 query.Add($"pageSize={queryParams.PageSize}");
