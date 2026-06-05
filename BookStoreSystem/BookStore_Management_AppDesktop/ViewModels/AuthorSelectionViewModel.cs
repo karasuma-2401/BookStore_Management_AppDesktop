@@ -139,7 +139,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
             {
                 IsLoading = true;
 
-                var created = await _authorApiService.CreateAuthorAsync(SearchAuthorText.Trim());
+                var newAuthorToCreate = new Author { Name = SearchAuthorText.Trim() };
+                var created = await _authorApiService.CreateAuthorAsync(newAuthorToCreate);
 
                 if (created == null)
                 {

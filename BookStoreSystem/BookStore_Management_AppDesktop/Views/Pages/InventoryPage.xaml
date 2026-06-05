@@ -218,32 +218,41 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="Actions" Width="100">
+                    <DataGridTemplateColumn Header="Action" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Border Background="#F1F5F9" CornerRadius="6" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True">
-                                    <Menu Background="Transparent" BorderThickness="0">
-                                        <MenuItem Padding="10,6" Background="Transparent" BorderThickness="0" Cursor="Hand">
-                                            <MenuItem.Header>
-                                                <ui:SymbolIcon Symbol="MoreVertical24" FontSize="18" Foreground="#475569"/>
-                                            </MenuItem.Header>
-
-                                            <MenuItem Header="Edit" 
-                                                      Icon="{ui:SymbolIcon Edit24}"
-                                                      Foreground="{DynamicResource SuccessPrimaryBrush}"
-                                                      Command="{Binding DataContext.EditBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                      CommandParameter="{Binding}"/>
-
-                                            <Separator Background="#E2E8F0"/>
-
-                                            <MenuItem Header="Delete" 
-                                                      Icon="{ui:SymbolIcon Delete24}" 
-                                                      Foreground="{DynamicResource ErrorPrimaryBrush}"
-                                                      Command="{Binding DataContext.DeleteBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                      CommandParameter="{Binding}"/>
-                                        </MenuItem>
-                                    </Menu>
-                                </Border>
+                                <Button Command="{Binding DataContext.EditBookCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}"
+                                        Cursor="Hand"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        ToolTip="Edit Book"
+                                        Width="75" Height="36">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="BtnBorder" 
+                                                    Background="White" 
+                                                    BorderBrush="{DynamicResource SuccessPrimaryBrush}" 
+                                                    BorderThickness="1.5" 
+                                                    CornerRadius="8" 
+                                                    SnapsToDevicePixels="True">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <ui:SymbolIcon Symbol="Edit24" FontSize="16" Foreground="{DynamicResource SuccessPrimaryBrush}" Margin="0,0,5,0"/>
+                                                    <TextBlock Text="Edit" Foreground="{DynamicResource SuccessPrimaryBrush}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="BtnBorder" Property="Background" Value="#F0FDF4"/>
+                                                    <Setter TargetName="BtnBorder" Property="BorderThickness" Value="2"/>
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="BtnBorder" Property="Background" Value="#DCFCE7"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

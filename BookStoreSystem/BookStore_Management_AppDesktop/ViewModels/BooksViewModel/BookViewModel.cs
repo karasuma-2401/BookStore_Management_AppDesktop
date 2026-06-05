@@ -37,12 +37,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private int _totalPages = 1;
         [ObservableProperty] private int _cartItemCount = 0;
 
-        [ObservableProperty] private bool _isDetailPanelOpen;
         [ObservableProperty] private Book? _currentDetailBook;
         [ObservableProperty] private int _selectedQuantity = 1;
         [ObservableProperty] private bool _isDetailLoading;
-        public decimal TotalPrice => (CurrentDetailBook?.Price ?? 0) * SelectedQuantity;
 
+        public decimal TotalPrice => (CurrentDetailBook?.Price ?? 0) * SelectedQuantity;
 
         public BookViewModel(
             IBookApiService apiService,
@@ -65,25 +64,26 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         #region --- HÀM XỬ LÝ REALTIME SIGNALR ---
         private void OnBookRealtimeChanged(Book book) => TriggerRefresh();
+
         private void OnBookIdRealtimeChanged(int bookId)
+        {
+            TriggerRefresh();
+        }
+
+        private void OnBookRealtimeUpdated(int bookId)
         {
             if (CurrentDetailBook?.BookId == bookId)
             {
-                Application.Current.Dispatcher.Invoke(() => CloseDetailPanel());
+                Application.Current.Dispatcher.Invoke(() => {
+                    _ = RefreshPanelDetailAsync(bookId);
+                });
             }
             TriggerRefresh();
         }
-        private void OnBookRealtimeUpdated(int bookId)
-        {
-            if (IsDetailPanelOpen && CurrentDetailBook?.BookId == bookId)
-            {
-                Application.Current.Dispatcher.InvokeAsync(async () => await RefreshPanelDetailAsync(bookId));
-            }
-            TriggerRefresh();
-        }
+
         private void OnStockRealtimeChanged(int bookId, int newQuantity)
         {
-            if (IsDetailPanelOpen && CurrentDetailBook?.BookId == bookId)
+            if (CurrentDetailBook?.BookId == bookId)
             {
                 Application.Current.Dispatcher.Invoke(() => {
                     if (CurrentDetailBook != null) CurrentDetailBook.Quantity = newQuantity;
@@ -146,7 +146,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 var query = new BookQueryParameters
                 {
                     Keyword = SearchText?.Trim(),
-
                     SortBy = sortBy,
                     SortOrder = sortOrder,
                     PageNumber = CurrentPage,
@@ -186,10 +185,18 @@ namespace BookStore_Management_AppDesktop.ViewModels
             if (selectedBook == null) return;
 
             SelectedQuantity = 1;
-            IsDetailPanelOpen = true;
 
             await RefreshPanelDetailAsync(selectedBook.BookId);
             OnPropertyChanged(nameof(TotalPrice));
+
+            if (CurrentDetailBook != null)
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var detailWindow = new BookStore_Management_AppDesktop.Views.Windows.BookDetailWindow(this);
+                    detailWindow.ShowDialog();
+                });
+            }
         }
 
         private async Task RefreshPanelDetailAsync(int bookId)
@@ -206,19 +213,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[Error loading side-panel details]: {ex.Message}");
+                Debug.WriteLine($"[Error loading book details]: {ex.Message}");
             }
             finally
             {
                 IsDetailLoading = false;
             }
-        }
-
-        [RelayCommand]
-        private void CloseDetailPanel()
-        {
-            IsDetailPanelOpen = false;
-            CurrentDetailBook = null;
         }
 
         [RelayCommand]
@@ -284,6 +284,5 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 await ExecuteSearchAsync();
             }
         }
-
     }
 }
