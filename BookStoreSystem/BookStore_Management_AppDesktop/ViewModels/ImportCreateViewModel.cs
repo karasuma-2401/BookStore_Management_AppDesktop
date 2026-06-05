@@ -1,15 +1,13 @@
-﻿using BookStore_Management_AppDesktop.Helpers;
-using BookStore_Management_AppDesktop.Models;
-using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs;
+﻿using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.ImportDTOs;
 using BookStore_Management_AppDesktop.Services;
-using BookStore_Management_AppDesktop.Services.API.BookServices;
 using BookStore_Management_AppDesktop.Services.API.Import;
 using BookStore_Management_AppDesktop.Services.Realtime;
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection; // 🎯 Thêm thư viện này để gọi ServiceProvider
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,29 +17,20 @@ namespace BookStore_Management_AppDesktop.ViewModels
 {
     public partial class ImportCreateViewModel : BaseViewModel
     {
-        private readonly IBookApiService _apiService;
         private readonly IDialogService _dialogService;
-        private readonly DebounceHelper _searchDebouncer = new DebounceHelper();
         private readonly IImportApiService _importApiService;
         private readonly IBookHubService _hubService;
-        private readonly IServiceProvider _serviceProvider; // 🎯 Thêm ServiceProvider
+        private readonly IServiceProvider _serviceProvider;
 
         [ObservableProperty] private ObservableCollection<ImportCartItem> _draftList = new ObservableCollection<ImportCartItem>();
-        [ObservableProperty] private string _searchText = string.Empty;
-        [ObservableProperty] private ObservableCollection<Book> _searchResults = new ObservableCollection<Book>();
-        [ObservableProperty] private Book? _selectedSearchResult;
-        [ObservableProperty] private int _tempImportQuantity = 1;
-        [ObservableProperty] private decimal _tempImportPrice = 0;
         [ObservableProperty] private decimal _totalDraftAmount = 0;
 
         public ImportCreateViewModel(
-            IBookApiService apiService,
             IDialogService dialogService,
             IImportApiService importApiService,
             IBookHubService hubService,
-            IServiceProvider serviceProvider) // 🎯 Inject ServiceProvider vào Constructor
+            IServiceProvider serviceProvider)
         {
-            _apiService = apiService;
             _dialogService = dialogService;
             _importApiService = importApiService;
             _hubService = hubService;
@@ -50,107 +39,49 @@ namespace BookStore_Management_AppDesktop.ViewModels
             _hubService.BookCreated += OnBookCreatedRealtime;
         }
 
-        private void OnBookCreatedRealtime(Book newBook)
+        [RelayCommand]
+        private void OpenSelectBookDialog()
         {
-            if (newBook == null) return;
+            var selectBookVM = _serviceProvider.GetRequiredService<SelectBookViewModel>();
+
+            selectBookVM.InitializeCallback(AddItemToDraft);
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var newItem = new ImportCartItem
-                {
-                    BookId = newBook.BookId,
-                    Title = newBook.Title ?? "New Book",
-                    AuthorName = newBook.DisplayAuthorNames,
-                    CurrentQuantity = newBook.Quantity,
-                    ImportQuantity = 1,
-                    ImportPrice = 0
-                };
-
-                newItem.PropertyChanged += DraftItem_PropertyChanged;
-                DraftList.Add(newItem);
-                RecalculateTotalAmount();
+                var window = new BookStore_Management_AppDesktop.Views.Windows.SelectBookWindow(selectBookVM);
+                window.ShowDialog();
             });
         }
 
-        partial void OnSearchTextChanged(string value)
+        private void AddItemToDraft(Book selectedBook, int quantity, decimal importPrice)
         {
-            if (SelectedSearchResult != null && value == SelectedSearchResult.Title)
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                return;
-            }
+                var existingItem = DraftList.FirstOrDefault(x => x.BookId == selectedBook.BookId);
 
-            _ = _searchDebouncer.RunAsync(400, async (token) =>
-            {
-                if (string.IsNullOrWhiteSpace(value))
+                if (existingItem != null)
                 {
-                    Application.Current.Dispatcher.Invoke(() => SearchResults.Clear());
-                    return;
+                    existingItem.ImportQuantity += quantity;
+                    existingItem.ImportPrice = importPrice; 
+                    RecalculateTotalAmount();
                 }
-
-                var query = new BookQueryParameters { Keyword = value, PageSize = 10 };
-                var results = await _apiService.GetAllBooksAsync(query, token);
-
-                Application.Current.Dispatcher.Invoke(() =>
+                else
                 {
-                    SearchResults.Clear();
-
-                    if (results != null && results.Data != null)
+                    var newItem = new ImportCartItem
                     {
-                        foreach (var book in results.Data)
-                        {
-                            SearchResults.Add(book);
-                        }
-                    }
-                });
+                        BookId = selectedBook.BookId,
+                        Title = selectedBook.Title ?? string.Empty,
+                        AuthorName = selectedBook.DisplayAuthorNames,
+                        CurrentQuantity = selectedBook.Quantity,
+                        ImportQuantity = quantity,
+                        ImportPrice = importPrice
+                    };
+                    newItem.PropertyChanged += DraftItem_PropertyChanged;
+                    DraftList.Add(newItem);
+                    RecalculateTotalAmount();
+                }
             });
         }
-
-        [RelayCommand]
-        private void AddToDraft()
-        {
-            if (SelectedSearchResult == null)
-            {
-                _dialogService.ShowMessage("Please choose a book from the suggested list!");
-                return;
-            }
-
-            if (TempImportQuantity <= 0 || TempImportPrice < 0)
-            {
-                _dialogService.ShowMessage("Quantity must be > 0 and Input price cannot be negative!");
-                return;
-            }
-
-            var existingItem = DraftList.FirstOrDefault(x => x.BookId == SelectedSearchResult.BookId);
-
-            if (existingItem != null)
-            {
-                existingItem.ImportQuantity += TempImportQuantity;
-                existingItem.ImportPrice = TempImportPrice;
-                RecalculateTotalAmount();
-            }
-            else
-            {
-                var newItem = new ImportCartItem
-                {
-                    BookId = SelectedSearchResult.BookId,
-                    Title = SelectedSearchResult.Title ?? string.Empty,
-                    AuthorName = SelectedSearchResult.DisplayAuthorNames,
-                    CurrentQuantity = SelectedSearchResult.Quantity,
-                    ImportQuantity = TempImportQuantity,
-                    ImportPrice = TempImportPrice
-                };
-                newItem.PropertyChanged += DraftItem_PropertyChanged;
-                DraftList.Add(newItem);
-                RecalculateTotalAmount();
-            }
-
-            SelectedSearchResult = null;
-            SearchText = string.Empty;
-            TempImportQuantity = 1;
-            TempImportPrice = 0;
-            SearchResults.Clear();
-        }
-
         private void RecalculateTotalAmount() => TotalDraftAmount = DraftList.Sum(item => item.TotalLinePrice);
 
         private void DraftItem_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -159,27 +90,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
             {
                 RecalculateTotalAmount();
             }
-        }
-
-        // =======================================================
-        // 🎯 ĐÃ SỬA: GỌI ADD BOOK WINDOW THEO CHUẨN FORM MỚI
-        // =======================================================
-        [RelayCommand]
-        private async Task OpenCreateNewBookDialogAsync()
-        {
-            // 1. Sinh ViewModel từ DI Container
-            var formVM = _serviceProvider.GetRequiredService<BookFormViewModel>();
-            formVM.OnShowMessage = (msg) => _dialogService.ShowMessage(msg);
-
-            // 2. Chạy async để nạp danh sách Gợi ý (Tác giả, Thể loại) từ API
-            await formVM.SetupAddModeAsync();
-
-            // 3. Đẩy lên UI Thread để mở Window dạng Dialog
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                var addWindow = new BookStore_Management_AppDesktop.Views.Windows.AddBookWindow(formVM);
-                addWindow.ShowDialog();
-            });
         }
 
         [RelayCommand]
@@ -196,15 +106,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [RelayCommand]
         private void ClearDraft()
         {
-            bool isConfirmed = _dialogService.ShowConfirmation(
-                                                    message: "Do you want to process and confirm this import order?",
-                                                    confirmText: "Process Import",
-                                                    isDanger: false);
-
-            if (isConfirmed)
-            {
-                ClearDraftSafe();
-            }
+            bool isConfirmed = _dialogService.ShowConfirmation("Are you sure you want to clear the entire draft?", "Clear Draft", true);
+            if (isConfirmed) ClearDraftSafe();
         }
 
         public void ClearDraftSafe()
@@ -223,10 +126,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 return;
             }
 
-            bool isConfirmed = _dialogService.ShowConfirmation(
-                                                        message: "Do you want to process and confirm this import order?",
-                                                        confirmText: "Process Import",
-                                                        isDanger: false);
+            bool isConfirmed = _dialogService.ShowConfirmation("Do you want to process and confirm this import order?", "Process Import", false);
 
             if (isConfirmed)
             {
@@ -243,7 +143,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 try
                 {
                     bool isSuccess = await _importApiService.CreateImportAsync(importDto);
-
                     if (isSuccess)
                     {
                         _dialogService.ShowMessage("Import successful! The inventory has been updated.");
@@ -254,11 +153,15 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         _dialogService.ShowMessage("Import failed. Please check the server connection.");
                     }
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
                     _dialogService.ShowMessage($"An error occurred: {ex.Message}");
                 }
             }
+        }
+
+        private void OnBookCreatedRealtime(Book newBook)
+        {
         }
     }
 }
