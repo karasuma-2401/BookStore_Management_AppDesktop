@@ -9,6 +9,7 @@ namespace BookStore_Management_AppDesktop.Models
         public string Title { get; set; } = string.Empty;
         public string AuthorName { get; set; } = string.Empty;
         public int CurrentQuantity { get; set; } 
+        public int? PublishYear { get; set; }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(TotalLinePrice))]

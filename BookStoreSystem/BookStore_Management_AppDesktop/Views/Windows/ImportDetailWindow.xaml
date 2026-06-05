@@ -188,7 +188,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="BOOK TITLE" Binding="{Binding BookTitle}" Width="2*" HeaderStyle="{StaticResource LeftAlignedHeaderStyle}">
+                        <DataGridTextColumn Header="BOOK TITLE" Binding="{Binding BookTitle}" Width="1.5*" HeaderStyle="{StaticResource LeftAlignedHeaderStyle}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
@@ -201,7 +201,19 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="QUANTITY" Binding="{Binding Quantity}" Width="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                        <DataGridTextColumn Header="PUBLISH YEAR" Binding="{Binding PublishYear}" Width="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Padding" Value="12,0"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Foreground" Value="#475569"/>
+                                    <Setter Property="TextAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="QUANTITY" Binding="{Binding Quantity}" Width="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
@@ -213,7 +225,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="IMPORT PRICE" Width="150" HeaderStyle="{StaticResource RightAlignedHeaderStyle}">
+                        <DataGridTextColumn Header="IMPORT PRICE" Width="140" HeaderStyle="{StaticResource RightAlignedHeaderStyle}">
                             <DataGridTextColumn.Binding>
                                 <Binding Path="ImportPrice" StringFormat="{}{0:N0} VND"/>
                             </DataGridTextColumn.Binding>

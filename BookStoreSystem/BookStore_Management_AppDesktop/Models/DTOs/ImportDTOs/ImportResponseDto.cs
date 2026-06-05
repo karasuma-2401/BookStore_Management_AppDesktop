@@ -10,6 +10,8 @@ namespace BookStore_Management_AppDesktop.Models.DTOs.ImportDTOs
         public string BookTitle { get; set; } = string.Empty;
         public int Quantity { get; set; }
         public decimal ImportPrice { get; set; }
+        public int? PublishYear { get; set; }
+        public decimal TotalPrice => Quantity * ImportPrice;
     }
 
     public class ImportResponseDto
