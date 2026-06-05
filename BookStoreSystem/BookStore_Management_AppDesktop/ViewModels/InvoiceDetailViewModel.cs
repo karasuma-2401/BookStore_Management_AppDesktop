@@ -50,7 +50,13 @@ namespace BookStore_Management_AppDesktop.ViewModels
             OnPropertyChanged(nameof(IsPaymentHistoryVisible));
         }
 
-        public bool IsPaymentButtonVisible => Invoice != null && Invoice.CustomerId != null && Invoice.CustomerId > 0 && Invoice.RemainingAmount > 0;
+        public bool IsPaymentButtonVisible => Invoice != null && 
+                                               Invoice.CustomerId != null && 
+                                               Invoice.CustomerId > 0 && 
+                                               Invoice.RemainingAmount > 0 && 
+                                               !string.Equals(Invoice.Status, "Canceled", StringComparison.OrdinalIgnoreCase) && 
+                                               !string.Equals(Invoice.Status, "Cancelled", StringComparison.OrdinalIgnoreCase);
+
         public bool IsPaymentHistoryVisible => Invoice != null && Invoice.CustomerId != null && Invoice.CustomerId > 0;
 
         [ObservableProperty]

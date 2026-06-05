@@ -56,12 +56,13 @@ namespace BookStore_Management_AppDesktop.Services.API.CategoryServices
             }
         }
 
-        public async Task<Category?> CreateCategoryAsync(string name)
+        public async Task<Category?> CreateCategoryAsync(Category newCategory)
         {
             try
             {
                 AddAuthorizationHeader();
-                var dto = new CategoryCreateDto { Name = name };
+
+                var dto = new CategoryCreateDto { Name = newCategory.Name };
                 var json = JsonSerializer.Serialize(dto, _options);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 

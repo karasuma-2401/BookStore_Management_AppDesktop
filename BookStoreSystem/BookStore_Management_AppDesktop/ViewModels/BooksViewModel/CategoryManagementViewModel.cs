@@ -83,8 +83,11 @@ namespace BookStore_Management_AppDesktop.ViewModels.BooksViewModel
             string? name = _dialogService.ShowInputDialog("Add New Category", "Enter category name:");
             if (string.IsNullOrWhiteSpace(name)) return;
 
-            var newCategory = await _categoryApiService.CreateCategoryAsync(name.Trim());
-            if (newCategory != null)
+            var newCategory = new Category { Name = name.Trim() };
+
+            var result = await _categoryApiService.CreateCategoryAsync(newCategory);
+
+            if (result != null)
             {
                 _dialogService.ShowMessage("Category added successfully!");
                 await ExecuteLoadCategoriesAsync();

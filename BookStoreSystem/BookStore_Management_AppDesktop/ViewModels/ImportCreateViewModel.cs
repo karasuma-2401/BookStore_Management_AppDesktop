@@ -9,6 +9,7 @@ using BookStore_Management_AppDesktop.Services.Realtime;
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection; // 🎯 Thêm thư viện này để gọi ServiceProvider
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly DebounceHelper _searchDebouncer = new DebounceHelper();
         private readonly IImportApiService _importApiService;
         private readonly IBookHubService _hubService;
+        private readonly IServiceProvider _serviceProvider; // 🎯 Thêm ServiceProvider
 
         [ObservableProperty] private ObservableCollection<ImportCartItem> _draftList = new ObservableCollection<ImportCartItem>();
         [ObservableProperty] private string _searchText = string.Empty;
@@ -36,12 +38,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
             IBookApiService apiService,
             IDialogService dialogService,
             IImportApiService importApiService,
-            IBookHubService hubService)
+            IBookHubService hubService,
+            IServiceProvider serviceProvider) // 🎯 Inject ServiceProvider vào Constructor
         {
             _apiService = apiService;
             _dialogService = dialogService;
             _importApiService = importApiService;
             _hubService = hubService;
+            _serviceProvider = serviceProvider;
 
             _hubService.BookCreated += OnBookCreatedRealtime;
         }
@@ -157,10 +161,25 @@ namespace BookStore_Management_AppDesktop.ViewModels
             }
         }
 
+        // =======================================================
+        // 🎯 ĐÃ SỬA: GỌI ADD BOOK WINDOW THEO CHUẨN FORM MỚI
+        // =======================================================
         [RelayCommand]
-        private void OpenCreateNewBookDialog()
+        private async Task OpenCreateNewBookDialogAsync()
         {
-            _dialogService.ShowAddBookWindow();
+            // 1. Sinh ViewModel từ DI Container
+            var formVM = _serviceProvider.GetRequiredService<BookFormViewModel>();
+            formVM.OnShowMessage = (msg) => _dialogService.ShowMessage(msg);
+
+            // 2. Chạy async để nạp danh sách Gợi ý (Tác giả, Thể loại) từ API
+            await formVM.SetupAddModeAsync();
+
+            // 3. Đẩy lên UI Thread để mở Window dạng Dialog
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var addWindow = new BookStore_Management_AppDesktop.Views.Windows.AddBookWindow(formVM);
+                addWindow.ShowDialog();
+            });
         }
 
         [RelayCommand]

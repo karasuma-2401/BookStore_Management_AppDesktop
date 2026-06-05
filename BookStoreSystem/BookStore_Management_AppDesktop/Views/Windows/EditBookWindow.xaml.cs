@@ -1,51 +1,27 @@
 using BookStore_Management_AppDesktop.Models;
-using BookStore_Management_AppDesktop.Services;
-using BookStore_Management_AppDesktop.Services.API;
-using BookStore_Management_AppDesktop.ViewModels;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Windows;
-using System.Windows.Input;
 
 namespace BookStore_Management_AppDesktop.Views.Windows
 {
-    /// <summary>
-    /// Interaction logic for EditBookWindow.xaml
-    /// </summary>
+
     public partial class EditBookWindow : Window
     {
-        private readonly BookFormViewModel _viewModel;
 
-        public EditBookWindow(Book bookToEdit)
+        public EditBookWindow(object viewModelContext)
         {
             InitializeComponent();
 
-            _viewModel = App.ServiceProvider!.GetRequiredService<BookFormViewModel>();
-
-            _viewModel.SetupEditMode(bookToEdit);
-
-            _viewModel.OnShowMessage = (message) =>
-            {
-                CustomMessageBox.Show(message);
-            };
-
-            _viewModel.OnRequestClose = () => this.Close();
-
-            this.DataContext = _viewModel;
-            this.Loaded += EditBookWindow_Loaded;
+            this.DataContext = viewModelContext;
         }
 
-        private async void EditBookWindow_Loaded(object sender, RoutedEventArgs e)
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            await _viewModel.InitializeAsync();
+            this.Close();
         }
-
-        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                this.DragMove();
-            }
+            this.Close();
         }
     }
 }

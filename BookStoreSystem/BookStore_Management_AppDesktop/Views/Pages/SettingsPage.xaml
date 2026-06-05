@@ -74,7 +74,7 @@
 
                             <TextBlock Text="Expiry Date" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SlateLightBrush}" Margin="0,0,0,5"/>
                             <Border Height="40" Background="White" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" CornerRadius="6" Margin="0,0,0,20">
-                                <ui:TextBox Text="{Binding NewVoucherExpiryDate, StringFormat='dd/MM/yyyy'}" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource TextOnCardBrush}" CaretBrush="{DynamicResource TextOnCardBrush}"/>
+                                <ui:TextBox Language="vi-VN" Text="{Binding NewVoucherExpiryDate, StringFormat='dd/MM/yyyy', ConverterCulture='vi-VN'}" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource TextOnCardBrush}" CaretBrush="{DynamicResource TextOnCardBrush}"/>
                             </Border>
 
                             <TextBlock Text="Usage Limit" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SlateLightBrush}" Margin="0,0,0,5"/>
@@ -90,85 +90,56 @@
                         <ui:Card Padding="15" Margin="0,0,0,15">
                             <StackPanel>
                                 <TextBlock Text="Active Vouchers" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="{DynamicResource TextOnCardBrush}"/>
-                                <ItemsControl ItemsSource="{Binding ActiveVouchers}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Margin="0,0,0,8" Padding="12" CornerRadius="8" BorderBrush="#A7F3D0" BorderThickness="1.5" Background="#0A10B981">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <StackPanel>
-                                                        <TextBlock Text="{Binding Code}" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource TextOnCardBrush}" Margin="0,0,0,4"/>
-                                                        <TextBlock Text="{Binding ExpiryDate, StringFormat='Expires: {0:dd/MM/yyyy}'}" FontSize="11" Foreground="{DynamicResource TextBodyBrush}"/>
-                                                    </StackPanel>
-                                                    <ui:Button Grid.Column="1" 
-                                                           Icon="{ui:SymbolIcon Delete24}" 
-                                                           Command="{Binding DataContext.DeleteVoucherCommand, RelativeSource={RelativeSource AncestorType=Page}}" 
-                                                           CommandParameter="{Binding}" 
-                                                           Appearance="Transparent" 
-                                                           Foreground="{DynamicResource TextSecondBrush}">
-                                                        <ui:Button.Style>
-                                                            <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
-                                                                <Style.Triggers>
-                                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter Property="Foreground" Value="#EF4444"/>
-                                                                        <Setter Property="Background" Value="#FFF5F5"/><Setter Property="BorderBrush" Value="#FEE2E2"/>
-                                                                    </Trigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </ui:Button.Style>
-                                                    </ui:Button>
-                                                </Grid>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                                <ScrollViewer MaxHeight="450" VerticalScrollBarVisibility="Auto" Padding="0,0,5,0">
+                                    <ItemsControl ItemsSource="{Binding ActiveVouchers}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Margin="0,0,12,8" Padding="12" CornerRadius="8" BorderBrush="#A7F3D0" BorderThickness="1.5" Background="#0A10B981">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding Code}" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource TextOnCardBrush}" Margin="0,0,0,4"/>
+                                                            <TextBlock Text="{Binding ExpiryDate, StringFormat='Expires: {0:dd/MM/yyyy}'}" FontSize="11" Foreground="{DynamicResource TextBodyBrush}"/>
+                                                        </StackPanel>
+                                                        <Button Grid.Column="1" 
+                                                                Command="{Binding DataContext.DeleteVoucherCommand, RelativeSource={RelativeSource AncestorType=Page}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Width="36" Height="36"
+                                                                Cursor="Hand">
+                                                            <Button.Template>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border x:Name="Border" 
+                                                                            Background="Transparent" 
+                                                                            BorderBrush="Transparent" 
+                                                                            BorderThickness="1.5" 
+                                                                            CornerRadius="8" 
+                                                                            SnapsToDevicePixels="True">
+                                                                        <ui:SymbolIcon Symbol="Delete24" Foreground="#EF4444" FontSize="18"/>
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter TargetName="Border" Property="Background" Value="#FFF5F5"/>
+                                                                            <Setter TargetName="Border" Property="BorderBrush" Value="#FEE2E2"/>
+                                                                        </Trigger>
+                                                                        <Trigger Property="IsPressed" Value="True">
+                                                                            <Setter TargetName="Border" Property="Background" Value="#FEE2E2"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Button.Template>
+                                                        </Button>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
                             </StackPanel>
                         </ui:Card>
 
-                        <!-- Expired & Deactivated Vouchers Card -->
-                        <ui:Card Padding="15">
-                            <StackPanel>
-                                <TextBlock Text="Expired &amp; Deactivated Vouchers" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="{DynamicResource TextOnCardBrush}"/>
-                                <ItemsControl ItemsSource="{Binding ExpiredVouchers}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Margin="0,0,0,8" Padding="12" CornerRadius="8" BorderBrush="#FECACA" BorderThickness="1.5" Background="#0AEF4444">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <StackPanel>
-                                                        <TextBlock Text="{Binding Code}" FontWeight="Bold" FontSize="14" Foreground="#94A3B8" Margin="0,0,0,4"/>
-                                                        <TextBlock Text="{Binding ExpiryDate, StringFormat='Expired: {0:dd/MM/yyyy}'}" FontSize="11" Foreground="#94A3B8"/>
-                                                    </StackPanel>
-                                                    <ui:Button Grid.Column="1" 
-                                                           Icon="{ui:SymbolIcon Delete24}" 
-                                                           Command="{Binding DataContext.DeleteVoucherCommand, RelativeSource={RelativeSource AncestorType=Page}}" 
-                                                           CommandParameter="{Binding}" 
-                                                           Appearance="Transparent" 
-                                                           Foreground="{DynamicResource TextSecondBrush}">
-                                                        <ui:Button.Style>
-                                                            <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
-                                                                <Style.Triggers>
-                                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter Property="Foreground" Value="#EF4444"/>
-                                                                        <Setter Property="Background" Value="#FFF5F5"/><Setter Property="BorderBrush" Value="#FEE2E2"/>
-                                                                    </Trigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </ui:Button.Style>
-                                                    </ui:Button>
-                                                </Grid>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </ui:Card>
                     </StackPanel>
                 </Grid>
             </StackPanel>

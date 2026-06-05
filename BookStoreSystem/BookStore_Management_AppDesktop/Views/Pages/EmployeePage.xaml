@@ -13,6 +13,41 @@
     <Page.Resources>
         <converters:EmployeeStatusConverter x:Key="EmployeeStatusConverter"/>
         <converters:EmployeeStatusColorConverter x:Key="EmployeeStatusColorConverter"/>
+        <Style x:Key="HoverRiseCardStyle" TargetType="Border">
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TranslateTransform X="0" Y="0"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                 To="-5" Duration="0:0:0.15">
+                                    <DoubleAnimation.EasingFunction>
+                                        <QuadraticEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                 To="0" Duration="0:0:0.15">
+                                    <DoubleAnimation.EasingFunction>
+                                        <QuadraticEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Page.Resources>
 
     <Grid>
@@ -130,7 +165,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Card 1: Total Employees -->
-            <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="0,0,10,5">
+            <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="0,0,10,5" Style="{StaticResource HoverRiseCardStyle}">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.16" Color="Black"/>
                 </Border.Effect>
@@ -155,7 +190,7 @@
             </Border>
 
             <!-- Card 2: Active Employees -->
-            <Border Grid.Column="1" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="10,0,10,5">
+            <Border Grid.Column="1" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="10,0,10,5" Style="{StaticResource HoverRiseCardStyle}">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.16" Color="Black"/>
                 </Border.Effect>
@@ -180,7 +215,7 @@
             </Border>
 
             <!-- Card 3: Resigned Employees -->
-            <Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="10,0,0,5">
+            <Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="10,0,0,5" Style="{StaticResource HoverRiseCardStyle}">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.16" Color="Black"/>
                 </Border.Effect>

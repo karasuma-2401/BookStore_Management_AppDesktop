@@ -26,15 +26,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-
         <Border
             Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
             Padding="25,10"
             Background="#111625"
             BorderBrush="#232D42"
@@ -73,11 +66,8 @@
                         <ComboBoxItem Content="Price: High to Low" Tag="price_desc" />
                         <ComboBoxItem Content="Title: A-Z" Tag="title_asc" />
                     </ComboBox>
-                    <Grid
-                        Width="54"
-                        Height="54"
-                        Margin="0,0,10,0">
 
+                    <Grid Width="54" Height="54" Margin="0,0,10,0">
                         <ui:Button
                             Width="46"
                             Height="46"
@@ -104,38 +94,21 @@
                                     </Style.Triggers>
                                 </Style>
                             </ui:Button.Style>
-                            <ui:SymbolIcon
-                                FontSize="20"
-                                FontWeight="SemiBold"
-                                Symbol="Cart24" />
+                            <ui:SymbolIcon FontSize="20" FontWeight="SemiBold" Symbol="Cart24" />
                         </ui:Button>
+
                         <Border
-                            Width="19"
-                            Height="19"
-                            Margin="0,2,2,0"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            Background="#FF4D4F"
-                            BorderBrush="#FFFFFF"
-                            BorderThickness="1.5"
-                            CornerRadius="10"
+                            Width="19" Height="19" Margin="0,2,2,0"
+                            HorizontalAlignment="Right" VerticalAlignment="Top"
+                            Background="#FF4D4F" BorderBrush="#FFFFFF" BorderThickness="1.5" CornerRadius="10"
                             IsHitTestVisible="False"
                             Visibility="{Binding CartItemCount, Converter={StaticResource IntToBoolConverter}, ConverterParameter=0}">
                             <Border.Effect>
-                                <DropShadowEffect
-                                    BlurRadius="3"
-                                    Opacity="0.3"
-                                    ShadowDepth="1"
-                                    Color="Black" />
+                                <DropShadowEffect BlurRadius="3" Opacity="0.3" ShadowDepth="1" Color="Black" />
                             </Border.Effect>
-
                             <TextBlock
-                                Margin="0,0,0,0.5"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="10"
-                                FontWeight="Bold"
-                                Foreground="White"
+                                Margin="0,0,0,0.5" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                FontSize="10" FontWeight="Bold" Foreground="White"
                                 Text="{Binding CartItemCount}" />
                         </Border>
                     </Grid>
@@ -146,7 +119,6 @@
         <ListView
             x:Name="BooksListView"
             Grid.Row="1"
-            Grid.Column="0"
             Padding="10,10,10,10"
             d:ItemsSource="{d:SampleData ItemCount=5}"
             Background="Transparent"
@@ -186,7 +158,6 @@
 
         <uc:PaginationControl
             Grid.Row="2"
-            Grid.Column="0"
             Margin="25,0,25,15"
             CurrentPage="{Binding CurrentPage}"
             ItemName="books"
@@ -195,16 +166,5 @@
             TotalItems="{Binding TotalItems}"
             TotalPages="{Binding TotalPages}" />
 
-        <Border
-            Grid.Row="1"
-            Grid.RowSpan="2"
-            Grid.Column="1"
-            Background="#161B26"
-            BorderBrush="#232D42"
-            BorderThickness="1,0,0,0"
-            Visibility="{Binding IsDetailPanelOpen, Converter={StaticResource NativeBoolToVis}}">
-
-            <uc:BookDetailPanel Visibility="Visible" />
-        </Border>
     </Grid>
 </Page>
