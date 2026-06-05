@@ -9,6 +9,8 @@
       Title="InvoiceDetailPage"
       Background="{DynamicResource ContentBackgroundBrush}">
 
+
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -171,6 +173,8 @@
 
                         <!-- Card 4: Balance Due -->
                         <Border Grid.Column="3" 
+                                Background="#0DEF4444"
+                                BorderBrush="#40EF4444"
                                 BorderThickness="1.5" 
                                 CornerRadius="8" 
                                 Margin="10,0,10,5" 
@@ -179,18 +183,6 @@
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.16" Color="Black"/>
                             </Border.Effect>
-                            <Border.Style>
-                                <Style TargetType="Border">
-                                    <Setter Property="Background" Value="#0D10B981" />
-                                    <Setter Property="BorderBrush" Value="#4010B981" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsPaymentButtonVisible}" Value="True">
-                                            <Setter Property="Background" Value="#0DEF4444" />
-                                            <Setter Property="BorderBrush" Value="#40EF4444" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Border.Style>
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
@@ -202,18 +194,22 @@
                                     <TextBlock Text="{Binding Invoice.RemainingAmount, StringFormat='{}{0:N0} VNĐ'}" FontWeight="Black" Foreground="{DynamicResource ErrorPrimaryBrush}" FontSize="18" HorizontalAlignment="Center"/>
                                 </StackPanel>
                                 
-                                <ui:Button Grid.Row="1" 
-                                           Content="Record Payment" 
-                                           Icon="{ui:SymbolIcon Symbol=Add24}" 
-                                           Appearance="Primary" 
-                                           Background="{DynamicResource NavyAccentBrush}"
-                                           BorderBrush="#008A72"
-                                           BorderThickness="1.5"
-                                           Command="{Binding RecordPaymentCommand}"
-                                           Visibility="{Binding IsPaymentButtonVisible, Converter={StaticResource BoolToVis}}"
-                                           Cursor="Hand"
-                                           HorizontalAlignment="Stretch"
-                                           HorizontalContentAlignment="Center"/>
+                                <Button Grid.Row="1" 
+                                        Style="{StaticResource PremiumColoredButtonStyle}"
+                                        Background="{DynamicResource NavyAccentBrush}"
+                                        BorderBrush="#008A72"
+                                        BorderThickness="1.5"
+                                        Command="{Binding RecordPaymentCommand}"
+                                        Visibility="{Binding IsPaymentButtonVisible, Converter={StaticResource BoolToVis}}"
+                                        Cursor="Hand"
+                                        HorizontalAlignment="Stretch"
+                                        Padding="15,8"
+                                        Height="38">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <ui:SymbolIcon Symbol="Add24" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Record Payment" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"/>
+                                    </StackPanel>
+                                </Button>
                             </Grid>
                         </Border>
                     </Grid>

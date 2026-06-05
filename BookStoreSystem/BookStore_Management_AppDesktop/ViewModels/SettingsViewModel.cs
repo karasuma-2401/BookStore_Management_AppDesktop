@@ -18,7 +18,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         [ObservableProperty] private ObservableCollection<VoucherDto> vouchers = new();
         [ObservableProperty] private ObservableCollection<VoucherDto> activeVouchers = new();
-        [ObservableProperty] private ObservableCollection<VoucherDto> expiredVouchers = new();
 
         [ObservableProperty] private string? newVoucherCode;
 
@@ -62,7 +61,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
                 Vouchers.Clear();
                 ActiveVouchers.Clear();
-                ExpiredVouchers.Clear();
                 foreach (var voucher in voucherList)
                 {
                     Vouchers.Add(voucher);
@@ -80,10 +78,6 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     if (isActive)
                     {
                         ActiveVouchers.Add(voucher);
-                    }
-                    else
-                    {
-                        ExpiredVouchers.Add(voucher);
                     }
                 }
             }
