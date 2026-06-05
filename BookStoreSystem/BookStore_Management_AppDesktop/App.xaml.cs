@@ -29,6 +29,7 @@ namespace BookStore_Management_AppDesktop
     public partial class App : Application
     {
         public static IServiceProvider? ServiceProvider { get; private set; }
+        public static string ApiBaseUrl { get; private set; } = string.Empty;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -49,21 +50,27 @@ namespace BookStore_Management_AppDesktop
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IConfiguration>(provider =>
-            {
-                return new ConfigurationBuilder()
-                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .Build();
-            });
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            services.AddSingleton<IConfiguration>(configuration);
+            // Nếu không tìm thấy trong file JSON, nó sẽ lấy giá trị mặc định là localhost (phòng hờ lỗi)
+            ApiBaseUrl = configuration.GetSection("ApiSettings:BaseUrl").Value ?? "https://localhost:7123";
 
             // // Get Services (Connect BE, Navigate)
-            services.AddHttpClient<IAuthService, AuthService>();
+            services.AddHttpClient<IAuthService, AuthService>(client => 
+            {
+                client.BaseAddress = new Uri(ApiBaseUrl);
+            });
+
             services.AddSingleton<CloudinaryService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ICartService, CartService>();
             services.AddSingleton<IBookHubService, BookHubService>();
 
+            // Các đăng ký service khác của bạn giữ nguyên...
             services.AddSingleton<IBookApiService, BookApiService>();
             services.AddSingleton<IAuthorApiService, AuthorApiService>();
             services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
@@ -80,7 +87,6 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<ICategoryApiService, CategoryApiService>();
             services.AddSingleton<IUserApiService, UserApiService>();
 
-            services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
             services.AddSingleton<IEmployeeShiftApiService, EmployeeShiftApiService>();
             
 
@@ -109,7 +115,6 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<KioskCheckInViewModel>();
             services.AddTransient<AuthorManagementViewModel>();
 
-
             // // Get View 
             services.AddTransient<MainWindow>();
             services.AddTransient<LoginWindow>();
@@ -134,5 +139,4 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<AuthorManagementWindow>();
         }
     }
-
 }
