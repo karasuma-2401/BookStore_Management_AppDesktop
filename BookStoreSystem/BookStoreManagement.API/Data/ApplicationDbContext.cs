@@ -29,6 +29,8 @@ namespace BookStoreManagement.API.Data
         public DbSet<Voucher> Vouchers { get; set; }
         public DbSet<InventoryReport> InventoryReports { get; set; }
         public DbSet<DebtReport> DebtReports { get; set; }
+
+        public DbSet<Setting> Settings { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

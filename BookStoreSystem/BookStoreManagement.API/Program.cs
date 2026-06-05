@@ -115,6 +115,7 @@ builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IInventoryReportService, InventoryReportService>();
 builder.Services.AddScoped<IDebtReportService, DebtReportService>();
+builder.Services.AddScoped<ISettingService, SettingService>();
 // Import
 builder.Services.AddScoped<IImportService, ImportService>();
 var app = builder.Build();
