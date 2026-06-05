@@ -306,90 +306,7 @@
                     </Grid>
                 </Border>
 
-                <Button
-                    x:Name="FilterButton"
-                    Margin="0,0,10,0"
-                    Click="FilterButton_Click"
-                    Style="{StaticResource SecondaryActionBtnStyle}"
-                    ToolTip="Filter Options">
-                    <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon
-                            Margin="0,0,6,0"
-                            FontSize="16"
-                            Foreground="#64748B"
-                            Symbol="Filter24" />
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontWeight="Medium"
-                            Text="{Binding SelectedFilter}" />
-                    </StackPanel>
 
-                    <Button.ContextMenu>
-                        <ContextMenu Style="{StaticResource ModernContextMenuStyle}">
-
-                            <MenuItem
-                                Command="{Binding ChangeFilterCommand}"
-                                CommandParameter="Name"
-                                Header="Search by Name">
-                                <MenuItem.Style>
-                                    <Style BasedOn="{StaticResource ModernMenuItemStyle}" TargetType="MenuItem">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding PlacementTarget.DataContext.SelectedFilter, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="Name">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </MenuItem.Style>
-                            </MenuItem>
-
-                            <MenuItem
-                                Command="{Binding ChangeFilterCommand}"
-                                CommandParameter="Phone"
-                                Header="Search by Phone">
-                                <MenuItem.Style>
-                                    <Style BasedOn="{StaticResource ModernMenuItemStyle}" TargetType="MenuItem">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding PlacementTarget.DataContext.SelectedFilter, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="Phone">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </MenuItem.Style>
-                            </MenuItem>
-
-                            <MenuItem
-                                Command="{Binding ChangeFilterCommand}"
-                                CommandParameter="Email"
-                                Header="Search by Email">
-                                <MenuItem.Style>
-                                    <Style BasedOn="{StaticResource ModernMenuItemStyle}" TargetType="MenuItem">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding PlacementTarget.DataContext.SelectedFilter, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="Email">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </MenuItem.Style>
-                            </MenuItem>
-
-                            <MenuItem
-                                Command="{Binding ChangeFilterCommand}"
-                                CommandParameter="Debt"
-                                Header="Search by Debt">
-                                <MenuItem.Style>
-                                    <Style BasedOn="{StaticResource ModernMenuItemStyle}" TargetType="MenuItem">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding PlacementTarget.DataContext.SelectedFilter, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="Debt">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </MenuItem.Style>
-                            </MenuItem>
-
-                        </ContextMenu>
-                    </Button.ContextMenu>
-                </Button>
                 <Button
                     Margin="0,0,15,0"
                     Command="{Binding RefreshCommand}"
@@ -608,7 +525,6 @@
         <Border
             Grid.Row="2"
             Margin="0,15,0,0"
-            Padding="10"
             Background="Transparent"
             CornerRadius="8">
             <Grid>
@@ -623,7 +539,8 @@
                         Text="Rows per page:" />
                     <ComboBox
                         Width="70"
-                        Height="32"
+                        Height="35"
+                        VerticalAlignment="Center"
                         Background="Transparent"
                         BorderBrush="Black"
                         Foreground="#0F172A"
