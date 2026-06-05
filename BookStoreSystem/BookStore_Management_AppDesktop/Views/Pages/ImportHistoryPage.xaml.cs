@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace BookStore_Management_AppDesktop.Views.Pages
 {
@@ -23,13 +24,20 @@ namespace BookStore_Management_AppDesktop.Views.Pages
             await _viewModel.LoadDataAsync();
         }
 
-        private void Row_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void ImportHistoryGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is DataGridRow row && row.DataContext != null)
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+
+            while ((dep != null) && !(dep is DataGridRow))
             {
-                if (_viewModel.ViewDetailCommand.CanExecute(row.DataContext))
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+
+            if (dep is DataGridRow row && row.DataContext is ImportHistoryUIModel importData)
+            {
+                if (_viewModel.ViewDetailCommand.CanExecute(importData))
                 {
-                    _viewModel.ViewDetailCommand.Execute(row.DataContext);
+                    _viewModel.ViewDetailCommand.Execute(importData);
                 }
             }
         }

@@ -1,205 +1,136 @@
-﻿<Page
-    x:Class="BookStore_Management_AppDesktop.Views.Pages.CreateImportPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Title="Create Import"
-    d:DesignHeight="700"
-    d:DesignWidth="1000"
-    Background="{DynamicResource ContentBackgroundBrush}"
-    mc:Ignorable="d">
+﻿<Page x:Class="BookStore_Management_AppDesktop.Views.Pages.CreateImportPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Background="#F8FAFC"
+      Title="Create Import">
+
+    <Page.Resources>
+        <Style x:Key="GridTextStyle" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border
-            Grid.Row="0"
-            Padding="25,15,25,0"
-            Background="{DynamicResource SidebarBackgroundBrush}">
-            <StackPanel VerticalAlignment="Center">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="26"
-                    FontWeight="Black"
-                    Foreground="{DynamicResource TextPrimaryBrush}"
-                    Text="CREATE NEW IMPORT" />
-                <TextBlock
-                    Margin="0,5,0,0"
-                    FontSize="14"
-                    Foreground="{DynamicResource TextSecondaryBrush}"
-                    Text="Search and add books to the draft before confirming the import" />
-            </StackPanel>
-        </Border>
-
-        <Border
-            Grid.Row="1"
-            Padding="25,20,25,20"
-            Background="{DynamicResource SidebarBackgroundBrush}">
+        <Border Grid.Row="0" Background="White" Padding="32,24" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Margin="0,0,15,0">
-                    <TextBlock
-                        Margin="0,0,0,5"
-                        FontSize="{StaticResource FontSizeBody}"
-                        FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
-                        Text="Find Book (Enter name):" />
-                    <ComboBox
-                        Height="40"
-                        DisplayMemberPath="Title"
-                        IsEditable="True"
-                        IsTextSearchEnabled="False"
-                        ItemsSource="{Binding SearchResults}"
-                        SelectedItem="{Binding SelectedSearchResult}"
-                        StaysOpenOnEdit="True"
-                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Create New Import" FontSize="28" FontWeight="Bold" Foreground="#0F172A"/>
+                    <TextBlock Text="Review your draft items before confirming the import transaction" Margin="0,6,0,0" Foreground="#64748B" FontSize="13"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" Margin="0,0,15,0">
-                    <TextBlock
-                        Margin="0,0,0,5"
-                        FontSize="{StaticResource FontSizeBody}"
-                        FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
-                        Text="Quantity:" />
-                    <ui:TextBox Height="40" Text="{Binding TempImportQuantity, UpdateSourceTrigger=PropertyChanged}" />
-                </StackPanel>
-
-                <StackPanel Grid.Column="2" Margin="0,0,15,0">
-                    <TextBlock
-                        Margin="0,0,0,5"
-                        FontSize="{StaticResource FontSizeBody}"
-                        FontWeight="SemiBold"
-                        Foreground="{DynamicResource TextPrimaryBrush}"
-                        Text="Import Price (VND):" />
-                    <ui:TextBox Height="40" Text="{Binding TempImportPrice, UpdateSourceTrigger=PropertyChanged}" />
-                </StackPanel>
-
-                <StackPanel
-                    Grid.Column="3"
-                    VerticalAlignment="Bottom"
-                    Orientation="Horizontal">
-                    <ui:Button
-                        Margin="0,0,10,0"
-                        Background="{DynamicResource SuccessPrimaryBrush}"
-                        Command="{Binding AddToDraftCommand}"
-                        Content="Add to Draft"
-                        Foreground="{DynamicResource TextOnLightBackgroudBrush}"
-                        Icon="{ui:SymbolIcon Add24}"
-                        Style="{StaticResource PrimaryActionButtonStyle}" />
-
-                    <ui:Button
-                        Command="{Binding OpenCreateNewBookDialogCommand}"
-                        Icon="{ui:SymbolIcon DocumentAdd24}"
-                        Style="{StaticResource SecondaryActionButtonStyle}"
-                        ToolTip="Add new book to catalog" />
-                </StackPanel>
+                <Button Grid.Column="1" Command="{Binding OpenSelectBookDialogCommand}" Height="45" Padding="20,0" Cursor="Hand" BorderThickness="0" Background="Transparent">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Btn" Background="#0F172A" CornerRadius="8">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="15,0">
+                                    <ui:SymbolIcon Symbol="Search24" Foreground="White" Margin="0,0,8,0" FontSize="18"/>
+                                    <TextBlock Text="Choose Book to Import" Foreground="White" FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Btn" Property="Background" Value="#1E293B"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
             </Grid>
         </Border>
 
-        <Border
-            Grid.Row="2"
-            Margin="20"
-            Background="{DynamicResource CardBackgroundBrush}"
-            BorderBrush="{DynamicResource BorderLightBrush}"
-            BorderThickness="1"
-            CornerRadius="8">
-            <DataGrid
-                AlternatingRowBackground="{DynamicResource ContentBackgroundBrush}"
-                AutoGenerateColumns="False"
-                Background="Transparent"
-                BorderThickness="0"
-                CanUserAddRows="False"
-                FontSize="15"
-                Foreground="{DynamicResource TextOnLightBackgroudBrush}"
-                GridLinesVisibility="Horizontal"
-                HeadersVisibility="Column"
-                HorizontalGridLinesBrush="#E2E8F0"
-                ItemsSource="{Binding DraftList}"
-                RowBackground="{DynamicResource CardBackgroundBrush}"
-                RowHeight="60"
-                VerticalGridLinesBrush="Transparent">
+        <Border Grid.Row="1" Margin="24" Background="White" CornerRadius="12" BorderBrush="#E2E8F0" BorderThickness="1">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="25" ShadowDepth="2" Opacity="0.05" Direction="270"/>
+            </Border.Effect>
+
+            <DataGrid ItemsSource="{Binding DraftList}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                      Background="Transparent" BorderThickness="0" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9"
+                      RowHeight="60" ColumnHeaderHeight="55">
+
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="#64748B"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="FontSize" Value="13"/>
+                        <Setter Property="Padding" Value="18,12"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                    </Style>
+                </DataGrid.Resources>
+
+                <DataGrid.ItemContainerStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="White"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F8FAFC"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.ItemContainerStyle>
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn
-                        Width="80"
-                        Binding="{Binding BookId}"
-                        Header="Book ID"
-                        IsReadOnly="True">
+                    <DataGridTextColumn Header="ID" Binding="{Binding BookId}" Width="80">
                         <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center" />
-                                <Setter Property="FontWeight" Value="Bold" />
-                                <Setter Property="Padding" Value="10,0,0,0" />
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource GridTextStyle}">
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Margin" Value="18,0,0,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Title}"
-                        Header="Book Title"
-                        IsReadOnly="True">
+                    <DataGridTextColumn Header="BOOK TITLE" Binding="{Binding Title}" Width="*">
                         <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center" />
-                                <Setter Property="FontWeight" Value="SemiBold" />
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource GridTextStyle}">
+                                <Setter Property="FontWeight" Value="SemiBold"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn
-                        Width="80"
-                        Binding="{Binding CurrentQuantity}"
-                        Header="Stock"
-                        IsReadOnly="True" />
-
-                    <DataGridTextColumn
-                        Width="110"
-                        Binding="{Binding ImportQuantity, UpdateSourceTrigger=PropertyChanged}"
-                        Header="Import Qty" />
-                    <DataGridTextColumn
-                        Width="130"
-                        Binding="{Binding ImportPrice, UpdateSourceTrigger=PropertyChanged}"
-                        Header="Price" />
-
-                    <DataGridTextColumn
-                        Width="150"
-                        Binding="{Binding TotalLinePrice, StringFormat={}{0:N0} VND}"
-                        Header="Line Total"
-                        IsReadOnly="True">
+                    <DataGridTextColumn Header="IMPORT QTY" Binding="{Binding ImportQuantity}" Width="120">
                         <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Foreground" Value="{DynamicResource SuccessPrimaryBrush}" />
-                                <Setter Property="FontWeight" Value="Bold" />
-                                <Setter Property="VerticalAlignment" Value="Center" />
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource GridTextStyle}">
+                                <Setter Property="FontWeight" Value="Bold"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTemplateColumn Width="60">
+                    <DataGridTextColumn Header="PRICE" Binding="{Binding ImportPrice, StringFormat={}{0:N0} VND}" Width="150">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource GridTextStyle}"/>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="LINE TOTAL" Binding="{Binding TotalLinePrice, StringFormat={}{0:N0} VND}" Width="180">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource GridTextStyle}">
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Foreground" Value="#059669"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTemplateColumn Width="80">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <ui:Button
-                                    Appearance="Transparent"
-                                    Command="{Binding DataContext.RemoveFromDraftCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                                    CommandParameter="{Binding}"
-                                    Cursor="Hand"
-                                    Foreground="{DynamicResource ErrorPrimaryBrush}"
-                                    Icon="{ui:SymbolIcon Delete24}" />
+                                <Button Command="{Binding DataContext.RemoveFromDraftCommand, RelativeSource={RelativeSource AncestorType=Page}}" CommandParameter="{Binding}" 
+                                        Background="Transparent" BorderThickness="0" Cursor="Hand">
+                                    <ui:SymbolIcon Symbol="Delete24" Foreground="#EF4444" FontSize="18"/>
+                                </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -207,42 +138,43 @@
             </DataGrid>
         </Border>
 
-        <Border
-            Grid.Row="3"
-            Margin="20,0,20,20"
-            Padding="20"
-            Background="{DynamicResource CardBackgroundBrush}"
-            BorderBrush="{DynamicResource BorderLightBrush}"
-            BorderThickness="1"
-            CornerRadius="8">
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                <TextBlock
-                    Margin="0,0,15,0"
-                    VerticalAlignment="Center"
-                    FontSize="{StaticResource FontSizeSubTitle}"
-                    FontWeight="SemiBold"
-                    Foreground="{DynamicResource TextMutedBrush}"
-                    Text="Total Amount:" />
+        <Border Grid.Row="2" Background="White" Padding="24" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock Text="Total Amount:" FontSize="16" Foreground="#64748B" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBlock Text="{Binding TotalDraftAmount, StringFormat={}{0:N0} VND}" FontSize="24" Foreground="#059669" FontWeight="Black" VerticalAlignment="Center" Margin="0,0,30,0"/>
 
-                <TextBlock
-                    Margin="0,0,30,0"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource PriceTextStyle}"
-                    Text="{Binding TotalDraftAmount, StringFormat={}{0:N0} VND}" />
+                <Button Command="{Binding ClearDraftCommand}" Height="45" Padding="20,0" Margin="0,0,12,0" Cursor="Hand" BorderThickness="0" Background="Transparent">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Btn" Background="#FEF2F2" BorderBrush="#FECACA" BorderThickness="1" CornerRadius="8">
+                                <TextBlock Text="Clear Draft" Foreground="#DC2626" FontWeight="Bold" VerticalAlignment="Center" Margin="15,0"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Btn" Property="Background" Value="#FEE2E2"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
 
-                <ui:Button
-                    Margin="0,0,10,0"
-                    Command="{Binding ClearDraftCommand}"
-                    Content="CLEAR DRAFT"
-                    Foreground="{DynamicResource ErrorPrimaryBrush}"
-                    Icon="{ui:SymbolIcon Delete24}"
-                    Style="{StaticResource SecondaryActionButtonStyle}" />
-
-                <ui:Button
-                    Command="{Binding ConfirmImportCommand}"
-                    Content="CONFIRM IMPORT"
-                    Icon="{ui:SymbolIcon Save24}"
-                    Style="{StaticResource PrimaryActionButtonStyle}" />
+                <Button Command="{Binding ConfirmImportCommand}" Height="45" Padding="20,0" Cursor="Hand" BorderThickness="0" Background="Transparent">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Btn" Background="#10B981" CornerRadius="8">
+                                <StackPanel Orientation="Horizontal" Margin="15,0">
+                                    <ui:SymbolIcon Symbol="Save24" Foreground="White" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Confirm Import" Foreground="White" FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Btn" Property="Background" Value="#059669"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
             </StackPanel>
         </Border>
     </Grid>
