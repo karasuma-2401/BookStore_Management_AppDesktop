@@ -1,0 +1,17 @@
+# Keep Docker CI builds deterministic and fast.
+.git
+.github
+.vs
+.vscode
+bin
+obj
+
+# Local/user-specific files should not enter the Docker build context.
+*.user
+*.suo
+*.lscache
+
+# Test and coverage outputs are produced by CI, not copied into images.
+TestResults
+CoverageReports
+coverage
