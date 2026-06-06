@@ -8,7 +8,6 @@ namespace BookStoreManagement.API.Models.Book
 
         public int PublishYear { get; set; }
         public string? Description { get; set; }
-        public string? Publisher { get; set; }
 
         public string ImagePath { get; set; } = string.Empty;
 
