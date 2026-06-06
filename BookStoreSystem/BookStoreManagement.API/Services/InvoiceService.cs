@@ -117,11 +117,17 @@ namespace BookStoreManagement.API.Services
                         throw new Exception($"Order total must be at least {voucher.DiscountAmount.Value:N0}đ to use this voucher.");
                     }
 
+                    decimal discount = 0;
                     if (voucher.DiscountPercent.HasValue)
                     {
-                        decimal discount = rawTotal * (voucher.DiscountPercent.Value / 100m);
-                        finalTotal = rawTotal - discount;
+                        discount = rawTotal * (voucher.DiscountPercent.Value / 100m);
                     }
+                    else if (voucher.DiscountAmount.HasValue)
+                    {
+                        discount = voucher.DiscountAmount.Value;
+                    }
+
+                    finalTotal = rawTotal - discount;
 
                     if (finalTotal < 0) finalTotal = 0;
 
