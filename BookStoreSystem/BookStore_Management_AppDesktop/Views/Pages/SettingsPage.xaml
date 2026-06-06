@@ -139,6 +139,29 @@
                                 </ScrollViewer>
                             </StackPanel>
                         </ui:Card>
+                        
+                        <!-- Deactivated & Expired Vouchers Card -->
+                        <ui:Card Padding="15">
+                            <StackPanel>
+                                <TextBlock Text="Deactivated &amp; Expired Vouchers" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="{DynamicResource TextOnCardBrush}"/>
+                                <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto" Padding="0,0,5,0">
+                                    <ItemsControl ItemsSource="{Binding DeactivatedVouchers}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Margin="0,0,12,8" Padding="12" CornerRadius="8" BorderBrush="#FCA5A5" BorderThickness="1.5" Background="#0AEF4444">
+                                                    <Grid>
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding Code}" FontWeight="Bold" FontSize="14" Foreground="#94A3B8" Margin="0,0,0,4"/>
+                                                            <TextBlock Text="{Binding ExpiryDate, StringFormat='Expired/Deactivated: {0:dd/MM/yyyy}'}" FontSize="11" Foreground="{DynamicResource TextBodyBrush}"/>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </StackPanel>
+                        </ui:Card>
 
                     </StackPanel>
                 </Grid>

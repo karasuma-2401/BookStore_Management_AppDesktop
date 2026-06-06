@@ -245,7 +245,17 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 var list = await _voucherApiService.GetAllVouchersAsync();
                 if (list != null)
                 {
-                    Vouchers = new ObservableCollection<VoucherDto>(list);
+                    // Filter to load only active vouchers (not expired and not over limit)
+                    var activeList = list.Where(voucher => 
+                    {
+                        if (voucher.ExpiryDate.HasValue && voucher.ExpiryDate.Value.ToLocalTime() < DateTime.Now)
+                            return false;
+                        if (voucher.UsageLimit.HasValue && voucher.UsedCount >= voucher.UsageLimit.Value)
+                            return false;
+                        return true;
+                    }).ToList();
+
+                    Vouchers = new ObservableCollection<VoucherDto>(activeList);
                 }
             }
             catch (Exception ex)
