@@ -1,4 +1,4 @@
-﻿<Page x:Class="BookStore_Management_AppDesktop.Views.Pages.InventoryPage"
+<Page x:Class="BookStore_Management_AppDesktop.Views.Pages.InventoryPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -75,18 +75,12 @@
                 <uc:StatCardControl 
                     Width="240" Height="95" Margin="0,0,20,0"
                     Title="Total Books" 
-                    Value="{Binding TotalBooksCount}" 
-                    CardBackground="#EBF5FF"
-                    IconColor="#3498DB"
-                    IconData="M18,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V4A2,2 0 0,0 18,2M18,20H6V4H8V12L10.5,9.5L13,12V4H18V20Z" />
+                    Value="{Binding TotalBooksCount}" />
 
                 <uc:StatCardControl 
                     Width="240" Height="95"
                     Title="Low Stock" 
-                    Value="{Binding LowStockBooksCount}" 
-                    CardBackground="#FFF4E6"
-                    IconColor="#F39C12"
-                    IconData="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z" />
+                    Value="{Binding LowStockBooksCount}" />
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
@@ -138,6 +132,17 @@
                         <Setter Property="HorizontalContentAlignment" Value="Left"/>
                     </Style>
                 </DataGrid.Resources>
+
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorBrush}"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
 
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding BookId}" Width="60">
@@ -195,7 +200,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat='{}{0:#,0} đ'}" Width="120">
+                    <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=\\'{0:#,0} đ\'}" Width="120">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -211,7 +216,7 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5,0">
                                     <ui:SymbolIcon x:Name="StockIcon" Symbol="CheckmarkCircle24" FontSize="18" Margin="0,0,8,0" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
-                                    <TextBlock x:Name="StockText" Text="{Binding Quantity, StringFormat='{}{0} In Stock'}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
+                                    <TextBlock x:Name="StockText" Text="{Binding Quantity, StringFormat=\\'{0} In Stock\'}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource SuccessPrimaryBrush}"/>
                                 </StackPanel>
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding Quantity}" Value="0">
