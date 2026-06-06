@@ -21,7 +21,7 @@ concurrency:
 
 env:
   DOTNET_VERSION: 10.0.x
-  SOLUTION_FILE: BookStoreSystem/BookStoreSystem.sln
+  SOLUTION_FILE: BookStoreSystem/BookStoreSystem.slnx
 
 jobs:
   build-only:
