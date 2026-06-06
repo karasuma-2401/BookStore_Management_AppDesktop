@@ -120,6 +120,9 @@ public class CustomerService : ICustomerService
         if (customer == null)
             return false;
 
+        if (customer.Debt > 0)
+            throw new Exception("Cannot delete customer with remaining debt");
+
         customer.IsDeleted = true;
         customer.DeletedAt = DateTime.UtcNow;
 
