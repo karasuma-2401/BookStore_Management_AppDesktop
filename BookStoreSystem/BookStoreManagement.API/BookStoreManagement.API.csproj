@@ -37,6 +37,7 @@
     <Folder Include="Models\Customer\" />
     <Folder Include="Models\InventoryReport\" />
     <Folder Include="Models\DebtReport\" />
+    <Folder Include="Models\Setting\" />
     <Folder Include="Models\Report\" />
   </ItemGroup>
 

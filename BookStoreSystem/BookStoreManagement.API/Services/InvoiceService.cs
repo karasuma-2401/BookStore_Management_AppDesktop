@@ -3,6 +3,7 @@ using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Models.Enums;
 using BookStoreManagement.API.Models.Invoice;
+using BookStoreManagement.API.Services.Interfaces;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,11 +13,13 @@ namespace BookStoreManagement.API.Services
     {
         private readonly ApplicationDBContext _context;
         private readonly IValidator<InvoiceCreateDto> _validator;
+        private readonly ISettingService _settingService;
 
-        public InvoiceService(ApplicationDBContext context, IValidator<InvoiceCreateDto> validator)
+        public InvoiceService(ApplicationDBContext context, IValidator<InvoiceCreateDto> validator, ISettingService settingService)
         {
             _context = context;
             _validator = validator;
+            _settingService = settingService;
         }
 
         public async Task<int?> CreateInvoiceAsync(int userId,InvoiceCreateDto dto)
@@ -25,6 +28,8 @@ namespace BookStoreManagement.API.Services
 
             try
             {
+                var maxDebt = await _settingService.GetDecimal("NOTOIDA");
+                var minStockAfterSale = await _settingService.GetInt("SLTONSAUBAN");
                 var validationResult = await _validator.ValidateAsync(dto);
                 if (!validationResult.IsValid)
                 {
@@ -39,6 +44,14 @@ namespace BookStoreManagement.API.Services
                     {
                         throw new Exception($"Customer with ID {dto.CustomerId} does not exist.");
                     }
+                }
+
+                if (dto.CustomerId.HasValue)
+                {
+                    var customer = await _context.Customers.FindAsync(dto.CustomerId.Value);
+
+                    if (customer != null && customer.Debt > maxDebt)
+                        throw new Exception($"Customer debt exceeds limit ({maxDebt})");
                 }
 
                 var bookIds = dto.Details.Select(d => d.BookId).ToList();
@@ -68,6 +81,8 @@ namespace BookStoreManagement.API.Services
                     {
                         throw new Exception($"Not enough stock for book '{book.Title}'. Remaining: {book.Quantity}");
                     }
+                    if ((book.Quantity - item.Quantity) < minStockAfterSale)
+                        throw new Exception($"Stock after sale must be at least {minStockAfterSale}");
 
                     book.Quantity -= item.Quantity;
 

@@ -7,6 +7,7 @@ namespace BookStore_Management_AppDesktop.Helpers.Enums
     public enum PageType
     {
         Books,
+        Regulations,
         Employees,
         Customers,
         Invoices,
