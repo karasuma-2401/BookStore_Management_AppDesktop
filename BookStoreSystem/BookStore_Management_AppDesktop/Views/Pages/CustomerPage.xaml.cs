@@ -1,5 +1,8 @@
+using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using BookStore_Management_AppDesktop.ViewModels;
@@ -64,6 +67,25 @@ namespace BookStore_Management_AppDesktop.Views.Pages
                     viewModel.CurrentPage++;
                 }
             }
+        }
+    }
+}
+namespace BookStore_Management_AppDesktop.Converters
+{
+    public class DebtToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is decimal debt)
+            {
+                return debt > 0 ? Visibility.Collapsed : Visibility.Visible;
+            }
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

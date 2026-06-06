@@ -242,6 +242,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 return;
             }
 
+            if (customer.Debt > 0)
+            {
+                _dialogService.ShowMessage($"Cannot delete {customer.Name} because they have an outstanding debt.");
+                return;
+            }
+
             if (_dialogService.ShowConfirmation($"Are you sure you want to delete {customer.Name}?"))
             {
                 var result = await _apiService.DeleteCustomerAsync(customer.CustomerId);

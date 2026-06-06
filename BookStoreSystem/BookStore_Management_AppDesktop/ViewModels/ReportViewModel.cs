@@ -148,23 +148,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     {
                         InventoryReports.Add(item);
 
-                        try
-                        {
-                            var type = item.GetType();
-                            var nameProp = type.GetProperty("BookName") ?? type.GetProperty("Title") ?? type.GetProperty("Name");
-                            var stockProp = type.GetProperty("FinalStock") ?? type.GetProperty("ClosingStock") ?? type.GetProperty("Stock") ?? type.GetProperty("Quantity");
+                        // Lấy BookId từ DTO và thêm chữ "Book #" cho biểu đồ đẹp hơn
+                        string bName = string.IsNullOrWhiteSpace(item.BookName) ? $"Book #{item.BookId}" : item.BookName;
+                        int bStock = item.ClosingStock;
 
-                            string bName = nameProp?.GetValue(item)?.ToString() ?? "Unknown";
-                            int bStock = Convert.ToInt32(stockProp?.GetValue(item) ?? 0);
-
-                            bookNames.Add(bName);
-                            finalStocks.Add(bStock);
-                        }
-                        catch
-                        {
-                            bookNames.Add("Unknown");
-                            finalStocks.Add(0);
-                        }
+                        bookNames.Add(bName);
+                        finalStocks.Add(bStock);
                     }
 
                     InventorySeries = new ISeries[]
@@ -173,10 +162,15 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         {
                             Values = finalStocks.ToArray(),
                             Name = "Final Stock",
-                            Fill = new SolidColorPaint(SKColor.Parse("#10B981")),
-                            MaxBarWidth = 40,
-                            Rx = 4,
-                            Ry = 4
+                            // Style màu Gradient hiện đại (Xanh ngọc sang Xanh lục)
+                            Fill = new LinearGradientPaint(
+                                new[] { SKColor.Parse("#34D399"), SKColor.Parse("#059669") },
+                                new SKPoint(0.5f, 0),
+                                new SKPoint(0.5f, 1)
+                            ),
+                            MaxBarWidth = 45, // Cột mập mạp hơn
+                            Rx = 8, // Bo góc tròn trịa
+                            Ry = 8
                         }
                     };
 
@@ -186,8 +180,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         {
                             Labels = bookNames.ToArray(),
                             LabelsPaint = new SolidColorPaint(SKColor.Parse("#64748B")),
-                            TextSize = 12,
-                            LabelsRotation = 15
+                            TextSize = 13,
+                            LabelsRotation = 15 // Nghiêng nhẹ chữ để không bị đè lên nhau
                         }
                     };
 
@@ -198,7 +192,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                             Name = "Stock Quantity",
                             LabelsPaint = new SolidColorPaint(SKColor.Parse("#64748B")),
                             NamePaint = new SolidColorPaint(SKColor.Parse("#0F172A")),
-                            TextSize = 12
+                            TextSize = 13
                         }
                     };
                 }
