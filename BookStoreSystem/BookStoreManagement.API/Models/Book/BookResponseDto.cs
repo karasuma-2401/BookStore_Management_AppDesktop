@@ -14,7 +14,6 @@ namespace BookStoreManagement.API.Models.Book
         public decimal Price { get; set; }
         public string? Description { get; set; }
         public int PublishYear { get; set; }
-        public string? Publisher { get; set; }
         public string ImagePath { get; set; } = string.Empty;
         public List<int> CategoryIds { get; set; } = new List<int>();
         public List<string> CategoryNames { get; set; } = new List<string>();

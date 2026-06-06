@@ -51,8 +51,12 @@ namespace BookStoreManagement.API.Services
 
             if (!string.IsNullOrEmpty(keyword))
             {
+                var keywordLower = keyword.ToLower();
+                // 🎯 Tìm kiếm đa năng: match với Title HOẶC Author.Name HOẶC Category.Name
                 query = query.Where(b =>
-                    EF.Functions.ILike(b.Title, $"%{keyword}%"));
+                    EF.Functions.ILike(b.Title, $"%{keyword}%") ||
+                    b.BookAuthors.Any(ba => EF.Functions.ILike(ba.Author.Name, $"%{keyword}%")) ||
+                    b.BookCategories.Any(bc => EF.Functions.ILike(bc.Category.Name, $"%{keyword}%")));
             }
 
             query = sortBy?.ToLower() switch
@@ -78,7 +82,6 @@ namespace BookStoreManagement.API.Services
                     BookId = b.BookId,
                     Title = b.Title,
                     PublishYear = b.PublishYear ?? 0,
-              //      Publisher = b.Publisher,
                     AuthorNames = b.BookAuthors
                         .Select(ba => ba.Author.Name)
                         .ToList(),
@@ -124,8 +127,6 @@ namespace BookStoreManagement.API.Services
                     BookId = b.BookId,
                     Title = b.Title,
                     PublishYear = b.PublishYear ?? 0,
-            //        Publisher = b.Publisher,
-
                     AuthorNames = b.BookAuthors
                         .Select(ba => ba.Author.Name)
                         .ToList(),

@@ -149,15 +149,6 @@
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="PUBLISHER" Binding="{Binding Publisher, TargetNullValue='Unknown'}" Width="1*">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
-                                        <Setter Property="Foreground" Value="#475569"/>
-                                        <Setter Property="TextWrapping" Value="Wrap"/>
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
                             <DataGridTextColumn Header="STOCK" Binding="{Binding Quantity}" Width="70">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
