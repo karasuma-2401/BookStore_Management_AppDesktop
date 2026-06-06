@@ -2,6 +2,8 @@
 using BookStore_Management_AppDesktop.Models.DTOs.ImportDTOs;
 using BookStore_Management_AppDesktop.Services;
 using BookStore_Management_AppDesktop.Services.API.Import;
+using BookStore_Management_AppDesktop.Helpers.Enums;
+using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.Services.Realtime;
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -23,6 +25,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly IBookHubService _hubService;
         private readonly IServiceProvider _serviceProvider;
         private readonly IRegulationApiService _regulationApiService;
+        private readonly INavigationService _navigationService;
 
         [ObservableProperty] private ObservableCollection<ImportCartItem> _draftList = new ObservableCollection<ImportCartItem>();
         [ObservableProperty] private decimal _totalDraftAmount = 0;
@@ -37,13 +40,15 @@ namespace BookStore_Management_AppDesktop.ViewModels
             IImportApiService importApiService,
             IBookHubService hubService,
             IServiceProvider serviceProvider,
-            IRegulationApiService regulationApiService)
+            IRegulationApiService regulationApiService,
+            INavigationService navigationService)
         {
             _dialogService = dialogService;
             _importApiService = importApiService;
             _hubService = hubService;
             _serviceProvider = serviceProvider;
             _regulationApiService = regulationApiService;
+            _navigationService = navigationService;
 
             _hubService.BookCreated += OnBookCreatedRealtime;
 
@@ -74,13 +79,16 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             var violations = new List<string>();
 
+            // Check total import quantity >= MinImportQuantity
+            int totalImportQty = DraftList.Sum(item => item.ImportQuantity);
+            if (MinImportQuantity > 0 && DraftList.Any() && totalImportQty < MinImportQuantity)
+            {
+                violations.Add($"- Total import quantity ({totalImportQty}) must be at least {MinImportQuantity}.");
+            }
+
+            // Check each book's stock against MaxStockQuantity
             foreach (var item in DraftList)
             {
-                if (MinImportQuantity > 0 && item.ImportQuantity < MinImportQuantity)
-                {
-                    violations.Add($"- \"{item.Title}\": Import quantity ({item.ImportQuantity}) must be at least {MinImportQuantity}.");
-                }
-
                 if (MaxStockQuantity > 0 && item.CurrentQuantity >= MaxStockQuantity)
                 {
                     violations.Add($"- \"{item.Title}\": Current stock ({item.CurrentQuantity}) is >= {MaxStockQuantity}. Cannot import this book.");
@@ -230,6 +238,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     _dialogService.ShowMessage($"An error occurred: {ex.Message}");
                 }
             }
+        }
+
+        [RelayCommand]
+        private void NavigateToImportHistory()
+        {
+            _navigationService.NavigateTo(PageType.ImportHistory);
         }
 
         private void OnBookCreatedRealtime(Book newBook)
