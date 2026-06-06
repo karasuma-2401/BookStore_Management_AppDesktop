@@ -12,7 +12,8 @@ namespace BookStoreManagement.API.Interfaces.Services
             string? sortBy,
             string? sortOrder,
             int page,
-            int pageSize);
+            int pageSize,
+            bool includeOutOfStock = false);
 
         Task<BookResponseDto?> GetBookById(int id);
         Task<BookResponseDto?> CreateBook(

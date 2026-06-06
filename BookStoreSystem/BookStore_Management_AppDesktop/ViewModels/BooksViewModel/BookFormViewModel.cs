@@ -31,6 +31,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
         // 🎯 CÁC TRƯỜNG DỮ LIỆU CỦA SÁCH
         [ObservableProperty] private string _title = string.Empty;
         [ObservableProperty] private int _publishYear = DateTime.Now.Year;
+        [ObservableProperty] private string? _publishYearError;
+        public bool HasPublishYearError => !string.IsNullOrEmpty(PublishYearError);
         [ObservableProperty] private decimal _price = 0;
         [ObservableProperty] private int _quantity = 0;
         [ObservableProperty] private string _description = string.Empty;
@@ -77,6 +79,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             LocalImagePath = string.Empty;
             Price = 0;     // Sách mới chưa có giá (đợi Import)
             Quantity = 0;  // Sách mới tồn kho = 0 (đợi Import)
+            PublishYear = DateTime.Now.Year; // Mặc định năm hiện tại
             SelectedBookAuthors.Clear();
             SelectedBookCategories.Clear();
 
@@ -143,6 +146,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
             if (string.IsNullOrWhiteSpace(Title)) { OnShowMessage?.Invoke("Please enter book title."); return; }
             if (!SelectedBookAuthors.Any()) { OnShowMessage?.Invoke("Please select at least one author."); return; }
             if (!SelectedBookCategories.Any()) { OnShowMessage?.Invoke("Please select at least one category."); return; }
+
+            int currentYear = DateTime.Now.Year;
+            if (PublishYear <= 1445) { OnShowMessage?.Invoke($"Publish year must be greater than 1445."); return; }
+            if (PublishYear > currentYear) { OnShowMessage?.Invoke($"Publish year cannot be greater than {currentYear}."); return; }
 
             try
             {
@@ -232,6 +239,44 @@ namespace BookStore_Management_AppDesktop.ViewModels
         }
         [RelayCommand] private void RemoveAuthor(Author author) => SelectedBookAuthors.Remove(author);
 
+
+        // ========================================================
+        // 🎯 LOGIC VALIDATE PUBLISH YEAR REAL-TIME
+        // ========================================================
+        partial void OnPublishYearChanged(int value)
+        {
+            ValidatePublishYear();
+        }
+
+        partial void OnPublishYearErrorChanged(string? value)
+        {
+            OnPropertyChanged(nameof(HasPublishYearError));
+        }
+
+        private void ValidatePublishYear()
+        {
+            int currentYear = DateTime.Now.Year;
+            if (PublishYear <= 0)
+            {
+                PublishYearError = "Publish year is required.";
+            }
+            else if (PublishYear < 1000 || PublishYear > 9999)
+            {
+                PublishYearError = "Publish year must be a 4-digit number.";
+            }
+            else if (PublishYear <= 1445)
+            {
+                PublishYearError = "Publish year must be greater than 1445.";
+            }
+            else if (PublishYear > currentYear)
+            {
+                PublishYearError = $"Publish year cannot be greater than {currentYear}.";
+            }
+            else
+            {
+                PublishYearError = null;
+            }
+        }
 
         partial void OnCategorySearchTextChanged(string value)
         {

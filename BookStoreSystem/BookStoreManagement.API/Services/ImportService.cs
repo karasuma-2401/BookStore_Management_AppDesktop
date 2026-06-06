@@ -35,6 +35,7 @@ namespace BookStoreManagement.API.Services
                 var details = new List<ImportDetail>();
                 var minImport = await _settingService.GetInt("SLNHAPTT");
                 var maxStockToImport = await _settingService.GetInt("SLTONTD");
+                var priceRate = await _settingService.GetDecimal("GIABAN");
 
                 foreach (var item in dto.Details)
                 {
@@ -49,7 +50,7 @@ namespace BookStoreManagement.API.Services
 
 
                     book.Quantity += item.Quantity;
-                    book.Price = item.ImportPrice;
+                    book.Price = item.ImportPrice * priceRate;
 
                     details.Add(new ImportDetail
                     {
@@ -76,6 +77,10 @@ namespace BookStoreManagement.API.Services
                             .Where(b => b.BookId == d.BookId)
                             .Select(b => b.Title)
                             .FirstOrDefault() ?? "",
+                        PublishYear = _context.Books
+                            .Where(b => b.BookId == d.BookId)
+                            .Select(b => b.PublishYear)
+                            .FirstOrDefault() ?? 0,
                         Quantity = d.Quantity,
                         ImportPrice = d.ImportPrice
                     }).ToList()
@@ -105,6 +110,7 @@ namespace BookStoreManagement.API.Services
                     {
                         BookId = d.BookId,
                         BookTitle = d.Book.Title,
+                        PublishYear = d.Book.PublishYear ?? 0,
                         Quantity = d.Quantity,
                         ImportPrice = d.ImportPrice
                     }).ToList()
@@ -132,6 +138,7 @@ namespace BookStoreManagement.API.Services
                 {
                     BookId = d.BookId,
                     BookTitle = d.Book.Title,
+                    PublishYear = d.Book.PublishYear ?? 0,
                     Quantity = d.Quantity,
                     ImportPrice = d.ImportPrice
                 }).ToList()

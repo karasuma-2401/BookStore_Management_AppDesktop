@@ -2,16 +2,20 @@ using BookStore_Management_AppDesktop.Helpers;
 using BookStore_Management_AppDesktop.Helpers.Enums;
 using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs;
+using BookStore_Management_AppDesktop.Services.API.AuthorServices;
 using BookStore_Management_AppDesktop.Services.API.BookServices;
 using BookStore_Management_AppDesktop.Services.API.CartServices;
+using BookStore_Management_AppDesktop.Services.API.CategoryServices;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.Services.Realtime;
 using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,6 +26,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
     public partial class BookViewModel : BaseViewModel
     {
         private readonly IBookApiService _apiService;
+        private readonly IAuthorApiService _authorApiService;
+        private readonly ICategoryApiService _categoryApiService;
         private readonly INavigationService _navigationService;
         private readonly ICartService _cartService;
         private readonly IBookHubService _hubService;
@@ -30,6 +36,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
         [ObservableProperty] private string _searchText = string.Empty;
         [ObservableProperty] private string? _selectedSort;
         [ObservableProperty] private ObservableCollection<Book> _books = new ObservableCollection<Book>();
+
+        // 🎯 BỘ LỌC TÌM KIẾM ĐA NĂNG
+        [ObservableProperty] private ObservableCollection<Author> _authors = new ObservableCollection<Author>();
+        [ObservableProperty] private ObservableCollection<Category> _categories = new ObservableCollection<Category>();
+        [ObservableProperty] private Author? _selectedAuthor;
+        [ObservableProperty] private Category? _selectedCategory;
 
         [ObservableProperty] private int _currentPage = 1;
         [ObservableProperty] private int _pageSize = 14;

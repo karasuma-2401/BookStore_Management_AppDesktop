@@ -71,29 +71,21 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                <ui:Button Command="{Binding OpenAuthorManagementCommand}"
-                           Appearance="Secondary"
-                           Height="50"
-                           Padding="18,0"
-                           Margin="0,0,12,0"
-                           Background="{DynamicResource CardBackgroundBrush}"
-                           BorderBrush="#E2E8F0"
-                           BorderThickness="1"
-                           Cursor="Hand">
+                <ui:Button Command="{Binding ExportInventoryCommand}" Appearance="Secondary" Height="50" Padding="18,0" Margin="0,0,12,0" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="DocumentAdd24" FontSize="20" Margin="0,0,10,0" Foreground="{DynamicResource SystemAccentColorBrush}"/>
+                        <TextBlock Text="Export to Excel" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
+                    </StackPanel>
+                </ui:Button>
+
+                <ui:Button Command="{Binding OpenAuthorManagementCommand}" Appearance="Secondary" Height="50" Padding="18,0" Margin="0,0,12,0" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" Cursor="Hand">
                     <StackPanel Orientation="Horizontal">
                         <ui:SymbolIcon Symbol="People24" FontSize="20" Margin="0,0,10,0" Foreground="{DynamicResource SystemAccentColorBrush}"/>
                         <TextBlock Text="Authors" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
                     </StackPanel>
                 </ui:Button>
 
-                <ui:Button Command="{Binding OpenCategoryManagementCommand}"
-                           Appearance="Secondary"
-                           Height="50"
-                           Padding="18,0"
-                           Background="{DynamicResource CardBackgroundBrush}"
-                           BorderBrush="#E2E8F0"
-                           BorderThickness="1"
-                           Cursor="Hand">
+                <ui:Button Command="{Binding OpenCategoryManagementCommand}" Appearance="Secondary" Height="50" Padding="18,0" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="#E2E8F0" BorderThickness="1" Cursor="Hand">
                     <StackPanel Orientation="Horizontal">
                         <ui:SymbolIcon Symbol="Grid24" FontSize="20" Margin="0,0,10,0" Foreground="{DynamicResource SystemAccentColorBrush}"/>
                         <TextBlock Text="Categories" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
@@ -104,24 +96,30 @@
 
         <Border Grid.Row="2" Background="{DynamicResource CardBackgroundBrush}" Margin="20,15,20,10" CornerRadius="8">
             <DataGrid ItemsSource="{Binding Books}" AutoGenerateColumns="False" 
-                      CanUserAddRows="False" 
-                      IsReadOnly="True" 
-                      CanUserSortColumns="False" 
+                      CanUserAddRows="False" IsReadOnly="True" CanUserSortColumns="False" 
                       RowHeight="65" HeadersVisibility="Column"
                       Foreground="{DynamicResource TextOnLightBackgroudBrush}" 
-                      Background="Transparent" 
-                      CanUserResizeColumns="False" 
+                      Background="Transparent" CanUserResizeColumns="False" 
                       RowBackground="{DynamicResource CardBackgroundBrush}"
                       AlternatingRowBackground="{DynamicResource ContentBackgroundBrush}"
                       BorderBrush="#E2E8F0" BorderThickness="1" 
                       HorizontalGridLinesBrush="#E2E8F0" VerticalGridLinesBrush="Transparent"
                       FontSize="{StaticResource FontSizeBody}" Cursor="Hand"
-                      EnableRowVirtualization="True"
-                      EnableColumnVirtualization="True"
-                      VirtualizingPanel.IsVirtualizing="True"
-                      VirtualizingPanel.VirtualizationMode="Recycling"
-                      ScrollViewer.CanContentScroll="True"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto">
+                      EnableRowVirtualization="True" EnableColumnVirtualization="True"
+                      VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
+                      ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="#64748B"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontSize" Value="13"/>
+                        <Setter Property="Padding" Value="12,8"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                    </Style>
+                </DataGrid.Resources>
 
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
@@ -139,13 +137,13 @@
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Margin" Value="10,0,0,0"/>
+                                <Setter Property="Margin" Value="12,0,0,0"/>
                                 <Setter Property="FontWeight" Value="SemiBold"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTemplateColumn Header="Book Details" Width="3*">
+                    <DataGridTemplateColumn Header="Book Details" Width="2.5*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel VerticalAlignment="Center" Margin="5,0">
@@ -155,6 +153,17 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+
+                    <DataGridTextColumn Header="Publish year" Binding="{Binding PublishYear}" Width="130">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextOnLightBackgroudBrush}"/>
+                                <Setter Property="Margin" Value="12,0,0,0"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
                     <DataGridTemplateColumn Header="Category" Width="2*">
                         <DataGridTemplateColumn.CellTemplate>
@@ -167,8 +176,10 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Background="#F1F5F9" CornerRadius="4" Padding="8,3" Margin="0,2,6,2">
-                                                <TextBlock Text="{Binding}" FontSize="11" Foreground="#475569" FontWeight="Medium"/>
+                                            <Border CornerRadius="4" Padding="8,3" Margin="0,2,6,2"
+                                                    Background="{Binding Converter={StaticResource CategoryNameToColorConverter}, ConverterParameter=Background}">
+                                                <TextBlock Text="{Binding}" FontSize="11" FontWeight="SemiBold"
+                                                           Foreground="{Binding Converter={StaticResource CategoryNameToColorConverter}, ConverterParameter=Foreground}"/>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
@@ -183,6 +194,7 @@
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="FontWeight" Value="SemiBold"/>
                                 <Setter Property="Foreground" Value="{DynamicResource TextOnLightBackgroudBrush}"/>
+                                <Setter Property="Margin" Value="12,0,0,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>

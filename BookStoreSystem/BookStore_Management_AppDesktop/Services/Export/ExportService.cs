@@ -270,6 +270,166 @@ namespace BookStore_Management_AppDesktop.Services.Export
             }
         }
 
+        public async Task<bool> ExportInventoryToExcelAsync(IEnumerable<Models.Book> books)
+        {
+            try
+            {
+                var fileName = $"Inventory_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+                var downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                downloadsPath = Path.Combine(downloadsPath, "Downloads");
+
+                if (!Directory.Exists(downloadsPath))
+                {
+                    Directory.CreateDirectory(downloadsPath);
+                }
+
+                var filePath = Path.Combine(downloadsPath, fileName);
+
+                using (var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add("Inventory");
+
+                    // Title
+                    var titleCell = worksheet.Cell("A1");
+                    titleCell.Value = "INVENTORY REPORT";
+                    titleCell.Style.Font.Bold = true;
+                    titleCell.Style.Font.FontSize = 16;
+                    titleCell.Style.Font.FontColor = XLColor.White;
+                    titleCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#0F172A");
+                    worksheet.Range("A1:F1").Merge();
+
+                    // Metadata
+                    worksheet.Cell(2, 1).Value = $"Exported: {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
+                    worksheet.Cell(2, 1).Style.Font.Italic = true;
+                    worksheet.Cell(2, 1).Style.Font.FontSize = 11;
+
+                    // Summary
+                    var bookList = books.ToList();
+                    int totalBooks = bookList.Count;
+                    int lowStockBooks = bookList.Count(b => b.Quantity > 0 && b.Quantity <= 5);
+                    long totalQuantity = bookList.Sum(b => b.Quantity);
+                    decimal totalValue = bookList.Sum(b => (long)b.Quantity * b.Price);
+
+                    worksheet.Cell(4, 1).Value = "SUMMARY";
+                    worksheet.Cell(4, 1).Style.Font.Bold = true;
+                    worksheet.Cell(4, 1).Style.Font.FontSize = 12;
+
+                    worksheet.Cell(5, 1).Value = "Total Books (Types):";
+                    worksheet.Cell(5, 2).Value = totalBooks;
+                    worksheet.Cell(5, 2).Style.Font.Bold = true;
+
+                    worksheet.Cell(6, 1).Value = "Total Stock Quantity:";
+                    worksheet.Cell(6, 2).Value = totalQuantity;
+                    worksheet.Cell(6, 2).Style.Font.Bold = true;
+
+                    worksheet.Cell(7, 1).Value = "Low Stock Items (1-5):";
+                    worksheet.Cell(7, 2).Value = lowStockBooks;
+                    worksheet.Cell(7, 2).Style.Font.Bold = true;
+                    worksheet.Cell(7, 2).Style.Font.FontColor = XLColor.FromHtml("#EF4444");
+
+                    worksheet.Cell(8, 1).Value = "Total Inventory Value:";
+                    worksheet.Cell(8, 2).Value = totalValue;
+                    worksheet.Cell(8, 2).Style.NumberFormat.Format = "#,##0.00";
+                    worksheet.Cell(8, 2).Style.Font.Bold = true;
+                    worksheet.Cell(8, 2).Style.Font.FontColor = XLColor.FromHtml("#059669");
+
+                    // Table headers
+                    int tableRow = 10;
+                    var headers = new[] { "ID", "Title", "Author(s)", "Publish Year", "Quantity", "Price", "Total Value" };
+                    for (int col = 1; col <= headers.Length; col++)
+                    {
+                        var cell = worksheet.Cell(tableRow, col);
+                        cell.Value = headers[col - 1];
+                        cell.Style.Font.Bold = true;
+                        cell.Style.Font.FontColor = XLColor.White;
+                        cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#1E293B");
+                        cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    }
+
+                    // Table data
+                    tableRow++;
+                    foreach (var book in bookList.OrderBy(b => b.Title))
+                    {
+                        worksheet.Cell(tableRow, 1).Value = book.BookId;
+                        worksheet.Cell(tableRow, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        worksheet.Cell(tableRow, 2).Value = book.Title;
+
+                        worksheet.Cell(tableRow, 3).Value = book.DisplayAuthorNames ?? "Unknown";
+
+                        worksheet.Cell(tableRow, 4).Value = book.PublishYear;
+
+                        var quantityCell = worksheet.Cell(tableRow, 5);
+                        quantityCell.Value = book.Quantity;
+                        quantityCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        quantityCell.Style.Font.Bold = true;
+
+                        // Color code quantity
+                        if (book.Quantity == 0)
+                        {
+                            quantityCell.Style.Font.FontColor = XLColor.FromHtml("#94A3B8");
+                        }
+                        else if (book.Quantity > 0 && book.Quantity <= 5)
+                        {
+                            quantityCell.Style.Font.FontColor = XLColor.FromHtml("#EF4444");
+                        }
+                        else
+                        {
+                            quantityCell.Style.Font.FontColor = XLColor.FromHtml("#059669");
+                        }
+
+                        var priceCell = worksheet.Cell(tableRow, 6);
+                        priceCell.Value = book.Price;
+                        priceCell.Style.NumberFormat.Format = "#,##0.00";
+                        priceCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+
+                        var totalValueCell = worksheet.Cell(tableRow, 7);
+                        totalValueCell.Value = (long)book.Quantity * book.Price;
+                        totalValueCell.Style.NumberFormat.Format = "#,##0.00";
+                        totalValueCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                        totalValueCell.Style.Font.Bold = true;
+
+                        // Alternating row colors
+                        if (tableRow % 2 == 0)
+                        {
+                            for (int col = 1; col <= 7; col++)
+                            {
+                                worksheet.Cell(tableRow, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#F8FAFC");
+                            }
+                        }
+
+                        // Add borders
+                        for (int col = 1; col <= 7; col++)
+                        {
+                            worksheet.Cell(tableRow, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                        }
+
+                        tableRow++;
+                    }
+
+                    // Set column widths
+                    worksheet.Column(1).Width = 8;
+                    worksheet.Column(2).Width = 30;
+                    worksheet.Column(3).Width = 20;
+                    worksheet.Column(4).Width = 20;
+                    worksheet.Column(5).Width = 12;
+                    worksheet.Column(6).Width = 15;
+                    worksheet.Column(7).Width = 15;
+
+                    workbook.SaveAs(filePath);
+                }
+
+                MessageBox.Show($"Inventory exported successfully to:\n{filePath}", "Export Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error exporting inventory: {ex.Message}", "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+        }
+
         private string GetMonthName(int month)
         {
             return month switch
@@ -291,3 +451,4 @@ namespace BookStore_Management_AppDesktop.Services.Export
         }
     }
 }
+

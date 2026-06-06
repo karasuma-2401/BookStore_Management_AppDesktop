@@ -30,7 +30,6 @@ namespace BookStoreManagement.API.Services
             {
                 var maxDebt = await _settingService.GetDecimal("NOTOIDA");
                 var minStockAfterSale = await _settingService.GetInt("SLTONSAUBAN");
-                var priceRate = await _settingService.GetDecimal("GIABAN");
                 var validationResult = await _validator.ValidateAsync(dto);
                 if (!validationResult.IsValid)
                 {
@@ -85,7 +84,6 @@ namespace BookStoreManagement.API.Services
                     if ((book.Quantity - item.Quantity) < minStockAfterSale)
                         throw new Exception($"Stock after sale must be at least {minStockAfterSale}");
 
-                    var salePrice = book.Price * priceRate;
                     book.Quantity -= item.Quantity;
 
                     var detailTotal = book.Price * item.Quantity;
@@ -95,7 +93,7 @@ namespace BookStoreManagement.API.Services
                     {
                         BookId = item.BookId,
                         Quantity = item.Quantity,
-                        SalePrice = salePrice
+                        SalePrice = book.Price
                     });
                 }
 

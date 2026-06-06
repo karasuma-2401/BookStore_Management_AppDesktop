@@ -47,6 +47,7 @@ namespace BookStore_Management_AppDesktop.Services.API.BookServices
                 if (!string.IsNullOrWhiteSpace(queryParams.Keyword)) query.Add($"keyword={Uri.EscapeDataString(queryParams.Keyword)}");
                 if (!string.IsNullOrWhiteSpace(queryParams.SortBy)) query.Add($"sortBy={queryParams.SortBy}");
                 if (!string.IsNullOrWhiteSpace(queryParams.SortOrder)) query.Add($"sortOrder={queryParams.SortOrder}");
+                if (queryParams.IncludeOutOfStock) query.Add($"includeOutOfStock={queryParams.IncludeOutOfStock}");
 
                 query.Add($"page={queryParams.PageNumber}");
                 query.Add($"pageSize={queryParams.PageSize}");
@@ -73,6 +74,7 @@ namespace BookStore_Management_AppDesktop.Services.API.BookServices
                     Quantity = dto.Quantity,
                     ImagePath = dto.ImagePath,
                     Description = dto.Description,
+                    PublishYear = dto.PublishYear,
                     CategoryIds = dto.CategoryIds ?? new List<int>(),
                     CategoryNames = dto.CategoryNames ?? new List<string>() 
                 }).ToList();
@@ -108,7 +110,7 @@ namespace BookStore_Management_AppDesktop.Services.API.BookServices
                 {
                     Title = newBook.Title ?? string.Empty,
                     AuthorIds = newBook.AuthorIds ?? new List<int>(),
-                    PublishYear = 2026, 
+                    PublishYear = newBook.PublishYear,
                     Description = newBook.Description ?? string.Empty,
                     ImagePath = newBook.ImagePath ?? string.Empty,
                     CategoryIds = newBook.CategoryIds ?? new List<int>()
@@ -135,6 +137,7 @@ namespace BookStore_Management_AppDesktop.Services.API.BookServices
                             Quantity = dto.Quantity,
                             ImagePath = dto.ImagePath,
                             Description = dto.Description,
+                            PublishYear = dto.PublishYear,
                             CategoryIds = dto.CategoryIds ?? new List<int>(),
                             CategoryNames = dto.CategoryNames ?? new List<string>()
                         };
@@ -179,6 +182,7 @@ namespace BookStore_Management_AppDesktop.Services.API.BookServices
                     Quantity = dto.Quantity,
                     ImagePath = dto.ImagePath,
                     Description = dto.Description,
+                    PublishYear = dto.PublishYear,
                     CategoryIds = dto.CategoryIds ?? new List<int>(),
                     CategoryNames = dto.CategoryNames ?? new List<string>()
                 };
@@ -200,7 +204,7 @@ namespace BookStore_Management_AppDesktop.Services.API.BookServices
                 {
                     Title = updatedBook.Title ?? string.Empty,
                     AuthorIds = updatedBook.AuthorIds ?? new List<int>(),
-                    PublishYear = 2026,
+                    PublishYear = updatedBook.PublishYear,
                     Quantity = updatedBook.Quantity,
                     Description = updatedBook.Description ?? string.Empty,
                     ImagePath = updatedBook.ImagePath ?? string.Empty,

@@ -31,12 +31,14 @@ namespace BookStoreManagement.API.Controllers
             [FromQuery] string? sortBy = "price",
             [FromQuery] string? sortOrder = "asc",
             [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10)
+            [FromQuery] int pageSize = 10,
+            [FromQuery] bool includeOutOfStock = false)
         {
             var result = await _bookService.GetBooks(
                 categoryId, authorId, keyword,
                 sortBy, sortOrder,
-                page, pageSize);
+                page, pageSize,
+                includeOutOfStock);
 
             return Ok(result);
         }

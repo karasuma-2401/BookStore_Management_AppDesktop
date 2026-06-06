@@ -30,9 +30,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IImportApiService _importApiService;
         private readonly IBookHubService _hubService;
+        private ObservableCollection<ImportHistoryUIModel> _allImportHistory = new ObservableCollection<ImportHistoryUIModel>();
 
         [ObservableProperty] private ObservableCollection<ImportHistoryUIModel> _importHistory = new ObservableCollection<ImportHistoryUIModel>();
         [ObservableProperty] private bool _isLoading;
+        [ObservableProperty] private DateTime? _filterStartDate = DateTime.Now.AddMonths(-1);
+        [ObservableProperty] private DateTime? _filterEndDate = DateTime.Now;
 
         public ImportHistoryViewModel(
             INavigationService navigationService,
@@ -60,10 +63,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                ImportHistory.Clear();
+                _allImportHistory.Clear();
                 foreach (var item in dataFromApi.OrderByDescending(x => x.ImportDate))
                 {
-                    ImportHistory.Add(new ImportHistoryUIModel
+                    _allImportHistory.Add(new ImportHistoryUIModel
                     {
                         ImportId = item.ImportId,
                         ImportDate = item.ImportDate.ToLocalTime(), 
@@ -74,8 +77,63 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         OriginalData = item
                     });
                 }
+                ApplyCurrentFilter();
             });
             IsLoading = false;
+        }
+
+        private void ApplyCurrentFilter()
+        {
+            ImportHistory.Clear();
+            var filtered = _allImportHistory.AsEnumerable();
+
+            if (FilterStartDate.HasValue)
+            {
+                var startDate = FilterStartDate.Value.Date;
+                filtered = filtered.Where(x => x.ImportDate.Date >= startDate);
+            }
+
+            if (FilterEndDate.HasValue)
+            {
+                var endDate = FilterEndDate.Value.Date.AddDays(1);
+                filtered = filtered.Where(x => x.ImportDate.Date < endDate);
+            }
+
+            foreach (var item in filtered)
+            {
+                ImportHistory.Add(item);
+            }
+        }
+
+        partial void OnFilterStartDateChanged(DateTime? value)
+        {
+            if (value.HasValue && FilterEndDate.HasValue && value > FilterEndDate)
+            {
+                FilterStartDate = FilterEndDate;
+            }
+        }
+
+        partial void OnFilterEndDateChanged(DateTime? value)
+        {
+            if (value.HasValue && FilterStartDate.HasValue && value < FilterStartDate)
+            {
+                FilterEndDate = FilterStartDate;
+            }
+        }
+
+        [RelayCommand]
+        private void ApplyDateFilter()
+        {
+            if (FilterStartDate.HasValue && FilterEndDate.HasValue && FilterStartDate > FilterEndDate)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show("Start date cannot be greater than end date!", "Invalid Date Range", MessageBoxButton.OK, MessageBoxImage.Warning);
+                });
+                return;
+            }
+
+            ApplyCurrentFilter();
         }
 
         [RelayCommand]

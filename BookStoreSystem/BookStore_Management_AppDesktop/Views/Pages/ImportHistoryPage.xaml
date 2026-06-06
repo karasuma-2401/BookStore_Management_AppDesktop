@@ -71,15 +71,36 @@
                         <Button Command="{Binding NavigateToCreateImportCommand}" Height="45" Width="160" Cursor="Hand" BorderThickness="0" Background="Transparent">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="Btn" Background="#0F172A" CornerRadius="10">
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <ui:SymbolIcon Symbol="Add24" Foreground="White" Margin="0,0,8,0"/>
-                                            <TextBlock Text="Add New Import" Foreground="White" FontWeight="Bold" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                    </Border>
+                                    <Grid>
+                                        <Border x:Name="Btn" 
+                                                Background="#6366F1" 
+                                                CornerRadius="8"
+                                                Padding="0">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.2" Direction="270" Color="#6366F1"/>
+                                            </Border.Effect>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <ui:SymbolIcon Symbol="Add24" Foreground="White" Margin="0,0,8,0"/>
+                                                <TextBlock Text="Add New Import" Foreground="White" FontWeight="Bold" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="Btn" Property="Background" Value="#1E293B"/>
+                                            <Setter TargetName="Btn" Property="Background" Value="#5558E3"/>
+                                            <Setter TargetName="Btn" Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect BlurRadius="12" ShadowDepth="4" Opacity="0.35" Direction="270" Color="#6366F1"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="Btn" Property="Background" Value="#4F46E5"/>
+                                            <Setter TargetName="Btn" Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect BlurRadius="6" ShadowDepth="1" Opacity="0.15" Direction="270" Color="#6366F1"/>
+                                                </Setter.Value>
+                                            </Setter>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -88,24 +109,80 @@
                     </StackPanel>
                 </Grid>
 
-                <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
-                    <StackPanel Margin="0,0,15,0">
-                        <TextBlock Text="From Date" Foreground="#64748B" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                        <DatePicker SelectedDate="{Binding FilterStartDate}" Style="{StaticResource CustomDatePickerStyle}"/>
-                    </StackPanel>
-                    <StackPanel Margin="0,0,15,0">
-                        <TextBlock Text="To Date" Foreground="#64748B" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                        <DatePicker SelectedDate="{Binding FilterEndDate}" Style="{StaticResource CustomDatePickerStyle}"/>
-                    </StackPanel>
+                <!-- Updated filter section matching AbsenceManagementPage pattern -->
+                <Border Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="0,24,0,0" Margin="0,24,0,0">
+                    <Grid VerticalAlignment="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <Button Command="{Binding ApplyDateFilterCommand}" VerticalAlignment="Bottom" Height="40" Padding="20,0" 
-                            Background="#6366F1" Foreground="White" BorderThickness="0" Cursor="Hand">
-                        <StackPanel Orientation="Horizontal">
-                            <ui:SymbolIcon Symbol="Search24" Foreground="White" Margin="0,0,8,0"/>
-                            <TextBlock Text="Filter" FontWeight="Bold"/>
+                        <StackPanel Grid.Column="0" Orientation="Vertical">
+                            <TextBlock Text="From Date" Foreground="#64748B" FontSize="11" Margin="0,0,0,8"/>
+                            <DatePicker SelectedDate="{Binding FilterStartDate}" 
+                                       Background="White" Foreground="#1E293B" 
+                                       BorderBrush="#38BDF8" BorderThickness="1.5" 
+                                       Padding="8,6" FontSize="12" Width="220" Height="40"
+                                       SelectedDateFormat="Short" Language="vi-VN"/>
                         </StackPanel>
-                    </Button>
-                </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="16,0,0,0">
+                            <TextBlock Text="To Date" Foreground="#64748B" FontSize="11" Margin="0,0,0,8"/>
+                            <DatePicker SelectedDate="{Binding FilterEndDate}" 
+                                       Background="White" Foreground="#1E293B" 
+                                       BorderBrush="#38BDF8" BorderThickness="1.5" 
+                                       Padding="8,6" FontSize="12" Width="220" Height="40"
+                                       SelectedDateFormat="Short" Language="vi-VN"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="2" Command="{Binding ApplyDateFilterCommand}" 
+                                Background="Transparent" Foreground="White" 
+                                Padding="0" Margin="16,0,0,0" Height="40" VerticalAlignment="Bottom"
+                                Cursor="Hand" BorderThickness="0">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Grid>
+                                        <Border x:Name="FilterBorder"
+                                                Background="#6366F1"
+                                                BorderBrush="#4F46E5"
+                                                BorderThickness="1.5"
+                                                CornerRadius="6"
+                                                Padding="16,8">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.2" Direction="270" Color="#6366F1"/>
+                                            </Border.Effect>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <ui:SymbolIcon Symbol="Search24" Foreground="White" Margin="0,0,8,0"/>
+                                                <TextBlock Text="Filter" FontWeight="Bold" VerticalAlignment="Center" Foreground="White"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="FilterBorder" Property="Background" Value="#5558E3"/>
+                                            <Setter TargetName="FilterBorder" Property="BorderBrush" Value="#3D3DB8"/>
+                                            <Setter TargetName="FilterBorder" Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect BlurRadius="12" ShadowDepth="4" Opacity="0.35" Direction="270" Color="#6366F1"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="FilterBorder" Property="Background" Value="#4F46E5"/>
+                                            <Setter TargetName="FilterBorder" Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect BlurRadius="6" ShadowDepth="1" Opacity="0.15" Direction="270" Color="#6366F1"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                </Border>
             </StackPanel>
         </Border>
 
@@ -114,9 +191,10 @@
                 <DropShadowEffect BlurRadius="25" ShadowDepth="2" Opacity="0.05" Direction="270"/>
             </Border.Effect>
 
-            <DataGrid ItemsSource="{Binding ImportHistory}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                <DataGrid x:Name="ImportHistoryGrid" ItemsSource="{Binding ImportHistory}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       Background="Transparent" BorderThickness="0" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9"
-                      RowHeight="60" ColumnHeaderHeight="55">
+                      RowHeight="60" ColumnHeaderHeight="55"
+                      PreviewMouseLeftButtonDown="ImportHistoryGrid_PreviewMouseLeftButtonDown">
 
                 <DataGrid.Resources>
                     <Style TargetType="DataGridColumnHeader">
@@ -132,7 +210,6 @@
                 <DataGrid.ItemContainerStyle>
                     <Style TargetType="DataGridRow">
                         <Setter Property="Cursor" Value="Hand"/>
-                        <EventSetter Event="PreviewMouseLeftButtonUp" Handler="Row_MouseLeftButtonUp"/>
                         <Setter Property="Background" Value="White"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">

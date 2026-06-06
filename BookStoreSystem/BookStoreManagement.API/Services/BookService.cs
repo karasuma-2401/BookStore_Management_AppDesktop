@@ -22,7 +22,8 @@ namespace BookStoreManagement.API.Services
             string? sortBy,
             string? sortOrder,
             int page,
-            int pageSize)
+            int pageSize,
+            bool includeOutOfStock = false)
         {
             var query = _context.Books
                 .Include(b => b.BookAuthors)
@@ -30,6 +31,11 @@ namespace BookStoreManagement.API.Services
                 .Include(b => b.BookCategories)
                     .ThenInclude(bc => bc.Category)
                 .AsQueryable();
+
+            if (!includeOutOfStock)
+            {
+                query = query.Where(b => b.Quantity > 0);
+            }
 
             if (authorId.HasValue)
             {
@@ -45,8 +51,12 @@ namespace BookStoreManagement.API.Services
 
             if (!string.IsNullOrEmpty(keyword))
             {
+                var keywordLower = keyword.ToLower();
+                // 🎯 Tìm kiếm đa năng: match với Title HOẶC Author.Name HOẶC Category.Name
                 query = query.Where(b =>
-                    EF.Functions.ILike(b.Title, $"%{keyword}%"));
+                    EF.Functions.ILike(b.Title, $"%{keyword}%") ||
+                    b.BookAuthors.Any(ba => EF.Functions.ILike(ba.Author.Name, $"%{keyword}%")) ||
+                    b.BookCategories.Any(bc => EF.Functions.ILike(bc.Category.Name, $"%{keyword}%")));
             }
 
             query = sortBy?.ToLower() switch
@@ -117,7 +127,6 @@ namespace BookStoreManagement.API.Services
                     BookId = b.BookId,
                     Title = b.Title,
                     PublishYear = b.PublishYear ?? 0,
-
                     AuthorNames = b.BookAuthors
                         .Select(ba => ba.Author.Name)
                         .ToList(),

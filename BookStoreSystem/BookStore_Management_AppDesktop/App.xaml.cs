@@ -29,6 +29,7 @@ namespace BookStore_Management_AppDesktop
     public partial class App : Application
     {
         public static IServiceProvider? ServiceProvider { get; private set; }
+        public static string ApiBaseUrl { get; private set; } = string.Empty;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -55,6 +56,16 @@ namespace BookStore_Management_AppDesktop
                 .Build();
 
             services.AddSingleton<IConfiguration>(configuration);
+            // Nếu không tìm thấy trong file JSON, nó sẽ lấy giá trị mặc định là localhost (phòng hờ lỗi)
+            ApiBaseUrl = configuration.GetSection("ApiSettings:BaseUrl").Value ?? "https://localhost:7123";
+
+            // // Get Services (Connect BE, Navigate)
+            services.AddHttpClient<IAuthService, AuthService>(client => 
+            {
+                client.BaseAddress = new Uri(ApiBaseUrl);
+            });
+
+            services.AddSingleton<IConfiguration>(configuration);
 
             // // Get Services (Connect BE, Navigate)
             // Read API base URL from configuration, fallback to localhost HTTPS default
@@ -67,6 +78,7 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<ICartService, CartService>();
             services.AddSingleton<IBookHubService, BookHubService>();
 
+            // Các đăng ký service khác của bạn giữ nguyên...
             services.AddSingleton<IBookApiService, BookApiService>();
             services.AddSingleton<IAuthorApiService, AuthorApiService>();
             services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
@@ -83,7 +95,6 @@ namespace BookStore_Management_AppDesktop
             services.AddSingleton<ICategoryApiService, CategoryApiService>();
             services.AddSingleton<IUserApiService, UserApiService>();
 
-            services.AddSingleton<IEmployeeApiService, EmployeeApiService>();
             services.AddSingleton<IEmployeeShiftApiService, EmployeeShiftApiService>();
             
 
@@ -97,6 +108,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<BookViewModel>();
             services.AddTransient<CategoryManagementViewModel>();
             services.AddTransient<EmployeeViewModel>();
+            services.AddTransient<SelectBookViewModel>();
             services.AddTransient<CustomerViewModel>();
             services.AddTransient<ImportCreateViewModel>(); 
             services.AddTransient<ImportHistoryViewModel>();
@@ -111,7 +123,6 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<KioskCheckInViewModel>();
             services.AddTransient<AuthorManagementViewModel>();
             services.AddTransient<RegulationViewModel>();
-
 
             // // Get View 
             services.AddTransient<MainWindow>();
@@ -138,5 +149,4 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<RegulationListView>();
         }
     }
-
 }

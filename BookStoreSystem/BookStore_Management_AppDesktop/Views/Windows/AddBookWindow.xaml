@@ -48,6 +48,20 @@
             </Setter>
         </Style>
 
+        <!-- 🎯 Style cho TextBox có lỗi validation: viền chuyển sang màu đỏ -->
+        <Style x:Key="FormTextBoxErrorStyle" TargetType="TextBox" BasedOn="{StaticResource FormTextBoxStyle}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding HasPublishYearError}" Value="True">
+                    <Setter Property="BorderBrush" Value="#EF4444" />
+                    <Setter Property="BorderThickness" Value="1.5" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding HasPublishYearError}" Value="False">
+                    <Setter Property="BorderBrush" Value="#0F172A" />
+                    <Setter Property="BorderThickness" Value="1" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="DropdownListItemStyle" TargetType="ListBoxItem">
             <Setter Property="Padding" Value="0"/>
             <Setter Property="Margin" Value="0"/>
@@ -185,6 +199,27 @@
                                 <Run Text="*" Foreground="#EF4444"/>
                             </ui:TextBlock>
                             <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FormTextBoxStyle}" FontWeight="Bold"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,15">
+                            <ui:TextBlock Style="{StaticResource FormLabelStyle}">
+                                <Run Text="Publish Year "/>
+                                <Run Text="*" Foreground="#EF4444"/>
+                            </ui:TextBlock>
+                            <TextBox x:Name="PublishYearTextBox"
+                                     Text="{Binding PublishYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource FormTextBoxErrorStyle}"
+                                     MaxLength="4"
+                                     PreviewTextInput="PublishYearTextBox_PreviewTextInput"
+                                     DataObject.Pasting="PublishYearTextBox_Pasting"
+                                     ToolTip="Nhập năm xuất bản (VD: 2024). Chỉ được nhập số, tối đa 4 chữ số."/>
+                            <!-- 🎯 TextBlock cảnh báo: chỉ hiển thị khi có lỗi -->
+                            <TextBlock Margin="0,4,0,0"
+                                       Text="{Binding PublishYearError}"
+                                       FontSize="12"
+                                       FontWeight="Medium"
+                                       Foreground="#EF4444"
+                                       Visibility="{Binding HasPublishYearError, Converter={StaticResource BoolToVis}}"/>
                         </StackPanel>
 
                         <StackPanel Margin="0,0,0,15">
@@ -335,11 +370,6 @@
                                     </StackPanel>
                                 </Button>
                             </Grid>
-                        </StackPanel>
-
-                        <StackPanel Margin="0,0,0,5">
-                            <ui:TextBlock Style="{StaticResource FormLabelStyle}" Text="Book Description Summary" />
-                            <TextBox Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="80" VerticalContentAlignment="Top" Padding="12,8" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Style="{StaticResource FormTextBoxStyle}" FontSize="13" />
                         </StackPanel>
 
                     </StackPanel>

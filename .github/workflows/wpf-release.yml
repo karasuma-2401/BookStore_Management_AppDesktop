@@ -1,0 +1,82 @@
+name: WPF CD (Release)
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+concurrency:
+  group: cd-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_VERSION: 10.0.x
+  WPF_PROJECT: BookStoreSystem/BookStore_Management_AppDesktop/BookStore_Management_AppDesktop.csproj
+
+jobs:
+  build-and-pack:
+    name: Build & Pack WPF App
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup .NET SDK with Cache
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          cache: true
+          cache-dependency-path: "**/*.csproj"
+
+      - name: Restore dependencies
+        run: dotnet restore "${{ env.WPF_PROJECT }}" --runtime win-x64
+      - name: Build
+        run: dotnet build "${{ env.WPF_PROJECT }}" --configuration Release --runtime win-x64 --no-restore
+      - name: Publish WPF App
+        run: dotnet publish "${{ env.WPF_PROJECT }}" --configuration Release --runtime win-x64 --self-contained false --no-build --output ./publish_output
+
+      - name: Zip the application
+        run: Compress-Archive -Path ./publish_output/* -DestinationPath BookStoreApp.zip
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: WPF-App-Package
+          path: BookStoreApp.zip
+          retention-days: 1
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: build-and-pack
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          name: WPF-App-Package
+
+      - name: Extract Version from Tag
+        id: extract_tag
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Create Release and Upload Asset
+        uses: softprops/action-gh-release@c062e08bd532815e2082a85e87e3ef29c3e6d191 # v2.0.8
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: BookStore App Release ${{ env.VERSION }}
+          body: |
+            🚀 **Official Desktop App Release.**
+            - **Version:** `${{ env.VERSION }}`
+            - Download the `BookStoreApp.zip` file attached below.
+            - Extract the contents and configure the Server connection using the `appsettings.json` file.
+            - Run the `.exe` file to launch the application.
+          draft: false
+          prerelease: false
+          files: BookStoreApp.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
