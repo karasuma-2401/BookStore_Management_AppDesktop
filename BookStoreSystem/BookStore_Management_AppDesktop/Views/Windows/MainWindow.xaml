@@ -155,6 +155,16 @@
                         FontWeight="SemiBold"
                         Text="Reports" />
                 </ui:NavigationViewItem>
+                <ui:NavigationViewItem
+                 Command="{Binding NavigateCommand}"
+                 CommandParameter="Regulations"
+                 Icon="{ui:SymbolIcon Book24}"
+                 Tag="Regulations">
+                    <TextBlock
+                     FontSize="{StaticResource FontSizeSubTitle}"
+                     FontWeight="SemiBold"
+                     Text="Regulations" />
+                </ui:NavigationViewItem>
 
                 <ui:NavigationViewItem
                     Icon="{ui:SymbolIcon People24}"

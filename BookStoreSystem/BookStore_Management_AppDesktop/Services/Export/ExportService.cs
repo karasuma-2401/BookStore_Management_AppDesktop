@@ -335,7 +335,6 @@ namespace BookStore_Management_AppDesktop.Services.Export
 
                     // Table headers
                     int tableRow = 10;
-                    // Publisher column tam de default vi backend chua cung cap
                     var headers = new[] { "ID", "Title", "Author(s)", "Publish Year", "Quantity", "Price", "Total Value" };
                     for (int col = 1; col <= headers.Length; col++)
                     {

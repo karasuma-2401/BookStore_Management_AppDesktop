@@ -73,6 +73,9 @@ namespace BookStore_Management_AppDesktop.Services.Navigation
                     case PageType.ShiftAssign:
                         newPage = _serviceProvider.GetRequiredService<ShiftSchedulePage>();
                         break;
+                    case PageType.Regulations:
+                        newPage = _serviceProvider!.GetRequiredService<RegulationListView>();
+                        break;
                     case PageType.AbsenceManagement:
                         newPage = _serviceProvider.GetRequiredService<AbsenceManagementPage>();
                         break;
