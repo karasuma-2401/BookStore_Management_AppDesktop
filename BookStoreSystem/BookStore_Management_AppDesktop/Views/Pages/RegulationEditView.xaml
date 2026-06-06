@@ -1,0 +1,173 @@
+<Window
+    x:Class="BookStore_Management_AppDesktop.Views.Pages.RegulationEditView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="Regulation"
+    Width="450"
+    SizeToContent="Height"
+    AllowsTransparency="True"
+    Background="Transparent"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None">
+
+	<Window.Resources>
+
+		<!-- LABEL -->
+		<Style x:Key="FormLabelStyle" TargetType="TextBlock">
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Margin" Value="0,0,0,6"/>
+		</Style>
+
+		<!-- TEXTBOX -->
+		<Style x:Key="FormTextBoxStyle" TargetType="TextBox">
+			<Setter Property="Height" Value="40"/>
+			<Setter Property="Padding" Value="12,0"/>
+			<Setter Property="BorderBrush" Value="#CBD5E1"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="TextBox">
+						<Border
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6"
+                            Background="White">
+							<ScrollViewer
+                                x:Name="PART_ContentHost"
+                                Padding="{TemplateBinding Padding}"/>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsFocused" Value="True">
+								<Setter Property="BorderBrush" Value="#0078D4"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<!-- PRIMARY BUTTON -->
+		<Style x:Key="PrimaryBtn" TargetType="Button">
+			<Setter Property="Height" Value="40"/>
+			<Setter Property="Background" Value="#0078D4"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border Background="{TemplateBinding Background}" CornerRadius="6">
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<!-- SECONDARY BUTTON -->
+		<Style x:Key="SecondaryBtn" TargetType="Button">
+			<Setter Property="Height" Value="40"/>
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="BorderBrush" Value="#CBD5E1"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6">
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+	</Window.Resources>
+
+	<Grid Margin="20">
+		<Border
+            Padding="25"
+            Background="White"
+            BorderBrush="#E2E8F0"
+            BorderThickness="1"
+            CornerRadius="12">
+
+			<Border.Effect>
+				<DropShadowEffect BlurRadius="15" Opacity="0.05" ShadowDepth="4"/>
+			</Border.Effect>
+
+			<StackPanel>
+
+				<!-- HEADER -->
+				<StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+					<Border Width="40" Height="40" Background="#E0F2FE" CornerRadius="8" Margin="0,0,10,0">
+						<ui:SymbolIcon Symbol="Settings24" Foreground="#0284C7"/>
+					</Border>
+
+					<TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Text="{Binding WindowTitle}" />
+				</StackPanel>
+
+				<!-- SETTING NAME -->
+				<StackPanel Margin="0,0,0,15">
+					<TextBlock Style="{StaticResource FormLabelStyle}" Text="Setting Name"/>
+					<TextBox
+                        Style="{StaticResource FormTextBoxStyle}"
+                        IsReadOnly="{Binding IsEditMode}"
+                        Text="{Binding SettingName, UpdateSourceTrigger=PropertyChanged}" />
+				</StackPanel>
+
+				<!-- VALUE -->
+				<StackPanel Margin="0,0,0,25">
+					<TextBlock Style="{StaticResource FormLabelStyle}" Text="Value"/>
+					<TextBox
+                        Style="{StaticResource FormTextBoxStyle}"
+                        Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+				</StackPanel>
+
+				<!-- BUTTONS -->
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition/>
+						<ColumnDefinition Width="10"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+
+					<Button
+                        Grid.Column="0"
+                        Content="Cancel"
+                        Click="CancelButton_Click"
+                        Style="{StaticResource SecondaryBtn}" />
+
+					<Button
+                        Grid.Column="2"
+                        Content="Save"
+                        Command="{Binding SaveCommand}"
+                        Style="{StaticResource PrimaryBtn}" />
+				</Grid>
+
+			</StackPanel>
+		</Border>
+
+		<!-- LOADING -->
+		<Grid
+            Background="#80000000"
+            Visibility="{Binding IsSaving, Converter={StaticResource BoolToVis}}">
+			<ProgressBar Width="120" Height="8" IsIndeterminate="True"
+                         VerticalAlignment="Center" HorizontalAlignment="Center"/>
+		</Grid>
+
+	</Grid>
+</Window>

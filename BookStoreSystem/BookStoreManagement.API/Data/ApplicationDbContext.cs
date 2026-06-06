@@ -30,7 +30,7 @@ namespace BookStoreManagement.API.Data
         public DbSet<InventoryReport> InventoryReports { get; set; }
         public DbSet<DebtReport> DebtReports { get; set; }
 
-        public DbSet<Setting> Settings { get; set; }
+        public DbSet<Settings> Settings { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -49,16 +49,19 @@ namespace BookStore_Management_AppDesktop
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IConfiguration>(provider =>
-            {
-                return new ConfigurationBuilder()
-                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .Build();
-            });
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            services.AddSingleton<IConfiguration>(configuration);
 
             // // Get Services (Connect BE, Navigate)
-            services.AddHttpClient<IAuthService, AuthService>();
+            // Read API base URL from configuration, fallback to localhost HTTPS default
+            var apiBase = configuration["ApiSettings:BaseUrl"] ?? configuration["ApiBaseUrl"] ?? "https://localhost:5001/";
+            services.AddHttpClient<IAuthService, AuthService>(client => client.BaseAddress = new Uri(apiBase));
+            // Register Regulation API client used by RegulationViewModel
+            services.AddHttpClient<IRegulationApiService, RegulationApiService>(client => client.BaseAddress = new Uri(apiBase));
             services.AddSingleton<CloudinaryService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ICartService, CartService>();
@@ -107,6 +110,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<AbsenceManagementViewModel>();
             services.AddTransient<KioskCheckInViewModel>();
             services.AddTransient<AuthorManagementViewModel>();
+            services.AddTransient<RegulationViewModel>();
 
 
             // // Get View 
@@ -131,6 +135,7 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<PayrollPage>();
             services.AddTransient<AbsenceManagementPage>();
             services.AddTransient<AuthorManagementWindow>();
+            services.AddTransient<RegulationListView>();
         }
     }
 
