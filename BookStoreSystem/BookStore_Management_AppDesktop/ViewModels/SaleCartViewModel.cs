@@ -94,6 +94,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             UpdateTotalQuantity();
 
             CartItems.CollectionChanged += CartItems_CollectionChanged;
+            _cartService.PropertyChanged += CartService_PropertyChanged;
             _ = LoadCustomers();
             _ = LoadVouchers();
         }
@@ -283,6 +284,19 @@ namespace BookStore_Management_AppDesktop.ViewModels
             UpdateTotalQuantity();
             TotalPrice = _cartService.TotalPrice;
             RecalculateFinalTotal();
+        }
+
+        private void CartService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ICartService.TotalPrice))
+            {
+                TotalPrice = _cartService.TotalPrice;
+                RecalculateFinalTotal();
+            }
+            else if (e.PropertyName == nameof(ICartService.ItemCount))
+            {
+                UpdateTotalQuantity();
+            }
         }
 
         private void UpdateTotalQuantity()

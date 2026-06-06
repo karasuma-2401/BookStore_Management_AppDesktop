@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.BookDTOs;
 using System;
 using System.ComponentModel;
@@ -60,8 +60,9 @@ namespace BookStore_Management_AppDesktop.Services.API.CartServices
                 });
             }
 
-            // BẮT BUỘC: Thông báo số lượng giỏ hàng thay đổi sau khi thêm
+            // BẮT BUỘC: Thông báo số lượng giỏ hàng và tổng tiền thay đổi sau khi thêm
             OnPropertyChanged(nameof(ItemCount));
+            OnPropertyChanged(nameof(TotalPrice));
         }
 
         public void RemoveFromCart(int bookId)
@@ -71,8 +72,9 @@ namespace BookStore_Management_AppDesktop.Services.API.CartServices
             {
                 _cartItems.Remove(item);
 
-                // BẮT BUỘC: Thông báo số lượng giỏ hàng thay đổi sau khi xóa
+                // BẮT BUỘC: Thông báo số lượng giỏ hàng và tổng tiền thay đổi sau khi xóa
                 OnPropertyChanged(nameof(ItemCount));
+                OnPropertyChanged(nameof(TotalPrice));
             }
         }
 
@@ -80,8 +82,9 @@ namespace BookStore_Management_AppDesktop.Services.API.CartServices
         {
             _cartItems.Clear();
 
-            // BẮT BUỘC: Thông báo số lượng về 0 sau khi clear giỏ hàng
+            // BẮT BUỘC: Thông báo số lượng và tổng tiền thay đổi sau khi clear giỏ hàng
             OnPropertyChanged(nameof(ItemCount));
+            OnPropertyChanged(nameof(TotalPrice));
         }
 
         public async Task<bool> CheckoutAsync(int? customerId = null, string voucherCode = null)
