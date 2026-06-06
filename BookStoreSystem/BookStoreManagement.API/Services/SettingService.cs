@@ -88,5 +88,30 @@ namespace BookStoreManagement.API.Services
 
             return true;
         }
+        public async Task<int> GetInt(string key)
+        {
+            var value = await _context.Settings
+                .Where(x => x.SettingName == key)
+                .Select(x => x.Value)
+                .FirstOrDefaultAsync();
+
+            if (value == null)
+                throw new Exception($"Setting {key} not found");
+
+            return int.Parse(value);
+        }
+
+        public async Task<decimal> GetDecimal(string key)
+        {
+            var value = await _context.Settings
+                .Where(x => x.SettingName == key)
+                .Select(x => x.Value)
+                .FirstOrDefaultAsync();
+
+            if (value == null)
+                throw new Exception($"Setting {key} not found");
+
+            return decimal.Parse(value);
+        }
     }
 }

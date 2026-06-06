@@ -1,17 +1,21 @@
 using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Entities;
+using BookStoreManagement.API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 namespace BookStoreManagement.API.Services
 {
     public class ImportService : IImportService
     {
         private readonly ApplicationDBContext _context;
+        private readonly ISettingService _settingService;
 
-        public ImportService(ApplicationDBContext context)
+        public ImportService(ApplicationDBContext context, ISettingService settingService)
         {
             _context = context;
+            _settingService = settingService;
         }
+        
 
         public async Task<ImportResponseDto> CreateImport(ImportCreateDto dto, int userId)
         {
@@ -29,6 +33,8 @@ namespace BookStoreManagement.API.Services
                 await _context.SaveChangesAsync();
 
                 var details = new List<ImportDetail>();
+                var minImport = await _settingService.GetInt("SLNHAPTT");
+                var maxStockToImport = await _settingService.GetInt("SLTONTD");
 
                 foreach (var item in dto.Details)
                 {
@@ -36,6 +42,11 @@ namespace BookStoreManagement.API.Services
 
                     if (book == null)
                         throw new Exception($"BookId {item.BookId} isn't exist");
+                    if (item.Quantity < minImport)
+                        throw new Exception($"Import quantity must be at least {minImport}");
+                    if (book.Quantity >= maxStockToImport)
+                        throw new Exception($"Cannot import book '{book.Title}' because stock >= {maxStockToImport}");
+
 
                     book.Quantity += item.Quantity;
                     book.Price = item.ImportPrice;
