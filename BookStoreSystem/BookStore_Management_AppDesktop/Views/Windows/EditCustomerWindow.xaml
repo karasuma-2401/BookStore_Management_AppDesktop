@@ -27,14 +27,13 @@
             <Setter Property="Background" Value="#FFFFFF" />
             <Setter Property="BorderBrush" Value="#CBD5E1" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Foreground" Value="#0F172A" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="CaretBrush" Value="#0078D4" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
                         <Border
+                            x:Name="MainBorder"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
@@ -46,8 +45,9 @@
                                 VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter Property="BorderBrush" Value="#0078D4" />
+                            <Trigger Property="Validation.HasError" Value="True">
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="#EF4444" />
+                                <Setter Property="ToolTip" Value="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -109,6 +109,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
     </Window.Resources>
 
     <Grid Margin="20,20,20,30">
@@ -180,15 +181,14 @@
 
                 <StackPanel Margin="0,0,0,15">
                     <TextBlock Style="{StaticResource FormLabelStyle}">
-                        <Run Text="Customer Name " />
-                        <Run Foreground="#EF4444" Text="*" />
+                        <Run Text="Customer Name " /> <Run Foreground="#EF4444" Text="*" />
                     </TextBlock>
-                    <TextBox x:Name="NameTextBox" Style="{StaticResource FormTextBoxStyle}" />
+                    <TextBox Style="{StaticResource FormTextBoxStyle}" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
                 </StackPanel>
 
                 <StackPanel Margin="0,0,0,15">
                     <TextBlock Style="{StaticResource FormLabelStyle}" Text="Phone Number" />
-                    <TextBox x:Name="PhoneTextBox" Style="{StaticResource FormTextBoxStyle}" />
+                    <TextBox Style="{StaticResource FormTextBoxStyle}" Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
                 </StackPanel>
 
                 <StackPanel Margin="0,0,0,15">

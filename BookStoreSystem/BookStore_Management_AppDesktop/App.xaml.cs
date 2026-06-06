@@ -110,6 +110,8 @@ namespace BookStore_Management_AppDesktop
             services.AddTransient<EmployeeViewModel>();
             services.AddTransient<SelectBookViewModel>();
             services.AddTransient<CustomerViewModel>();
+            services.AddTransient<AddCustomerViewModel>();
+            services.AddTransient<EditCustomerViewModel>();
             services.AddTransient<ImportCreateViewModel>(); 
             services.AddTransient<ImportHistoryViewModel>();
             services.AddTransient<InvoiceViewModel>();
