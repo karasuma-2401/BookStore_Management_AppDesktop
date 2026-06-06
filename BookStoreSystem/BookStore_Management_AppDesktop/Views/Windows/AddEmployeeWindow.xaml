@@ -42,8 +42,61 @@
             <Setter Property="BorderThickness" Value="1.5"/>
             <Setter Property="Padding" Value="8,4"/>
             <Style.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="White"/>
-                <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#1E293B"/>
+                <!-- Override system and theme brushes to force a light theme dropdown -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="White" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#1E293B" />
+                <SolidColorBrush x:Key="SolidBackgroundFillColorBaseBrush" Color="White" />
+                <SolidColorBrush x:Key="SolidBackgroundFillColorSecondaryBrush" Color="#F8FAFC" />
+                <SolidColorBrush x:Key="SolidBackgroundFillColorTertiaryBrush" Color="#E2E8F0" />
+                <SolidColorBrush x:Key="SystemControlPageBackgroundChromeLowBrush" Color="White" />
+                <SolidColorBrush x:Key="ComboBoxBackground" Color="White" />
+                <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="#F1F5F9" />
+                <SolidColorBrush x:Key="ComboBoxBackgroundPressed" Color="#E2E8F0" />
+                <SolidColorBrush x:Key="ComboBoxBackgroundDisabled" Color="#E2E8F0" />
+                <SolidColorBrush x:Key="ComboBoxForeground" Color="#1E293B" />
+                <SolidColorBrush x:Key="ComboBoxForegroundPointerOver" Color="#1E293B" />
+                <SolidColorBrush x:Key="ComboBoxForegroundPressed" Color="#1E293B" />
+                <SolidColorBrush x:Key="ComboBoxForegroundDisabled" Color="#94A3B8" />
+                <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="White" />
+                <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#CBD5E1" />
+                <SolidColorBrush x:Key="ComboBoxPopupBorderBrush" Color="#CBD5E1" />
+                <SolidColorBrush x:Key="ComboBoxPopupBackground" Color="White" />
+                <SolidColorBrush x:Key="ComboBoxPopupForeground" Color="#1E293B" />
+                <SolidColorBrush x:Key="ControlSolidFillColorDefaultBrush" Color="White" />
+                
+                <!-- Custom light ComboBoxItem style with elegant hover and select triggers -->
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Foreground" Value="#1E293B" />
+                    <Setter Property="Padding" Value="10,8" />
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ComboBoxItem">
+                                <Border x:Name="ItemBorder" 
+                                        Background="{TemplateBinding Background}" 
+                                        BorderThickness="0" 
+                                        CornerRadius="6" 
+                                        Margin="3,2"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter />
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="ItemBorder" Property="Background" Value="#F1F5F9" />
+                                        <Setter Property="TextElement.Foreground" Value="#00D4B2" />
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="ItemBorder" Property="Background" Value="#E0FDF9" />
+                                        <Setter Property="TextElement.Foreground" Value="#00BFA0" />
+                                        <Setter Property="TextElement.FontWeight" Value="SemiBold" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
             </Style.Resources>
         </Style>
         <Style TargetType="TextBlock">

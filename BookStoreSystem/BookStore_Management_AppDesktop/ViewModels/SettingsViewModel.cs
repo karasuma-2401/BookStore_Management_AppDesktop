@@ -18,6 +18,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         [ObservableProperty] private ObservableCollection<VoucherDto> vouchers = new();
         [ObservableProperty] private ObservableCollection<VoucherDto> activeVouchers = new();
+        [ObservableProperty] private ObservableCollection<VoucherDto> deactivatedVouchers = new();
 
         [ObservableProperty] private string? newVoucherCode;
 
@@ -61,6 +62,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
                 Vouchers.Clear();
                 ActiveVouchers.Clear();
+                DeactivatedVouchers.Clear();
                 foreach (var voucher in voucherList)
                 {
                     Vouchers.Add(voucher);
@@ -78,6 +80,10 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     if (isActive)
                     {
                         ActiveVouchers.Add(voucher);
+                    }
+                    else
+                    {
+                        DeactivatedVouchers.Add(voucher);
                     }
                 }
             }
@@ -233,6 +239,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     Debug.WriteLine($"[Voucher Deleted] Code: {voucher.Code}");
                     OnShowMessage?.Invoke("✅ Voucher deleted successfully!");
                     Vouchers.Remove(voucher);
+                    await LoadVouchersAsync();
                 }
                 else
                 {
