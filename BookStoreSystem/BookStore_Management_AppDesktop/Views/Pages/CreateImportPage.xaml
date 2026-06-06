@@ -10,13 +10,16 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="#1E293B"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="18,0,0,0"/>
         </Style>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -31,6 +34,24 @@
                     <TextBlock Text="Create New Import" FontSize="28" FontWeight="Bold" Foreground="#0F172A"/>
                     <TextBlock Text="Review your draft items before confirming the import transaction" Margin="0,6,0,0" Foreground="#64748B" FontSize="13"/>
                 </StackPanel>
+
+                <Button Grid.Column="1" Command="{Binding NavigateToImportHistoryCommand}" Height="45" Padding="15,0" Margin="0,0,12,0" Cursor="Hand" BorderThickness="0" Background="Transparent">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Btn" Background="#6366F1" CornerRadius="8">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,0">
+                                    <ui:SymbolIcon Symbol="ArrowLeft24" Foreground="White" Margin="0,0,8,0" FontSize="18"/>
+                                    <TextBlock Text="Back" Foreground="White" FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Btn" Property="Background" Value="#5558E3"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
 
                 <Button Grid.Column="1" Command="{Binding OpenSelectBookDialogCommand}" Height="45" Padding="20,0" Cursor="Hand" BorderThickness="0" Background="Transparent">
                     <Button.Template>
@@ -101,11 +122,10 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="PUBLISH YEAR" Binding="{Binding PublishYear}" Width="100">
+                    <DataGridTextColumn Header="PUBLISH YEAR" Binding="{Binding PublishYear}" Width="130">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock" BasedOn="{StaticResource GridTextStyle}">
                                 <Setter Property="FontWeight" Value="SemiBold"/>
-                                <Setter Property="TextAlignment" Value="Center"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -137,7 +157,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Command="{Binding DataContext.RemoveFromDraftCommand, RelativeSource={RelativeSource AncestorType=Page}}" CommandParameter="{Binding}" 
-                                        Background="Transparent" BorderThickness="0" Cursor="Hand">
+                                        Background="Transparent" BorderThickness="0" Cursor="Hand" Margin="18,0,0,0">
                                     <ui:SymbolIcon Symbol="Delete24" Foreground="#EF4444" FontSize="18"/>
                                 </Button>
                             </DataTemplate>
@@ -147,44 +167,75 @@
             </DataGrid>
         </Border>
 
-        <Border Grid.Row="2" Background="White" Padding="24" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <TextBlock Text="Total Amount:" FontSize="16" Foreground="#64748B" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <TextBlock Text="{Binding TotalDraftAmount, StringFormat={}{0:N0} VND}" FontSize="24" Foreground="#059669" FontWeight="Black" VerticalAlignment="Center" Margin="0,0,30,0"/>
-
-                <Button Command="{Binding ClearDraftCommand}" Height="45" Padding="20,0" Margin="0,0,12,0" Cursor="Hand" BorderThickness="0" Background="Transparent">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="Btn" Background="#FEF2F2" BorderBrush="#FECACA" BorderThickness="1" CornerRadius="8">
-                                <TextBlock Text="Clear Draft" Foreground="#DC2626" FontWeight="Bold" VerticalAlignment="Center" Margin="15,0"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Btn" Property="Background" Value="#FEE2E2"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-
-                <Button Command="{Binding ConfirmImportCommand}" Height="45" Padding="20,0" Cursor="Hand" BorderThickness="0" Background="Transparent">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="Btn" Background="#10B981" CornerRadius="8">
-                                <StackPanel Orientation="Horizontal" Margin="15,0">
-                                    <ui:SymbolIcon Symbol="Save24" Foreground="White" Margin="0,0,8,0"/>
-                                    <TextBlock Text="Confirm Import" Foreground="White" FontWeight="Bold" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Btn" Property="Background" Value="#059669"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+        <!-- Regulation Warning -->
+        <Border Grid.Row="2" Background="#FFFBEB" Padding="24,12" BorderBrush="#FDE68A" BorderThickness="0,1,0,0" 
+                Visibility="{Binding HasRegulationViolation, Converter={StaticResource BoolToVis}}">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <ui:SymbolIcon Symbol="Warning24" Foreground="#D97706" FontSize="18" Margin="0,0,10,0"/>
+                <TextBlock Text="{Binding RegulationWarningText}" Foreground="#92400E" FontSize="13" FontWeight="SemiBold" 
+                           TextWrapping="Wrap" VerticalAlignment="Center"/>
             </StackPanel>
+        </Border>
+
+        <!-- Footer -->
+        <Border Grid.Row="3" Background="White" Padding="24" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Regulation info on the left -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:SymbolIcon Symbol="Info24" Foreground="#6366F1" FontSize="16" Margin="0,0,8,0"/>
+                    <TextBlock Foreground="#64748B" FontSize="12" VerticalAlignment="Center">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="Regulations: Minimum import qty = {0} | Max stock threshold = {1}">
+                                <Binding Path="MinImportQuantity"/>
+                                <Binding Path="MaxStockQuantity"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock Text="Total Amount:" FontSize="16" Foreground="#64748B" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="{Binding TotalDraftAmount, StringFormat={}{0:N0} VND}" FontSize="24" Foreground="#059669" FontWeight="Black" VerticalAlignment="Center" Margin="0,0,30,0"/>
+
+                    <Button Command="{Binding ClearDraftCommand}" Height="45" Padding="20,0" Margin="0,0,12,0" Cursor="Hand" BorderThickness="0" Background="Transparent">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Btn" Background="#FEF2F2" BorderBrush="#FECACA" BorderThickness="1" CornerRadius="8">
+                                    <TextBlock Text="Clear Draft" Foreground="#DC2626" FontWeight="Bold" VerticalAlignment="Center" Margin="15,0"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Btn" Property="Background" Value="#FEE2E2"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <Button Command="{Binding ConfirmImportCommand}" IsEnabled="{Binding HasRegulationViolation, Converter={StaticResource InvertBoolConverter}}" Height="45" Padding="20,0" Cursor="Hand" BorderThickness="0" Background="Transparent">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Btn" Background="#10B981" CornerRadius="8">
+                                    <StackPanel Orientation="Horizontal" Margin="15,0">
+                                        <ui:SymbolIcon Symbol="Save24" Foreground="White" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Confirm Import" Foreground="White" FontWeight="Bold" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Btn" Property="Background" Value="#059669"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </Grid>
         </Border>
     </Grid>
 </Page>
