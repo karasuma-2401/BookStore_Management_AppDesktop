@@ -51,8 +51,13 @@ namespace BookStore_Management_AppDesktop.Services.API
                 if (!response.IsSuccessStatusCode)
                     return new List<InvoiceListDto>();
 
-                return await response.Content.ReadFromJsonAsync<List<InvoiceListDto>>()
+                var list = await response.Content.ReadFromJsonAsync<List<InvoiceListDto>>()
                        ?? new List<InvoiceListDto>();
+                foreach (var item in list)
+                {
+                    item.InvoiceDate = item.InvoiceDate.ToLocalTime();
+                }
+                return list;
             }
             catch (Exception ex)
             {
@@ -89,7 +94,12 @@ namespace BookStore_Management_AppDesktop.Services.API
                 };
 
                 // 4. Ép kiểu chuỗi JSON sang Object C# với cấu hình options ở trên
-                return await response.Content.ReadFromJsonAsync<InvoiceDetailResponseDto>(options);
+                var detail = await response.Content.ReadFromJsonAsync<InvoiceDetailResponseDto>(options);
+                if (detail != null)
+                {
+                    detail.InvoiceDate = detail.InvoiceDate.ToLocalTime();
+                }
+                return detail;
             }
             catch (Exception ex)
             {
@@ -173,8 +183,13 @@ namespace BookStore_Management_AppDesktop.Services.API
 
                 var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 var json = await response.Content.ReadAsStringAsync();
-                return System.Text.Json.JsonSerializer.Deserialize<List<PaymentResponseDto>>(json, options) 
+                var payments = System.Text.Json.JsonSerializer.Deserialize<List<PaymentResponseDto>>(json, options) 
                        ?? new List<PaymentResponseDto>();
+                foreach (var payment in payments)
+                {
+                    payment.PaymentDate = payment.PaymentDate.ToLocalTime();
+                }
+                return payments;
             }
             catch (Exception ex)
             {
