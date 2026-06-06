@@ -75,6 +75,7 @@ namespace BookStoreManagement.API.Services
         public async Task<IEnumerable<InventoryReportResponseDTO>> GetReports(int month, int year)
         {
             return await _context.InventoryReports
+                .Include(x => x.Book)
                 .Where(x => x.Month == month && x.Year == year)
                 .Select(x => new InventoryReportResponseDTO
                 {
@@ -82,6 +83,7 @@ namespace BookStoreManagement.API.Services
                     Month = x.Month,
                     Year = x.Year,
                     BookId = x.BookId,
+                    BookName = x.Book.Title,
                     OpeningStock = x.OpeningStock,
                     ChangeAmount = x.ChangeAmount,
                     ClosingStock = x.ClosingStock
@@ -92,6 +94,7 @@ namespace BookStoreManagement.API.Services
         public async Task<InventoryReportResponseDTO?> GetById(int id)
         {
             return await _context.InventoryReports
+                .Include(x => x.Book)
                 .Where(x => x.ReportId == id)
                 .Select(x => new InventoryReportResponseDTO
                 {
@@ -99,6 +102,7 @@ namespace BookStoreManagement.API.Services
                     Month = x.Month,
                     Year = x.Year,
                     BookId = x.BookId,
+                    BookName = x.Book.Title,
                     OpeningStock = x.OpeningStock,
                     ChangeAmount = x.ChangeAmount,
                     ClosingStock = x.ClosingStock
@@ -109,6 +113,7 @@ namespace BookStoreManagement.API.Services
         public async Task<IEnumerable<InventoryReportResponseDTO>> GetByBook(int bookId)
         {
             return await _context.InventoryReports
+                .Include(x => x.Book)
                 .Where(x => x.BookId == bookId)
                 .Select(x => new InventoryReportResponseDTO
                 {
@@ -116,6 +121,7 @@ namespace BookStoreManagement.API.Services
                     Month = x.Month,
                     Year = x.Year,
                     BookId = x.BookId,
+                    BookName = x.Book.Title,
                     OpeningStock = x.OpeningStock,
                     ChangeAmount = x.ChangeAmount,
                     ClosingStock = x.ClosingStock
