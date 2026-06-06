@@ -18,6 +18,7 @@
             <converters:RoleToColorConverter x:Key="RoleToColorConverter" />
             <converters:RoleToSoftBackgroundConverter x:Key="RoleToSoftBackgroundConverter" />
             <converters:CategoryNameToColorConverter x:Key="CategoryNameToColorConverter" />
+            <converters:InvertBoolConverter x:Key="InvertBoolConverter" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Dark" />
