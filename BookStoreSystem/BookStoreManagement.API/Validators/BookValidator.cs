@@ -22,6 +22,10 @@ namespace BookStoreManagement.API.Validators
                 .When(x => x.Description != null)
                 .WithMessage("Description too long");
 
+            RuleFor(x => x.PublishYear)
+            .Must(y => y == null || y > 0)
+            .WithMessage("Publish year must be > 0");
+
             RuleFor(x => x.DeletedAt)
                 .Must((book, deletedAt) =>
                 {

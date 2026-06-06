@@ -66,7 +66,7 @@ public class CustomersController : ControllerBase
     public async Task<IActionResult> DeleteCustomer(int id)
     {
         var deleted = await _customerService.DeleteCustomer(id);
-
+        
         if (!deleted)
             return NotFound();
 

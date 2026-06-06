@@ -36,6 +36,9 @@ namespace BookStoreManagement.API.Services
                 var minImport = await _settingService.GetInt("SLNHAPTT");
                 var maxStockToImport = await _settingService.GetInt("SLTONTD");
                 var priceRate = await _settingService.GetDecimal("GIABAN");
+                var totalQuantity = dto.Details.Sum(x => x.Quantity);
+                if (totalQuantity < minImport)
+                    throw new Exception($"Total import quantity must be at least {minImport}");
 
                 foreach (var item in dto.Details)
                 {
@@ -43,8 +46,6 @@ namespace BookStoreManagement.API.Services
 
                     if (book == null)
                         throw new Exception($"BookId {item.BookId} isn't exist");
-                    if (item.Quantity < minImport)
-                        throw new Exception($"Import quantity must be at least {minImport}");
                     if (book.Quantity >= maxStockToImport)
                         throw new Exception($"Cannot import book '{book.Title}' because stock >= {maxStockToImport}");
 
