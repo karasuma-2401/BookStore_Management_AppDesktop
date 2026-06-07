@@ -2,6 +2,7 @@ using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Book;
 using BookStoreManagement.API.Models.Entities;
+using BookStoreManagement.API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreManagement.API.Services
@@ -9,10 +10,12 @@ namespace BookStoreManagement.API.Services
     public class BookService : IBookService
     {
         private readonly ApplicationDBContext _context;
+        private readonly ISettingService _settingService;
 
-        public BookService(ApplicationDBContext context)
+        public BookService(ApplicationDBContext context, ISettingService settingService)
         {
             _context = context;
+            _settingService = settingService;
         }
 
         public async Task<object> GetBooks(
@@ -212,6 +215,10 @@ namespace BookStoreManagement.API.Services
             book.ImagePath = dto.ImagePath;
             book.Quantity = dto.Quantity;
             book.PublishYear = dto.PublishYear;
+            // Cập nhật giá bán sách. BUG: Trước đây thiếu dòng này -> giá bán không được lưu
+            // khi admin edit sách -> hiển thị giá cũ (có thể là giá nhập từ lần import trước).
+            // Đồng thời đảm bảo giá bán luôn >= 0 để tránh giá trị âm.
+            book.Price = dto.Price < 0 ? 0 : dto.Price;
 
             // ?? UPDATE AUTHORS
             var newAuthorIds = dto.AuthorIds.Distinct().ToList();
@@ -266,6 +273,60 @@ namespace BookStoreManagement.API.Services
 
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        /// <summary>
+        /// Recalculate lại giá bán cho tất cả sách dựa trên giá nhập gần nhất và GIABAN do người dùng cấu hình.
+        /// Công thức: Giá bán mới = Giá nhập gần nhất * GIABAN
+        /// Dùng để đồng bộ lại giá bán khi user thay đổi GIABAN trong Settings/Regulation.
+        /// </summary>
+        public async Task<int> RecalculateAllBookPrices()
+        {
+            // Lấy GIABAN từ settings do người dùng cấu hình.
+            decimal priceRate;
+            try
+            {
+                priceRate = await _settingService.GetDecimal("GIABAN");
+            }
+            catch
+            {
+                throw new Exception(
+                    "Chưa cấu hình GIABAN trong bảng settings. Vui lòng vào Settings/Regulation để thiết lập GIABAN trước khi recalculate.");
+            }
+
+            var books = await _context.Books
+                .Where(b => !b.IsDeleted)
+                .ToListAsync();
+
+            int updatedCount = 0;
+            foreach (var book in books)
+            {
+                // Lấy import price gần nhất của sách (theo ID lớn nhất)
+                var latestImport = await _context.ImportDetails
+                    .Where(d => d.BookId == book.BookId)
+                    .OrderByDescending(d => d.Id)
+                    .FirstOrDefaultAsync();
+
+                if (latestImport == null) continue; // Bỏ qua sách chưa từng nhập
+
+                var importPrice = latestImport.ImportPrice;
+                if (importPrice <= 0) continue;
+
+                // Tính giá bán mới dựa trên GIABAN do user config (không fix cứng).
+                var newPrice = importPrice * priceRate;
+                if (newPrice != book.Price)
+                {
+                    book.Price = newPrice;
+                    updatedCount++;
+                }
+            }
+
+            if (updatedCount > 0)
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            return updatedCount;
         }
     }
 }

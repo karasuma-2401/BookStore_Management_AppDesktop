@@ -137,5 +137,31 @@ namespace BookStoreManagement.API.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Endpoint admin: Recalculate lại giá bán cho tất cả sách dựa trên giá nhập gần nhất.
+        /// Dùng khi setting "GIABAN" bị cấu hình sai khiến giá bán bị phóng đại.
+        /// </summary>
+        [HttpPost("recalculate-prices")]
+        public async Task<IActionResult> RecalculatePrices()
+        {
+            try
+            {
+                int updatedCount = await _bookService.RecalculateAllBookPrices();
+                return Ok(new
+                {
+                    message = $"Đã recalculate giá bán cho {updatedCount} sách.",
+                    updatedCount
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Recalculate failed",
+                    detail = ex.Message
+                });
+            }
+        }
     }
 }

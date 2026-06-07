@@ -1,3 +1,4 @@
+using System.Globalization;
 using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Models.DTOs;
 using BookStoreManagement.API.Models.Entities;
@@ -98,7 +99,7 @@ namespace BookStoreManagement.API.Services
             if (value == null)
                 throw new Exception($"Setting {key} not found");
 
-            return int.Parse(value);
+            return int.Parse(value, CultureInfo.InvariantCulture);
         }
 
         public async Task<decimal> GetDecimal(string key)
@@ -111,7 +112,7 @@ namespace BookStoreManagement.API.Services
             if (value == null)
                 throw new Exception($"Setting {key} not found");
 
-            return decimal.Parse(value);
+            return decimal.Parse(value, CultureInfo.InvariantCulture);
         }
     }
 }

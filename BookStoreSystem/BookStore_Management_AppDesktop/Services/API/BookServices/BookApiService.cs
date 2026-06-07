@@ -206,6 +206,10 @@ namespace BookStore_Management_AppDesktop.Services.API.BookServices
                     AuthorIds = updatedBook.AuthorIds ?? new List<int>(),
                     PublishYear = updatedBook.PublishYear,
                     Quantity = updatedBook.Quantity,
+                    // BUG đã fix: bổ sung Price vào payload gửi lên server.
+                    // Trước đây client không gửi field này => server không lưu được giá bán
+                    // khi admin edit sách => dẫn đến "giá bán hiển thị nhầm bằng giá nhập" hoặc giữ giá cũ.
+                    Price = updatedBook.Price,
                     Description = updatedBook.Description ?? string.Empty,
                     ImagePath = updatedBook.ImagePath ?? string.Empty,
                     CategoryIds = updatedBook.CategoryIds ?? new List<int>()

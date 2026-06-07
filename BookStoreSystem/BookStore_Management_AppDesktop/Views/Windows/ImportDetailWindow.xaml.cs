@@ -52,9 +52,10 @@ namespace BookStore_Management_AppDesktop.Views.Windows
                     worksheet.Column(1).Width = 12;
                     worksheet.Column(2).Width = 40;
                     worksheet.Column(3).Width = 12;
-                    worksheet.Column(4).Width = 18;
+                    worksheet.Column(4).Width = 14;
                     worksheet.Column(5).Width = 18;
                     worksheet.Column(6).Width = 18;
+                    worksheet.Column(7).Width = 18;
 
                     // Title row
                     worksheet.Range("A1:F1").Merge();
@@ -80,7 +81,7 @@ namespace BookStore_Management_AppDesktop.Views.Windows
 
                     // Table headers
                     const int headerRow = 8;
-                    var headers = new[] { "BOOK ID", "BOOK TITLE", "PUBLISH YEAR", "QUANTITY", "IMPORT PRICE", "TOTAL" };
+                    var headers = new[] { "BOOK ID", "BOOK TITLE", "PUBLISH YEAR", "QUANTITY", "IMPORT PRICE", "SELLING PRICE", "TOTAL" };
                     for (int col = 0; col < headers.Length; col++)
                     {
                         var cell = worksheet.Cell(headerRow, col + 1);
@@ -109,8 +110,11 @@ namespace BookStore_Management_AppDesktop.Views.Windows
                         worksheet.Cell(dataRow, 4).Value = detail.Quantity;
                         worksheet.Cell(dataRow, 5).Value = detail.ImportPrice;
                         worksheet.Cell(dataRow, 5).Style.NumberFormat.Format = "#,##0";
-                        worksheet.Cell(dataRow, 6).Value = total;
+                        // Cột giá bán = giá nhập * priceRate (GIABAN do user cấu hình)
+                        worksheet.Cell(dataRow, 6).Value = detail.SellingPrice;
                         worksheet.Cell(dataRow, 6).Style.NumberFormat.Format = "#,##0";
+                        worksheet.Cell(dataRow, 7).Value = total;
+                        worksheet.Cell(dataRow, 7).Style.NumberFormat.Format = "#,##0";
 
                         // Alignment
                         worksheet.Cell(dataRow, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -118,9 +122,10 @@ namespace BookStore_Management_AppDesktop.Views.Windows
                         worksheet.Cell(dataRow, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                         worksheet.Cell(dataRow, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
                         worksheet.Cell(dataRow, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                        worksheet.Cell(dataRow, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
                         // Border
-                        for (int col = 1; col <= 6; col++)
+                        for (int col = 1; col <= 7; col++)
                         {
                             worksheet.Cell(dataRow, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                         }
@@ -128,7 +133,7 @@ namespace BookStore_Management_AppDesktop.Views.Windows
                         // Alternate row color
                         if (rowIndex % 2 == 0)
                         {
-                            for (int col = 1; col <= 6; col++)
+                            for (int col = 1; col <= 7; col++)
                             {
                                 worksheet.Cell(dataRow, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#F1F5F9");
                             }

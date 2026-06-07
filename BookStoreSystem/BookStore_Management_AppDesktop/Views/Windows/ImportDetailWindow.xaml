@@ -225,22 +225,37 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="IMPORT PRICE" Width="140" HeaderStyle="{StaticResource RightAlignedHeaderStyle}">
-                            <DataGridTextColumn.Binding>
-                                <Binding Path="ImportPrice" StringFormat="{}{0:N0} VND"/>
-                            </DataGridTextColumn.Binding>
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Padding" Value="12,0"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                    <Setter Property="Foreground" Value="#059669"/>
-                                    <Setter Property="TextAlignment" Value="Right"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
+                    <DataGridTextColumn Header="IMPORT PRICE" Width="140" HeaderStyle="{StaticResource RightAlignedHeaderStyle}">
+                        <DataGridTextColumn.Binding>
+                            <Binding Path="ImportPrice" StringFormat="{}{0:N0} VND"/>
+                        </DataGridTextColumn.Binding>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Padding" Value="12,0"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Foreground" Value="#059669"/>
+                                <Setter Property="TextAlignment" Value="Right"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="TOTAL" Width="150" HeaderStyle="{StaticResource RightAlignedHeaderStyle}">
+                    <DataGridTextColumn Header="SELLING PRICE" Width="150" HeaderStyle="{StaticResource RightAlignedHeaderStyle}">
+                        <DataGridTextColumn.Binding>
+                            <Binding Path="SellingPrice" StringFormat="{}{0:N0} VND"/>
+                        </DataGridTextColumn.Binding>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Padding" Value="12,0"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Foreground" Value="#7C3AED"/>
+                                <Setter Property="TextAlignment" Value="Right"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="TOTAL" Width="150" HeaderStyle="{StaticResource RightAlignedHeaderStyle}">
                             <DataGridTextColumn.Binding>
                                 <Binding Path="TotalPrice" StringFormat="{}{0:N0} VND"/>
                             </DataGridTextColumn.Binding>
