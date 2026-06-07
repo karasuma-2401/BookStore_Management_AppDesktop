@@ -35,41 +35,43 @@
                     <TextBlock Text="Review your draft items before confirming the import transaction" Margin="0,6,0,0" Foreground="#64748B" FontSize="13"/>
                 </StackPanel>
 
-                <Button Grid.Column="1" Command="{Binding NavigateToImportHistoryCommand}" Height="45" Padding="15,0" Margin="0,0,12,0" Cursor="Hand" BorderThickness="0" Background="Transparent">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="Btn" Background="#6366F1" CornerRadius="8">
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,0">
-                                    <ui:SymbolIcon Symbol="ArrowLeft24" Foreground="White" Margin="0,0,8,0" FontSize="18"/>
-                                    <TextBlock Text="Back" Foreground="White" FontWeight="Bold" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Btn" Property="Background" Value="#5558E3"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Command="{Binding NavigateToImportHistoryCommand}" Height="45" Padding="15,0" Margin="0,0,12,0" Cursor="Hand" BorderThickness="0" Background="Transparent">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Btn" Background="#6366F1" CornerRadius="8">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,0">
+                                        <ui:SymbolIcon Symbol="ArrowLeft24" Foreground="White" Margin="0,0,8,0" FontSize="18"/>
+                                        <TextBlock Text="Back to Import History" Foreground="White" FontWeight="Bold" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Btn" Property="Background" Value="#5558E3"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
 
-                <Button Grid.Column="1" Command="{Binding OpenSelectBookDialogCommand}" Height="45" Padding="20,0" Cursor="Hand" BorderThickness="0" Background="Transparent">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="Btn" Background="#0F172A" CornerRadius="8">
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="15,0">
-                                    <ui:SymbolIcon Symbol="Search24" Foreground="White" Margin="0,0,8,0" FontSize="18"/>
-                                    <TextBlock Text="Choose Book to Import" Foreground="White" FontWeight="Bold" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Btn" Property="Background" Value="#1E293B"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                    <Button Command="{Binding OpenSelectBookDialogCommand}" Height="45" Padding="20,0" Cursor="Hand" BorderThickness="0" Background="Transparent">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Btn" Background="#0F172A" CornerRadius="8">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="15,0">
+                                        <ui:SymbolIcon Symbol="Search24" Foreground="White" Margin="0,0,8,0" FontSize="18"/>
+                                        <TextBlock Text="Choose Book to Import" Foreground="White" FontWeight="Bold" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Btn" Property="Background" Value="#1E293B"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
             </Grid>
         </Border>
 

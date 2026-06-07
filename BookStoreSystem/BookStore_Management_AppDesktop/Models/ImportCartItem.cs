@@ -16,13 +16,10 @@ namespace BookStore_Management_AppDesktop.Models
         private int _importQuantity;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(ExpectedRetailPrice))] 
         [NotifyPropertyChangedFor(nameof(TotalLinePrice))]
-        private decimal _importPrice; 
+        private decimal _importPrice;
 
 
         public decimal TotalLinePrice => ImportQuantity * ImportPrice;
-
-        public decimal ExpectedRetailPrice => ImportPrice * 1.05m;
     }
 }
