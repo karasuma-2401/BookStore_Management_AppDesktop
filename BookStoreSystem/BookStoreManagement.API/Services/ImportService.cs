@@ -79,11 +79,17 @@ namespace BookStoreManagement.API.Services
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+
+                var createdUser = await _context.Users
+                    .Include(u => u.Employee)
+                    .FirstOrDefaultAsync(u => u.UserId == userId);
+
                 return new ImportResponseDto
                 {
                     ImportId = import.ImportId,
                     ImportDate = import.ImportDate,
                     UserId = import.UserId,
+                    UserName = createdUser?.Employee != null ? createdUser.Employee.FullName : createdUser?.Username ?? string.Empty,
                     Details = details.Select(d => new ImportDetailResponseDto
                     {
                         BookId = d.BookId,
@@ -119,7 +125,7 @@ namespace BookStoreManagement.API.Services
                     ImportId = i.ImportId,
                     ImportDate = i.ImportDate,
                     UserId = i.UserId,
-                    UserName = i.User.Employee.FullName,
+                    UserName = i.User.Employee != null ? i.User.Employee.FullName : i.User.Username,
                     Details = i.ImportDetails.Select(d => new ImportDetailResponseDto
                     {
                         BookId = d.BookId,
@@ -147,7 +153,7 @@ namespace BookStoreManagement.API.Services
                 ImportId = import.ImportId,
                 ImportDate = import.ImportDate,
                 UserId = import.UserId,
-                UserName = import.User.Employee.FullName,
+                UserName = import.User.Employee != null ? import.User.Employee.FullName : import.User.Username,
                 Details = import.ImportDetails.Select(d => new ImportDetailResponseDto
                 {
                     BookId = d.BookId,
