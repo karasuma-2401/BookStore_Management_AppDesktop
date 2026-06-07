@@ -15,7 +15,7 @@ namespace BookStoreManagement.API.Services
             _context = context;
             _settingService = settingService;
         }
-        
+
 
         public async Task<ImportResponseDto> CreateImport(ImportCreateDto dto, int userId)
         {
@@ -35,7 +35,16 @@ namespace BookStoreManagement.API.Services
                 var details = new List<ImportDetail>();
                 var minImport = await _settingService.GetInt("SLNHAPTT");
                 var maxStockToImport = await _settingService.GetInt("SLTONTD");
-                var priceRate = await _settingService.GetDecimal("GIABAN");
+
+                // Lấy hệ số tính giá bán (GIABAN) do người dùng cấu hình trong bảng settings.
+                // Công thức: Giá bán = Giá nhập * GIABAN
+                //   - GIABAN = 1.05 => giá bán = giá nhập * 1.05 (markup 5%)
+                //   - GIABAN = 1.20 => giá bán = giá nhập * 1.20 (markup 20%)
+                //   - GIABAN = 1.30 => giá bán = giá nhập * 1.30 (markup 30%)
+                // Người dùng toàn quyền quyết định giá trị GIABAN thông qua trang Settings/Regulation.
+                // Nếu setting chưa được cấu hình thì ném exception để bắt buộc admin phải thiết lập.
+                decimal priceRate = await _settingService.GetDecimal("GIABAN");
+
                 var totalQuantity = dto.Details.Sum(x => x.Quantity);
                 if (totalQuantity < minImport)
                     throw new Exception($"Total import quantity must be at least {minImport}");
@@ -51,14 +60,20 @@ namespace BookStoreManagement.API.Services
 
 
                     book.Quantity += item.Quantity;
-                    book.Price = item.ImportPrice * priceRate;
+                    // Giá bán = Giá nhập * GIABAN (do người dùng cấu hình).
+                    // Không ép cứng markup ở code: nếu GIABAN = 1.0 thì giá bán = giá nhập,
+                    // nếu GIABAN = 1.2 thì giá bán = giá nhập * 1.2, v.v.
+                    var sellingPrice = item.ImportPrice * priceRate;
+                    book.Price = sellingPrice;
 
                     details.Add(new ImportDetail
                     {
                         ImportId = import.ImportId,
                         BookId = item.BookId,
                         Quantity = item.Quantity,
-                        ImportPrice = item.ImportPrice
+                        ImportPrice = item.ImportPrice,
+                        // Lưu riêng giá bán tại thời điểm nhập để truy vết
+                        SellingPrice = sellingPrice
                     });
                 }
 
@@ -83,7 +98,8 @@ namespace BookStoreManagement.API.Services
                             .Select(b => b.PublishYear)
                             .FirstOrDefault() ?? 0,
                         Quantity = d.Quantity,
-                        ImportPrice = d.ImportPrice
+                        ImportPrice = d.ImportPrice,
+                        SellingPrice = d.SellingPrice
                     }).ToList()
                 };
             }
@@ -113,7 +129,8 @@ namespace BookStoreManagement.API.Services
                         BookTitle = d.Book.Title,
                         PublishYear = d.Book.PublishYear ?? 0,
                         Quantity = d.Quantity,
-                        ImportPrice = d.ImportPrice
+                        ImportPrice = d.ImportPrice,
+                        SellingPrice = d.SellingPrice
                     }).ToList()
                 })
                 .ToListAsync();
@@ -141,7 +158,8 @@ namespace BookStoreManagement.API.Services
                     BookTitle = d.Book.Title,
                     PublishYear = d.Book.PublishYear ?? 0,
                     Quantity = d.Quantity,
-                    ImportPrice = d.ImportPrice
+                        ImportPrice = d.ImportPrice,
+                        SellingPrice = d.SellingPrice
                 }).ToList()
             };
         }

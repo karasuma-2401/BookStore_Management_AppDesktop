@@ -25,5 +25,11 @@ namespace BookStoreManagement.API.Interfaces.Services
         Task<bool> UpdateBook(int id, BookUpdateDto dto);
 
         Task<bool> DeleteBook(int id);
+
+        /// <summary>
+        /// Recalculate lại giá bán cho tất cả sách dựa trên giá nhập gần nhất.
+        /// Trả về số lượng sách đã được cập nhật.
+        /// </summary>
+        Task<int> RecalculateAllBookPrices();
     }
 }

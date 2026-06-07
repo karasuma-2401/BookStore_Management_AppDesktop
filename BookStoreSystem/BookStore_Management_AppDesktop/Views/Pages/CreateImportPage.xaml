@@ -138,7 +138,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="PRICE" Binding="{Binding ImportPrice, StringFormat={}{0:N0} VND}" Width="150">
+                    <DataGridTextColumn Header="IMPORT PRICE" Binding="{Binding ImportPrice, StringFormat={}{0:N0} VND}" Width="170">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock" BasedOn="{StaticResource GridTextStyle}"/>
                         </DataGridTextColumn.ElementStyle>
