@@ -23,15 +23,6 @@ namespace BookStoreManagement.API.Models.Entities
         [Column("import_price", TypeName = "decimal(12,2)")]
         public decimal ImportPrice {get; set;}
 
-        /// <summary>
-        /// Giá bán của mỗi cuốn sách tại thời điểm nhập = ImportPrice * priceRate (GIABAN do user cấu hình).
-        /// Lưu riêng ở từng dòng import_details để:
-        ///   - Truy vết được giá bán tại thời điểm nhập (lịch sử giá).
-        ///   - Tránh việc thay đổi GIABAN sau này làm ảnh hưởng ngược tới các đơn nhập cũ.
-        /// </summary>
-        [Column("selling_price", TypeName = "decimal(12,2)")]
-        public decimal SellingPrice { get; set; }
-
         [ForeignKey("ImportId")]
         public Import Import {get; set;} = null!;
 

@@ -71,9 +71,7 @@ namespace BookStoreManagement.API.Services
                         ImportId = import.ImportId,
                         BookId = item.BookId,
                         Quantity = item.Quantity,
-                        ImportPrice = item.ImportPrice,
-                        // Lưu riêng giá bán tại thời điểm nhập để truy vết
-                        SellingPrice = sellingPrice
+                        ImportPrice = item.ImportPrice
                     });
                 }
 
@@ -98,8 +96,7 @@ namespace BookStoreManagement.API.Services
                             .Select(b => b.PublishYear)
                             .FirstOrDefault() ?? 0,
                         Quantity = d.Quantity,
-                        ImportPrice = d.ImportPrice,
-                        SellingPrice = d.SellingPrice
+                        ImportPrice = d.ImportPrice
                     }).ToList()
                 };
             }
@@ -129,8 +126,7 @@ namespace BookStoreManagement.API.Services
                         BookTitle = d.Book.Title,
                         PublishYear = d.Book.PublishYear ?? 0,
                         Quantity = d.Quantity,
-                        ImportPrice = d.ImportPrice,
-                        SellingPrice = d.SellingPrice
+                        ImportPrice = d.ImportPrice
                     }).ToList()
                 })
                 .ToListAsync();
@@ -158,8 +154,7 @@ namespace BookStoreManagement.API.Services
                     BookTitle = d.Book.Title,
                     PublishYear = d.Book.PublishYear ?? 0,
                     Quantity = d.Quantity,
-                        ImportPrice = d.ImportPrice,
-                        SellingPrice = d.SellingPrice
+                    ImportPrice = d.ImportPrice
                 }).ToList()
             };
         }
