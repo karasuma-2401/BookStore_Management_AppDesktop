@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BookStoreManagement.API.Models.Entities;
 using BookStoreManagement.API.Interfaces.Services;
@@ -9,7 +9,7 @@ namespace BookStoreManagement.API.Controllers
 {
     [Route("employee")]
     [ApiController]
-    [Authorize(Roles = "admin")]
+    [Authorize]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
@@ -20,6 +20,7 @@ namespace BookStoreManagement.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetEmployees()
         {
             var employees = await _employeeService.GetAllEmployeesAsync();
@@ -27,6 +28,7 @@ namespace BookStoreManagement.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetEmployee(int id)
         {
             var employee = await _employeeService.GetEmployeeByIdAsync(id);
@@ -35,7 +37,17 @@ namespace BookStoreManagement.API.Controllers
                 : Ok(employee);
         }
 
+        [HttpGet("by-user/{userId}")]
+        public async Task<IActionResult> GetEmployeeByUserId(int userId)
+        {
+            var employee = await _employeeService.GetEmployeeByUserIdAsync(userId);
+            return employee == null
+                ? NotFound(new { message = "Employee not found." })
+                : Ok(employee);
+        }
+
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PostEmployee(EmployeeCreateDto employee)
         {
             var success = await _employeeService.CreateEmployeeAsync(employee);
@@ -45,6 +57,7 @@ namespace BookStoreManagement.API.Controllers
         }
 
         [HttpPut("{id}")]   
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PutEmployee(int id, EmployeeUpdateDto employee)
         {
             var success = await _employeeService.UpdateEmployeeAsync(id, employee);
@@ -54,6 +67,7 @@ namespace BookStoreManagement.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteEmployee(int id)
         {
             try

@@ -1,4 +1,4 @@
-﻿using BookStoreManagement.API.Data;
+using BookStoreManagement.API.Data;
 using BookStoreManagement.API.Interfaces.Services;
 using BookStoreManagement.API.Models.Employee;
 using BookStoreManagement.API.Models.Entities;
@@ -40,6 +40,24 @@ namespace BookStoreManagement.API.Services
         {
             return await _context.Employees
             .Where(e => e.EmployeeId == id)
+            .Select(e => new EmployeeResponseDto
+            {
+                EmployeeId = e.EmployeeId,
+                UserId = e.UserId,
+                FullName = e.FullName,
+                Age = e.Age,
+                Phone = e.Phone,
+                Address = e.Address,
+                Salary = e.Salary,
+                Status = e.Status
+            })
+            .FirstOrDefaultAsync();
+        }
+
+        public async Task<EmployeeResponseDto?> GetEmployeeByUserIdAsync(int userId)
+        {
+            return await _context.Employees
+            .Where(e => e.UserId == userId)
             .Select(e => new EmployeeResponseDto
             {
                 EmployeeId = e.EmployeeId,

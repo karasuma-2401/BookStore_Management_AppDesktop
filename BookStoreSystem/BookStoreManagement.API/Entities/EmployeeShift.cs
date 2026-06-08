@@ -28,7 +28,7 @@ namespace BookStoreManagement.API.Models.Entities
         public DateTime? CheckInTime { get; set; }
 
         [Column("is_paid")]
-        public bool IsPaid { get; set; } = true;
+        public bool IsPaid { get; set; } = false;
 
         [ForeignKey("EmployeeId")]
         public Employee Employee {get; set;} = null!;

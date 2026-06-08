@@ -105,7 +105,7 @@ namespace BookStoreManagement.API.Controllers
         }
 
         [HttpPost("kiosk-checkin")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,staff")]
         public async Task<IActionResult> KioskCheckIn([FromBody] KioskCheckInRequestDto dto)
         {
             if (dto == null || dto.EmployeeId <= 0)

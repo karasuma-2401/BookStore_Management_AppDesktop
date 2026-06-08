@@ -41,7 +41,10 @@ namespace BookStoreManagement.API.BackgroundJobs
                         bool changed = false;
                         foreach (var es in scheduledShifts)
                         {
-                            var shiftEndTime = es.WorkDate.Date.Add(es.Shift?.EndTime ?? TimeSpan.Zero);
+                            var utcDate = DateTime.SpecifyKind(es.WorkDate, DateTimeKind.Utc);
+                            var workDateVn = TimeZoneInfo.ConvertTimeFromUtc(utcDate, vnTimeZone).Date;
+                            var shiftEndTime = workDateVn.Add(es.Shift?.EndTime ?? TimeSpan.Zero);
+
                             if (nowVn > shiftEndTime)
                             {
                                 es.Status = "Absent";
