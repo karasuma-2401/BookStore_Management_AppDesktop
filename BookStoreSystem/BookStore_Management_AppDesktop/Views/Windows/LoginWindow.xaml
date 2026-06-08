@@ -4,21 +4,114 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:components="clr-namespace:BookStore_Management_AppDesktop.Views.UserControls"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:viewmodels="clr-namespace:BookStore_Management_AppDesktop.ViewModels"
     Title="Book Store Login"
     Width="1100"
     Height="700"
     ExtendsContentIntoTitleBar="True"
     WindowBackdropType="None"
     WindowStartupLocation="CenterScreen">
+    <ui:FluentWindow.Resources>
+        <Style x:Key="WindowButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#20FFFFFF" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#35FFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style
+            x:Key="CloseButtonStyle"
+            BasedOn="{StaticResource WindowButtonStyle}"
+            TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="Transparent">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#E81123" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#C50F1F" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </ui:FluentWindow.Resources>
+
     <Grid>
         <Border Background="{DynamicResource NavyPrimaryBrush}" />
+        <Grid
+            Height="42"
+            VerticalAlignment="Top"
+            Background="Transparent"
+            MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
 
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Margin="18,0"
+                VerticalAlignment="Center"
+                FontSize="16"
+                FontWeight="Bold"
+                Foreground="White"
+                Text="📚 Book Store Management System" />
+
+            <StackPanel
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                    Width="46"
+                    Height="42"
+                    Click="Minimize_Click"
+                    Content="─"
+                    FontSize="14"
+                    Style="{StaticResource WindowButtonStyle}" />
+                <Button
+                    Width="46"
+                    Height="42"
+                    Click="Maximize_Click"
+                    Content="□"
+                    FontSize="12"
+                    Style="{StaticResource WindowButtonStyle}" />
+                <Button
+                    Width="46"
+                    Height="42"
+                    Click="Close_Click"
+                    Content="✕"
+                    FontSize="12"
+                    Style="{StaticResource CloseButtonStyle}" />
+            </StackPanel>
+        </Grid>
         <ItemsControl
-            Grid.Column="0"
-            Margin="-50"
+            Margin="-50,42,-50,-50"
             ItemsSource="{Binding CarouselBooks}"
             Opacity="0.65">
+
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel
@@ -27,8 +120,11 @@
                         Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+
             <ItemsControl.ItemTemplate>
+
                 <DataTemplate>
+
                     <Image
                         Width="140"
                         Height="200"
@@ -47,150 +143,76 @@
                         <Image.RenderTransform>
                             <TranslateTransform x:Name="floatTransform" Y="0" />
                         </Image.RenderTransform>
+
                     </Image>
+
                 </DataTemplate>
+
             </ItemsControl.ItemTemplate>
+
         </ItemsControl>
         <Border
-            Grid.Column="1"
-            Width="auto"
-            Height="auto"
-            Margin="15,0,15,0"
+            Width="350"
+            Margin="0,42,0,0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             BorderBrush="#4DFFFFFF"
             BorderThickness="2"
             CornerRadius="24">
+
             <Border.Background>
                 <SolidColorBrush Opacity="0.65" Color="#0F172A" />
             </Border.Background>
+
             <Border.Effect>
+
                 <DropShadowEffect
                     BlurRadius="40"
                     Opacity="0.65"
                     ShadowDepth="15"
                     Color="Black" />
+
             </Border.Effect>
+
             <Grid Margin="40,50,40,40">
+
                 <StackPanel VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+
                     <StackPanel.RenderTransform>
                         <TranslateTransform X="0" />
                     </StackPanel.RenderTransform>
 
                     <StackPanel.Style>
+
                         <Style TargetType="StackPanel">
-                            <Setter Property="IsHitTestVisible" Value="False" />
+
                             <Setter Property="Opacity" Value="0" />
+                            <Setter Property="IsHitTestVisible" Value="False" />
 
                             <Style.Triggers>
+
                                 <DataTrigger Binding="{Binding IsLoginFormVisible}" Value="True">
+
+                                    <Setter Property="Opacity" Value="1" />
                                     <Setter Property="IsHitTestVisible" Value="True" />
 
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation
-                                                    Storyboard.TargetProperty="Opacity"
-                                                    To="1"
-                                                    Duration="0:0:0.3" />
-                                                <DoubleAnimation
-                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                    From="-100"
-                                                    To="0"
-                                                    Duration="0:0:0.4">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CubicEase EasingMode="EaseOut" />
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.EnterActions>
-
-                                    <DataTrigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation
-                                                    Storyboard.TargetProperty="Opacity"
-                                                    To="0"
-                                                    Duration="0:0:0.3" />
-                                                <DoubleAnimation
-                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                    To="-100"
-                                                    Duration="0:0:0.4">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CubicEase EasingMode="EaseIn" />
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.ExitActions>
                                 </DataTrigger>
+
                             </Style.Triggers>
+
                         </Style>
+
                     </StackPanel.Style>
 
                     <components:LoginForm />
 
                 </StackPanel>
 
-
-                <StackPanel VerticalAlignment="Center" RenderTransformOrigin="0.5, 0.5">
-                    <StackPanel.RenderTransform>
-                        <TranslateTransform Y="-100" />
-                    </StackPanel.RenderTransform>
-                    <StackPanel.Style>
-                        <Style TargetType="StackPanel">
-                            <Setter Property="IsHitTestVisible" Value="False" />
-                            <Setter Property="Opacity" Value="0" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsForgotPasswordFormVisible}" Value="True">
-                                    <Setter Property="IsHitTestVisible" Value="True" />
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation
-                                                    Storyboard.TargetProperty="Opacity"
-                                                    To="1"
-                                                    Duration="0:0:0.3" />
-                                                <DoubleAnimation
-                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-                                                    From="-100"
-                                                    To="0"
-                                                    Duration="0:0:0.4">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CubicEase EasingMode="EaseOut" />
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.EnterActions>
-
-                                    <DataTrigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation
-                                                    Storyboard.TargetProperty="Opacity"
-                                                    To="0"
-                                                    Duration="0:0:0.3" />
-                                                <DoubleAnimation
-                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-                                                    To="-100"
-                                                    Duration="0:0:0.4">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CubicEase EasingMode="EaseIn" />
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.ExitActions>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Style>
-                    <components:ForgotPasswordForm />
-                </StackPanel>
             </Grid>
 
         </Border>
+
     </Grid>
+
 </ui:FluentWindow>
+
