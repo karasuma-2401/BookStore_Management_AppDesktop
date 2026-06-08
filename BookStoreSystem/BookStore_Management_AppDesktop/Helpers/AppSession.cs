@@ -14,5 +14,6 @@ namespace BookStore_Management_AppDesktop.Helpers
         }
 
         public static bool IsAdmin => string.Equals(CurrentRole, "admin", StringComparison.OrdinalIgnoreCase);
+        public static bool IsEmployee => !IsAdmin;
     }
 }

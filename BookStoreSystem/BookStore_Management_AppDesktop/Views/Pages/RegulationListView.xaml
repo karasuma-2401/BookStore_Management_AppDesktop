@@ -145,25 +145,7 @@
                     Text="Regulation Management" />
             </StackPanel>
 
-            <Button
-                Grid.Column="1"
-                Command="{Binding AddCommand}"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Style="{StaticResource PrimaryActionBtnStyle}">
-                <StackPanel Orientation="Horizontal">
-                    <ui:SymbolIcon
-                        Margin="0,0,6,0"
-                        FontSize="18"
-                        Foreground="#FFFFFF"
-                        Symbol="Add24" />
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="14"
-                        FontWeight="Bold"
-                        Text="Add Regulation" />
-                </StackPanel>
-            </Button>
+           
         </Grid>
 
         <!-- Content -->
@@ -215,31 +197,20 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center">   
+                Orientation="Horizontal"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center">
 
-                        <Button
-                        Margin="0,0,6,0"
-                        Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                        CommandParameter="{Binding}"
-                        Style="{DynamicResource IconBtnStyle}"
-                        ToolTip="Edit Regulation">
-                                                <ui:SymbolIcon
-                            FontSize="18"
-                            Foreground="#0284C7"
-                            Symbol="Edit24" />
-                                            </Button>
-
-                                            <Button
-                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                        CommandParameter="{Binding}"
-                        Style="{DynamicResource IconBtnStyle}"
-                        ToolTip="Delete Regulation">
+                                        <Button
+                    Margin="0,0,6,0"
+                    Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                    CommandParameter="{Binding}"
+                    Style="{DynamicResource IconBtnStyle}"
+                    ToolTip="Edit Regulation">
                                             <ui:SymbolIcon
-                            FontSize="18"
-                            Foreground="#EF4444"
-                            Symbol="Delete24" />
+                        FontSize="18"
+                        Foreground="#0284C7"
+                        Symbol="Edit24" />
                                         </Button>
 
                                     </StackPanel>

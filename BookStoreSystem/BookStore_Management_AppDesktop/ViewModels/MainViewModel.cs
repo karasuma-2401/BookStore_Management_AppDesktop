@@ -10,8 +10,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly INavigationService _navigationService;
         public bool IsAdmin => AppSession.IsAdmin;
+        public bool IsNotEmployee => AppSession.IsAdmin;  // Only show for Admin, not for Employee
 
- 
+
         public MainViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;

@@ -156,14 +156,15 @@
                         Text="Reports" />
                 </ui:NavigationViewItem>
                 <ui:NavigationViewItem
-                 Command="{Binding NavigateCommand}"
-                 CommandParameter="Regulations"
-                 Icon="{ui:SymbolIcon Book24}"
-                 Tag="Regulations">
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="Regulations"
+                    Icon="{ui:SymbolIcon Book24}"
+                    Tag="Regulations"
+                    Visibility="{Binding IsNotEmployee, Converter={StaticResource BoolToVis}}">
                     <TextBlock
-                     FontSize="{StaticResource FontSizeSubTitle}"
-                     FontWeight="SemiBold"
-                     Text="Regulations" />
+                        FontSize="{StaticResource FontSizeSubTitle}"
+                        FontWeight="SemiBold"
+                        Text="Regulations" />
                 </ui:NavigationViewItem>
 
                 <ui:NavigationViewItem

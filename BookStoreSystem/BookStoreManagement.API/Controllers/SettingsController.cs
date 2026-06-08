@@ -1,11 +1,13 @@
 using BookStoreManagement.API.Models.DTOs;
 using BookStoreManagement.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStoreManagement.API.Controllers
 {
     [Route("setting")]
     [ApiController]
+    [Authorize(Roles = "admin")]
     public class SettingsController : ControllerBase
     {
         private readonly ISettingService _service;
