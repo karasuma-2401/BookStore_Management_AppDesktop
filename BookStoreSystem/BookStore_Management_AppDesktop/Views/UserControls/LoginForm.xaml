@@ -9,7 +9,9 @@
     d:DesignHeight="100"
     d:DesignWidth="350"
     mc:Ignorable="d">
+
     <StackPanel>
+
         <ui:TextBlock
             Margin="0,0,0,10"
             HorizontalAlignment="Center"
@@ -17,6 +19,7 @@
             FontWeight="ExtraBold"
             Foreground="{DynamicResource TextPrimaryBrush}"
             Text="LOGIN" />
+
         <ui:TextBlock
             Margin="0,0,0,40"
             HorizontalAlignment="Center"
@@ -43,50 +46,46 @@
             Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
             PasswordChar="●"
             PlaceholderText="Password">
+
             <ui:PasswordBox.InputBindings>
                 <KeyBinding Key="Enter" Command="{Binding LoginCommand}" />
             </ui:PasswordBox.InputBindings>
+
         </ui:PasswordBox>
-        <Grid Margin="0,0,0,25">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <CheckBox
-                Grid.Column="0"
-                Content="Remember me"
-                Foreground="{DynamicResource TextSecondBrush}"
-                IsChecked="{Binding RememberMe}" />
-            <ui:Button
-                Grid.Column="1"
-                Padding="0"
-                Appearance="Transparent"
-                Command="{Binding SwitchToForgotPasswordCommand}"
-                Content="Forgot password?"
-                FontWeight="SemiBold"
-                Foreground="{DynamicResource NavyAccentBrush}" />
-        </Grid>
+
+        <CheckBox
+            Margin="0,0,0,25"
+            Content="Remember me"
+            Foreground="{DynamicResource TextSecondBrush}"
+            IsChecked="{Binding RememberMe}" />
+
         <TextBlock
             Margin="0,0,0,15"
             HorizontalAlignment="Center"
             FontWeight="SemiBold"
             Text="{Binding ErrorMessage}"
             TextWrapping="Wrap">
+
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Setter Property="Foreground" Value="{DynamicResource ErrorPrimaryBrush}" />
+
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsSuccessMessage}" Value="True">
                             <Setter Property="Foreground" Value="{DynamicResource SuccessPrimaryBrush}" />
                         </DataTrigger>
                     </Style.Triggers>
+
                 </Style>
             </TextBlock.Style>
+
         </TextBlock>
+
         <ui:ProgressRing
             Margin="0,0,0,15"
             IsIndeterminate="True"
             Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}" />
+
         <ui:Button
             Padding="0,14"
             HorizontalAlignment="Stretch"
@@ -98,5 +97,7 @@
             FontSize="16"
             FontWeight="Bold"
             Foreground="{DynamicResource NavyPrimaryBrush}" />
+
     </StackPanel>
+
 </UserControl>
