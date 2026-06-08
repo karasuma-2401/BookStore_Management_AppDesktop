@@ -2,6 +2,7 @@
 using BookStore_Management_AppDesktop.Services;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 namespace BookStore_Management_AppDesktop.Services
 {
@@ -15,10 +16,28 @@ namespace BookStore_Management_AppDesktop.Services
             Debug.WriteLine($"[RegulationApiService] Initialized with BaseAddress: {_http.BaseAddress}");
         }
 
+        /// <summary>
+        /// Adds JWT token to request headers for authentication
+        /// </summary>
+        private void AddAuthorizationHeader()
+        {
+            var token = Settings.Default.AccessToken;
+            if (!string.IsNullOrEmpty(token))
+            {
+                _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                Debug.WriteLine("[RegulationApiService] Authorization header added");
+            }
+            else
+            {
+                Debug.WriteLine("[RegulationApiService] WARNING: No access token found");
+            }
+        }
+
         public async Task<List<RegulationResponseDto>> GetAllAsync()
         {
             try
             {
+                AddAuthorizationHeader();
                 Debug.WriteLine($"[RegulationApiService] Requesting: GET {_http.BaseAddress}setting");
 
                 var result = await _http.GetFromJsonAsync<List<RegulationResponseDto>>("setting");
@@ -38,12 +57,14 @@ namespace BookStore_Management_AppDesktop.Services
 
         public async Task<RegulationResponseDto> GetByNameAsync(string name)
         {
+            AddAuthorizationHeader();
             Debug.WriteLine($"[RegulationApiService] Requesting: GET {_http.BaseAddress}setting/{name}");
             return await _http.GetFromJsonAsync<RegulationResponseDto>($"setting/{name}");
         }
 
         public async Task<bool> CreateAsync(RegulationCreateDto dto)
         {
+            AddAuthorizationHeader();
             Debug.WriteLine($"[RegulationApiService] Requesting: POST setting?name={dto.SettingName}&value={dto.Value}");
 
             var response = await _http.PostAsync(
@@ -55,6 +76,7 @@ namespace BookStore_Management_AppDesktop.Services
 
         public async Task<bool> UpdateAsync(string name, RegulationUpdateDto dto)
         {
+            AddAuthorizationHeader();
             Debug.WriteLine($"[RegulationApiService] Requesting: PUT setting/{name}");
 
             var response = await _http.PutAsJsonAsync($"setting/{name}", dto);
@@ -65,6 +87,7 @@ namespace BookStore_Management_AppDesktop.Services
 
         public async Task<bool> DeleteAsync(string name)
         {
+            AddAuthorizationHeader();
             Debug.WriteLine($"[RegulationApiService] Requesting: DELETE setting/{name}");
 
             var response = await _http.DeleteAsync($"setting/{name}");
