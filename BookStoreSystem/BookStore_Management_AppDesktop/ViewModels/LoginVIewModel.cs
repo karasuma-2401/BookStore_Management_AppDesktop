@@ -122,8 +122,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     var employeeApi = App.ServiceProvider!.GetRequiredService<BookStore_Management_AppDesktop.Services.API.EmployeeServices.IEmployeeApiService>();
                     var shiftApi = App.ServiceProvider!.GetRequiredService<BookStore_Management_AppDesktop.Services.API.IEmployeeShiftApiService>();
 
-                    var employees = await employeeApi.GetAllEmployeesAsync();
-                    var employee = employees.FirstOrDefault(e => e.UserId == userId);
+                    var employee = await employeeApi.GetEmployeeByUserIdAsync(userId);
                     if (employee != null)
                     {
                         var checkinResult = await shiftApi.KioskCheckInAsync(employee.EmployeeId);

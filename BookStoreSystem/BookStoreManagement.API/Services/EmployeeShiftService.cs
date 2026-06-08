@@ -20,6 +20,13 @@ namespace BookStoreManagement.API.Services
             _validator = validator;
         }
 
+        private DateTime GetWorkDateVn(DateTime workDate)
+        {
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            var utcDate = DateTime.SpecifyKind(workDate, DateTimeKind.Utc);
+            return TimeZoneInfo.ConvertTimeFromUtc(utcDate, vnTimeZone).Date;
+        }
+
         public async Task<string?> AssignShiftAsync(ShiftAssignDto dto)
         {
             if (!await _context.Shifts.AnyAsync(s => s.ShiftId == dto.ShiftId))
@@ -33,11 +40,15 @@ namespace BookStoreManagement.API.Services
             DateTime nowVn = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
             var todayVn = nowVn.Date;
 
-            if (dto.WorkDate.Date < todayVn)
+            // Chuyển đổi dto.WorkDate sang múi giờ Việt Nam trước khi lấy phần ngày để tránh lệch ngày
+            var workDateUtcInput = DateTime.SpecifyKind(dto.WorkDate, DateTimeKind.Utc);
+            var workDateVn = TimeZoneInfo.ConvertTimeFromUtc(workDateUtcInput, vnTimeZone).Date;
+
+            if (workDateVn < todayVn)
                 return "Cannot schedule a shift for a date or month in the past.";
 
             // Đảm bảo kiểu múi giờ là UTC và chỉ lấy phần Ngày (Date) cho PostgreSQL timestamptz
-            var workDateUtc = DateTime.SpecifyKind(dto.WorkDate.Date, DateTimeKind.Utc);
+            var workDateUtc = DateTime.SpecifyKind(workDateVn, DateTimeKind.Utc);
 
             if (await _context.EmployeeShifts.AnyAsync(es => es.EmployeeId == dto.EmployeeId && es.WorkDate == workDateUtc && es.ShiftId == dto.ShiftId))
                 return "Employee already has this shift assigned for this date.";
@@ -49,7 +60,7 @@ namespace BookStoreManagement.API.Services
                 WorkDate = workDateUtc,
                 Status = "Scheduled",
                 CheckInTime = null,
-                IsPaid = true
+                IsPaid = false
             };
 
             _context.EmployeeShifts.Add(employeeshift);
@@ -83,7 +94,7 @@ namespace BookStoreManagement.API.Services
             {
                 if (es.Status == "Scheduled" && es.Shift != null)
                 {
-                    var shiftEndTime = es.WorkDate.Date.Add(es.Shift.EndTime);
+                    var shiftEndTime = GetWorkDateVn(es.WorkDate).Add(es.Shift.EndTime);
                     if (nowVn > shiftEndTime)
                     {
                         es.Status = "Absent";
@@ -103,7 +114,7 @@ namespace BookStoreManagement.API.Services
                 FullName = es.Employee?.FullName ?? string.Empty,
                 ShiftName = es.Shift?.ShiftName ?? string.Empty,
                 WorkTime = es.Shift != null ? $"{es.Shift.StartTime} - {es.Shift.EndTime}" : string.Empty,
-                WorkDate = es.WorkDate.ToString("yyyy-MM-dd"),
+                WorkDate = GetWorkDateVn(es.WorkDate).ToString("yyyy-MM-dd"),
                 Status = es.Status,
                 CheckInTime = es.CheckInTime,
                 IsPaid = es.IsPaid
@@ -139,7 +150,7 @@ namespace BookStoreManagement.API.Services
             DateTime nowVn = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
 
 
-            DateTime shiftStartTime = assignment.WorkDate.Date.Add(assignment.Shift.StartTime);
+            DateTime shiftStartTime = GetWorkDateVn(assignment.WorkDate).Add(assignment.Shift.StartTime);
 
             // Cho phép trễ tối đa 15 phút (Grace period)
             DateTime lateThreshold = shiftStartTime.AddMinutes(15);
@@ -151,10 +162,12 @@ namespace BookStoreManagement.API.Services
             if (nowVn <= shiftStartTime)
             {
                 assignment.Status = "Present";
+                assignment.IsPaid = true;
             }
             else if (nowVn <= lateThreshold)
             {
                 assignment.Status = "Late";
+                assignment.IsPaid = true;
             }
             else
             {
@@ -238,7 +251,7 @@ namespace BookStoreManagement.API.Services
                 {
                     // Nếu thời điểm hiện tại đã vượt quá giờ kết thúc ca làm việc,
                     // mà nhân viên chưa check-in (vẫn ở trạng thái Scheduled) thì tính là Absent
-                    var shiftEndTime = es.WorkDate.Date.Add(es.Shift?.EndTime ?? TimeSpan.Zero);
+                    var shiftEndTime = GetWorkDateVn(es.WorkDate).Add(es.Shift?.EndTime ?? TimeSpan.Zero);
                     if (nowVn > shiftEndTime)
                     {
                         absentCount++;
@@ -277,7 +290,7 @@ namespace BookStoreManagement.API.Services
             {
                 if (es.Status == "Scheduled" && es.Shift != null)
                 {
-                    var shiftEndTime = es.WorkDate.Date.Add(es.Shift.EndTime);
+                    var shiftEndTime = GetWorkDateVn(es.WorkDate).Add(es.Shift.EndTime);
                     if (nowVn > shiftEndTime)
                     {
                         es.Status = "Absent";
@@ -334,20 +347,32 @@ namespace BookStoreManagement.API.Services
 
             TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             DateTime nowVn = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
-            var todayUtc = DateTime.SpecifyKind(nowVn.Date, DateTimeKind.Utc);
+            var todayVn = nowVn.Date;
 
-            var assignment = await _context.EmployeeShifts
+            var assignments = await _context.EmployeeShifts
                 .Include(es => es.Employee)
                 .Include(es => es.Shift)
-                .FirstOrDefaultAsync(es => es.EmployeeId == employeeId && es.WorkDate == todayUtc);
+                .Where(es => es.EmployeeId == employeeId)
+                .ToListAsync();
 
-            if (assignment == null)
+            var todayAssignments = assignments
+                .Where(es => GetWorkDateVn(es.WorkDate) == todayVn)
+                .OrderBy(es => es.Shift?.StartTime)
+                .ToList();
+
+            if (!todayAssignments.Any())
             {
                 return new KioskCheckInResponseDto 
                 { 
                     Success = false, 
                     Message = $"No shift scheduled for today ({nowVn:dd/MM/yyyy}) for {employee.FullName}." 
                 };
+            }
+
+            var assignment = todayAssignments.FirstOrDefault(es => es.Status == "Scheduled");
+            if (assignment == null)
+            {
+                assignment = todayAssignments.Last();
             }
 
             if (assignment.Status == "Present" || assignment.Status == "Late")
@@ -374,7 +399,7 @@ namespace BookStoreManagement.API.Services
                 };
             }
 
-            DateTime shiftStartTime = assignment.WorkDate.Date.Add(assignment.Shift?.StartTime ?? TimeSpan.Zero);
+            DateTime shiftStartTime = GetWorkDateVn(assignment.WorkDate).Add(assignment.Shift?.StartTime ?? TimeSpan.Zero);
             DateTime lateThreshold = shiftStartTime.AddMinutes(15);
 
             if (nowVn < shiftStartTime.AddMinutes(-30))

@@ -1,4 +1,4 @@
-﻿using BookStoreManagement.API.Models.Employee;
+using BookStoreManagement.API.Models.Employee;
 using BookStoreManagement.API.Models.Entities;
 
 namespace BookStoreManagement.API.Interfaces.Services
@@ -7,6 +7,7 @@ namespace BookStoreManagement.API.Interfaces.Services
     {
         Task<IEnumerable<EmployeeResponseDto>> GetAllEmployeesAsync();
         Task<EmployeeResponseDto?> GetEmployeeByIdAsync(int id);
+        Task<EmployeeResponseDto?> GetEmployeeByUserIdAsync(int userId);
         Task<bool> CreateEmployeeAsync(EmployeeCreateDto employee);
         Task<bool> UpdateEmployeeAsync(int id, EmployeeUpdateDto employee);
         Task<bool> DeleteEmployeeAsync(int id);

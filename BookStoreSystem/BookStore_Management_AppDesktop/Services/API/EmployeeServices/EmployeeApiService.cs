@@ -64,6 +64,44 @@ namespace BookStore_Management_AppDesktop.Services.API.EmployeeServices
             }
         }
 
+        public async Task<Employee?> GetEmployeeByUserIdAsync(int userId)
+        {
+            try
+            {
+                AddAuthorizationHeader();
+                var response = await _httpClient.GetAsync($"employee/by-user/{userId}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    MessageBox.Show("You do not have permissions to access this profile!", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Stop);
+                    return null;
+                }
+
+                if (!response.IsSuccessStatusCode) return null;
+
+                var json = await response.Content.ReadAsStringAsync();
+                var dto = JsonSerializer.Deserialize<EmployeeResponseDto>(json, _options);
+                if (dto == null) return null;
+
+                return new Employee
+                {
+                    EmployeeId = dto.EmployeeId,
+                    FullName = dto.FullName,
+                    Age = dto.Age,
+                    Phone = dto.Phone,
+                    Address = dto.Address,
+                    Salary = dto.Salary,
+                    UserId = dto.UserId,
+                    Status = dto.Status
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"GetEmployeeByUserId Error: {ex.Message}");
+                return null;
+            }
+        }
+
         public async Task<bool> CreateEmployeeAsync(Employee emp)
         {
             try
