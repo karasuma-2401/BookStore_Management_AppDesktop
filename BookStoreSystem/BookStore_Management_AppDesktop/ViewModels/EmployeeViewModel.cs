@@ -22,6 +22,17 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly IUserApiService _userApiService;
         private List<Employee> _allEmployees = new();
         private CancellationTokenSource? _searchCts;
+        private Dictionary<int, string> _userIdToRoleMap = new();
+
+        private bool IsEmployeeAdmin(Employee emp)
+        {
+            if (emp == null) return false;
+            if (_userIdToRoleMap.TryGetValue(emp.UserId, out var roleId))
+            {
+                return string.Equals(roleId, "admin", StringComparison.OrdinalIgnoreCase);
+            }
+            return false;
+        }
 
         [ObservableProperty]
         private ObservableCollection<Employee> _employees = new();
@@ -59,6 +70,16 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             try
             {
+                var users = await _userApiService.GetAllUsersAsync();
+                if (users != null)
+                {
+                    _userIdToRoleMap = users.ToDictionary(u => u.UserId, u => u.RoleId);
+                }
+                else
+                {
+                    _userIdToRoleMap.Clear();
+                }
+
                 var data = await _apiService.GetAllEmployeesAsync();
                 if (data != null)
                 {
@@ -116,6 +137,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 };
             }).ToList();
 
+            // Sort: Admin first, then by Full Name
+            filteredData = filteredData
+                .OrderByDescending(e => IsEmployeeAdmin(e))
+                .ThenBy(e => e.FullName)
+                .ToList();
+
             int totalFiltered = filteredData.Count;
             int totalPages = Math.Max(1, (int)Math.Ceiling((double)totalFiltered / PageSize));
 
@@ -168,7 +195,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (employee == null) return;
 
-            var editViewModel = new UpdateEmployeeViewModel(employee);
+            var editViewModel = new UpdateEmployeeViewModel(employee, IsEmployeeAdmin(employee));
             var editWindow = new BookStore_Management_AppDesktop.Views.Windows.EditEmployeeWindow(editViewModel);
 
             if (Application.Current.MainWindow != null)
@@ -187,8 +214,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (employee == null) return;
 
+            bool isAdmin = IsEmployeeAdmin(employee);
+            string noun = isAdmin ? "Admin" : "Employee";
+
             bool isConfirmed = _dialogService.ShowConfirmation(
-                message: $"Are you sure you want to change status of '{employee.FullName}' to Resigned (Nghỉ làm)?",
+                message: $"Are you sure you want to change status of {noun.ToLower()} '{employee.FullName}' to Resigned (Nghỉ làm)?",
                 confirmText: "Change",
                 isDanger: true);
 
@@ -203,11 +233,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
                         // Soft delete: update status to 0 locally
                         employee.Status = 0;
                         UpdateDisplayList();
-                        _dialogService.ShowMessage("Employee status updated to Resigned (Nghỉ làm) successfully!");
+                        _dialogService.ShowMessage($"{noun} status updated to Resigned (Nghỉ làm) successfully!");
                     }
                     else
                     {
-                        _dialogService.ShowMessage("Failed to update employee status.");
+                        _dialogService.ShowMessage($"Failed to update {noun.ToLower()} status.");
                     }
                 }
                 catch (Exception ex)
@@ -271,6 +301,9 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (employee == null) return;
 
+            bool isAdmin = IsEmployeeAdmin(employee);
+            string noun = isAdmin ? "Admin" : "Employee";
+
             var dialog = new BookStore_Management_AppDesktop.Views.Windows.ChangeEmployeePasswordDialog(employee.FullName);
             if (Application.Current.MainWindow != null)
             {
@@ -284,11 +317,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     var result = await _userApiService.AdminChangeStaffPasswordAsync(employee.EmployeeId, dialog.NewPassword);
                     if (result.IsSuccess)
                     {
-                        _dialogService.ShowMessage("Employee password updated successfully!");
+                        _dialogService.ShowMessage($"{noun} password updated successfully!");
                     }
                     else
                     {
-                        _dialogService.ShowMessage($"Failed to update password: {result.Message}");
+                        _dialogService.ShowMessage($"Failed to update {noun.ToLower()} password: {result.Message}");
                     }
                 }
                 catch (Exception ex)

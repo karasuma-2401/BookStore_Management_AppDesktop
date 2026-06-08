@@ -1,6 +1,7 @@
 using BookStore_Management_AppDesktop.Services.API;
 using BookStore_Management_AppDesktop.Services.API.EmployeeServices;
 using BookStore_Management_AppDesktop.Services;
+using BookStore_Management_AppDesktop.Services.Export;
 using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs.ShiftDTOs;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -29,6 +30,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly IEmployeeShiftApiService _shiftApiService;
         private readonly IEmployeeApiService _employeeApiService;
         private readonly IDialogService _dialogService;
+        private readonly IExportService _exportService;
 
         private List<Employee> _allEmployees = new();
 
@@ -58,11 +60,13 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
         public PayrollViewModel(IEmployeeShiftApiService shiftApiService,
                               IEmployeeApiService employeeApiService,
-                              IDialogService dialogService)
+                              IDialogService dialogService,
+                              IExportService exportService)
         {
             _shiftApiService = shiftApiService;
             _employeeApiService = employeeApiService;
             _dialogService = dialogService;
+            _exportService = exportService;
 
             SelectedMonth = DateTime.Now.Month;
             SelectedYear = DateTime.Now.Year;
@@ -168,27 +172,18 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 IsLoading = true;
                 LoadingMessage = "Exporting payroll...";
 
-                var filename = $"Payroll_{SelectedMonth:D2}_{SelectedYear}.csv";
-                var content = new System.Text.StringBuilder();
+                var payslips = PayrollData
+                    .Select(row => row.Payslip)
+                    .OfType<PayslipDto>()
+                    .ToList();
 
-                // Header
-                content.AppendLine("Employee ID,Full Name,Total Assigned Shifts,Worked Shifts,Absent Shifts,Base Salary,Actual Salary");
-
-                // Data rows
-                foreach (var row in PayrollData)
+                if (payslips.Count == 0)
                 {
-                    content.AppendLine($"{row.EmployeeId},{row.FullName},{row.TotalAssignedShifts},{row.WorkedShifts},{row.AbsentShifts},{row.BaseSalary},{row.ActualSalary}");
+                    _dialogService.ShowMessage("No payroll data to export.");
+                    return;
                 }
 
-                // Footer
-                content.AppendLine($"\n,TOTAL PAYROLL,,,,,{TotalPayroll}");
-
-                var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                var filepath = Path.Combine(desktopPath, filename);
-
-                await File.WriteAllTextAsync(filepath, content.ToString());
-
-                _dialogService.ShowMessage($"Payroll exported to {filepath}");
+                await _exportService.ExportPayrollToExcelAsync(SelectedMonth, SelectedYear, payslips);
             }
             catch (Exception ex)
             {

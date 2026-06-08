@@ -24,6 +24,11 @@ namespace BookStore_Management_AppDesktop.Services.Export
             IEnumerable<EmployeeShiftResponseDto> shifts);
 
         Task<bool> ExportInventoryToExcelAsync(IEnumerable<Book> books);
+
+        Task<bool> ExportPayrollToExcelAsync(
+            int month,
+            int year,
+            IEnumerable<PayslipDto> payrolls);
     }
 }
 
