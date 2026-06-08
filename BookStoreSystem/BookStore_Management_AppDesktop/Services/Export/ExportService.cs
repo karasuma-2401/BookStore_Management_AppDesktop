@@ -430,6 +430,158 @@ namespace BookStore_Management_AppDesktop.Services.Export
             }
         }
 
+        public async Task<bool> ExportPayrollToExcelAsync(
+            int month,
+            int year,
+            IEnumerable<PayslipDto> payrolls)
+        {
+            try
+            {
+                var fileName = $"Payroll_{month:D2}_{year}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+                var downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                downloadsPath = Path.Combine(downloadsPath, "Downloads");
+
+                if (!Directory.Exists(downloadsPath))
+                {
+                    Directory.CreateDirectory(downloadsPath);
+                }
+
+                var filePath = Path.Combine(downloadsPath, fileName);
+
+                using (var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add("Payroll");
+
+                    // Title block
+                    var titleCell = worksheet.Cell("A1");
+                    titleCell.Value = $"PAYROLL REPORT - {GetMonthName(month).ToUpper()} {year}";
+                    titleCell.Style.Font.Bold = true;
+                    titleCell.Style.Font.FontSize = 16;
+                    titleCell.Style.Font.FontColor = XLColor.White;
+                    titleCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#0F172A");
+                    titleCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    worksheet.Range("A1:G1").Merge();
+
+                    // Metadata
+                    worksheet.Cell(3, 1).Value = "Exported On:";
+                    worksheet.Cell(3, 1).Style.Font.Bold = true;
+                    worksheet.Cell(3, 2).Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+                    int totalEmployees = payrolls.Count();
+                    decimal totalPayroll = payrolls.Sum(p => p.ActualSalary);
+
+                    worksheet.Cell(4, 1).Value = "Total Employees:";
+                    worksheet.Cell(4, 1).Style.Font.Bold = true;
+                    worksheet.Cell(4, 2).Value = totalEmployees;
+
+                    worksheet.Cell(5, 1).Value = "Total Payroll:";
+                    worksheet.Cell(5, 1).Style.Font.Bold = true;
+                    worksheet.Cell(5, 2).Value = totalPayroll;
+                    worksheet.Cell(5, 2).Style.NumberFormat.Format = "#,##0.00";
+
+                    // Table headers
+                    var headers = new[] { "Employee ID", "Full Name", "Total Assigned Shifts", "Worked Shifts", "Absent Shifts", "Rate Per Shift", "Actual Salary" };
+                    for (int col = 1; col <= headers.Length; col++)
+                    {
+                        var cell = worksheet.Cell(7, col);
+                        cell.Value = headers[col - 1];
+                        cell.Style.Font.Bold = true;
+                        cell.Style.Font.FontColor = XLColor.White;
+                        cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#1E293B");
+                        cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    }
+
+                    // Table data
+                    int currentRow = 8;
+                    foreach (var p in payrolls)
+                    {
+                        worksheet.Cell(currentRow, 1).Value = p.EmployeeId;
+                        worksheet.Cell(currentRow, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        worksheet.Cell(currentRow, 2).Value = p.FullName;
+
+                        worksheet.Cell(currentRow, 3).Value = p.TotalAssignedShifts;
+                        worksheet.Cell(currentRow, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        worksheet.Cell(currentRow, 4).Value = p.WorkedShifts;
+                        worksheet.Cell(currentRow, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        worksheet.Cell(currentRow, 5).Value = p.AbsentShifts;
+                        worksheet.Cell(currentRow, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        var rateCell = worksheet.Cell(currentRow, 6);
+                        rateCell.Value = p.Salary;
+                        rateCell.Style.NumberFormat.Format = "#,##0.00";
+                        rateCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+
+                        var actualSalaryCell = worksheet.Cell(currentRow, 7);
+                        actualSalaryCell.Value = p.ActualSalary;
+                        actualSalaryCell.Style.NumberFormat.Format = "#,##0.00";
+                        actualSalaryCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                        actualSalaryCell.Style.Font.Bold = true;
+
+                        // Add borders
+                        for (int col = 1; col <= 7; col++)
+                        {
+                            worksheet.Cell(currentRow, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                            if (currentRow % 2 == 0)
+                            {
+                                worksheet.Cell(currentRow, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#F8FAFC");
+                            }
+                        }
+
+                        currentRow++;
+                    }
+
+                    // Total summary row
+                    worksheet.Cell(currentRow, 1).Value = "";
+                    worksheet.Cell(currentRow, 2).Value = "TOTAL PAYROLL";
+                    worksheet.Cell(currentRow, 2).Style.Font.Bold = true;
+                    worksheet.Cell(currentRow, 2).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+
+                    worksheet.Cell(currentRow, 3).Value = payrolls.Sum(p => p.TotalAssignedShifts);
+                    worksheet.Cell(currentRow, 3).Style.Font.Bold = true;
+                    worksheet.Cell(currentRow, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                    worksheet.Cell(currentRow, 4).Value = payrolls.Sum(p => p.WorkedShifts);
+                    worksheet.Cell(currentRow, 4).Style.Font.Bold = true;
+                    worksheet.Cell(currentRow, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                    worksheet.Cell(currentRow, 5).Value = payrolls.Sum(p => p.AbsentShifts);
+                    worksheet.Cell(currentRow, 5).Style.Font.Bold = true;
+                    worksheet.Cell(currentRow, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                    worksheet.Cell(currentRow, 6).Value = "";
+
+                    var totalActualSalaryCell = worksheet.Cell(currentRow, 7);
+                    totalActualSalaryCell.Value = totalPayroll;
+                    totalActualSalaryCell.Style.NumberFormat.Format = "#,##0.00";
+                    totalActualSalaryCell.Style.Font.Bold = true;
+                    totalActualSalaryCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+
+                    for (int col = 1; col <= 7; col++)
+                    {
+                        worksheet.Cell(currentRow, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                        worksheet.Cell(currentRow, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#E0E7FF");
+                    }
+
+                    // Auto fit column widths
+                    worksheet.Columns().AdjustToContents();
+
+                    workbook.SaveAs(filePath);
+                }
+
+                MessageBox.Show($"Payroll exported successfully to:\n{filePath}", "Export Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error exporting payroll: {ex.Message}", "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+        }
+
         private string GetMonthName(int month)
         {
             return month switch

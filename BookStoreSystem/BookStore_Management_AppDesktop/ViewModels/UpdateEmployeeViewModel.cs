@@ -1,4 +1,4 @@
-﻿using BookStore_Management_AppDesktop.Models;
+using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Services.API.EmployeeServices; 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -14,6 +14,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         // Internal IDs for API calls
         private readonly int _employeeId;
         private readonly int _userId;
+        private readonly bool _isAdmin;
 
         // Flat properties for UI Binding
         [ObservableProperty] private int _displayEmployeeId;
@@ -28,13 +29,14 @@ namespace BookStore_Management_AppDesktop.ViewModels
         public Action<string, string>? OnShowMessage { get; set; }
         public Action<bool>? OnRequestClose { get; set; }
 
-        public UpdateEmployeeViewModel(Employee employee)
+        public UpdateEmployeeViewModel(Employee employee, bool isAdmin = false)
         {
             _apiService = new EmployeeApiService();
 
             // Mapping original data to flat properties
             _employeeId = employee.EmployeeId;
             _userId = employee.UserId;
+            _isAdmin = isAdmin;
 
             DisplayEmployeeId = employee.EmployeeId;
             FullName = employee.FullName ?? string.Empty;
@@ -49,7 +51,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             if (string.IsNullOrWhiteSpace(FullName))
             {
-                OnShowMessage?.Invoke("Validation Error", "Please enter the employee's full name.");
+                OnShowMessage?.Invoke("Validation Error", _isAdmin ? "Please enter the admin's full name." : "Please enter the employee's full name.");
                 return;
             }
 
@@ -73,7 +75,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
 
                 if (isSuccess)
                 {
-                    OnShowMessage?.Invoke("Success", "Employee information updated successfully!");
+                    OnShowMessage?.Invoke("Success", _isAdmin ? "Admin information updated successfully!" : "Employee information updated successfully!");
                     OnRequestClose?.Invoke(true);
                 }
                 else
