@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 using BookStoreManagement.API.Interfaces.Services;
 using Microsoft.AspNetCore.SignalR; 
 using BookStoreManagement.API.Hubs;   
@@ -24,7 +25,24 @@ namespace BookStoreManagement.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ImportCreateDto dto)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            // Log incoming claims for debugging
+            System.Diagnostics.Debug.WriteLine("[ImportsController] Incoming claims:");
+            foreach (var c in User.Claims)
+            {
+                System.Diagnostics.Debug.WriteLine($" - {c.Type} = {c.Value}");
+            }
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst(JwtRegisteredClaimNames.Sub) ?? User.FindFirst(ClaimTypes.Name);
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new { Success = false, Message = "Invalid Token. Cannot identify user." });
+            }
+
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+            {
+                return Unauthorized(new { Success = false, Message = "Invalid Token. Cannot identify user." });
+            }
+
             var result = await _service.CreateImport(dto, userId);
 
             if (result != null && dto.Details != null)

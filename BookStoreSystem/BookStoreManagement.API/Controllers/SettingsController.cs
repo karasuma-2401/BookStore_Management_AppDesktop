@@ -7,7 +7,7 @@ namespace BookStoreManagement.API.Controllers
 {
     [Route("setting")]
     [ApiController]
-    [Authorize(Roles = "admin")]
+    [Authorize]
     public class SettingsController : ControllerBase
     {
         private readonly ISettingService _service;
@@ -35,6 +35,7 @@ namespace BookStoreManagement.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([FromQuery] string name, [FromQuery] string value)
         {
             var result = await _service.Create(name, value);
@@ -42,6 +43,7 @@ namespace BookStoreManagement.API.Controllers
         }
 
         [HttpPut("{name}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Update(string name, [FromBody] UpdateSettingDTO dto)
         {
             var result = await _service.Update(name, dto.Value);
@@ -52,6 +54,7 @@ namespace BookStoreManagement.API.Controllers
         }
 
         [HttpDelete("{name}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(string name)
         {
             var success = await _service.Delete(name);
