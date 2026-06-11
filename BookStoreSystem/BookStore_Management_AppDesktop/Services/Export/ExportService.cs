@@ -306,7 +306,8 @@ namespace BookStore_Management_AppDesktop.Services.Export
                     // Summary
                     var bookList = books.ToList();
                     int totalBooks = bookList.Count;
-                    int lowStockBooks = bookList.Count(b => b.Quantity > 0 && b.Quantity <= 5);
+                    int lowStockThreshold = bookList.Any() ? bookList.First().LowStockThreshold : 5;
+                    int lowStockBooks = bookList.Count(b => b.Quantity > 0 && b.Quantity <= lowStockThreshold);
                     long totalQuantity = bookList.Sum(b => b.Quantity);
                     decimal totalValue = bookList.Sum(b => (long)b.Quantity * b.Price);
 
@@ -322,7 +323,7 @@ namespace BookStore_Management_AppDesktop.Services.Export
                     worksheet.Cell(6, 2).Value = totalQuantity;
                     worksheet.Cell(6, 2).Style.Font.Bold = true;
 
-                    worksheet.Cell(7, 1).Value = "Low Stock Items (1-5):";
+                    worksheet.Cell(7, 1).Value = $"Low Stock Items (1-{lowStockThreshold}):";
                     worksheet.Cell(7, 2).Value = lowStockBooks;
                     worksheet.Cell(7, 2).Style.Font.Bold = true;
                     worksheet.Cell(7, 2).Style.Font.FontColor = XLColor.FromHtml("#EF4444");
@@ -370,7 +371,7 @@ namespace BookStore_Management_AppDesktop.Services.Export
                         {
                             quantityCell.Style.Font.FontColor = XLColor.FromHtml("#94A3B8");
                         }
-                        else if (book.Quantity > 0 && book.Quantity <= 5)
+                        else if (book.Quantity > 0 && book.Quantity <= book.LowStockThreshold)
                         {
                             quantityCell.Style.Font.FontColor = XLColor.FromHtml("#EF4444");
                         }

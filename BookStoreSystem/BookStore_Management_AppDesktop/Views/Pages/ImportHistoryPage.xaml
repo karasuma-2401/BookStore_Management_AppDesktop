@@ -73,11 +73,11 @@
                                 <ControlTemplate TargetType="Button">
                                     <Grid>
                                         <Border x:Name="Btn" 
-                                                Background="#6366F1" 
+                                                Background="#0078D4" 
                                                 CornerRadius="8"
                                                 Padding="0">
                                             <Border.Effect>
-                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.2" Direction="270" Color="#6366F1"/>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.2" Direction="270" Color="#0078D4"/>
                                             </Border.Effect>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                 <ui:SymbolIcon Symbol="Add24" Foreground="White" Margin="0,0,8,0"/>
@@ -87,18 +87,18 @@
                                     </Grid>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="Btn" Property="Background" Value="#5558E3"/>
+                                            <Setter TargetName="Btn" Property="Background" Value="#0078D4"/>
                                             <Setter TargetName="Btn" Property="Effect">
                                                 <Setter.Value>
-                                                    <DropShadowEffect BlurRadius="12" ShadowDepth="4" Opacity="0.35" Direction="270" Color="#6366F1"/>
+                                                    <DropShadowEffect BlurRadius="12" ShadowDepth="4" Opacity="0.35" Direction="270" Color="#0078D4"/>
                                                 </Setter.Value>
                                             </Setter>
                                         </Trigger>
                                         <Trigger Property="IsPressed" Value="True">
-                                            <Setter TargetName="Btn" Property="Background" Value="#4F46E5"/>
+                                            <Setter TargetName="Btn" Property="Background" Value="#0078D4"/>
                                             <Setter TargetName="Btn" Property="Effect">
                                                 <Setter.Value>
-                                                    <DropShadowEffect BlurRadius="6" ShadowDepth="1" Opacity="0.15" Direction="270" Color="#6366F1"/>
+                                                    <DropShadowEffect BlurRadius="6" ShadowDepth="1" Opacity="0.15" Direction="270" Color="#0078D4"/>
                                                 </Setter.Value>
                                             </Setter>
                                         </Trigger>
@@ -145,8 +145,8 @@
                                 <ControlTemplate TargetType="Button">
                                     <Grid>
                                         <Border x:Name="FilterBorder"
-                                                Background="#6366F1"
-                                                BorderBrush="#4F46E5"
+                                                Background="#0078D4"
+                                                BorderBrush="#0078D4"
                                                 BorderThickness="1.5"
                                                 CornerRadius="6"
                                                 Padding="16,8">
@@ -220,12 +220,17 @@
                 </DataGrid.ItemContainerStyle>
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding ImportId}" Width="100">
+                    <DataGridTextColumn Header="ID" Binding="{Binding ImportId}" Width="80">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock" BasedOn="{StaticResource GridTextStyle}">
                                 <Setter Property="FontWeight" Value="Bold"/>
                                 <Setter Property="Margin" Value="18,0,0,0"/>
                             </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="EMPLOYEE ID" Binding="{Binding UserId}" Width="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource GridTextStyle}"/>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="DATE" Width="220">

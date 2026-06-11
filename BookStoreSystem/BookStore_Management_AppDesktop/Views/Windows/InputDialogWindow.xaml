@@ -2,24 +2,142 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        Title="{Binding WindowTitle, RelativeSource={RelativeSource Self}}" 
-        Height="180" Width="400"
-        WindowStartupLocation="CenterOwner" ResizeMode="NoResize" WindowStyle="ToolWindow"
-        Background="{DynamicResource ContentBackgroundBrush}">
+        Title="{Binding Title, RelativeSource={RelativeSource Self}}" 
+        Width="420"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None">
+
+    <Window.Resources>
+        <Style x:Key="DialogFormLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#1E293B" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+
+        <Style x:Key="DialogTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="42" />
+            <Setter Property="Padding" Value="14,0" />
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#CBD5E1" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="#0F172A" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="CaretBrush" Value="#0F172A" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost" Padding="{TemplateBinding Padding}" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="#0078D4" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="#94A3B8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DialogPrimaryBtnStyle" TargetType="Button">
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Background" Value="#0078D4" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#106EBE" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#005A9E" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DialogSecondaryBtnStyle" TargetType="Button">
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="Foreground" Value="#0F172A" />
+            <Setter Property="BorderBrush" Value="#CBD5E1" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F8FAFC" />
+                                <Setter Property="BorderBrush" Value="#94A3B8" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#F1F5F9" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        <Border Padding="24" Background="#FFFFFF" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="12">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="15" Opacity="0.08" ShadowDepth="4" Color="#000000" />
+            </Border.Effect>
 
-        <TextBlock Grid.Row="0" x:Name="MessageLabel" Text="Input:" FontWeight="SemiBold" Margin="0,0,0,10" Foreground="{DynamicResource TextOnLightBackgroudBrush}"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-        <ui:TextBox Grid.Row="1" x:Name="InputTxt" VerticalAlignment="Top" GotFocus="InputTxt_GotFocus"/>
+                <Grid Grid.Row="0" Margin="0,0,0,20">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="36" Height="36" Margin="0,0,12,0" Background="#F0F9FF" CornerRadius="8">
+                            <ui:SymbolIcon FontSize="18" Foreground="#0284C7" Symbol="Edit24" />
+                        </Border>
+                        <TextBlock VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Foreground="#0F172A" Text="{Binding Title, RelativeSource={RelativeSource Self}}" />
+                    </StackPanel>
+                </Grid>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <ui:Button Content="Cancel" Click="Cancel_Click" Margin="0,0,10,0" Appearance="Secondary" Width="80"/>
-            <ui:Button Content="OK" Click="Ok_Click" Appearance="Primary" Width="80" IsDefault="True"/>
-        </StackPanel>
+                <StackPanel Grid.Row="1" Margin="0,0,0,20">
+                    <TextBlock x:Name="MessageLabel" Style="{StaticResource DialogFormLabelStyle}" />
+                    <TextBox x:Name="InputTxt" Style="{StaticResource DialogTextBoxStyle}" GotFocus="InputTxt_GotFocus" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Cancel" Click="Cancel_Click" Style="{StaticResource DialogSecondaryBtnStyle}" Width="90" Margin="0,0,10,0" />
+                    <Button Content="OK" Click="Ok_Click" Style="{StaticResource DialogPrimaryBtnStyle}" Width="90" IsDefault="True" />
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

@@ -16,7 +16,22 @@ namespace BookStore_Management_AppDesktop.Models
             ? string.Join(", ", AuthorNames)
             : "Unknown Author";
 
-        public int Quantity { get; set; }
+        private int _quantity;
+        public int Quantity
+        {
+            get => _quantity;
+            set
+            {
+                if (SetProperty(ref _quantity, value))
+                {
+                    OnPropertyChanged(nameof(StockStatusText));
+                    OnPropertyChanged(nameof(StockStatusIcon));
+                    OnPropertyChanged(nameof(StockStatusColor));
+                    OnPropertyChanged(nameof(IsLowStock));
+                }
+            }
+        }
+
         public decimal Price { get; set; }
         public string? Description { get; set; }
         public string? ImagePath { get; set; }
@@ -28,5 +43,57 @@ namespace BookStore_Management_AppDesktop.Models
         public string DisplayCategoryNames => CategoryNames != null && CategoryNames.Any()
             ? string.Join(", ", CategoryNames)
             : "Uncategorized";
+
+        // Low stock threshold - set externally after loading regulation
+        private int _lowStockThreshold = 5;
+        public int LowStockThreshold
+        {
+            get => _lowStockThreshold;
+            set
+            {
+                if (_lowStockThreshold != value)
+                {
+                    _lowStockThreshold = value;
+                    OnPropertyChanged(nameof(StockStatusText));
+                    OnPropertyChanged(nameof(StockStatusIcon));
+                    OnPropertyChanged(nameof(StockStatusColor));
+                    OnPropertyChanged(nameof(IsLowStock));
+                }
+            }
+        }
+
+        // Computed stock display properties
+        public bool IsLowStock => Quantity > 0 && Quantity <= LowStockThreshold;
+        public bool IsOutOfStock => Quantity == 0;
+
+        public string StockStatusIcon
+        {
+            get
+            {
+                if (IsOutOfStock) return "DismissCircle24";
+                if (IsLowStock) return "Warning24";
+                return "CheckmarkCircle24";
+            }
+        }
+
+        public string StockStatusText
+        {
+            get
+            {
+                if (IsOutOfStock) return "Out of Stock";
+                if (IsLowStock && Quantity <= LowStockThreshold) return $"Low Stock ({Quantity} left)";
+                return $"{Quantity} In Stock";
+            }
+        }
+
+        public System.Windows.Media.Color StockStatusColor
+        {
+            get
+            {
+                if (IsOutOfStock || IsLowStock)
+                    return System.Windows.Media.Color.FromRgb(0xEF, 0x44, 0x44); // Error red
+                return System.Windows.Media.Color.FromRgb(0x05, 0x96, 0x69); // Success green
+            }
+        }
     }
 }
