@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using BookStore_Management_AppDesktop.Services.API;
 
 namespace BookStore_Management_AppDesktop.ViewModels
 {
@@ -27,6 +28,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
         private readonly IBookHubService _hubService;
         private readonly IServiceProvider _serviceProvider;
         private readonly IExportService _exportService;
+        private readonly IRegulationApiService _regulationApiService;
+        private int _lowStockThreshold = 5; // default 5, will be overridden by regulation
 
         private readonly DebounceHelper _searchDebouncer = new DebounceHelper();
 
@@ -47,7 +50,8 @@ namespace BookStore_Management_AppDesktop.ViewModels
             IDialogService dialogService,
             IBookHubService hubService,
             IServiceProvider serviceProvider,
-            IExportService exportService) 
+            IExportService exportService,
+            IRegulationApiService regulationApiService) 
         {
             _apiService = apiService;
             _cloudinaryService = cloudinaryService;
@@ -55,6 +59,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
             _hubService = hubService;
             _serviceProvider = serviceProvider;
             _exportService = exportService;
+            _regulationApiService = regulationApiService;
 
             _hubService.BookCreated += (b) => RefreshInventoryGrid();
             _hubService.BookDeleted += (id) => RefreshInventoryGrid();
@@ -69,7 +74,28 @@ namespace BookStore_Management_AppDesktop.ViewModels
         }
 
         partial void OnSelectedSortChanged(string? value) { CurrentPage = 1; _ = ExecuteSearchAsync(); }
-        public override async Task LoadDataAsync() => await ExecuteSearchAsync();
+        public override async Task LoadDataAsync()
+        {
+            await LoadLowStockThresholdAsync();
+            await ExecuteSearchAsync();
+        }
+
+        private async Task LoadLowStockThresholdAsync()
+        {
+            try
+            {
+                var regulation = await _regulationApiService.GetByNameAsync("SLTONSAUBAN");
+                if (regulation != null && int.TryParse(regulation.Value, out int threshold))
+                {
+                    _lowStockThreshold = threshold;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[InventoryViewModel] Failed to load SLTONSAUBAN regulation: {ex.Message}");
+                // Keep default value of 5
+            }
+        }
 
         private async Task ExecuteSearchAsync(CancellationToken token = default)
         {
@@ -96,7 +122,11 @@ namespace BookStore_Management_AppDesktop.ViewModels
                     Books.Clear();
                     if (response != null && response.Data != null)
                     {
-                        foreach (var book in response.Data) Books.Add(book);
+                        foreach (var book in response.Data)
+                        {
+                            book.LowStockThreshold = _lowStockThreshold;
+                            Books.Add(book);
+                        }
                         TotalItems = response.TotalItems; 
                         TotalPages = response.TotalPages > 0 ? response.TotalPages : 1;
                         TotalBooksCount = TotalItems.ToString("N0");
@@ -128,7 +158,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
                 var response = await _apiService.GetAllBooksAsync(allBooksQuery, token);
                 if (response?.Data != null)
                 {
-                    LowStockCount = response.Data.Count(b => b.Quantity > 0 && b.Quantity <= 5);
+                    LowStockCount = response.Data.Count(b => b.Quantity > 0 && b.Quantity <= _lowStockThreshold);
                     LowStockBooksCount = LowStockCount.ToString("N0");
                 }
             }

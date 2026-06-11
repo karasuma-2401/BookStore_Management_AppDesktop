@@ -105,8 +105,8 @@
 
                         <Button Grid.Column="2" Style="{StaticResource PremiumColoredButtonStyle}"
                                    Command="{Binding ApplyDateFilterCommand}"
-                                   Background="#6366F1" Foreground="White"
-                                   BorderBrush="#4F46E5" BorderThickness="1.5"
+                                   Background="#0078D4" Foreground="White"
+                                   BorderBrush="#0078D4" BorderThickness="1.5"
                                    Padding="12,6" FontSize="12" Margin="10,0,0,0"
                                    Height="36" VerticalAlignment="Bottom">
                             <StackPanel Orientation="Horizontal">

@@ -147,7 +147,6 @@
                     </ui:Button>
                 </StackPanel>
 
-                <!-- Nút Add New Employee được đưa vào đây, không còn bị chia border nên mất hẳn vạch trắng -->
                 <ui:Button Grid.Row="1" Grid.Column="0" Content="Add New Employee"
                            Icon="{ui:SymbolIcon Add24}" Height="40"
                            Style="{StaticResource PremiumSolidButtonStyle}"

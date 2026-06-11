@@ -1,5 +1,7 @@
 ﻿using BookStore_Management_AppDesktop.Helpers.Enums;
+using BookStore_Management_AppDesktop.Models;
 using BookStore_Management_AppDesktop.Models.DTOs;
+using BookStore_Management_AppDesktop.Services.API.EmployeeServices;
 using BookStore_Management_AppDesktop.Services.API.Import;
 using BookStore_Management_AppDesktop.Services.Navigation;
 using BookStore_Management_AppDesktop.Services.Realtime; 
@@ -7,6 +9,7 @@ using BookStore_Management_AppDesktop.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +32,7 @@ namespace BookStore_Management_AppDesktop.ViewModels
     {
         private readonly INavigationService _navigationService;
         private readonly IImportApiService _importApiService;
+        private readonly IEmployeeApiService _employeeApiService;
         private readonly IBookHubService _hubService;
         private ObservableCollection<ImportHistoryUIModel> _allImportHistory = new ObservableCollection<ImportHistoryUIModel>();
 
@@ -40,10 +44,12 @@ namespace BookStore_Management_AppDesktop.ViewModels
         public ImportHistoryViewModel(
             INavigationService navigationService,
             IImportApiService importApiService,
+            IEmployeeApiService employeeApiService,
             IBookHubService hubService) 
         {
             _navigationService = navigationService;
             _importApiService = importApiService;
+            _employeeApiService = employeeApiService;
             _hubService = hubService;
             _hubService.ImportCreated += OnImportRealtimeCreated;
         }
@@ -60,18 +66,29 @@ namespace BookStore_Management_AppDesktop.ViewModels
         {
             IsLoading = true;
             var dataFromApi = await _importApiService.GetAllImportsAsync();
+            var employees = await _employeeApiService.GetAllEmployeesAsync();
+
+            // Build a dictionary mapping UserId -> FullName for quick lookup
+            var employeeFullNameMap = employees
+                .Where(e => !string.IsNullOrWhiteSpace(e.FullName))
+                .ToDictionary(e => e.UserId, e => e.FullName);
 
             Application.Current.Dispatcher.Invoke(() =>
             {
                 _allImportHistory.Clear();
                 foreach (var item in dataFromApi.OrderByDescending(x => x.ImportDate))
                 {
+                    // Try to get full name from employee data, fallback to UserName if not found
+                    var fullName = employeeFullNameMap.TryGetValue(item.UserId, out var name) 
+                        ? name 
+                        : item.UserName;
+
                     _allImportHistory.Add(new ImportHistoryUIModel
                     {
                         ImportId = item.ImportId,
                         ImportDate = item.ImportDate.ToLocalTime(), 
                         UserId = item.UserId,
-                        EmployeeName = string.IsNullOrWhiteSpace(item.UserName) ? "Unknown" : item.UserName,
+                        EmployeeName = string.IsNullOrWhiteSpace(fullName) ? "Unknown" : fullName,
                         TotalItems = item.Details.Sum(d => d.Quantity),
                         TotalAmount = item.Details.Sum(d => d.Quantity * d.ImportPrice),
                         OriginalData = item
