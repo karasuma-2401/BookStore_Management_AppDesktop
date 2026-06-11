@@ -58,6 +58,8 @@ namespace BookStoreManagement.API.Services
                     new Claim(ClaimTypes.Name, userAccount.Username!),
 
                     new Claim(JwtRegisteredClaimNames.Sub, userAccount.UserId.ToString()),
+                    // Also include NameIdentifier claim so controllers that look for ClaimTypes.NameIdentifier can find it
+                    new Claim(ClaimTypes.NameIdentifier, userAccount.UserId.ToString()),
 
                     new Claim(ClaimTypes.Role, userAccount.RoleId ?? "staff")
                 }),
