@@ -1,0 +1,112 @@
+﻿Task name,Property,Assignee,Due,Priority,Tags
+Develop survey questions,Done,Sohrab Amin,"April 21, 2024",Medium,Research
+Interpret findings,In Progress,Nate Martins,"May 19, 2024",Medium,Research
+Write research report,Not Started,Ben Lang,"May 22, 2024",High,Research
+Conduct interviews,In Progress,Sohrab Amin,"May 12, 2024",High,Research
+Develop advertising plan,Done,Nate Martins,"April 13, 2024",Medium,"Improvement, Marketing"
+Define target audience,Done,Sohrab Amin,"April 17, 2024",Low,"Improvement, Marketing"
+Create social media plan,Not Started,Nate Martins,"May 2, 2023",Medium,"Improvement, Marketing"
+Create performance marketing plan,Not Started,Nate Martins,"May 2, 2023",Medium,"Improvement, Marketing"
+Develop new creative assets,Done,Sohrab Amin,"April 15, 2024",High,"Branding, Improvement, Marketing"
+Report on marketing ROI,In Progress,Ben Lang,"May 5, 2024",Medium,"Improvement, Marketing"
+CREATE DATABASE,Done,Huỳnh Gia Thịnh,"March 4, 2026 → March 9, 2026",High,"App, Database"
+CONNECT WITH SERVERLESS (NEON),Done,Win Pear,"March 4, 2026 → May 30, 2026",Medium,"App, Database"
+API: Login (JWT Authentication),Done,Trương Tiến,"March 4, 2026 → March 30, 2026",High,"API, App"
+API: Book CRUD,Done,Huỳnh Gia Thịnh,"March 31, 2026 → April 10, 2026",High,"API, App"
+API: Author CRUD,Done,Huỳnh Gia Thịnh,"March 23, 2026 → May 30, 2026",High,"API, App"
+API: Book Category CRUD,Done,Huỳnh Gia Thịnh,"March 23, 2026 → May 30, 2026",High,"API, App"
+API: Book Sale Invoice,Done,Trương Tiến,"March 31, 2026 → April 10, 2026",High,"API, App"
+API: Book Sale Payment,Done,Trương Tiến,"March 31, 2026 → April 10, 2026",High,"API, App"
+API: Voucher Terms & Conditions,Done,Trương Tiến,"March 31, 2026 → April 10, 2026",High,"API, App"
+API: Employees Management,Done,Trương Tiến,"March 31, 2026 → April 10, 2026",High,"API, App"
+API: Customer Management,Done,Huỳnh Gia Thịnh,"March 31, 2026 → April 10, 2026",High,"API, App"
+API: Report Design,Done,Huỳnh Gia Thịnh,"March 31, 2026 → April 10, 2026",High,"API, App"
+API: Reuglation,Done,Huỳnh Gia Thịnh,"May 15, 2026 → June 5, 2026",High,"API, App"
+API: Shift Management,Done,Trương Tiến,"May 15, 2026 → June 5, 2026",Low,"API, App"
+API: Payroll Management,Done,Trương Tiến,"May 15, 2026 → June 5, 2026",Low,"API, App"
+API: Absent Employee Management,Done,Trương Tiến,"May 15, 2026 → June 5, 2026",Low,"API, App"
+Import Report,Done,Huỳnh Gia Thịnh,"March 9, 2026 → May 30, 2026",High,"API, App"
+Inventory Report,Done,Huỳnh Gia Thịnh,"March 9, 2026 → May 30, 2026",High,"API, App"
+Monthly Report,Done,Huỳnh Gia Thịnh,"March 9, 2026 → May 30, 2026",High,"API, App"
+API: Debt Management,Done,Huỳnh Gia Thịnh,"March 31, 2026 → April 10, 2026",High,"API, App"
+API: Customer CRUD,Done,Huỳnh Gia Thịnh,"March 31, 2026 → April 10, 2026",High,"API, App"
+API: Shifts Management and Staff Scheduling,Done,Trương Tiến,"March 23, 2026 → May 30, 2026",High,"API, App"
+API: Users CRUD,Done,Trương Tiến,"March 23, 2026 → May 30, 2026",High,"API, App"
+API Intergration Services,Done,Win Pear,"March 4, 2026 → June 5, 2026",High,App
+Set up HttpCLient with Base URL,Done,Win Pear,"March 4, 2026 → May 30, 2026",High,"App, Database"
+Attach the JWT token to the request header that require authentication,Done,Win Pear,"March 4, 2026 → May 30, 2026",High,"App, Database"
+Handle common HTTP errors and display notifications,Done,Win Pear,"March 4, 2026 → May 30, 2026",High,"App, Database"
+Create certain Service Class contains function call API,Done,Win Pear,"March 4, 2026 → May 30, 2026",High,"App, Database"
+FEATURE: Authentication (Login/ Sign in),Done,Win Pear,"March 4, 2026 → March 30, 2026",High,Design
+Design Layout Login,Done,Win Pear,"March 4, 2026 → May 30, 2026",High,App
+"Handle validation logic (Check null, email format, password length)",Done,Win Pear,"March 4, 2026 → May 30, 2026",High,App
+"Call API Login, receive and save JWT Token",Done,Win Pear,"March 4, 2026 → May 30, 2026",High,App
+Handle Navigation to Main Window after Login Succesfully,Done,Win Pear,"March 4, 2026 → May 30, 2026",High,App
+Implement the forgot password feature,Done,Win Pear,"March 4, 2026 → May 30, 2026",Medium,App
+Implement the ‘Remember Me’ feature,Done,Win Pear,"March 4, 2026 → May 30, 2026",Medium,App
+FEATURE: Main Layout & Navigation,Done,Đơn Thuần,"March 4, 2026 → March 30, 2026",High,Design
+Design Main Window layout,Done,Đơn Thuần,"March 4, 2026 → May 30, 2026",High,App
+"Make Slide bar and Top Navigation ",Done,Đơn Thuần,"March 4, 2026 → May 30, 2026",High,App
+Set up Frame or Content Control for sub-page,Done,Đơn Thuần,"March 4, 2026 → May 30, 2026",High,App
+Write Navigation between page,Done,Đơn Thuần,"March 4, 2026 → May 30, 2026",High,App
+FEATURE: CURD for books (Inventory),Done,Đơn Thuần,"March 31, 2026 → April 10, 2026",High,Design
+Design List book (Not book cover),Done,Đơn Thuần,"March 4, 2026 → May 30, 2026",High,App
+Intergrate API take list books and show (read),Done,Đơn Thuần,"March 4, 2026 → May 30, 2026",High,App
+Design Form/Dialog Create and call API,Done,Đơn Thuần,"March 4, 2026 → May 30, 2026",High,App
+Design Form/Dialog Update book information and call API,Done,Đơn Thuần,"March 4, 2026 → May 30, 2026",High,App
+Design Form/Dialog Delete books,Done,Đơn Thuần,"March 4, 2026 → May 30, 2026",High,App
+FEATURE: Book page,Done,Đơn Thuần,"March 31, 2026 → April 10, 2026",High,Design
+FEATURE: Filter Books (book),Done,Đơn Thuần,"March 31, 2026 → April 10, 2026",High,App
+"Design Search bar (track name, author, categories, ….)",Not Started,Đơn Thuần,"March 4, 2026 → May 30, 2026",High,App
+"Advanced filter (Choose category, filter by prices …)",Not Started,Đơn Thuần,"March 4, 2026 → May 30, 2026",High,App
+Connect with API backend to transmit params,Not Started,Đơn Thuần,"March 4, 2026 → May 30, 2026",High,App
+Handle add to cart (for sale),Done,Đơn Thuần,"March 31, 2026 → April 10, 2026",High,"App, Design"
+FEATURE: Book Sale Invoice,Done,Trung Lê Hữu,"March 31, 2026 → April 10, 2026",High,Design
+Design UI to make invoice,Done,Trung Lê Hữu,"March 31, 2026 → April 10, 2026",High,App
+"Implement add/delete books in cart, update quantity on hand",Done,Trung Lê Hữu,"March 31, 2026 → April 10, 2026",High,App
+"Calculate the total (Discount, tax,..)",Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",High,App
+Call API to save invoices to DB,Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",High,App
+Design template to print invoice and Export (PDF or bill),Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",High,App
+FEATURE: Cash receipt,Done,Trung Lê Hữu,"March 31, 2026 → April 10, 2026",Medium,Design
+"Design payment format (choose customer, CreateDate,…)",Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",Medium,App
+Check logic (for Loan followed by regulations),Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",Medium,App
+Call API to save payments,Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",Medium,App
+Print invoice and Export payment,Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",Low,App
+FEATURE: Employee management,Done,Trung Lê Hữu,"March 31, 2026 → April 10, 2026",Medium,Design
+FEATURE: Shift Schedule Management,Done,Trung Lê Hữu,"May 15, 2026 → June 5, 2026",Low,Design
+FEATURE Payroll Management,Done,Trung Lê Hữu,"May 15, 2026 → June 5, 2026",Low,Design
+FEATURE Absent Management,Done,Trung Lê Hữu,"May 15, 2026 → June 5, 2026",Low,Design
+Design UI for employee management,Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",High,App
+"CRUD for employ ",Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",High,App
+"Implement role-based access control on the UI (Ex: Sales staff cannot see the Reports menu,….)",Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",Medium,App
+Approve Absent to make change status,Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",High,App
+FEATURE: Customer Managements,Done,Win Pear,"March 31, 2026 → April 10, 2026",High,Design
+FEATURE: Make Monthly Report,Done,Win Pear,"March 31, 2026 → April 10, 2026",High,Design
+FEATURE: Import Book,Done,Đơn Thuần,"March 31, 2026 → April 10, 2026",High,Design
+FEATURE: Regulation management,Done,Huỳnh Gia Thịnh,"May 15, 2026 → June 5, 2026",High,Design
+Design basic UI,Done,Huỳnh Gia Thịnh,,,
+Call API to set up,Done,Huỳnh Gia Thịnh,"May 15, 2026 → June 5, 2026",High,Design
+Set up some KEY_WORKS for project need to change,Done,Huỳnh Gia Thịnh,"May 15, 2026 → June 5, 2026",High,Design
+Design import book page,Done,Đơn Thuần,"March 31, 2026 → April 10, 2026",High,Design
+Call API and write Logic for Add & Edit Customer Infomation,Done,Win Pear,"March 31, 2026 → April 10, 2026",High,Design
+Design page customer Management,Done,Win Pear,"March 31, 2026 → April 10, 2026",High,Design
+Export to Excel or PDF),Done,Win Pear,"March 4, 2026 → May 30, 2026",Low,App
+"Design for certainly show (inventory report, import report,….)",Done,Win Pear,"March 4, 2026 → May 30, 2026",Low,App
+Intergate Charts (Library) to show revenue,Done,Win Pear,"March 4, 2026 → May 30, 2026",Low,App
+Desing filter to (Month/Year) to review report,Done,Win Pear,"March 4, 2026 → May 30, 2026",Low,App
+Create product positioning,Done,Sohrab Amin,"May 1, 2024",High,Branding
+Create product demo video,Done,Nate Martins,"April 29, 2024",High,
+Monitor launch performance,In Progress,Ben Lang,"May 9, 2024",High,Metrics
+SRS + Thiết kế cơ sở dữ liệu & sơ đồ lớp,Done,Huỳnh Gia Thịnh,"May 25, 2026 → June 10, 2026",High,Docs
+Introduction + UI design,Done,Trung Lê Hữu,"May 25, 2026 → June 10, 2026",High,Docs
+System design & Software Design,Done,Đơn Thuần,"May 25, 2026 → June 10, 2026",High,Docs
+Realistic & Conclusion,Done,Trương Tiến,"May 25, 2026 → June 10, 2026",High,Docs
+Testing & Implementation,Done,Win Pear,"May 25, 2026 → June 10, 2026",High,Docs
+PPT about Project + Demo,Done,Huỳnh Gia Thịnh,"May 25, 2026 → June 10, 2026",High,Docs
+Design UI for Shift Schedule Management,Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",High,App
+Design Filter by status of shift,Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",High,App
+UI for add employee into shift,Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",Medium,App
+Design UI for Payroll for employee Management,Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",High,App
+Call api for this feature,Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",High,App
+Design UI for Absent employee Management,Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",High,App
+Call api for this feature,Done,Trung Lê Hữu,"March 4, 2026 → May 30, 2026",High,App
